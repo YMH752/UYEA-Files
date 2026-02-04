@@ -1,0 +1,98 @@
+:root {
+    --primary-color: #0078d4;
+    --sidebar-bg: #ffffff;
+    --main-bg: #f5f7f9;
+    --sidebar-width: 200px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--main-bg);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* 顶部栏 */
+.top-header {
+    height: 60px;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    z-index: 100;
+}
+
+.logo { font-size: 22px; font-weight: bold; color: var(--primary-color); cursor: pointer; }
+
+.search-bar { display: flex; background: #f1f3f4; border-radius: 8px; padding: 4px; }
+.search-bar input { border: none; background: transparent; padding: 6px 15px; width: 260px; outline: none; }
+.search-bar button { background: var(--primary-color); color: white; border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; }
+
+/* 主体布局 */
+.app-container { display: flex; flex: 1; overflow: hidden; }
+
+/* 侧边栏 */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid #e0e0e0;
+    padding: 20px 0;
+    overflow-y: auto;
+}
+
+.nav-group { font-size: 12px; color: #999; padding: 15px 20px 5px; text-transform: uppercase; }
+.nav-item {
+    display: block;
+    padding: 12px 20px;
+    color: #444;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+.nav-item:hover { background: #f0f7ff; color: var(--primary-color); padding-left: 25px; }
+.nav-item.active { background: var(--primary-color); color: white; font-weight: bold; }
+
+/* 内容区 */
+.main-content { flex: 1; padding: 25px; overflow-y: auto; }
+.section-title { margin-bottom: 20px; font-size: 20px; color: #333; border-left: 4px solid var(--primary-color); padding-left: 10px; }
+
+/* 工具网格 */
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 15px;
+    margin-bottom: 40px;
+}
+.tool-card {
+    background: white;
+    padding: 20px 10px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid #eee;
+    transition: 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+.tool-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: var(--primary-color); }
+
+/* 论坛列表 */
+.forum-list { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.post-item {
+    display: flex;
+    align-items: center;
+    padding: 18px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: 0.2s;
+}
+.post-item:hover { background: #fafafa; }
+.tag { padding: 3px 8px; border-radius: 4px; font-size: 12px; margin-right: 15px; white-space: nowrap; }
+.tag.notice { background: #ffebee; color: #f44336; }
+.tag.share { background: #e8f5e9; color: #4caf50; }
+.tag.ask { background: #e3f2fd; color: #2196f3; }
