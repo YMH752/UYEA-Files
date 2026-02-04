@@ -2,41 +2,154 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>悠野 U-Wild | 论坛</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>综合讨论 | 悠野 U-Wild</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 针对论坛页面的特殊样式补充 */
+        .forum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .post-btn {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        .post-btn:hover { opacity: 0.9; transform: scale(1.05); }
+
+        .post-list {
+            background: #fff;
+            border-radius: 15px;
+            border: 1px solid #eee;
+            overflow: hidden;
+        }
+        .post-item {
+            display: flex;
+            padding: 20px;
+            border-bottom: 1px solid #f5f5f5;
+            transition: 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        .post-item:last-child { border-bottom: none; }
+        .post-item:hover { background: #fafafa; }
+
+        .post-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+            margin-right: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 5px;
+        }
+        .stat-count { font-weight: 800; color: var(--primary); font-size: 18px; }
+        .stat-label { font-size: 11px; color: #999; }
+
+        .post-content h3 { font-size: 16px; margin-bottom: 8px; color: #333; }
+        .post-meta { font-size: 12px; color: #aaa; display: flex; gap: 15px; }
+        .post-tag {
+            background: #eef2f7;
+            color: #667eea;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <header class="top-header">
-        <div class="logo" onclick="location.href='index.html'">悠野 U-Wild</div>
-        <div class="search-bar">
-            <input type="text" placeholder="搜索帖子...">
-            <button>搜索</button>
+    <nav class="top-nav">
+        <div class="logo">悠野 U-Wild</div>
+        <div class="search-wrapper">
+            <select id="searchEngine">
+                <option value="baidu">百度</option>
+                <option value="google">谷歌</option>
+                <option value="bing">必应</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="搜索社区讨论主题...">
+            <button onclick="handleSearch()">搜索</button>
         </div>
-    </header>
+        <div class="date-info">2026-02-04 星期三</div>
+    </nav>
 
-    <div class="app-container">
+    <div class="container">
         <aside class="sidebar">
             <div class="nav-group">核心导航</div>
-            <a href="index.html" class="nav-item">⭐ 常用推荐</a>
-            <a href="tools.html" class="nav-item">🛠️ 网页工具箱</a>
-            <a href="forum.html" class="nav-item active">💬 综合讨论</a>
+            <a href="index.html" class="nav-item"><i>🔥</i> 常用推荐</a>
+            <a href="index.html#ai-tools" class="nav-item"><i>🤖</i> AI 工具集</a>
+            <div class="nav-group">社区互动</div>
+            <a href="forum.html" class="nav-item active"><i>💬</i> 综合讨论</a>
+            <a href="#" class="nav-item"><i>📢</i> 站务公告</a>
         </aside>
 
-        <main class="main-content">
-            <h2 class="section-title">综合讨论区</h2>
-            <div class="forum-list">
-                <div class="post-item"><span class="tag notice">公告</span><p>【必读】悠野社区文明公约 v1.0</p></div>
-                <div class="post-item"><span class="tag share">分享</span><p>2026年最好用的10个前端开发库推荐</p></div>
-                <div class="post-item"><span class="tag ask">求助</span><p>VS Code 插件突然失效了怎么排查？</p></div>
-                <div class="post-item"><span class="tag share">分享</span><p>如何快速部署自己的个人博客到 Vercel</p></div>
-                <div class="post-item"><span class="tag ask">求助</span><p>新人求助：关于响应式布局的适配问题</p></div>
-                <div class="post-item"><span class="tag share">分享</span><p>发现一个超好用的配色网站，不敢独享</p></div>
-                <div class="post-item"><span class="tag notice">公告</span><p>招募论坛版主，欢迎各位活跃用户报名</p></div>
-                <div class="post-item"><span class="tag share">分享</span><p>这就是内容填充的魅力吗？感觉很充实</p></div>
-                <div class="post-item"><span class="tag ask">讨论</span><p>大家平时是喜欢用单页面还是多页面切换？</p></div>
+        <main class="main">
+            <div class="forum-header">
+                <div class="section-header"><h2>综合讨论区</h2></div>
+                <a href="#" class="post-btn">+ 发布新帖</a>
             </div>
+
+            <div class="post-list">
+                <a href="#" class="post-item">
+                    <div class="post-stats">
+                        <span class="stat-count">128</span>
+                        <span class="stat-label">回复</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>关于 2026 年前端开发趋势的深度讨论</h3>
+                        <div class="post-meta">
+                            <span class="post-tag">技术</span>
+                            <span>发布者: 悠野小助手</span>
+                            <span>3 小时前</span>
+                            <span>🔥 热门</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#" class="post-item">
+                    <div class="post-stats">
+                        <span class="stat-count">45</span>
+                        <span class="stat-label">回复</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>【置顶】本站 Zeabur 部署指南及常见 404 解决办法</h3>
+                        <div class="post-meta">
+                            <span class="post-tag" style="color: #e67e22; background: #fdf6ec;">公告</span>
+                            <span>发布者: 管理员</span>
+                            <span>昨天</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#" class="post-item">
+                    <div class="post-stats">
+                        <span class="stat-count">12</span>
+                        <span class="stat-label">回复</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>有没有好用的 AI 绘画提示词（Prompt）分享网站？</h3>
+                        <div class="post-meta">
+                            <span class="post-tag" style="color: #27ae60; background: #eafaf1;">求助</span>
+                            <span>发布者: 萌新一枚</span>
+                            <span>5 小时前</span>
+                        </div>
+                    </div>
+                </a>
+
+                </div>
         </main>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
