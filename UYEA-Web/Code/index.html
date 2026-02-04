@@ -2,56 +2,47 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>悠野 U-Wild | 首页</title>
+    <title>悠野 U-Wild | 极速导航</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="top-header">
-        <div class="logo" onclick="location.href='index.html'">悠野 U-Wild</div>
-        <div class="search-bar">
-            <input type="text" placeholder="搜索资源...">
-            <button>搜索</button>
+    <nav class="top-nav">
+        <div class="logo">悠野 U-Wild</div>
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="搜索工具、网址或社区帖子...">
+            <button onclick="handleSearch()">搜索</button>
         </div>
-    </header>
+        <div class="user-profile" style="color: #999; font-size: 13px;">2026-02-04 星期三</div>
+    </nav>
 
-    <div class="app-container">
+    <div class="container">
         <aside class="sidebar">
             <div class="nav-group">核心导航</div>
-            <a href="index.html" class="nav-item active">⭐ 常用推荐</a>
-            <a href="tools.html" class="nav-item">🛠️ 网页工具箱</a>
-            <a href="forum.html" class="nav-item">💬 综合讨论</a>
-            <div class="nav-group">生产力</div>
-            <a href="#" class="nav-item">🤖 AI 助手</a>
-            <a href="#" class="nav-item">💻 前端开发</a>
-            <a href="#" class="nav-item">🎨 设计素材</a>
-            <a href="#" class="nav-item">📊 数据分析</a>        
-            <div class="nav-group">资源库</div>
-            <a href="#" class="nav-item">🎬 影视资源</a>
-            <a href="#" class="nav-item">📚 电子书库</a>
-            <a href="#" class="nav-item">🎮 游戏单机</a>
-            <a href="#" class="nav-item">💿 软件下载</a>
-            <div class="nav-group">关于</div>
-            <a href="#" class="nav-item">📢 站务公告</a>
-            <a href="#" class="nav-item">📧 联系我们</a>
+            <a href="index.html" class="nav-item active"><i>🔥</i> 常用推荐</a>
+            <a href="tools.html" class="nav-item"><i>🔧</i> 实用工具</a>
+            <a href="forum.html" class="nav-item"><i>💬 "社区互动"</a>
+            
+            <div class="nav-group">资源分类</div>
+            <a href="#" class="nav-item"><i>🎬</i> 影音媒体</a>
+            <a href="#" class="nav-item"><i>🎨</i> 设计资源</a>
+            <a href="#" class="nav-item"><i>🎮</i> 游戏单机</a>
+            <a href="#" class="nav-item"><i>💾</i> 软件下载</a>
         </aside>
 
-        <main class="main-content">
-            <h2 class="section-title">常用推荐</h2>
-            <div class="tool-grid">
-                <a href="#" class="tool-card">GitHub</a><a href="#" class="tool-card">Bilibili</a>
-                <a href="#" class="tool-card">ChatGPT</a><a href="#" class="tool-card">Vercel</a>
-                <a href="#" class="tool-card">知乎</a><a href="#" class="tool-card">掘金</a>
-                <a href="#" class="tool-card">YouTube</a><a href="#" class="tool-card">Notion</a>
-                <a href="#" class="tool-card">Stack Overflow</a><a href="#" class="tool-card">Figma</a>
-                <a href="#" class="tool-card">Canva</a><a href="#" class="tool-card">MDN Docs</a>
-                <a href="#" class="tool-card">CSDN</a><a href="#" class="tool-card">百度</a>
-                <a href="#" class="tool-card">淘宝</a><a href="#" class="tool-card">京东</a>
-                <a href="#" class="tool-card">微博</a><a href="#" class="tool-card">豆瓣</a>
-            </div>
+        <main class="main">
+            <div class="section-header"><h2>常用推荐</h2></div>
+            <div class="grid">
+                <div class="card"><span class="icon">🚀</span><span>GitHub</span><p>开发者社区</p></div>
+                <div class="card"><span class="icon">📺</span><span>Bilibili</span><p>视频弹幕网</p></div>
+                <div class="card"><span class="icon">🤖</span><span>ChatGPT</span><p>AI 智能对话</p></div>
+                <div class="card"><span class="icon">🎨</span><span>Figma</span><p>在线设计工具</p></div>
+                <div class="card"><span class="icon">📝</span><span>Notion</span><p>全能笔记</p></div>
+                <div class="card"><span class="icon">🔍</span><span>StackOverflow</span><p>程序问答</p></div>
+                <div class="card"><span class="icon">📦</span><span>Vercel</span><p>前端部署</p></div>
+                <div class="card"><span class="icon">💡</span><span>知乎</span><p>知识共享</p></div>
+                </div>
         </main>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
-
