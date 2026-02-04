@@ -37,24 +37,35 @@ body {
 .app-container { display: flex; flex: 1; overflow: hidden; }
 
 /* 侧边栏 */
+/* 优化侧边栏：缩小宽度至 180px，增加平滑过渡 */
 .sidebar {
-    width: var(--sidebar-width);
-    background: var(--sidebar-bg);
-    border-right: 1px solid #e0e0e0;
-    padding: 20px 0;
-    overflow-y: auto;
+    width: 180px; /* 之前可能太宽了 */
+    background: #fff;
+    border-right: 1px solid #eaeaea;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 丝滑动画 */
 }
 
-.nav-group { font-size: 12px; color: #999; padding: 15px 20px 5px; text-transform: uppercase; }
+/* 侧边栏项：增加悬停时的缩进动画 */
 .nav-item {
-    display: block;
-    padding: 12px 20px;
-    color: #444;
-    text-decoration: none;
-    font-size: 14px;
-    transition: all 0.2s;
+    padding: 10px 20px;
+    margin: 4px 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
-.nav-item:hover { background: #f0f7ff; color: var(--primary-color); padding-left: 25px; }
+.nav-item:hover {
+    background: #f0f7ff;
+    padding-left: 25px; /* 点击或悬停时轻微右移 */
+}
+
+/* 搜索框优化：圆角和阴影增强 */
+.search-bar {
+    border: 2px solid #eee;
+    transition: border-color 0.3s;
+}
+.search-bar:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(0,120,212,0.1);
+}
 .nav-item.active { background: var(--primary-color); color: white; font-weight: bold; }
 
 /* 内容区 */
@@ -96,3 +107,4 @@ body {
 .tag.notice { background: #ffebee; color: #f44336; }
 .tag.share { background: #e8f5e9; color: #4caf50; }
 .tag.ask { background: #e3f2fd; color: #2196f3; }
+
