@@ -1,110 +1,86 @@
 :root {
     --primary-color: #0078d4;
-    --sidebar-bg: #ffffff;
-    --main-bg: #f5f7f9;
-    --sidebar-width: 200px;
+    --sidebar-width: 200px; /* 侧边栏固定宽度 */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--main-bg);
+    font-family: system-ui, -apple-system, sans-serif;
     display: flex;
     flex-direction: column;
     height: 100vh;
+    overflow: hidden; /* 防止整页滚动，改用局部滚动 */
 }
 
-/* 顶部栏 */
+/* 顶部导航 */
 .top-header {
     height: 60px;
     background: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 24px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    z-index: 100;
+    padding: 0 20px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0; /* 确保不被压缩 */
 }
-
-.logo { font-size: 22px; font-weight: bold; color: var(--primary-color); cursor: pointer; }
-
-.search-bar { display: flex; background: #f1f3f4; border-radius: 8px; padding: 4px; }
-.search-bar input { border: none; background: transparent; padding: 6px 15px; width: 260px; outline: none; }
-.search-bar button { background: var(--primary-color); color: white; border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; }
 
 /* 主体布局 */
-.app-container { display: flex; flex: 1; overflow: hidden; }
+.app-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
 
-/* 侧边栏 */
-/* 优化侧边栏：缩小宽度至 180px，增加平滑过渡 */
+/* 侧边栏 - 修复关键 */
 .sidebar {
-    width: 180px; /* 之前可能太宽了 */
+    width: var(--sidebar-width);
     background: #fff;
-    border-right: 1px solid #eaeaea;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 丝滑动画 */
+    border-right: 1px solid #eee;
+    overflow-y: auto;
+    flex-shrink: 0; /* 禁止侧边栏被内容挤压 */
 }
 
-/* 侧边栏项：增加悬停时的缩进动画 */
 .nav-item {
-    padding: 10px 20px;
-    margin: 4px 10px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-.nav-item:hover {
-    background: #f0f7ff;
-    padding-left: 25px; /* 点击或悬停时轻微右移 */
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #444;
+    transition: 0.2s;
 }
 
-/* 搜索框优化：圆角和阴影增强 */
-.search-bar {
-    border: 2px solid #eee;
-    transition: border-color 0.3s;
+.nav-item.active {
+    background: var(--primary-color);
+    color: white;
 }
-.search-bar:focus-within {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 8px rgba(0,120,212,0.1);
+
+/* 主内容区 - 修复关键 */
+.main-content {
+    flex: 1; /* 占据剩余所有空间 */
+    padding: 30px;
+    overflow-y: auto; /* 只有这里可以滚动 */
+    background: #f9f9f9;
 }
-.nav-item.active { background: var(--primary-color); color: white; font-weight: bold; }
 
-/* 内容区 */
-.main-content { flex: 1; padding: 25px; overflow-y: auto; }
-.section-title { margin-bottom: 20px; font-size: 20px; color: #333; border-left: 4px solid var(--primary-color); padding-left: 10px; }
-
-/* 工具网格 */
+/* 内容网格 - 自动排列 */
 .tool-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 15px;
     margin-bottom: 40px;
 }
+
 .tool-card {
     background: white;
     padding: 20px 10px;
-    border-radius: 10px;
-    text-align: center;
     border: 1px solid #eee;
+    border-radius: 8px;
+    text-align: center;
     transition: 0.3s;
-    cursor: pointer;
-    text-decoration: none;
-    color: #333;
-    font-size: 14px;
 }
-.tool-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: var(--primary-color); }
 
-/* 论坛列表 */
-.forum-list { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.post-item {
-    display: flex;
-    align-items: center;
-    padding: 18px 20px;
-    border-bottom: 1px solid #f0f0f0;
-    transition: 0.2s;
+.tool-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: var(--primary-color);
 }
-.post-item:hover { background: #fafafa; }
-.tag { padding: 3px 8px; border-radius: 4px; font-size: 12px; margin-right: 15px; white-space: nowrap; }
-.tag.notice { background: #ffebee; color: #f44336; }
-.tag.share { background: #e8f5e9; color: #4caf50; }
-.tag.ask { background: #e3f2fd; color: #2196f3; }
-
