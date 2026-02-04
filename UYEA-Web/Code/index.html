@@ -6,43 +6,58 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="top-nav">
-        <div class="logo">悠野 U-Wild</div>
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="搜索工具、网址或社区帖子...">
-            <button onclick="handleSearch()">搜索</button>
-        </div>
-        <div class="user-profile" style="color: #999; font-size: 13px;">2026-02-04 星期三</div>
-    </nav>
+<nav class="top-nav">
+    <div class="logo">悠野 U-Wild</div>
+    <div class="search-wrapper">
+        <select id="searchEngine" style="border:none; background:none; outline:none; padding:0 10px; cursor:pointer;">
+            <option value="baidu">百度</option>
+            <option value="google">谷歌</option>
+            <option value="bing">必应</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="搜索资源、网址或社区内容...">
+        <button onclick="handleSearch()">搜索</button>
+    </div>
+    <div class="date-info">2026-02-04 星期三</div>
+</nav>
 
-    <div class="container">
-        <aside class="sidebar">
-            <div class="nav-group">核心导航</div>
-            <a href="index.html" class="nav-item active"><i>🔥</i> 常用推荐</a>
-            <a href="tools.html" class="nav-item"><i>🔧</i> 实用工具</a>
-            <a href="forum.html" class="nav-item"><i>💬 "社区互动"</a>
-            
-            <div class="nav-group">资源分类</div>
-            <a href="#" class="nav-item"><i>🎬</i> 影音媒体</a>
-            <a href="#" class="nav-item"><i>🎨</i> 设计资源</a>
-            <a href="#" class="nav-item"><i>🎮</i> 游戏单机</a>
-            <a href="#" class="nav-item"><i>💾</i> 软件下载</a>
-        </aside>
+<div class="container">
+    <aside class="sidebar">
+        <div class="nav-group">核心导航</div>
+        <a href="#recommend" class="nav-item active"><i>🔥</i> 常用推荐</a>
+        <a href="#ai-tools" class="nav-item"><i>🤖</i> AI 工具集</a>
+        <a href="#dev-tools" class="nav-item"><i>🔧</i> 开发者工具</a>
+        
+        <div class="nav-group">社区互动</div>
+        <a href="forum.html" class="nav-item"><i>💬</i> 综合讨论</a>
+    </aside>
 
-        <main class="main">
+    <main class="main" id="scrollContainer">
+        <section id="recommend">
             <div class="section-header"><h2>常用推荐</h2></div>
             <div class="grid">
-                <div class="card"><span class="icon">🚀</span><span>GitHub</span><p>开发者社区</p></div>
-                <div class="card"><span class="icon">📺</span><span>Bilibili</span><p>视频弹幕网</p></div>
-                <div class="card"><span class="icon">🤖</span><span>ChatGPT</span><p>AI 智能对话</p></div>
-                <div class="card"><span class="icon">🎨</span><span>Figma</span><p>在线设计工具</p></div>
-                <div class="card"><span class="icon">📝</span><span>Notion</span><p>全能笔记</p></div>
-                <div class="card"><span class="icon">🔍</span><span>StackOverflow</span><p>程序问答</p></div>
-                <div class="card"><span class="icon">📦</span><span>Vercel</span><p>前端部署</p></div>
-                <div class="card"><span class="icon">💡</span><span>知乎</span><p>知识共享</p></div>
+                <a href="https://github.com" target="_blank" class="card">
+                    <span class="icon">🚀</span><span>GitHub</span><p>全球最大的代码托管平台</p>
+                </a>
+                <a href="https://v.bilibili.com" target="_blank" class="card">
+                    <span class="icon">📺</span><span>Bilibili</span><p>国产良心视频学习站</p>
+                </a>
+                <a href="https://chatgpt.com" target="_blank" class="card">
+                    <span class="icon">💬</span><span>ChatGPT</span><p>最强 AI 辅助办公</p>
+                </a>
                 </div>
-        </main>
-    </div>
+        </section>
+
+        <section id="ai-tools" style="margin-top: 50px;">
+            <div class="section-header"><h2>AI 工具集</h2></div>
+            <div class="grid">
+                <div class="card"><span class="icon">🎨</span><span>Midjourney</span><p>AI 绘画天花板</p></div>
+                <div class="card"><span class="icon">✍️</span><span>Jasper</span><p>AI 文案写作专家</p></div>
+                <div class="card"><span class="icon">🎬</span><span>Runway</span><p>AI 视频生成神器</p></div>
+            </div>
+        </section>
+    </main>
+</div>
     <script src="script.js"></script>
 </body>
 </html>
+
