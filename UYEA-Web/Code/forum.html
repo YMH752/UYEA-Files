@@ -2,104 +2,288 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>综合讨论 | 悠野 U-Wild</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>悠野社区 | UYEA</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* 针对论坛页面的特殊样式补充 */
-        .forum-header {
+        /* ── 论坛页专属样式 ── */
+
+        /* 论坛顶栏 */
+        .forum-toolbar {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
             margin-bottom: 20px;
         }
+
         .post-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             background: var(--primary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
+            color: #fff;
+            padding: 9px 20px;
+            border-radius: var(--radius-sm);
             font-weight: 600;
             font-size: 14px;
-            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            transition: background var(--duration), transform var(--duration) var(--ease-bounce),
+                        box-shadow var(--duration);
+            flex-shrink: 0;
         }
-        .post-btn:hover { opacity: 0.9; transform: scale(1.05); }
+        .post-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,120,212,0.3);
+        }
+        .post-btn:active { transform: scale(0.97); }
 
-        .post-list {
-            background: #fff;
-            border-radius: 15px;
-            border: 1px solid #eee;
-            overflow: hidden;
+        /* 日期信息 */
+        .date-info {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            flex-shrink: 0;
         }
+
+        /* 帖子列表容器 */
+        .post-list {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1.5px solid var(--border);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 单条帖子 */
         .post-item {
             display: flex;
-            padding: 20px;
-            border-bottom: 1px solid #f5f5f5;
-            transition: 0.2s;
-            cursor: pointer;
+            align-items: center;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
             text-decoration: none;
             color: inherit;
+            transition: background var(--duration), transform var(--duration) var(--ease-smooth);
+            position: relative;
+            overflow: hidden;
+            gap: 16px;
         }
         .post-item:last-child { border-bottom: none; }
-        .post-item:hover { background: #fafafa; }
+        .post-item:hover {
+            background: var(--primary-light);
+        }
+        .post-item:active { background: #dbeeff; }
 
+        /* 帖子左侧数据块 */
         .post-stats {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 60px;
-            margin-right: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 5px;
+            min-width: 54px;
+            padding: 8px 6px;
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+            transition: background var(--duration), border-color var(--duration);
         }
-        .stat-count { font-weight: 800; color: var(--primary); font-size: 18px; }
-        .stat-label { font-size: 11px; color: #999; }
+        .post-item:hover .post-stats {
+            background: #fff;
+            border-color: var(--primary);
+        }
+        .stat-count {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 20px;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            font-weight: 500;
+        }
 
-        .post-content h3 { font-size: 16px; margin-bottom: 8px; color: #333; }
-        .post-meta { font-size: 12px; color: #aaa; display: flex; gap: 15px; }
+        /* 帖子主体 */
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .post-content h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color var(--duration);
+        }
+        .post-item:hover .post-content h3 { color: var(--primary); }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* 标签 */
         .post-tag {
-            background: #eef2f7;
-            color: #667eea;
+            display: inline-block;
             padding: 2px 8px;
             border-radius: 4px;
-            font-weight: bold;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .tag-tech    { background: #eef0ff; color: #5563e8; }
+        .tag-notice  { background: #fff4e6; color: #e07b20; }
+        .tag-help    { background: #eafaf1; color: #22a05a; }
+        .tag-hot     { background: #fff0f0; color: #e03e3e; }
+
+        /* 帖子右侧箭头 */
+        .post-arrow {
+            font-size: 20px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: transform var(--duration), color var(--duration);
+            font-weight: 300;
+        }
+        .post-item:hover .post-arrow {
+            transform: translateX(4px);
+            color: var(--primary);
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+        .empty-state p { font-size: 14px; }
+
+        /* 移动端适配 */
+        @media (max-width: 767px) {
+            .post-item { padding: 14px 16px; gap: 12px; }
+            .post-stats { min-width: 46px; }
+            .stat-count { font-size: 16px; }
+            .post-content h3 { font-size: 14px; }
+            .post-arrow { display: none; }
+            .date-info { display: none; }
+        }
+
+        @media (max-width: 479px) {
+            .post-meta { gap: 6px; }
+            .post-content h3 { white-space: normal; }
         }
     </style>
 </head>
 <body>
-    <nav class="top-nav">
-        <div class="logo">悠野 U-Wild</div>
-        <div class="search-wrapper">
-            <select id="searchEngine">
-                <option value="baidu">百度</option>
-                <option value="google">谷歌</option>
-                <option value="bing">必应</option>
-            </select>
-            <input type="text" id="searchInput" placeholder="搜索社区讨论主题...">
-            <button onclick="handleSearch()">搜索</button>
+
+    <!-- ===== 顶部导航栏（与index.html完全一致） ===== -->
+    <nav class="top-nav" id="topNav">
+        <div class="nav-inner">
+            <div class="logo">
+                <span class="logo-text">UYEA</span>
+                <span class="logo-sub">悠野工作室</span>
+            </div>
+            <div class="search-wrapper">
+                <div class="search-engine-select">
+                    <select id="searchEngine">
+                        <option value="baidu">百度</option>
+                        <option value="google">谷歌</option>
+                        <option value="bing">必应</option>
+                    </select>
+                    <span class="select-arrow">▾</span>
+                </div>
+                <input type="text" id="searchInput" placeholder="搜索社区讨论..." autocomplete="off">
+                <button class="search-btn" onclick="handleSearch()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="菜单">
+                <span></span><span></span><span></span>
+            </button>
         </div>
-        <div class="date-info">2026-02-04 星期三</div>
     </nav>
 
-    <div class="container">
-        <aside class="sidebar">
-            <div class="nav-group">核心导航</div>
-            <a href="index.html" class="nav-item"><i>🔥</i> 常用推荐</a>
-            <a href="index.html#ai-tools" class="nav-item"><i>🤖</i> AI 工具集</a>
-            <div class="nav-group">社区互动</div>
-            <a href="forum.html" class="nav-item active"><i>💬</i> 综合讨论</a>
-            <a href="#" class="nav-item"><i>📢</i> 站务公告</a>
+    <!-- ===== 主体容器 ===== -->
+    <div class="layout-wrapper">
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- ===== 侧边导航栏 ===== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span>导航分区</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="index.html#recommend" class="nav-item" data-section="recommend">
+                    <i class="nav-icon">🔥</i>
+                    <span>常用推荐</span>
+                </a>
+                <a href="index.html#ai" class="nav-item" data-section="ai">
+                    <i class="nav-icon">🤖</i>
+                    <span>AI工具箱</span>
+                </a>
+                <a href="index.html#dev" class="nav-item" data-section="dev">
+                    <i class="nav-icon">🛠️</i>
+                    <span>开发工坊</span>
+                </a>
+                <a href="tools.html" class="nav-item" data-section="tools">
+                    <i class="nav-icon">🧰</i>
+                    <span>实用工具</span>
+                </a>
+                <a href="forum.html" class="nav-item active" data-section="forum">
+                    <i class="nav-icon">💬</i>
+                    <span>悠野社区</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <span>© 2024 悠野工作室</span>
+            </div>
         </aside>
 
-        <main class="main">
-            <div class="forum-header">
-                <div class="section-header"><h2>综合讨论区</h2></div>
-                <a href="#" class="post-btn">+ 发布新帖</a>
+        <!-- ===== 主内容区 ===== -->
+        <main class="main-content" id="mainContent">
+
+            <!-- 欢迎横幅 -->
+            <div class="welcome-banner">
+                <div class="banner-text">
+                    <h1>💬 悠野社区</h1>
+                    <p>分享想法 · 互帮互助 · 共同成长</p>
+                </div>
             </div>
 
-            <div class="post-list">
+            <!-- 论坛顶栏 -->
+            <div class="forum-toolbar">
+                <div class="section-header" style="margin-bottom:0">
+                    <span class="section-icon">📋</span>
+                    <h2>综合讨论区</h2>
+                </div>
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <span class="date-info" id="dateInfo"></span>
+                    <button class="post-btn" onclick="alert('发帖功能即将开放！')">
+                        ＋ 发布新帖
+                    </button>
+                </div>
+            </div>
+
+            <!-- 帖子列表 -->
+            <div class="post-list" id="postList">
+
                 <a href="#" class="post-item">
                     <div class="post-stats">
                         <span class="stat-count">128</span>
@@ -108,12 +292,13 @@
                     <div class="post-content">
                         <h3>关于 2026 年前端开发趋势的深度讨论</h3>
                         <div class="post-meta">
-                            <span class="post-tag">技术</span>
+                            <span class="post-tag tag-tech">技术</span>
+                            <span class="post-tag tag-hot">🔥 热门</span>
                             <span>发布者: 悠野小助手</span>
                             <span>3 小时前</span>
-                            <span>🔥 热门</span>
                         </div>
                     </div>
+                    <span class="post-arrow">›</span>
                 </a>
 
                 <a href="#" class="post-item">
@@ -124,11 +309,12 @@
                     <div class="post-content">
                         <h3>【置顶】本站 Zeabur 部署指南及常见 404 解决办法</h3>
                         <div class="post-meta">
-                            <span class="post-tag" style="color: #e67e22; background: #fdf6ec;">公告</span>
+                            <span class="post-tag tag-notice">📌 公告</span>
                             <span>发布者: 管理员</span>
                             <span>昨天</span>
                         </div>
                     </div>
+                    <span class="post-arrow">›</span>
                 </a>
 
                 <a href="#" class="post-item">
@@ -139,17 +325,63 @@
                     <div class="post-content">
                         <h3>有没有好用的 AI 绘画提示词（Prompt）分享网站？</h3>
                         <div class="post-meta">
-                            <span class="post-tag" style="color: #27ae60; background: #eafaf1;">求助</span>
+                            <span class="post-tag tag-help">求助</span>
                             <span>发布者: 萌新一枚</span>
                             <span>5 小时前</span>
                         </div>
                     </div>
+                    <span class="post-arrow">›</span>
                 </a>
 
+                <!-- 空状态占位（有帖子时可用JS隐藏） -->
+                <!--
+                <div class="empty-state">
+                    <div class="empty-icon">🌿</div>
+                    <p>还没有帖子，来发第一帖吧！</p>
                 </div>
+                -->
+
+            </div>
+
         </main>
     </div>
 
+    <!-- ===== 移动端底部导航栏 ===== -->
+    <nav class="bottom-nav" id="bottomNav">
+        <a href="index.html#recommend" class="bottom-nav-item" data-section="recommend">
+            <span class="bottom-icon">🔥</span>
+            <span class="bottom-label">推荐</span>
+        </a>
+        <a href="index.html#ai" class="bottom-nav-item" data-section="ai">
+            <span class="bottom-icon">🤖</span>
+            <span class="bottom-label">AI工具</span>
+        </a>
+        <a href="index.html#dev" class="bottom-nav-item" data-section="dev">
+            <span class="bottom-icon">🛠️</span>
+            <span class="bottom-label">开发</span>
+        </a>
+        <a href="tools.html" class="bottom-nav-item" data-section="tools">
+            <span class="bottom-icon">🧰</span>
+            <span class="bottom-label">工具</span>
+        </a>
+        <a href="forum.html" class="bottom-nav-item active" data-section="forum">
+            <span class="bottom-icon">💬</span>
+            <span class="bottom-label">社区</span>
+        </a>
+    </nav>
+
     <script src="script.js"></script>
+    <script>
+        // 自动显示当前日期
+        (function() {
+            const days = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            const el = document.getElementById('dateInfo');
+            if (el) el.textContent = `${y}-${m}-${d} ${days[now.getDay()]}`;
+        })();
+    </script>
 </body>
 </html>
