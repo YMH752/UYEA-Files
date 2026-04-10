@@ -2,48 +2,220 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>UYEA | 悠野导航</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="top-nav">
-        <div class="logo">UYEA</div>
-        <div class="search-wrapper">
-            <select id="searchEngine">
-                <option value="baidu">百度</option>
-                <option value="google">谷歌</option>
-            </select>
-            <input type="text" id="searchInput" placeholder="搜索关键词...">
-            <button onclick="handleSearch()">搜索</button>
+
+    <!-- ===== 顶部导航栏 ===== -->
+    <nav class="top-nav" id="topNav">
+        <div class="nav-inner">
+            <div class="logo">
+                <span class="logo-text">UYEA</span>
+                <span class="logo-sub">悠野工作室</span>
+            </div>
+            <div class="search-wrapper">
+                <div class="search-engine-select">
+                    <select id="searchEngine">
+                        <option value="baidu">百度</option>
+                        <option value="google">谷歌</option>
+                        <option value="bing">必应</option>
+                    </select>
+                    <span class="select-arrow">▾</span>
+                </div>
+                <input type="text" id="searchInput" placeholder="搜索关键词..." autocomplete="off">
+                <button class="search-btn" onclick="handleSearch()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </button>
+            </div>
+            <!-- 汉堡菜单（平板及以下显示） -->
+            <button class="hamburger" id="hamburgerBtn" aria-label="菜单">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
-    <div class="container">
-        <aside class="sidebar">
-            <a href="#recommend" class="nav-item active"><i>🔥</i><span>常用推荐</span></a>
-            <a href="#ai" class="nav-item"><i>🤖</i><span>AI工具</span></a>
-            <a href="#dev" class="nav-item"><i>🔧</i><span>开发者</span></a>
-            <a href="forum.html" class="nav-item"><i>💬</i><span>社区</span></a>
+    <!-- ===== 主体容器 ===== -->
+    <div class="layout-wrapper">
+
+        <!-- 侧边栏遮罩（移动端） -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- ===== 侧边导航栏 ===== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span>导航分区</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#recommend" class="nav-item active" data-section="recommend">
+                    <i class="nav-icon">🔥</i>
+                    <span>常用推荐</span>
+                </a>
+                <a href="#ai" class="nav-item" data-section="ai">
+                    <i class="nav-icon">🤖</i>
+                    <span>AI工具箱</span>
+                </a>
+                <a href="#dev" class="nav-item" data-section="dev">
+                    <i class="nav-icon">🛠️</i>
+                    <span>开发工坊</span>
+                </a>
+                <a href="tools.html" class="nav-item" data-section="tools">
+                    <i class="nav-icon">🧰</i>
+                    <span>实用工具</span>
+                </a>
+                <a href="forum.html" class="nav-item" data-section="forum">
+                    <i class="nav-icon">💬</i>
+                    <span>悠野社区</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <span>© 2024 悠野工作室</span>
+            </div>
         </aside>
 
-        <main class="main">
-            <section id="recommend">
-                <div class="section-header"><h2>常用推荐</h2></div>
-                <div class="grid">
-                    <a href="https://github.com" class="card"><span class="icon">🚀</span><span>GitHub</span><p>代码托管</p></a>
-                    <a href="https://bilibili.com" class="card"><span class="icon">📺</span><span>Bilibili</span><p>视频社区</p></a>
+        <!-- ===== 主内容区 ===== -->
+        <main class="main-content" id="mainContent">
+
+            <!-- 欢迎横幅 -->
+            <div class="welcome-banner">
+                <div class="banner-text">
+                    <h1>欢迎来到 <strong>悠野工作室</strong></h1>
+                    <p>你的一站式工具导航 · 开发 · 社区平台</p>
+                </div>
+            </div>
+
+            <!-- 常用推荐 -->
+            <section id="recommend" class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🔥</span>
+                    <h2>常用推荐</h2>
+                </div>
+                <div class="card-grid">
+                    <a href="https://github.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon">🚀</div>
+                        <div class="card-info">
+                            <span class="card-name">GitHub</span>
+                            <p class="card-desc">代码托管</p>
+                        </div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://bilibili.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon">📺</div>
+                        <div class="card-info">
+                            <span class="card-name">Bilibili</span>
+                            <p class="card-desc">视频社区</p>
+                        </div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <!-- 更多卡片占位 -->
+                    <div class="card card-placeholder">
+                        <div class="card-icon">＋</div>
+                        <div class="card-info">
+                            <span class="card-name">即将添加</span>
+                            <p class="card-desc">敬请期待</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <section id="ai">
-                <div class="section-header"><h2>AI工具</h2></div>
-                <div class="grid">
-                    <a href="https://chat.openai.com" class="card"><span class="icon">🤖</span><span>ChatGPT</span><p>智能对话</p></a>
+            <!-- AI工具箱 -->
+            <section id="ai" class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🤖</span>
+                    <h2>AI工具箱</h2>
+                </div>
+                <div class="card-grid">
+                    <a href="https://chat.openai.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon">🧠</div>
+                        <div class="card-info">
+                            <span class="card-name">ChatGPT</span>
+                            <p class="card-desc">智能对话</p>
+                        </div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://claude.ai" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon">✨</div>
+                        <div class="card-info">
+                            <span class="card-name">Claude</span>
+                            <p class="card-desc">AI助手</p>
+                        </div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <div class="card card-placeholder">
+                        <div class="card-icon">＋</div>
+                        <div class="card-info">
+                            <span class="card-name">即将添加</span>
+                            <p class="card-desc">敬请期待</p>
+                        </div>
+                    </div>
                 </div>
             </section>
+
+            <!-- 开发工坊 -->
+            <section id="dev" class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🛠️</span>
+                    <h2>开发工坊</h2>
+                </div>
+                <div class="card-grid">
+                    <a href="https://developer.mozilla.org" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon">📖</div>
+                        <div class="card-info">
+                            <span class="card-name">MDN</span>
+                            <p class="card-desc">Web开发文档</p>
+                        </div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://stackoverflow.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon">💡</div>
+                        <div class="card-info">
+                            <span class="card-name">Stack Overflow</span>
+                            <p class="card-desc">技术问答社区</p>
+                        </div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <div class="card card-placeholder">
+                        <div class="card-icon">＋</div>
+                        <div class="card-info">
+                            <span class="card-name">即将添加</span>
+                            <p class="card-desc">敬请期待</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
+
+    <!-- ===== 移动端底部导航栏 ===== -->
+    <nav class="bottom-nav" id="bottomNav">
+        <a href="#recommend" class="bottom-nav-item active" data-section="recommend">
+            <span class="bottom-icon">🔥</span>
+            <span class="bottom-label">推荐</span>
+        </a>
+        <a href="#ai" class="bottom-nav-item" data-section="ai">
+            <span class="bottom-icon">🤖</span>
+            <span class="bottom-label">AI工具</span>
+        </a>
+        <a href="#dev" class="bottom-nav-item" data-section="dev">
+            <span class="bottom-icon">🛠️</span>
+            <span class="bottom-label">开发</span>
+        </a>
+        <a href="tools.html" class="bottom-nav-item" data-section="tools">
+            <span class="bottom-icon">🧰</span>
+            <span class="bottom-label">工具</span>
+        </a>
+        <a href="forum.html" class="bottom-nav-item" data-section="forum">
+            <span class="bottom-icon">💬</span>
+            <span class="bottom-label">社区</span>
+        </a>
+    </nav>
+
     <script src="script.js"></script>
 </body>
 </html>
