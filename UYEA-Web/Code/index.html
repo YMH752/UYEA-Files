@@ -2,65 +2,48 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>悠野 U-Wild | 极速导航</title>
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UYEA | 悠野导航</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav class="top-nav">
-    <div class="logo">悠野 U-Wild</div>
-    <div class="search-wrapper">
-        <select id="searchEngine" style="border:none; background:none; outline:none; padding:0 10px; cursor:pointer;">
-            <option value="baidu">百度</option>
-            <option value="google">谷歌</option>
-            <option value="bing">必应</option>
-        </select>
-        <input type="text" id="searchInput" placeholder="搜索资源、网址或社区内容...">
-        <button onclick="handleSearch()">搜索</button>
-    </div>
-    <div class="date-info">2026-02-04 星期三</div>
-</nav>
+    <nav class="top-nav">
+        <div class="logo">UYEA</div>
+        <div class="search-wrapper">
+            <select id="searchEngine">
+                <option value="baidu">百度</option>
+                <option value="google">谷歌</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="搜索关键词...">
+            <button onclick="handleSearch()">搜索</button>
+        </div>
+    </nav>
 
-<div class="container">
-    <aside class="sidebar">
-        <div class="nav-group">核心导航</div>
-        <a href="#recommend" class="nav-item active"><i>🔥</i> 常用推荐</a>
-        <a href="#ai-tools" class="nav-item"><i>🤖</i> AI 工具集</a>
-        <a href="#dev-tools" class="nav-item"><i>🔧</i> 开发者工具</a>
-        
-        <div class="nav-group">社区互动</div>
-        <a href="forum.html" class="nav-item"><i>💬</i> 综合讨论</a>
-    </aside>
+    <div class="container">
+        <aside class="sidebar">
+            <a href="#recommend" class="nav-item active"><i>🔥</i><span>常用推荐</span></a>
+            <a href="#ai" class="nav-item"><i>🤖</i><span>AI工具</span></a>
+            <a href="#dev" class="nav-item"><i>🔧</i><span>开发者</span></a>
+            <a href="forum.html" class="nav-item"><i>💬</i><span>社区</span></a>
+        </aside>
 
-    <main class="main" id="scrollContainer">
-        <section id="recommend">
-            <div class="section-header"><h2>常用推荐</h2></div>
-            <div class="grid">
-                <a href="https://www.github.com" target="_blank" class="card">
-                    <span class="icon">🚀</span><span>GitHub</span><p>全球最大的代码托管平台</p>
-                </a>
-                <a href="https://www.bilibili.com" target="_blank" class="card">
-                    <span class="icon">📺</span><span>Bilibili</span><p>国产良心视频学习站</p>
-                </a>
-                <a href="https://www.chatgpt.com" target="_blank" class="card">
-                    <span class="icon">💬</span><span>ChatGPT</span><p>最强 AI 辅助办公</p>
-                </a>
+        <main class="main">
+            <section id="recommend">
+                <div class="section-header"><h2>常用推荐</h2></div>
+                <div class="grid">
+                    <a href="https://github.com" class="card"><span class="icon">🚀</span><span>GitHub</span><p>代码托管</p></a>
+                    <a href="https://bilibili.com" class="card"><span class="icon">📺</span><span>Bilibili</span><p>视频社区</p></a>
                 </div>
-        </section>
+            </section>
 
-        <section id="ai-tools" style="margin-top: 50px;">
-            <div class="section-header"><h2>AI 工具集</h2></div>
-            <div class="grid">
-                <div class="card"><span class="icon">🎨</span><span>Midjourney</span><p>AI 绘画天花板</p></div>
-                <div class="card"><span class="icon">✍️</span><span>Jasper</span><p>AI 文案写作专家</p></div>
-                <div class="card"><span class="icon">🎬</span><span>Runway</span><p>AI 视频生成神器</p></div>
-            </div>
-        </section>
-    </main>
-</div>
+            <section id="ai">
+                <div class="section-header"><h2>AI工具</h2></div>
+                <div class="grid">
+                    <a href="https://chat.openai.com" class="card"><span class="icon">🤖</span><span>ChatGPT</span><p>智能对话</p></a>
+                </div>
+            </section>
+        </main>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
