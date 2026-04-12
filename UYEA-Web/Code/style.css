@@ -133,9 +133,7 @@ button { cursor: pointer; font-family: inherit; }
     height: 40px;
     transition: border-color var(--duration) var(--ease-smooth),
                 box-shadow var(--duration) var(--ease-smooth);
-    /* 修复：移除 overflow:hidden，否则下拉菜单会被切掉 */
-    overflow: visible; 
-    position: relative;
+    overflow: hidden;
 }
 
 .search-wrapper:focus-within {
@@ -152,9 +150,26 @@ button { cursor: pointer; font-family: inherit; }
     flex-shrink: 0;
 }
 
-/* 隐藏原生select */
 .search-engine-select select {
-    display: none;
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 0 24px 0 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: inherit;
+    cursor: pointer;
+    height: 38px;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    pointer-events: none;
 }
 
 #searchInput {
@@ -179,9 +194,7 @@ button { cursor: pointer; font-family: inherit; }
     height: 100%;
     background: var(--primary);
     border: none;
-    /* 修复：给搜索按钮右侧圆角，匹配整体框体 */
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-radius: 0;
     color: #fff;
     transition: background var(--duration);
     flex-shrink: 0;
@@ -660,7 +673,6 @@ button { cursor: pointer; font-family: inherit; }
 @media (max-width: 479px) {
     :root { --header-h: 54px; }
 
-    /* 修复：手机端隐藏自定义引擎选择，防止遮挡输入框 */
     .search-engine-select { display: none; }
 
     .card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -687,4 +699,27 @@ button { cursor: pointer; font-family: inherit; }
     .welcome-banner { padding: 36px 40px; }
     .banner-text h1 { font-size: 26px; }
     .banner-text p { font-size: 15px; }
+}
+
+/* ── 折叠屏专项（展开态约 768px 正方形） ── */
+@media (min-width: 600px) and (max-width: 900px) and (min-aspect-ratio: 1/1) {
+    .card-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ────────────────────────────────────────────
+   11. Favicon 图标图片样式
+   ──────────────────────────────────────────── */
+.card-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 6px;
+    display: block;
+}
+
+/* 兜底emoji：图片加载失败时显示 */
+.icon-fallback {
+    display: none;
+    font-size: 28px;
+    line-height: 1;
 }
