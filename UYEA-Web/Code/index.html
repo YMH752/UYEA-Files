@@ -6,7 +6,6 @@
     <title>UYEA | 悠野导航</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <!-- Noto Sans SC 正文 + Bebas Neue UYEA标题 -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* ── UYEA Logo：Bebas Neue，加粗，不斜体 ── */
@@ -55,6 +54,8 @@
             position: relative;
             border-right: 1px solid var(--border);
             flex-shrink: 0;
+            /* 修复：确保容器有层级上下文 */
+            z-index: 10;
         }
         /* 隐藏原生select，用自定义按钮替代 */
         .search-engine-select select { display: none; }
@@ -87,13 +88,16 @@
             background: var(--surface);
             border: 1.5px solid var(--border);
             border-radius: 10px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15); /* 加深阴影便于识别 */
             min-width: 100px;
-            z-index: 999;
+            /* 修复：提高下拉列表层级，确保在导航栏之上 */
+            z-index: 1000;
             overflow: hidden;
             animation: dropIn 0.18s ease both;
         }
-        .engine-dropdown.open { display: block; }
+        .engine-dropdown.open { 
+            display: block !important; /* 修复：强制显示 */
+        }
         @keyframes dropIn {
             from { opacity: 0; transform: translateY(-6px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -128,9 +132,7 @@
                 <span class="logo-sub">悠野工作室</span>
             </div>
             <div class="search-wrapper">
-                <!-- 自定义下拉搜索引擎选择器 -->
                 <div class="search-engine-select" id="engineSelect">
-                    <!-- 原生select保留供JS读取 -->
                     <select id="searchEngine">
                         <option value="baidu">百度</option>
                         <option value="google">谷歌</option>
@@ -199,7 +201,6 @@
                 </div>
             </div>
 
-            <!-- 每日推荐 -->
             <section id="recommend" class="content-section">
                 <div class="section-header">
                     <span class="section-icon">🔥</span><h2>每日推荐</h2>
@@ -222,7 +223,6 @@
                 </div>
             </section>
 
-            <!-- Ai · 智能体 -->
             <section id="ai" class="content-section">
                 <div class="section-header">
                     <span class="section-icon">🤖</span><h2>Ai · 智能体</h2>
@@ -291,7 +291,6 @@
                 </div>
             </section>
 
-            <!-- 生活 -->
             <section id="life" class="content-section">
                 <div class="section-header">
                     <span class="section-icon">🌿</span><h2>生活</h2>
@@ -334,7 +333,6 @@
                 </div>
             </section>
 
-            <!-- 工具 -->
             <section id="tools" class="content-section">
                 <div class="section-header">
                     <span class="section-icon">🛠️</span><h2>工具</h2>
@@ -365,7 +363,6 @@
         </main>
     </div>
 
-    <!-- 底部导航栏：3个 -->
     <nav class="bottom-nav" id="bottomNav">
         <a href="index.html" class="bottom-nav-item active" data-section="recommend">
             <span class="bottom-icon">🏠</span>
@@ -383,7 +380,7 @@
 
     <script src="script.js"></script>
     <script>
-    /* ── 自定义搜索引擎下拉菜单逻辑 ── */
+    /* ── 自定义搜索引擎下拉菜单逻辑 (行内保留作为快速响应) ── */
     (function() {
         const btn      = document.getElementById('engineBtn');
         const dropdown = document.getElementById('engineDropdown');
@@ -391,36 +388,30 @@
         const select   = document.getElementById('searchEngine');
         const options  = dropdown.querySelectorAll('.engine-option');
 
-        // 点击按钮开关下拉
+        // 修复：使用更严谨的显示控制
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
-            const isOpen = dropdown.classList.toggle('open');
-            btn.classList.toggle('open', isOpen);
+            const isNowOpen = dropdown.classList.toggle('open');
+            btn.classList.toggle('open', isNowOpen);
         });
 
-        // 点击选项
         options.forEach(opt => {
             opt.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const val = this.dataset.value;
-                // 更新原生select
                 select.value = val;
-                // 更新按钮文字
                 label.textContent = this.textContent.trim();
-                // 更新选中样式
                 options.forEach(o => {
                     o.classList.remove('selected');
                     o.querySelector('.engine-dot').style.background = 'transparent';
                 });
                 this.classList.add('selected');
                 this.querySelector('.engine-dot').style.background = 'var(--primary)';
-                // 关闭下拉
                 dropdown.classList.remove('open');
                 btn.classList.remove('open');
             });
         });
 
-        // 点击外部关闭
         document.addEventListener('click', function() {
             dropdown.classList.remove('open');
             btn.classList.remove('open');
