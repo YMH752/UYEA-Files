@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => searchInput.closest('.search-wrapper').classList.remove('shake'), 500);
             return;
         }
-        // 修复：确保获取的是隐藏 select 的最新值
         const engine = searchEngine.value;
         const url = (engineUrls[engine] || engineUrls.baidu)(query);
         window.open(url, '_blank', 'noopener,noreferrer');
