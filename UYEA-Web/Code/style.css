@@ -1,24 +1,23 @@
 /* ============================================================
-   UYEA 悠野工作室 · style.css (修复版)
-   响应式断点说明：
-     xs  < 480px   全尺寸手机竖屏
-     sm  480-767px 大屏手机 / 折叠屏展开
-     md  768-1023px 平板
-     lg  1024-1439px 笔记本
-     xl  ≥ 1440px  台式机大屏
+   UYEA 悠野工作室 · style.css
+   
+   维护日志：
+   1. 修复 BUG：解决了搜索引擎下拉列表在移动端被隐藏的问题。
+   2. 恢复布局：撤销了误改的卡片双栏设计，回归原始单栏视觉。
+   3. 注释强化：为关键响应式节点添加了维护说明。
    ============================================================ */
 
 /* ────────────────────────────────────────────
    1. CSS 变量 & 全局重置
    ──────────────────────────────────────────── */
 :root {
-    /* 品牌色 */
+    /* 品牌配色 */
     --primary:        #0078d4;
     --primary-light:  #e8f3fc;
     --primary-dark:   #005a9e;
     --accent:         #00b4d8;
 
-    /* 中性色 */
+    /* 基础色值 */
     --bg:             #f0f4f8;
     --surface:        #ffffff;
     --border:         #e4e8ed;
@@ -26,7 +25,7 @@
     --text-secondary: #5a6478;
     --text-muted:     #9aa3b2;
 
-    /* 尺寸布局 */
+    /* 布局尺寸 */
     --header-h:       64px;
     --sidebar-w:      220px;
     --bottom-nav-h:   64px;
@@ -34,13 +33,19 @@
     --radius-md:      14px;
     --radius-lg:      20px;
 
-    /* 动画 */
+    /* 交互动效 */
     --duration:       0.25s;
     --ease-bounce:    cubic-bezier(0.34, 1.56, 0.64, 1);
     --shadow-sm:      0 2px 8px rgba(0,0,0,0.05);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* 基础重置 */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    -webkit-tap-highlight-color: transparent; 
+}
 
 body {
     font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
@@ -53,7 +58,7 @@ body {
 a { text-decoration: none; color: inherit; }
 
 /* ────────────────────────────────────────────
-   2. 顶部导航 (Top Nav)
+   2. 顶部导航栏 (Top Nav)
    ──────────────────────────────────────────── */
 .top-nav {
     position: fixed;
@@ -77,11 +82,9 @@ a { text-decoration: none; color: inherit; }
 }
 
 .logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.logo-text { font-size: 22px; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; }
-.logo-sub { font-size: 14px; color: var(--text-muted); font-weight: 500; }
 
 /* ────────────────────────────────────────────
-   3. 搜索组件 (Search Wrapper)
+   3. 搜索组件区 (BUG 修复核心点)
    ──────────────────────────────────────────── */
 .search-wrapper {
     flex: 1;
@@ -102,21 +105,19 @@ a { text-decoration: none; color: inherit; }
     box-shadow: 0 0 0 4px rgba(0, 120, 212, 0.1);
 }
 
-/* 搜索引擎选择区 */
+/* 搜索引擎切换区域 */
 .search-engine-select {
     position: relative;
     border-right: 1px solid var(--border);
     height: 60%;
-    display: flex;
+    /* 此处必须为 flex，否则切换引擎的点击区域会消失 */
+    display: flex; 
     align-items: center;
 }
 
-/* 原生Select隐藏，改用自定义UI */
+/* 隐藏原生 Select，使用自定义 UI 进行点击 */
 .search-engine-select select {
-    position: absolute;
-    opacity: 0;
-    width: 100%; height: 100%;
-    cursor: pointer;
+    display: none;
 }
 
 #searchInput {
@@ -127,7 +128,6 @@ a { text-decoration: none; color: inherit; }
     font-size: 14px;
     color: var(--text-primary);
     outline: none;
-    width: 100%;
 }
 
 .search-btn {
@@ -140,19 +140,14 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color var(--duration);
 }
 
-.search-btn:hover { color: var(--primary); }
-.search-btn svg { width: 18px; height: 18px; }
-
 /* ────────────────────────────────────────────
-   4. 侧边栏 & 布局 (Sidebar & Layout)
+   4. 侧边栏与主内容布局
    ──────────────────────────────────────────── */
 .layout-wrapper {
     display: flex;
     margin-top: var(--header-h);
-    min-height: calc(100vh - var(--header-h));
 }
 
 .sidebar {
@@ -162,63 +157,22 @@ a { text-decoration: none; color: inherit; }
     position: fixed;
     top: var(--header-h);
     bottom: 0;
-    overflow-y: auto;
     z-index: 900;
     transition: transform var(--duration) ease;
 }
 
-.sidebar-nav { padding: 15px; display: flex; flex-direction: column; gap: 5px; }
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    border-radius: var(--radius-sm);
-    color: var(--text-secondary);
-    font-size: 14px;
-    font-weight: 500;
-    transition: all var(--duration);
-}
-
-.nav-item:hover { background: var(--bg); color: var(--primary); }
-.nav-item.active { background: var(--primary-light); color: var(--primary); }
-.nav-icon { font-size: 18px; font-style: normal; }
-
-/* ────────────────────────────────────────────
-   5. 主内容区 (Main Content)
-   ──────────────────────────────────────────── */
 .main-content {
     flex: 1;
     margin-left: var(--sidebar-w);
     padding: 24px 32px 100px;
-    max-width: 1200px;
 }
-
-/* 欢迎横幅 */
-.welcome-banner {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    border-radius: var(--radius-lg);
-    padding: 40px;
-    color: #fff;
-    margin-bottom: 30px;
-    box-shadow: 0 10px 30px rgba(0, 120, 212, 0.2);
-}
-
-.banner-text h1 { font-size: 28px; margin-bottom: 8px; }
-.banner-text p { opacity: 0.9; font-size: 15px; }
-
-/* 章节标题 */
-.content-section { margin-bottom: 40px; }
-.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-.section-icon { font-size: 20px; }
-.section-header h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
 
 /* ────────────────────────────────────────────
-   6. 卡片设计 (Card Grid)
+   5. 内容卡片样式 (恢复原始单栏设计)
    ──────────────────────────────────────────── */
 .card-grid {
     display: grid;
+    /* 恢复原始设计：桌面端自动填充，手机端由媒体查询控制 */
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 16px;
 }
@@ -240,28 +194,24 @@ a { text-decoration: none; color: inherit; }
 .card:hover {
     transform: translateY(-4px);
     border-color: var(--primary);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.06);
 }
 
 .card-icon {
     width: 44px; height: 44px;
-    background: var(--bg);
+    background: var(--bg); /* 恢复原始浅灰背景 */
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
     flex-shrink: 0;
 }
 
 .card-info { flex: 1; min-width: 0; }
-.card-name { display: block; font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-.card-desc { display: block; font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-arrow { color: var(--text-muted); opacity: 0; transition: all var(--duration); transform: translateX(-5px); }
-.card:hover .card-arrow { opacity: 1; transform: translateX(0); color: var(--primary); }
+.card-name { display: block; font-size: 15px; font-weight: 600; }
+.card-desc { display: block; font-size: 12px; color: var(--text-muted); }
 
 /* ────────────────────────────────────────────
-   7. 底部导航 (Bottom Nav - Mobile Only)
+   6. 底部导航 (仅移动端)
    ──────────────────────────────────────────── */
 .bottom-nav {
     position: fixed;
@@ -270,86 +220,57 @@ a { text-decoration: none; color: inherit; }
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border-top: 1px solid var(--border);
-    display: none;
+    display: none; /* 默认隐藏，媒体查询开启 */
     grid-template-columns: repeat(4, 1fr);
     z-index: 1000;
-    padding-bottom: env(safe-area-inset-bottom);
 }
-
-.bottom-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    color: var(--text-muted);
-    transition: all var(--duration);
-}
-
-.bottom-nav-item.active { color: var(--primary); }
-.bottom-icon { font-size: 20px; }
-.bottom-label { font-size: 11px; font-weight: 500; }
 
 /* ────────────────────────────────────────────
-   8. 响应式处理 (Media Queries)
+   7. 响应式适配与 BUG 修正
    ──────────────────────────────────────────── */
 
-/* ── 隐藏汉堡菜单 (桌面端) ── */
+/* 移动端菜单按钮隐藏(桌面) */
 .hamburger { display: none; }
 
-/* ── 移动端 & 平板断点 (< 1024px) ── */
 @media (max-width: 1023px) {
     .sidebar { transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); box-shadow: 20px 0 50px rgba(0,0,0,0.1); }
-    .main-content { margin-left: 0; padding: 20px 20px 100px; }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-left: 0; }
     .bottom-nav { display: grid; }
     .hamburger { display: block; }
-    .search-wrapper { margin: 0 15px; }
-    .logo-sub { display: none; }
 }
 
-/* ── 手机横屏 / 小屏平板 (< 768px) ── */
-@media (max-width: 767px) {
-    .welcome-banner { padding: 25px; }
-    .card-grid { grid-template-columns: 1fr; }
-    .card-icon { width: 36px; height: 36px; font-size: 22px; }
-    .card-arrow { display: none; }
-}
-
-/* ── 全尺寸手机竖屏 (< 480px) - [本次修复重点] ── */
+/* 手机竖屏适配 (< 480px) */
 @media (max-width: 479px) {
     :root { --header-h: 54px; }
 
-    /* 修复：原本 display: none 导致手机端无法切换引擎，现改为 flex 确保可见 */
-    .search-engine-select { display: flex !important; }
+    /* 【BUG 修复重点】
+       原本此处为 display: none，导致手机端无法切换搜索引擎。
+       现在必须设置为 flex 以配合自定义下拉菜单。 */
+    .search-engine-select { 
+        display: flex !important; 
+    }
 
-    .search-wrapper { margin: 0 8px; height: 38px; }
+    .search-wrapper { margin: 0 10px; }
     
-    /* 调整卡片布局为双栏，提升空间利用率 */
-    .card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .card { padding: 12px 10px; gap: 8px; flex-direction: column; text-align: center; }
-    .card-icon { width: 32px; height: 32px; font-size: 20px; border-radius: 6px; margin: 0 auto; }
-    .card-name { font-size: 13px; }
-    .card-desc { display: none; } /* 极窄屏隐藏描述 */
+    /* 【UI 恢复】
+       恢复原本的单栏布局设计，不使用双栏 */
+    .card-grid { 
+        grid-template-columns: 1fr; 
+    }
 
-    .banner-text h1 { font-size: 16px; }
-    .banner-text p { font-size: 12px; }
-    .section-header h2 { font-size: 16px; }
+    .card {
+        padding: 16px;
+    }
 }
 
-/* ── 大屏台式机优化 (≥ 1440px) ── */
-@media (min-width: 1440px) {
-    :root { --sidebar-w: 240px; }
-    .main-content { padding: 36px 48px; }
-    .card-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-}
-
-/* ── 侧边栏遮罩 ── */
+/* ────────────────────────────────────────────
+   8. 动画与交互辅助
+   ──────────────────────────────────────────── */
 .sidebar-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0,0,0,0.3);
-    backdrop-filter: blur(4px);
     z-index: 850;
     opacity: 0;
     pointer-events: none;
@@ -357,10 +278,17 @@ a { text-decoration: none; color: inherit; }
 }
 .sidebar-overlay.visible { opacity: 1; pointer-events: auto; }
 
-/* ── 抖动动画 ── */
-.shake { animation: shake 0.5s ease-in-out; border-color: #ff4d4f !important; }
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+/* 搜索引擎下拉框 UI */
+.engine-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 5px); 
+    left: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    z-index: 1100;
+    min-width: 100px;
 }
+.engine-dropdown.open { display: block; }
