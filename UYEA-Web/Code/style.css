@@ -1,10 +1,11 @@
 /* ============================================================
-   UYEA 悠野工作室 · style.css (完全还原版)
-   
-   修复日志：
-   1. 仅针对 520 行左右的 .search-engine-select 进行了修复，
-      将原本的 display: none 改为 display: flex，确保下拉列表可见。
-   2. 撤销了所有未经授权的 UI 改动，完全保留你原始的间距、字体和比例。
+   UYEA 悠野工作室 · style.css
+   响应式断点：
+     xs  < 480px   全尺寸手机竖屏
+     sm  480-767px 大屏手机 / 折叠屏展开
+     md  768-1023px 平板
+     lg  1024-1439px 笔记本
+     xl  ≥ 1440px  台式机大屏
    ============================================================ */
 
 /* ────────────────────────────────────────────
@@ -39,12 +40,7 @@
     --shadow-sm:      0 2px 8px rgba(0,0,0,0.05);
 }
 
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-    -webkit-tap-highlight-color: transparent; 
-}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
     font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
@@ -84,9 +80,7 @@ a { text-decoration: none; color: inherit; }
 .logo-text { font-size: 22px; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; }
 .logo-sub { font-size: 14px; color: var(--text-muted); font-weight: 500; }
 
-/* ────────────────────────────────────────────
-   3. 搜索框
-   ──────────────────────────────────────────── */
+/* 搜索框容器 */
 .search-wrapper {
     flex: 1;
     max-width: 520px;
@@ -117,8 +111,7 @@ a { text-decoration: none; color: inherit; }
 .search-engine-select select {
     position: absolute;
     opacity: 0;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     cursor: pointer;
 }
 
@@ -150,7 +143,7 @@ a { text-decoration: none; color: inherit; }
 .search-btn svg { width: 18px; height: 18px; }
 
 /* ────────────────────────────────────────────
-   4. 侧边栏与布局
+   3. 侧边栏与主内容布局
    ──────────────────────────────────────────── */
 .layout-wrapper {
     display: flex;
@@ -178,48 +171,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ────────────────────────────────────────────
-   5. 响应式处理 (BUG 修复就在这里)
-   ──────────────────────────────────────────── */
-.hamburger { display: none; }
-
-@media (max-width: 1023px) {
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); box-shadow: 20px 0 50px rgba(0,0,0,0.1); }
-    .main-content { margin-left: 0; padding: 20px 20px 100px; }
-    .bottom-nav { display: grid; }
-    .hamburger { display: block; }
-    .search-wrapper { margin: 0 15px; }
-    .logo-sub { display: none; }
-}
-
-@media (max-width: 767px) {
-    .card-grid { grid-template-columns: 1fr; }
-    .card-arrow { display: none; }
-}
-
-/* ── 全尺寸手机竖屏 (< 480px) ── */
-@media (max-width: 479px) {
-    :root { --header-h: 54px; }
-
-    /* 【唯一修改位置】：原本是 display: none，现在改为 display: flex 确保下拉列表可点击 */
-    .search-engine-select { display: flex; }
-
-    /* 还原你原本的双栏布局 */
-    .card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-
-    .card { padding: 12px 10px; gap: 8px; }
-    .card-icon { width: 32px; height: 32px; font-size: 20px; border-radius: 6px; }
-    .card-name { font-size: 13px; }
-    .card-desc { font-size: 10px; }
-
-    .banner-text h1 { font-size: 16px; }
-    .banner-text p { font-size: 12px; }
-
-    .section-header h2 { font-size: 16px; }
-}
-
-/* ────────────────────────────────────────────
-   6. 其他原始样式 (卡片、动画等)
+   4. 卡片设计 (Card Grid)
    ──────────────────────────────────────────── */
 .card-grid {
     display: grid;
@@ -262,35 +214,52 @@ a { text-decoration: none; color: inherit; }
 .card-name { display: block; font-size: 15px; font-weight: 600; margin-bottom: 2px; }
 .card-desc { display: block; font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* 底部导航 */
+/* ────────────────────────────────────────────
+   5. 响应式适配 (BUG 修复在此模块)
+   ──────────────────────────────────────────── */
+.hamburger { display: none; }
+
+@media (max-width: 1023px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); box-shadow: 20px 0 50px rgba(0,0,0,0.1); }
+    .main-content { margin-left: 0; padding: 20px 20px 100px; }
+    .bottom-nav { display: grid; }
+    .hamburger { display: block; }
+    .search-wrapper { margin: 0 15px; }
+    .logo-sub { display: none; }
+}
+
+@media (max-width: 767px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .card-arrow { display: none; }
+}
+
+/* ── 全尺寸手机竖屏 (< 480px) ── */
+@media (max-width: 479px) {
+    :root { --header-h: 54px; }
+
+    /* 修复下拉 Bug：将 display: none 改为 flex 即可，不触动其他样式 */
+    .search-engine-select { display: flex; }
+
+    .card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+    .card { padding: 12px 10px; gap: 8px; }
+    .card-icon { width: 32px; height: 32px; font-size: 20px; border-radius: 6px; }
+    .card-name { font-size: 13px; }
+    .card-desc { font-size: 10px; }
+
+    .banner-text h1 { font-size: 16px; }
+    .banner-text p { font-size: 12px; }
+
+    .section-header h2 { font-size: 16px; }
+}
+
+/* ────────────────────────────────────────────
+   6. 辅助样式 (遮罩、动画等)
+   ──────────────────────────────────────────── */
 .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
     height: var(--bottom-nav-h);
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--border);
-    display: none;
-    grid-template-columns: repeat(4, 1fr);
-    z-index: 1000;
-}
-
-.sidebar-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.3);
-    backdrop-filter: blur(4px);
-    z-index: 850;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--duration);
-}
-.sidebar-overlay.visible { opacity: 1; pointer-events: auto; }
-
-/* 抖动动画 */
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-}
-.shake { animation: shake 0.5s ease-in-out; border-color: #ff4d4f !important; }
+    backdrop-filter: blur(
