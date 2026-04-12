@@ -705,3 +705,21 @@ button { cursor: pointer; font-family: inherit; }
 @media (min-width: 600px) and (max-width: 900px) and (min-aspect-ratio: 1/1) {
     .card-grid { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ────────────────────────────────────────────
+   11. Favicon 图标图片样式
+   ──────────────────────────────────────────── */
+.card-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 6px;
+    display: block;
+}
+
+/* 兜底emoji：图片加载失败时显示 */
+.icon-fallback {
+    display: none;
+    font-size: 28px;
+    line-height: 1;
+}
