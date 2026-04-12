@@ -28,136 +28,120 @@
         }
         /* ── favicon图片：更大尺寸、清晰渲染 ── */
         .card-icon img {
-            width: 85%;
-            height: 85%;
+            width: 40px;
+            height: 40px;
             object-fit: contain;
+            border-radius: 10px;
+            display: block;
+            box-shadow: none !important;
             image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+        .icon-fallback {
+            display: none;
+            font-size: 28px;
+            line-height: 1;
         }
 
-        /* ── 搜索引擎切换器样式修复 ── */
+        /* ── 去掉卡片副标题 ── */
+        .card-desc { display: none !important; }
+
+        /* ── 底部导航3个均分 ── */
+        .bottom-nav { justify-content: space-around; }
+
+        /* ── 自定义下拉菜单 ── */
         .search-engine-select {
             position: relative;
-            display: flex;
-            align-items: center;
-            height: 100%;
+            border-right: 1px solid var(--border);
+            flex-shrink: 0;
+            /* 修复：确保容器有层级上下文 */
+            z-index: 10;
         }
-
+        /* 隐藏原生select，用自定义按钮替代 */
+        .search-engine-select select { display: none; }
         .engine-btn {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             padding: 0 12px;
-            height: 100%;
-            background: none;
+            height: 38px;
+            background: transparent;
             border: none;
-            border-right: 1.5px solid var(--border);
-            color: var(--text-primary);
-            font-size: 14px;
             cursor: pointer;
-            transition: background 0.2s;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text-secondary);
+            white-space: nowrap;
         }
-
-        .engine-btn:hover {
-            background: var(--bg);
-        }
-
         .engine-btn .arrow {
             font-size: 10px;
-            transition: transform 0.3s;
-            opacity: 0.6;
+            color: var(--text-muted);
+            transition: transform 0.2s;
         }
+        .engine-btn.open .arrow { transform: rotate(180deg); }
 
-        /* 当展开时箭头旋转 */
-        .engine-btn.open .arrow {
-            transform: rotate(180deg);
-        }
-
-        /* 下拉列表基础样式 */
         .engine-dropdown {
+            display: none;
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 6px);
             left: 0;
-            width: 120px;
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            box-shadow: var(--shadow-lg);
-            padding: 6px;
-            display: none; /* 默认隐藏 */
-            flex-direction: column;
-            gap: 4px;
-            z-index: 1000; /* 确保在最顶层 */
-            animation: dropdownFade 0.2s ease-out;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15); /* 加深阴影便于识别 */
+            min-width: 100px;
+            /* 修复：提高下拉列表层级，确保在导航栏之上 */
+            z-index: 1000;
+            overflow: hidden;
+            animation: dropIn 0.18s ease both;
         }
-
-        /* 当父级或自身拥有 open 类时显示 */
-        .engine-dropdown.open {
-            display: flex;
+        .engine-dropdown.open { 
+            display: block !important; /* 修复：强制显示 */
         }
-
-        @keyframes dropdownFade {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
         .engine-option {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 10px;
-            border-radius: 6px;
+            gap: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--text-primary);
             cursor: pointer;
-            font-size: 14px;
-            transition: background 0.2s;
+            transition: background 0.15s;
         }
-
-        .engine-option:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-        }
-
-        .engine-option.selected {
-            background: var(--primary-light);
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .engine-dot {
-            width: 8px;
-            height: 8px;
+        .engine-option:hover { background: var(--primary-light); color: var(--primary); }
+        .engine-option.selected { color: var(--primary); font-weight: 600; }
+        .engine-option .engine-dot {
+            width: 7px; height: 7px;
             border-radius: 50%;
             background: transparent;
+            flex-shrink: 0;
         }
-
-        .engine-option.selected .engine-dot {
-            background: var(--primary);
-        }
+        .engine-option.selected .engine-dot { background: var(--primary); }
     </style>
 </head>
-<body class="home-page">
+<body>
 
-    <header class="top-nav">
-        <div class="nav-left">
-            <button class="hamburger" id="hamburgerBtn" aria-label="菜单">
-                <span></span><span></span><span></span>
-            </button>
+    <nav class="top-nav" id="topNav">
+        <div class="nav-inner">
             <div class="logo">
                 <span class="logo-text">UYEA</span>
                 <span class="logo-sub">悠野工作室</span>
             </div>
-        </div>
-        <div class="nav-right">
-            <div class="search-group">
-                <div class="search-engine-select">
-                    <button class="engine-btn" id="engineBtn">
-                        <span id="engineLabel">百度</span>
-                        <span class="arrow">▼</span>
-                    </button>
-                    <select id="searchEngine" style="display:none;">
+            <div class="search-wrapper">
+                <div class="search-engine-select" id="engineSelect">
+                    <select id="searchEngine">
                         <option value="baidu">百度</option>
                         <option value="google">谷歌</option>
                         <option value="bing">必应</option>
                     </select>
+                    <button class="engine-btn" id="engineBtn" type="button">
+                        <span id="engineLabel">百度</span>
+                        <span class="arrow">▾</span>
+                    </button>
                     <div class="engine-dropdown" id="engineDropdown">
                         <div class="engine-option selected" data-value="baidu">
                             <span class="engine-dot"></span>百度
@@ -170,135 +154,225 @@
                         </div>
                     </div>
                 </div>
-                <input type="text" id="searchInput" placeholder="搜索你想要的..." autocomplete="off">
-                <button class="search-submit" id="searchBtn">
-                    <svg t="1710582534567" class="icon" viewBox="0 0 1024 1024" version="1.1" width="18" height="18"><path d="M426.666667 85.333333C615.146667 85.333333 768 238.186667 768 426.666667c0 74.24-23.893333 143.146667-64 199.04l230.186667 230.186666-60.373334 60.373334-230.186666-230.186667c-55.893333 40.106667-124.8 64-199.04 64-188.48 0-341.333333-152.853333-341.333333-341.333334s152.853333-341.333333 341.333333-341.333333z m0 85.333334c-141.333333 0-256 114.666667-256 256s114.666667 256 256 256 256-114.666667 256-256-114.666667-256-256-256z" fill="currentColor"></path></svg>
+                <input type="text" id="searchInput" placeholder="搜索关键词..." autocomplete="off">
+                <button class="search-btn" onclick="handleSearch()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
                 </button>
             </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="菜单">
+                <span></span><span></span><span></span>
+            </button>
         </div>
-    </header>
+    </nav>
 
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="layout-wrapper">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <aside class="sidebar" id="sidebar">
-        <nav class="sidebar-nav">
-            <a href="#recommend" class="nav-item active" data-section="recommend">
-                <span class="nav-icon">🔥</span>
-                <span class="nav-text">热门推荐</span>
-            </a>
-            <a href="#ai" class="nav-item" data-section="ai">
-                <span class="nav-icon">🤖</span>
-                <span class="nav-text">人工智能</span>
-            </a>
-            <a href="#dev" class="nav-item" data-section="dev">
-                <span class="nav-icon">🛠️</span>
-                <span class="nav-text">开发工具</span>
-            </a>
-            <div class="nav-divider"></div>
-            <a href="tools.html" class="nav-item">
-                <span class="nav-icon">🧰</span>
-                <span class="nav-text">实用工具箱</span>
-            </a>
-            <a href="forum.html" class="nav-item">
-                <span class="nav-icon">💬</span>
-                <span class="nav-text">悠野社区</span>
-            </a>
-        </nav>
-        <div class="sidebar-footer">
-            <p>© 2024 UYEA Studio</p>
-        </div>
-    </aside>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header"><span>导航分区</span></div>
+            <nav class="sidebar-nav">
+                <a href="#recommend" class="nav-item active" data-section="recommend">
+                    <i class="nav-icon">🔥</i><span>每日推荐</span>
+                </a>
+                <a href="#ai" class="nav-item" data-section="ai">
+                    <i class="nav-icon">🤖</i><span>Ai · 智能体</span>
+                </a>
+                <a href="#life" class="nav-item" data-section="life">
+                    <i class="nav-icon">🌿</i><span>生活</span>
+                </a>
+                <a href="#tools" class="nav-item" data-section="tools">
+                    <i class="nav-icon">🛠️</i><span>工具</span>
+                </a>
+                <a href="forum.html" class="nav-item" data-section="forum">
+                    <i class="nav-icon">💬</i><span>悠野社区</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer"><span>© 2025 悠野工作室</span></div>
+        </aside>
 
-    <main class="main-content" id="mainContent">
-        
-        <section class="banner-section">
-            <div class="banner-card">
+        <main class="main-content" id="mainContent">
+
+            <div class="welcome-banner">
                 <div class="banner-text">
-                    <h1>你好，欢迎来到悠野导航</h1>
-                    <p>探索、创造、分享。发现更有趣的世界。</p>
+                    <h1>悠野 · <strong>UYEA</strong></h1>
+                    <p>大锅炖网站 · 导航 · 工具 · 社区</p>
                 </div>
-                <div class="banner-img">🚀</div>
             </div>
-        </section>
 
-        <section class="content-section active" id="recommend">
-            <div class="section-header">
-                <h2>热门推荐</h2>
-                <span class="section-badge">HOT</span>
-            </div>
-            <div class="card-grid">
-                <a href="https://github.com" target="_blank" class="card">
-                    <div class="card-icon"><img src="https://icon.horse/icon/github.com" onerror="this.src='https://api.iowen.cn/favicon/github.com.png'" alt="GitHub"></div>
-                    <div class="card-info">
-                        <div class="card-name">GitHub</div>
-                        <div class="card-desc">全球最大的开源代码托管平台</div>
+            <section id="recommend" class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🔥</span><h2>每日推荐</h2>
+                </div>
+                <div class="card-grid">
+                    <a href="https://github.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/github.com" alt="GitHub" onerror="this.src='https://www.google.com/s2/favicons?domain=github.com&sz=64';this.onerror=null;"><span class="icon-fallback">🚀</span></div>
+                        <div class="card-info"><span class="card-name">GitHub</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://bilibili.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/bilibili.com" alt="Bilibili" onerror="this.src='https://www.google.com/s2/favicons?domain=bilibili.com&sz=64';this.onerror=null;"><span class="icon-fallback">📺</span></div>
+                        <div class="card-info"><span class="card-name">Bilibili</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <div class="card card-placeholder">
+                        <div class="card-icon">＋</div>
+                        <div class="card-info"><span class="card-name">即将添加</span></div>
                     </div>
-                    <div class="card-arrow"></div>
-                </a>
-                <a href="https://v2ex.com" target="_blank" class="card">
-                    <div class="card-icon"><img src="https://icon.horse/icon/v2ex.com" onerror="this.src='https://api.iowen.cn/favicon/v2ex.com.png'" alt="V2EX"></div>
-                    <div class="card-info">
-                        <div class="card-name">V2EX</div>
-                        <div class="card-desc">创意工作者们的社区</div>
+                </div>
+            </section>
+
+            <section id="ai" class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🤖</span><h2>Ai · 智能体</h2>
+                </div>
+                <div class="card-grid">
+                    <a href="https://gemini.google.com/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/gemini.google.com" alt="Gemini" onerror="this.src='https://www.google.com/s2/favicons?domain=gemini.google.com&sz=64';this.onerror=null;"><span class="icon-fallback">✨</span></div>
+                        <div class="card-info"><span class="card-name">Google Gemini</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://chatgpt.com/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/chatgpt.com" alt="ChatGPT" onerror="this.src='https://www.google.com/s2/favicons?domain=chatgpt.com&sz=64';this.onerror=null;"><span class="icon-fallback">🧠</span></div>
+                        <div class="card-info"><span class="card-name">ChatGPT</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://deepseek.com/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/deepseek.com" alt="DeepSeek" onerror="this.src='https://www.google.com/s2/favicons?domain=deepseek.com&sz=64';this.onerror=null;"><span class="icon-fallback">🔍</span></div>
+                        <div class="card-info"><span class="card-name">DeepSeek</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://doubao.com/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/doubao.com" alt="豆包" onerror="this.src='https://www.google.com/s2/favicons?domain=doubao.com&sz=64';this.onerror=null;"><span class="icon-fallback">🫘</span></div>
+                        <div class="card-info"><span class="card-name">豆包</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://yiyan.baidu.com/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/yiyan.baidu.com" alt="文心一言" onerror="this.src='https://www.google.com/s2/favicons?domain=yiyan.baidu.com&sz=64';this.onerror=null;"><span class="icon-fallback">🖊️</span></div>
+                        <div class="card-info"><span class="card-name">文心一言</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://tongyi.aliyun.com/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/tongyi.aliyun.com" alt="千问" onerror="this.src='https://www.google.com/s2/favicons?domain=tongyi.aliyun.com&sz=64';this.onerror=null;"><span class="icon-fallback">💬</span></div>
+                        <div class="card-info"><span class="card-name">千问</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://grok.com/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/grok.com" alt="Grok" onerror="this.src='https://www.google.com/s2/favicons?domain=grok.com&sz=64';this.onerror=null;"><span class="icon-fallback">⚡</span></div>
+                        <div class="card-info"><span class="card-name">Grok</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://claude.ai/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/claude.ai" alt="Claude" onerror="this.src='https://www.google.com/s2/favicons?domain=claude.ai&sz=64';this.onerror=null;"><span class="icon-fallback">🌟</span></div>
+                        <div class="card-info"><span class="card-name">Claude</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://yuanbao.tencent.com/chat/naQivTmsDa" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/yuanbao.tencent.com" alt="元宝" onerror="this.src='https://www.google.com/s2/favicons?domain=yuanbao.tencent.com&sz=64';this.onerror=null;"><span class="icon-fallback">💎</span></div>
+                        <div class="card-info"><span class="card-name">元宝</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://kimi.moonshot.cn/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/kimi.moonshot.cn" alt="Kimi" onerror="this.src='https://www.google.com/s2/favicons?domain=kimi.moonshot.cn&sz=64';this.onerror=null;"><span class="icon-fallback">🌙</span></div>
+                        <div class="card-info"><span class="card-name">Kimi</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://perplexity.ai/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/perplexity.ai" alt="Perplexity" onerror="this.src='https://www.google.com/s2/favicons?domain=perplexity.ai&sz=64';this.onerror=null;"><span class="icon-fallback">🔎</span></div>
+                        <div class="card-info"><span class="card-name">Perplexity</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://copilot.cloud.microsoft/" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/copilot.cloud.microsoft" alt="Copilot" onerror="this.src='https://www.google.com/s2/favicons?domain=copilot.cloud.microsoft&sz=64';this.onerror=null;"><span class="icon-fallback">🪟</span></div>
+                        <div class="card-info"><span class="card-name">Copilot Chat</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                </div>
+            </section>
+
+            <section id="life" class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🌿</span><h2>生活</h2>
+                </div>
+                <div class="card-grid">
+                    <a href="https://www.xiaohongshu.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/xiaohongshu.com" alt="小红书" onerror="this.src='https://www.google.com/s2/favicons?domain=xiaohongshu.com&sz=64';this.onerror=null;"><span class="icon-fallback">📕</span></div>
+                        <div class="card-info"><span class="card-name">小红书</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://weibo.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/weibo.com" alt="微博" onerror="this.src='https://www.google.com/s2/favicons?domain=weibo.com&sz=64';this.onerror=null;"><span class="icon-fallback">🐦</span></div>
+                        <div class="card-info"><span class="card-name">微博</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://zhihu.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/zhihu.com" alt="知乎" onerror="this.src='https://www.google.com/s2/favicons?domain=zhihu.com&sz=64';this.onerror=null;"><span class="icon-fallback">💡</span></div>
+                        <div class="card-info"><span class="card-name">知乎</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://taobao.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/taobao.com" alt="淘宝" onerror="this.src='https://www.google.com/s2/favicons?domain=taobao.com&sz=64';this.onerror=null;"><span class="icon-fallback">🛒</span></div>
+                        <div class="card-info"><span class="card-name">淘宝</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://jd.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/jd.com" alt="京东" onerror="this.src='https://www.google.com/s2/favicons?domain=jd.com&sz=64';this.onerror=null;"><span class="icon-fallback">📦</span></div>
+                        <div class="card-info"><span class="card-name">京东</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://map.baidu.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/map.baidu.com" alt="百度地图" onerror="this.src='https://www.google.com/s2/favicons?domain=map.baidu.com&sz=64';this.onerror=null;"><span class="icon-fallback">🗺️</span></div>
+                        <div class="card-info"><span class="card-name">百度地图</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <div class="card card-placeholder">
+                        <div class="card-icon">＋</div>
+                        <div class="card-info"><span class="card-name">即将添加</span></div>
                     </div>
-                    <div class="card-arrow"></div>
-                </a>
-            </div>
-        </section>
+                </div>
+            </section>
 
-        <section class="content-section" id="ai">
-            <div class="section-header">
-                <h2>人工智能</h2>
-            </div>
-            <div class="card-grid">
-                <a href="https://chat.openai.com" target="_blank" class="card">
-                    <div class="card-icon"><img src="https://icon.horse/icon/openai.com" onerror="this.src='https://api.iowen.cn/favicon/openai.com.png'" alt="ChatGPT"></div>
-                    <div class="card-info">
-                        <div class="card-name">ChatGPT</div>
-                        <div class="card-desc">OpenAI 旗下的智能对话模型</div>
+            <section id="tools" class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🛠️</span><h2>工具</h2>
+                </div>
+                <div class="card-grid">
+                    <a href="https://developer.mozilla.org" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/developer.mozilla.org" alt="MDN" onerror="this.src='https://www.google.com/s2/favicons?domain=developer.mozilla.org&sz=64';this.onerror=null;"><span class="icon-fallback">📖</span></div>
+                        <div class="card-info"><span class="card-name">MDN</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="https://stackoverflow.com" target="_blank" rel="noopener" class="card">
+                        <div class="card-icon"><img src="https://icon.horse/icon/stackoverflow.com" alt="Stack Overflow" onerror="this.src='https://www.google.com/s2/favicons?domain=stackoverflow.com&sz=64';this.onerror=null;"><span class="icon-fallback">💡</span></div>
+                        <div class="card-info"><span class="card-name">Stack Overflow</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <a href="tools.html" class="card">
+                        <div class="card-icon">🧰</div>
+                        <div class="card-info"><span class="card-name">悠野工具箱</span></div>
+                        <div class="card-arrow">›</div>
+                    </a>
+                    <div class="card card-placeholder">
+                        <div class="card-icon">＋</div>
+                        <div class="card-info"><span class="card-name">即将添加</span></div>
                     </div>
-                    <div class="card-arrow"></div>
-                </a>
-            </div>
-        </section>
+                </div>
+            </section>
 
-        <section class="content-section" id="dev">
-            <div class="section-header">
-                <h2>开发工具</h2>
-            </div>
-            <div class="card-grid">
-                <a href="https://developer.mozilla.org" target="_blank" class="card">
-                    <div class="card-icon"><img src="https://icon.horse/icon/mozilla.org" onerror="this.src='https://api.iowen.cn/favicon/mozilla.org.png'" alt="MDN"></div>
-                    <div class="card-info">
-                        <div class="card-name">MDN Web Docs</div>
-                        <div class="card-desc">最权威的 Web 开发文档</div>
-                    </div>
-                    <div class="card-arrow"></div>
-                </a>
-            </div>
-        </section>
+        </main>
+    </div>
 
-        <div style="height: 100px;"></div>
-    </main>
-
-    <nav class="bottom-nav">
-        <a href="#recommend" class="bottom-nav-item active" data-section="recommend">
-            <span class="bottom-icon">🔥</span>
-            <span class="bottom-label">推荐</span>
+    <nav class="bottom-nav" id="bottomNav">
+        <a href="index.html" class="bottom-nav-item active" data-section="recommend">
+            <span class="bottom-icon">🏠</span>
+            <span class="bottom-label">导航</span>
         </a>
-        <a href="#ai" class="bottom-nav-item" data-section="ai">
-            <span class="bottom-icon">🤖</span>
-            <span class="bottom-label">AI工具</span>
-        </a>
-        <a href="#dev" class="bottom-nav-item" data-section="dev">
-            <span class="bottom-icon">🛠️</span>
-            <span class="bottom-label">开发</span>
-        </a>
-        <a href="tools.html" class="bottom-nav-item">
+        <a href="tools.html" class="bottom-nav-item" data-section="toolspage">
             <span class="bottom-icon">🧰</span>
-            <span class="bottom-label">工具</span>
+            <span class="bottom-label">线上工具</span>
         </a>
-        <a href="forum.html" class="bottom-nav-item">
+        <a href="forum.html" class="bottom-nav-item" data-section="forum">
             <span class="bottom-icon">💬</span>
             <span class="bottom-label">社区</span>
         </a>
@@ -306,7 +380,7 @@
 
     <script src="script.js"></script>
     <script>
-    /* ── 搜索引擎下拉交互逻辑 ── */
+    /* ── 自定义搜索引擎下拉菜单逻辑 (行内保留作为快速响应) ── */
     (function() {
         const btn      = document.getElementById('engineBtn');
         const dropdown = document.getElementById('engineDropdown');
@@ -314,37 +388,30 @@
         const select   = document.getElementById('searchEngine');
         const options  = dropdown.querySelectorAll('.engine-option');
 
-        // 切换下拉列表显示/隐藏
+        // 修复：使用更严谨的显示控制
         btn.addEventListener('click', function(e) {
-            // 阻止冒泡防止立即被document点击事件关闭
-            e.stopPropagation(); 
-            const isOpen = dropdown.classList.toggle('open');
-            btn.classList.toggle('open', isOpen);
+            e.stopPropagation();
+            const isNowOpen = dropdown.classList.toggle('open');
+            btn.classList.toggle('open', isNowOpen);
         });
 
-        // 选项点击逻辑
         options.forEach(opt => {
             opt.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const val = this.dataset.value;
-                
-                // 1. 同步更新隐藏的真实select组件的值
                 select.value = val;
-                
-                // 2. 更新按钮上显示的文字（去除多余空格）
                 label.textContent = this.textContent.trim();
-                
-                // 3. 视觉反馈：更新选中样式
-                options.forEach(o => o.classList.remove('selected'));
+                options.forEach(o => {
+                    o.classList.remove('selected');
+                    o.querySelector('.engine-dot').style.background = 'transparent';
+                });
                 this.classList.add('selected');
-                
-                // 4. 选择后自动关闭下拉框
+                this.querySelector('.engine-dot').style.background = 'var(--primary)';
                 dropdown.classList.remove('open');
                 btn.classList.remove('open');
             });
         });
 
-        // 点击页面其他位置时自动收起下拉框
         document.addEventListener('click', function() {
             dropdown.classList.remove('open');
             btn.classList.remove('open');
