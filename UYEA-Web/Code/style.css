@@ -80,7 +80,6 @@ a { text-decoration: none; color: inherit; }
 .logo-text { font-size: 22px; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; }
 .logo-sub { font-size: 14px; color: var(--text-muted); font-weight: 500; }
 
-/* 搜索框容器 */
 .search-wrapper {
     flex: 1;
     max-width: 520px;
@@ -143,7 +142,7 @@ a { text-decoration: none; color: inherit; }
 .search-btn svg { width: 18px; height: 18px; }
 
 /* ────────────────────────────────────────────
-   3. 侧边栏与主内容布局
+   3. 侧边栏与布局
    ──────────────────────────────────────────── */
 .layout-wrapper {
     display: flex;
@@ -215,7 +214,7 @@ a { text-decoration: none; color: inherit; }
 .card-desc { display: block; font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ────────────────────────────────────────────
-   5. 响应式适配 (BUG 修复在此模块)
+   5. 响应式适配
    ──────────────────────────────────────────── */
 .hamburger { display: none; }
 
@@ -238,7 +237,7 @@ a { text-decoration: none; color: inherit; }
 @media (max-width: 479px) {
     :root { --header-h: 54px; }
 
-    /* 修复下拉 Bug：将 display: none 改为 flex 即可，不触动其他样式 */
+    /* 【此处仅删除 display: none; 确保 BUG 修复】 */
     .search-engine-select { display: flex; }
 
     .card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -255,11 +254,49 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ────────────────────────────────────────────
-   6. 辅助样式 (遮罩、动画等)
+   6. 底部导航栏
    ──────────────────────────────────────────── */
 .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
     height: var(--bottom-nav-h);
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border);
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    z-index: 1000;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: var(--text-muted);
+    transition: all var(--duration);
+}
+
+.bottom-nav-item.active { color: var(--primary); }
+.bottom-icon { font-size: 20px; }
+.bottom-label { font-size: 11px; font-weight: 500; }
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(4px);
+    z-index: 850;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration);
+}
+.sidebar-overlay.visible { opacity: 1; pointer-events: auto; }
+
+.shake { animation: shake 0.5s ease-in-out; border-color: #ff4d4f !important; }
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
