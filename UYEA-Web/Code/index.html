@@ -93,7 +93,7 @@
             border-radius: 2px;
         }
 
-        /* 状态卡片：用于“尽请期待” */
+        /* 状态卡片：用于"尽请期待" */
         .text-status-card {
             background: var(--surface);
             border: 1.5px dashed var(--border);
@@ -121,6 +121,20 @@
             height: 100%;
             object-fit: contain;
             border-radius: 6px;
+        }
+
+        /* ✅ 新增：图标加载失败时的备用样式 */
+        .card-icon .icon-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         @media (max-width: 768px) {
@@ -172,60 +186,75 @@
 
             <div class="section-header"><h2 class="section-title">Ai</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
-                <a href="https://www.deepseek.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.deepseek.com/favicon.ico"></div>
-                    <div class="card-info"><div class="card-title">DeepSeek</div></div>
+                <!-- ✅ 新增：Google Gemini -->
+                <a href="https://www.gemini.google.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="gemini.google.com" data-site-name="Google Gemini"></div>
+                    <div class="card-info"><div class="card-title">Google Gemini</div></div>
                 </a>
                 <a href="https://chatgpt.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://openai.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="chatgpt.com" data-site-name="ChatGPT"></div>
                     <div class="card-info"><div class="card-title">ChatGPT</div></div>
                 </a>
                 <a href="https://claude.ai/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://claude.ai/images/apple-touch-icon.png"></div>
+                    <div class="card-icon"><img src="" data-domain="claude.ai" data-site-name="Claude"></div>
                     <div class="card-info"><div class="card-title">Claude</div></div>
                 </a>
+                <a href="https://www.deepseek.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="deepseek.com" data-site-name="DeepSeek"></div>
+                    <div class="card-info"><div class="card-title">DeepSeek</div></div>
+                </a>
                 <a href="https://yiyan.baidu.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://yiyan.baidu.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="yiyan.baidu.com" data-site-name="文心一言"></div>
                     <div class="card-info"><div class="card-title">文心一言</div></div>
                 </a>
-                <a href="https://qianwen.aliyun.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://img.alicdn.com/imgextra/i4/O1CN01S99m9x1Wp9Fh9O9m9_!!6000000002830-2-tps-32-32.png"></div>
+                <a href="https://www.qianwen.aliyun.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="qianwen.aliyun.com" data-site-name="通义千问"></div>
                     <div class="card-info"><div class="card-title">通义千问</div></div>
                 </a>
+                <!-- ✅ 新增：千问（阿里通义千问中文别名） -->
+                <a href="https://www.qianwen.aliyun.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="qianwen.aliyun.com" data-site-name="千问"></div>
+                    <div class="card-info"><div class="card-title">千问</div></div>
+                </a>
                 <a href="https://www.kimi.ai/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://kimi.moonshot.cn/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="kimi.ai" data-site-name="Kimi"></div>
                     <div class="card-info"><div class="card-title">Kimi</div></div>
                 </a>
                 <a href="https://www.doubao.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.doubao.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="doubao.com" data-site-name="豆包"></div>
                     <div class="card-info"><div class="card-title">豆包</div></div>
                 </a>
                 <a href="https://yuanbao.tencent.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://yuanbao.tencent.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="yuanbao.tencent.com" data-site-name="腾讯元宝"></div>
                     <div class="card-info"><div class="card-title">腾讯元宝</div></div>
                 </a>
                 <a href="https://www.perplexity.ai/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.perplexity.ai/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="perplexity.ai" data-site-name="Perplexity"></div>
                     <div class="card-info"><div class="card-title">Perplexity</div></div>
                 </a>
                 <a href="https://grok.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://grok.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="grok.com" data-site-name="Grok"></div>
                     <div class="card-info"><div class="card-title">Grok</div></div>
+                </a>
+                <!-- ✅ 新增：Microsoft 365 Copilot Chat -->
+                <a href="https://copilot.cloud.microsoft/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="copilot.cloud.microsoft" data-site-name="Copilot"></div>
+                    <div class="card-info"><div class="card-title">Microsoft 365 Copilot Chat</div></div>
                 </a>
             </div>
 
             <div class="section-header"><h2 class="section-title">生活</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
                 <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.xiaohongshu.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="xiaohongshu.com" data-site-name="小红书"></div>
                     <div class="card-info"><div class="card-title">小红书</div></div>
                 </a>
                 <a href="https://www.bilibili.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.bilibili.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="bilibili.com" data-site-name="Bilibili"></div>
                     <div class="card-info"><div class="card-title">Bilibili</div></div>
                 </a>
                 <a href="https://www.zhihu.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.zhihu.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="zhihu.com" data-site-name="知乎"></div>
                     <div class="card-info"><div class="card-title">知乎</div></div>
                 </a>
             </div>
@@ -233,15 +262,15 @@
             <div class="section-header"><h2 class="section-title">工具</h2></div>
             <div class="grid-container">
                 <a href="https://github.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://github.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="github.com" data-site-name="GitHub"></div>
                     <div class="card-info"><div class="card-title">GitHub</div></div>
                 </a>
                 <a href="https://tinypng.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://tinypng.com/images/apple-touch-icon.png"></div>
+                    <div class="card-icon"><img src="" data-domain="tinypng.com" data-site-name="TinyPNG"></div>
                     <div class="card-info"><div class="card-title">TinyPNG</div></div>
                 </a>
                 <a href="https://v0.dev" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://v0.dev/favicon.ico"></div>
+                    <div class="card-icon"><img src="" data-domain="v0.dev" data-site-name="v0.dev"></div>
                     <div class="card-info"><div class="card-title">v0.dev</div></div>
                 </a>
             </div>
