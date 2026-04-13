@@ -1,7 +1,7 @@
 /* ============================================================
    UYEA 悠野工作室 · script.js (优化版)
    优化内容：菜单统一、图标加载、localStorage保存、汉堡菜单
-   ✅ 新增：A+C方案图标加载 + 随机颜色备用方案
+   ✅ 新增：国内百度+搜狗favicon服务 + Promise.race并行加载
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ────────────────────────────────────────────
-       7. 移动端汉堡菜单（✅新增）
+       7. 移动端汉堡菜单
        ──────────────────────────────────────────── */
     function toggleSidebar() {
         const isOpen = sidebar.classList.toggle('open');
@@ -228,20 +228,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ────────────────────────────────────────────
-       ✅ 10. 新增：A+C方案图标加载机制
+       ✅ 10. 新增：国内favicon服务 + Promise.race并行加载
        方案说明：
-       - 方案A（第一优先）：使用DuckDuckGo图标服务，稳定性高
-       - 方案C（第二优先）：直接访问官网favicon + 超时处理
+       - 方案1：百度favicon服务（国内可用）
+       - 方案2：搜狗favicon服务（国内可用）
        - 降级方案：随机颜色渐变 + 网站首字母
+       
+       核心特点：
+       - 使用Promise.race()并行加载，谁快用谁
+       - 每个请求4秒超时，保证不会太慢
+       - 支持所有跨域加载方式
        ──────────────────────────────────────────── */
 
     /* ✅ 生成随机颜色函数（支持渐变） */
     function generateRandomGradient() {
-        // 生成两个随机HSL颜色用于渐变
+        // ✅ 生成两个随机HSL颜色用于渐变
         const hue1 = Math.random() * 360;
-        const hue2 = (hue1 + 60 + Math.random() * 60) % 360; // 相隔60-120度保证颜色搭配
-        const saturation = 60 + Math.random() * 30; // 60-90%饱和度
-        const lightness = 50 + Math.random() * 20; // 50-70%亮度
+        // ✅ 第二个颜色相隔60-120度，保证颜色搭配美观
+        const hue2 = (hue1 + 60 + Math.random() * 60) % 360;
+        // ✅ 中等饱和度和亮度，保证易读性
+        const saturation = 60 + Math.random() * 30; // 60-90%
+        const lightness = 50 + Math.random() * 20; // 50-70%
         
         const color1 = `hsl(${hue1}, ${saturation}%, ${lightness}%)`;
         const color2 = `hsl(${hue2}, ${saturation}%, ${lightness}%)`;
@@ -251,81 +258,92 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ✅ 获取网站名称的首个字符 */
     function getFirstChar(siteName) {
-        // 移除特殊字符，提取首个有意义的字符
+        // ✅ 移除特殊字符，提取首个有意义的字符
         const cleanName = siteName.replace(/[^a-zA-Z\u4e00-\u9fa5]/g, '');
         return cleanName.charAt(0).toUpperCase() || '?';
     }
 
-    /* ✅ 方案A：DuckDuckGo图标服务（第一优先） */
-    function loadIconFromDuckDuckGo(domain, fallbackCallback) {
-        const ddgIconUrl = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+    /* ✅ 为单个img标签加载图标（使用Promise.race） */
+    function loadIconWithRace(img, domain, siteName) {
+        // ✅ 构建百度和搜狗的favicon URL
+        const baiduUrl = `https://www.baidu.com/favicon.ico?domain=${domain}`;
+        const sogouUrl = `https://www.sogou.com/favicon.ico?domain=${domain}`;
         
-        // 使用带超时的fetch请求
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
-        
-        fetch(ddgIconUrl, { 
-            mode: 'no-cors',
-            signal: controller.signal 
-        })
-        .then(response => {
-            clearTimeout(timeoutId);
-            if (response.ok || response.status === 0) {
-                return ddgIconUrl; // 返回URL用于img标签
-            }
-            throw new Error('DuckDuckGo loading failed');
-        })
-        .catch(error => {
-            clearTimeout(timeoutId);
-            console.warn(`DuckDuckGo icon failed for ${domain}:`, error.message);
-            // 降级到方案C
-            fallbackCallback();
+        // ✅ 创建百度Promise - 4秒超时
+        const baiduPromise = new Promise((resolve, reject) => {
+            const timer = setTimeout(() => {
+                reject(new Error('Baidu timeout'));
+            }, 4000);
+
+            const testImg = new Image();
+            testImg.crossOrigin = 'anonymous';
+            testImg.onload = () => {
+                clearTimeout(timer);
+                resolve(baiduUrl);
+            };
+            testImg.onerror = () => {
+                clearTimeout(timer);
+                reject(new Error('Baidu failed'));
+            };
+            testImg.src = baiduUrl;
         });
-    }
 
-    /* ✅ 方案C：直接从官网加载favicon（第二优先） + 降级处理 */
-    function loadIconFromWebsite(domain, siteName, img) {
-        const officialIconUrl = `https://${domain}/favicon.ico`;
-        
-        // 为img标签添加加载成功和失败的处理
-        let loadTimeout = setTimeout(() => {
-            // 超时处理：7秒还没加载则认为失败
-            if (!img.complete || img.naturalHeight === 0) {
-                clearTimeout(loadTimeout);
+        // ✅ 创建搜狗Promise - 4秒超时
+        const sogouPromise = new Promise((resolve, reject) => {
+            const timer = setTimeout(() => {
+                reject(new Error('Sogou timeout'));
+            }, 4000);
+
+            const testImg = new Image();
+            testImg.crossOrigin = 'anonymous';
+            testImg.onload = () => {
+                clearTimeout(timer);
+                resolve(sogouUrl);
+            };
+            testImg.onerror = () => {
+                clearTimeout(timer);
+                reject(new Error('Sogou failed'));
+            };
+            testImg.src = sogouUrl;
+        });
+
+        // ✅ 使用Promise.race - 哪个先成功就用哪个
+        Promise.race([baiduPromise, sogouPromise])
+            .then(successUrl => {
+                // ✅ 有一个成功，立即设置src并加载
+                img.onload = () => {
+                    img.style.opacity = '1';
+                    const source = successUrl.includes('baidu') ? 'Baidu' : 'Sogou';
+                    console.log(`✅ Icon loaded successfully for ${domain} from ${source}`);
+                };
+                img.onerror = () => {
+                    console.warn(`Icon load failed after race success for ${domain}`);
+                    handleIconLoadFailure(img, siteName);
+                };
+                img.crossOrigin = 'anonymous';
+                img.src = successUrl;
+            })
+            .catch(error => {
+                // ✅ 两个都失败，使用随机颜色备用方案
+                console.warn(`Both Baidu and Sogou failed for ${domain}:`, error.message);
                 handleIconLoadFailure(img, siteName);
-            }
-        }, 7000);
-
-        img.onload = () => {
-            clearTimeout(loadTimeout);
-            img.style.opacity = '1';
-            console.log(`Icon loaded successfully for ${domain}`);
-        };
-
-        img.onerror = () => {
-            clearTimeout(loadTimeout);
-            console.warn(`Official favicon failed for ${domain}`);
-            handleIconLoadFailure(img, siteName);
-        };
-
-        // 设置带crossorigin处理的src
-        img.crossOrigin = 'anonymous';
-        img.src = officialIconUrl;
+            });
     }
 
     /* ✅ 降级方案：生成随机颜色背景 + 网站首字母 */
     function handleIconLoadFailure(img, siteName) {
+        // ✅ 隐藏失败的img标签
         img.style.display = 'none';
         
-        // 生成随机颜色备用方案
+        // ✅ 创建随机颜色的备用方案
         const fallback = document.createElement('div');
         fallback.className = 'icon-fallback';
         fallback.textContent = getFirstChar(siteName);
         fallback.style.background = generateRandomGradient();
         
-        // 将备用方案插入到父容器
+        // ✅ 将备用方案插入到父容器中
         img.parentElement.appendChild(fallback);
-        console.log(`Using fallback for ${siteName} with first char: ${getFirstChar(siteName)}`);
+        console.log(`📌 Using fallback for ${siteName} with first char: ${getFirstChar(siteName)}`);
     }
 
     /* ✅ 初始化所有卡片的图标加载 */
@@ -339,33 +357,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // ✅ 优先使用方案A（DuckDuckGo）
-            const ddgUrl = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
-            
-            // 设置超时机制：DuckDuckGo失败则降级到方案C
-            let ddgTimeout = setTimeout(() => {
-                if (!img.complete || img.naturalHeight === 0) {
-                    // DuckDuckGo超时或失败
-                    console.warn(`DuckDuckGo icon timeout for ${domain}, falling back to official favicon`);
-                    loadIconFromWebsite(domain, siteName, img);
-                }
-            }, 4000); // 4秒超时
-
-            img.onload = () => {
-                clearTimeout(ddgTimeout);
-                img.style.opacity = '1';
-                console.log(`✅ DuckDuckGo icon loaded for ${domain}`);
-            };
-
-            img.onerror = () => {
-                clearTimeout(ddgTimeout);
-                console.warn(`DuckDuckGo icon error for ${domain}, trying official favicon`);
-                loadIconFromWebsite(domain, siteName, img);
-            };
-
-            // 设置DuckDuckGo URL
-            img.crossOrigin = 'anonymous';
-            img.src = ddgUrl;
+            // ✅ 使用Promise.race方案加载图标
+            loadIconWithRace(img, domain, siteName);
         });
     }
 
@@ -373,20 +366,20 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeIconLoading();
 
     /* ────────────────────────────────────────────
-       11. ✅ 可选：定期清理过期的localStorage缓存
+       11. 可选：定期清理过期的localStorage缓存
        ──────────────────────────────────────────── */
     function cleanupLocalStorage() {
         const keys = Object.keys(localStorage);
         keys.forEach(key => {
             if (key.startsWith('icon_cache_') && Date.now() - parseInt(localStorage.getItem(key + '_time')) > 7 * 24 * 60 * 60 * 1000) {
-                // 清理7天以前的缓存
+                // ✅ 清理7天以前的缓存
                 localStorage.removeItem(key);
                 localStorage.removeItem(key + '_time');
             }
         });
     }
 
-    // 每次页面加载时清理缓存
+    // ✅ 每次页面加载时清理缓存
     cleanupLocalStorage();
 
 });
@@ -428,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
             animation: shake 0.3s ease-in-out; 
         }
 
-        /* ✅ 新增：图标加载失败时的备用样式 */
+        /* ✅ 图标加载失败时的备用样式 */
         .icon-fallback {
             width: 100%;
             height: 100%;
@@ -447,39 +440,28 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 
 /* ────────────────────────────────────────────
-   13. ✅ 图标URL映射表（便于后续更新）
+   13. 图标服务配置说明
    ──────────────────────────────────────────── */
 /* 
- * 说明：这个映射表用于快速更新图标源
- * 当某个网站的favicon改变时，只需修改这里的URL
- * 无需修改HTML中的图片标签
+ * 国内favicon服务配置
  * 
- * 使用方法：
- * 1. 如果icon.horse / cdn.jsdelivr无法获取最新图标
- * 2. 可以从官网直接获取：website.com/favicon.ico
- * 3. 更新对应的URL即可
+ * 使用的服务：
+ * 1. 百度图标服务：https://www.baidu.com/favicon.ico?domain=xxx
+ * 2. 搜狗图标服务：https://www.sogou.com/favicon.ico?domain=xxx
  * 
- * 当前策略：
- * - 优先使用DuckDuckGo服务：icons.duckduckgo.com/ip3/domain.ico
- * - 备选使用官网favicon：website.com/favicon.ico
+ * 加载策略：
+ * - 使用Promise.race()并行请求两个服务
+ * - 谁先成功就用谁的结果
+ * - 每个请求4秒超时
+ * - 都失败则显示随机颜色+首字母
+ * 
+ * 为什么选择这两个？
+ * - 百度和搜狗是国内最大的搜索引擎
+ * - 在国内网络环境最稳定
+ * - 都提供免费的favicon查询API
+ * - 使用并行加载可以充分利用它们的速度优势
  */
-const ICON_URLS = {
-    'gemini.google.com': 'https://icons.duckduckgo.com/ip3/gemini.google.com.ico',
-    'chatgpt.com': 'https://icons.duckduckgo.com/ip3/chatgpt.com.ico',
-    'deepseek.com': 'https://icons.duckduckgo.com/ip3/deepseek.com.ico',
-    'doubao.com': 'https://icons.duckduckgo.com/ip3/doubao.com.ico',
-    'yiyan.baidu.com': 'https://icons.duckduckgo.com/ip3/yiyan.baidu.com.ico',
-    'qianwen.aliyun.com': 'https://icons.duckduckgo.com/ip3/qianwen.aliyun.com.ico',
-    'grok.com': 'https://icons.duckduckgo.com/ip3/grok.com.ico',
-    'claude.ai': 'https://icons.duckduckgo.com/ip3/claude.ai.ico',
-    'yuanbao.tencent.com': 'https://icons.duckduckgo.com/ip3/yuanbao.tencent.com.ico',
-    'kimi.ai': 'https://icons.duckduckgo.com/ip3/kimi.ai.ico',
-    'perplexity.ai': 'https://icons.duckduckgo.com/ip3/perplexity.ai.ico',
-    'copilot.cloud.microsoft': 'https://icons.duckduckgo.com/ip3/copilot.cloud.microsoft.ico',
-    'xiaohongshu.com': 'https://icons.duckduckgo.com/ip3/xiaohongshu.com.ico',
-    'bilibili.com': 'https://icons.duckduckgo.com/ip3/bilibili.com.ico',
-    'zhihu.com': 'https://icons.duckduckgo.com/ip3/zhihu.com.ico',
-    'github.com': 'https://icons.duckduckgo.com/ip3/github.com.ico',
-    'tinypng.com': 'https://icons.duckduckgo.com/ip3/tinypng.com.ico',
-    'v0.dev': 'https://icons.duckduckgo.com/ip3/v0.dev.ico'
+const FAVICON_SERVICES = {
+    baidu: (domain) => `https://www.baidu.com/favicon.ico?domain=${domain}`,
+    sogou: (domain) => `https://www.sogou.com/favicon.ico?domain=${domain}`
 };
