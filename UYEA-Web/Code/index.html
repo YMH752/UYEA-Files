@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 首页顶栏布局 ── */
+        /* ── 顶栏布局 ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -93,7 +93,7 @@
             border-radius: 2px;
         }
 
-        /* 状态卡片：用于“尽请期待” */
+        /* 尽请期待卡片 */
         .text-status-card {
             background: var(--surface);
             border: 1.5px dashed var(--border);
@@ -105,7 +105,7 @@
             grid-column: 1 / -1;
         }
 
-        /* ✅ 图标样式：圆角、无阴影、背景透明 */
+        /* ✅ 图标样式优化：解决加载失败问题 */
         .card-icon {
             width: 32px;
             height: 32px;
@@ -121,6 +121,9 @@
             height: 100%;
             object-fit: contain;
             border-radius: 6px;
+        }
+        .icon-fallback {
+            font-size: 20px;
         }
 
         @media (max-width: 768px) {
@@ -173,43 +176,43 @@
             <div class="section-header"><h2 class="section-title">Ai</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
                 <a href="https://www.deepseek.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.deepseek.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/www.deepseek.com.ico"></div>
                     <div class="card-info"><div class="card-title">DeepSeek</div></div>
                 </a>
                 <a href="https://chatgpt.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://openai.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/chatgpt.com.ico"></div>
                     <div class="card-info"><div class="card-title">ChatGPT</div></div>
                 </a>
                 <a href="https://claude.ai/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://claude.ai/images/apple-touch-icon.png"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/claude.ai.ico"></div>
                     <div class="card-info"><div class="card-title">Claude</div></div>
                 </a>
                 <a href="https://yiyan.baidu.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://yiyan.baidu.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/yiyan.baidu.com.ico"></div>
                     <div class="card-info"><div class="card-title">文心一言</div></div>
                 </a>
                 <a href="https://qianwen.aliyun.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://img.alicdn.com/imgextra/i4/O1CN01S99m9x1Wp9Fh9O9m9_!!6000000002830-2-tps-32-32.png"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/qianwen.aliyun.com.ico"></div>
                     <div class="card-info"><div class="card-title">通义千问</div></div>
                 </a>
                 <a href="https://www.kimi.ai/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://kimi.moonshot.cn/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/www.kimi.ai.ico"></div>
                     <div class="card-info"><div class="card-title">Kimi</div></div>
                 </a>
                 <a href="https://www.doubao.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.doubao.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/www.doubao.com.ico"></div>
                     <div class="card-info"><div class="card-title">豆包</div></div>
                 </a>
                 <a href="https://yuanbao.tencent.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://yuanbao.tencent.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/yuanbao.tencent.com.ico"></div>
                     <div class="card-info"><div class="card-title">腾讯元宝</div></div>
                 </a>
                 <a href="https://www.perplexity.ai/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.perplexity.ai/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/www.perplexity.ai.ico"></div>
                     <div class="card-info"><div class="card-title">Perplexity</div></div>
                 </a>
                 <a href="https://grok.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://grok.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/grok.com.ico"></div>
                     <div class="card-info"><div class="card-title">Grok</div></div>
                 </a>
             </div>
@@ -217,15 +220,15 @@
             <div class="section-header"><h2 class="section-title">生活</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
                 <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.xiaohongshu.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/www.xiaohongshu.com.ico"></div>
                     <div class="card-info"><div class="card-title">小红书</div></div>
                 </a>
                 <a href="https://www.bilibili.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.bilibili.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/www.bilibili.com.ico"></div>
                     <div class="card-info"><div class="card-title">Bilibili</div></div>
                 </a>
                 <a href="https://www.zhihu.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://www.zhihu.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/www.zhihu.com.ico"></div>
                     <div class="card-info"><div class="card-title">知乎</div></div>
                 </a>
             </div>
@@ -233,21 +236,30 @@
             <div class="section-header"><h2 class="section-title">工具</h2></div>
             <div class="grid-container">
                 <a href="https://github.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://github.com/favicon.ico"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/github.com.ico"></div>
                     <div class="card-info"><div class="card-title">GitHub</div></div>
                 </a>
                 <a href="https://tinypng.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://tinypng.com/images/apple-touch-icon.png"></div>
+                    <div class="card-icon"><img src="https://icons.duckduckgo.com/ip3/tinypng.com.ico"></div>
                     <div class="card-info"><div class="card-title">TinyPNG</div></div>
-                </a>
-                <a href="https://v0.dev" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="https://v0.dev/favicon.ico"></div>
-                    <div class="card-info"><div class="card-title">v0.dev</div></div>
                 </a>
             </div>
         </div>
     </main>
 
     <script src="script.js"></script>
+    <script>
+        /* ✅ 最终降级逻辑：如果API也挂了，显示首字母或占位符 */
+        document.querySelectorAll('.card-icon img').forEach(img => {
+            img.onerror = function() {
+                const parent = this.parentElement;
+                this.remove();
+                const span = document.createElement('span');
+                span.className = 'icon-fallback';
+                span.textContent = '🌐'; // 如果API加载失败，统一显示漂亮的地球
+                parent.appendChild(span);
+            };
+        });
+    </script>
 </body>
 </html>
