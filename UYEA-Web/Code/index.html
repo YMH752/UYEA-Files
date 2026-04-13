@@ -4,151 +4,250 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>UYEA | 悠野导航</title>
+    
+    <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
+    <meta name="theme-color" content="#0078d4">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
+    
     <style>
-        /* ── 顶栏与汉堡菜单 ── */
-        .top-bar { display: flex; align-items: center; gap: 15px; padding: 0 20px; height: var(--header-h); background: var(--surface); border-bottom: 1.5px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .header-logo { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 22px; color: var(--primary); text-decoration: none; }
-        
-        .menu-toggle { display: none; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; padding: 5px; }
-        .menu-toggle span { width: 20px; height: 2.5px; background: var(--text-primary); border-radius: 2px; }
+        /* ── 首页顶栏布局 ── */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 0 24px;
+            height: var(--header-h);
+            background: var(--surface);
+            border-bottom: 1.5px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-        .search-container { flex: 1; max-width: 500px; margin: 0 auto; }
-        .search-wrapper { display: flex; align-items: center; background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 0 10px; height: 38px; }
-        .search-wrapper input { border: none; background: transparent; outline: none; width: 100%; padding-left: 8px; font-size: 14px; }
+        .header-logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--primary);
+            text-decoration: none;
+        }
 
-        /* ✅ 图标样式：圆角、无背景、无阴影 */
-        .card-icon { width: 32px; height: 32px; background: transparent; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
-        .icon-text-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--primary-light); color: var(--primary); font-size: 14px; font-weight: bold; border-radius: 6px; }
+        .search-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            max-width: 600px;
+        }
 
-        .text-status-card { background: var(--surface); border: 1.5px dashed var(--border); border-radius: 12px; padding: 30px; text-align: center; color: var(--text-muted); grid-column: 1/-1; }
+        .header-search-wrapper {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0 12px;
+            height: 40px;
+        }
 
-        @media (max-width: 1024px) { .menu-toggle { display: flex; } }
+        #searchInput {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            padding: 0 8px;
+            font-size: 14px;
+        }
+
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+
+        .login-btn {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 2px;
+        }
+
+        /* 状态卡片：用于“尽请期待” */
+        .text-status-card {
+            background: var(--surface);
+            border: 1.5px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 16px;
+            grid-column: 1 / -1;
+        }
+
+        /* ✅ 图标样式：圆角、无阴影、背景透明 */
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: transparent !important;
+            box-shadow: none !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+        }
     </style>
 </head>
 <body>
+
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><span class="logo-text">UYEA</span></div>
+        <div class="sidebar-header">
+            <div class="logo-group">
+                <span class="logo-text">UYEA</span>
+                <span class="logo-sub">悠野工作室</span>
+            </div>
+        </div>
         <nav class="nav-menu">
-            <a href="#" class="nav-item active">🏠 全部导航</a>
-            <a href="tools.html" class="nav-item">🛠️ 实用工具</a>
-            <a href="forum.html" class="nav-item">💬 悠野社区</a>
+            <div class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></div>
+            <a href="tools.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></a>
+            <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
         </nav>
     </aside>
 
     <main class="main-content">
         <header class="top-bar">
-            <button class="menu-toggle" id="hamburgerBtn"><span></span><span></span><span></span></button>
             <a href="#" class="header-logo">UYEA</a>
             <div class="search-container">
-                <div class="search-wrapper">🔍<input type="text" id="searchInput" placeholder="搜索资源..."></div>
+                <div class="header-search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="搜索你需要的资源...">
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="#" class="login-btn">登录 / 注册</a>
+                <button class="menu-toggle" id="hamburgerBtn">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </header>
 
         <div class="content-wrapper">
-            <section class="section">
-                <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
-                <div class="grid-container"><div class="text-status-card">☕ 尽请期待</div></div>
-            </section>
+            
+            <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
+            <div class="grid-container" style="margin-bottom: 40px;">
+                <div class="text-status-card">☕ 尽请期待</div>
+            </div>
 
-            <section class="section">
-                <div class="section-header"><h2 class="section-title">Ai</h2></div>
-                <div class="grid-container">
-                    <a href="https://www.deepseek.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/www.deepseek.com" data-name="D"></div>
-                        <div class="card-title">DeepSeek</div>
-                    </a>
-                    <a href="https://chatgpt.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/chatgpt.com" data-name="C"></div>
-                        <div class="card-title">ChatGPT</div>
-                    </a>
-                    <a href="https://claude.ai/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/claude.ai" data-name="C"></div>
-                        <div class="card-title">Claude</div>
-                    </a>
-                    <a href="https://yiyan.baidu.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/yiyan.baidu.com" data-name="文"></div>
-                        <div class="card-title">文心一言</div>
-                    </a>
-                    <a href="https://qianwen.aliyun.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/qianwen.aliyun.com" data-name="通"></div>
-                        <div class="card-title">通义千问</div>
-                    </a>
-                    <a href="https://www.kimi.ai/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/www.kimi.ai" data-name="K"></div>
-                        <div class="card-title">Kimi</div>
-                    </a>
-                    <a href="https://www.doubao.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/www.doubao.com" data-name="豆"></div>
-                        <div class="card-title">豆包</div>
-                    </a>
-                    <a href="https://yuanbao.tencent.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/yuanbao.tencent.com" data-name="元"></div>
-                        <div class="card-title">腾讯元宝</div>
-                    </a>
-                    <a href="https://www.perplexity.ai/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/www.perplexity.ai" data-name="P"></div>
-                        <div class="card-title">Perplexity</div>
-                    </a>
-                    <a href="https://grok.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/grok.com" data-name="G"></div>
-                        <div class="card-title">Grok</div>
-                    </a>
-                </div>
-            </section>
+            <div class="section-header"><h2 class="section-title">Ai</h2></div>
+            <div class="grid-container" style="margin-bottom: 40px;">
+                <a href="https://www.deepseek.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.deepseek.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">DeepSeek</div></div>
+                </a>
+                <a href="https://chatgpt.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://openai.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">ChatGPT</div></div>
+                </a>
+                <a href="https://claude.ai/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://claude.ai/images/apple-touch-icon.png"></div>
+                    <div class="card-info"><div class="card-title">Claude</div></div>
+                </a>
+                <a href="https://yiyan.baidu.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://yiyan.baidu.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">文心一言</div></div>
+                </a>
+                <a href="https://qianwen.aliyun.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://img.alicdn.com/imgextra/i4/O1CN01S99m9x1Wp9Fh9O9m9_!!6000000002830-2-tps-32-32.png"></div>
+                    <div class="card-info"><div class="card-title">通义千问</div></div>
+                </a>
+                <a href="https://www.kimi.ai/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://kimi.moonshot.cn/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">Kimi</div></div>
+                </a>
+                <a href="https://www.doubao.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.doubao.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">豆包</div></div>
+                </a>
+                <a href="https://yuanbao.tencent.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://yuanbao.tencent.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">腾讯元宝</div></div>
+                </a>
+                <a href="https://www.perplexity.ai/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.perplexity.ai/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">Perplexity</div></div>
+                </a>
+                <a href="https://grok.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://grok.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">Grok</div></div>
+                </a>
+            </div>
 
-            <section class="section">
-                <div class="section-header"><h2 class="section-title">生活</h2></div>
-                <div class="grid-container">
-                    <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/www.xiaohongshu.com" data-name="红"></div>
-                        <div class="card-title">小红书</div>
-                    </a>
-                    <a href="https://www.bilibili.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/www.bilibili.com" data-name="B"></div>
-                        <div class="card-title">Bilibili</div>
-                    </a>
-                </div>
-            </section>
+            <div class="section-header"><h2 class="section-title">生活</h2></div>
+            <div class="grid-container" style="margin-bottom: 40px;">
+                <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.xiaohongshu.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">小红书</div></div>
+                </a>
+                <a href="https://www.bilibili.com" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.bilibili.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">Bilibili</div></div>
+                </a>
+                <a href="https://www.zhihu.com" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.zhihu.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">知乎</div></div>
+                </a>
+            </div>
 
-            <section class="section">
-                <div class="section-header"><h2 class="section-title">工具</h2></div>
-                <div class="grid-container">
-                    <a href="https://github.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="https://favicon.im/github.com" data-name="G"></div>
-                        <div class="card-title">GitHub</div>
-                    </a>
-                </div>
-            </section>
+            <div class="section-header"><h2 class="section-title">工具</h2></div>
+            <div class="grid-container">
+                <a href="https://github.com" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://github.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">GitHub</div></div>
+                </a>
+                <a href="https://tinypng.com" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://tinypng.com/images/apple-touch-icon.png"></div>
+                    <div class="card-info"><div class="card-title">TinyPNG</div></div>
+                </a>
+                <a href="https://v0.dev" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://v0.dev/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">v0.dev</div></div>
+                </a>
+            </div>
         </div>
     </main>
 
-    <script>
-        // ✅ 汉堡菜单控制
-        const btn = document.getElementById('hamburgerBtn');
-        const side = document.getElementById('sidebar');
-        const over = document.getElementById('sidebarOverlay');
-        const toggle = () => {
-            side.classList.toggle('open');
-            over.classList.toggle('open');
-        };
-        btn.onclick = toggle;
-        over.onclick = toggle;
-
-        // ✅ 图标加载失败兜底：显示首字母
-        document.querySelectorAll('.card-icon img').forEach(img => {
-            img.onerror = function() {
-                const name = this.getAttribute('data-name') || '?';
-                const parent = this.parentElement;
-                this.remove();
-                const fb = document.createElement('div');
-                fb.className = 'icon-text-fallback';
-                fb.textContent = name;
-                parent.appendChild(fb);
-            };
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
