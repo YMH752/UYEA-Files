@@ -1,6 +1,6 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   修改：移除所有描述(desc)样式，优化图标，仅保留主标题
+   优化：移除描述，仅保留主标题，适配 API 图标加载
    ============================================================ */
 
 :root {
@@ -53,7 +53,7 @@ body {
 .nav-item.active { background: var(--primary-light); color: var(--primary); }
 .nav-icon { margin-right: 12px; font-size: 18px; }
 
-/* 主内容区域 */
+/* 内容区域 */
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
 .content-wrapper { padding: 32px; max-width: 1200px; margin: 0 auto; }
 
@@ -67,14 +67,14 @@ body {
     width: 4px; background: var(--primary); border-radius: 2px;
 }
 
-/* 网格 */
+/* 网格布局 */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 减小最小宽度，适配纯标题卡片 */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 12px;
 }
 
-/* 卡片 - 仅保留主标题逻辑 */
+/* 卡片样式 */
 .card-item {
     background: var(--surface);
     border: 1.5px solid var(--border);
@@ -101,8 +101,6 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
-/* ✅ 彻底移除 card-desc 相关的代码，减少体积 */
 
 /* 移动端适配 */
 @media (max-width: 1024px) {
