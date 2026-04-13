@@ -1,5 +1,5 @@
 /* ============================================================
-   UYEA 悠野工作室 · script.js
+   UYEA 悠野工作室 · script.js (接手修订版)
    功能模块：
      1. 搜索（百度 / 谷歌 / 必应 + 回车触发）
      2. 汉堡菜单 & 侧边栏开关
@@ -22,177 +22,141 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay       = document.getElementById('sidebarOverlay');
     const mainContent   = document.getElementById('mainContent');
 
-    // 所有导航项（侧边栏 + 底部导航）
+    // 获取所有导航项：包括侧边栏和移动端底部导航
     const sidebarItems  = document.querySelectorAll('.sidebar .nav-item[data-section]');
     const bottomItems   = document.querySelectorAll('.bottom-nav .bottom-nav-item[data-section]');
-    // 所有内容分区
+    // 获取页面中带有ID的内容分区，用于滚动监听
     const sections      = document.querySelectorAll('.content-section[id]');
 
 
     /* ──────────────────────────────────────────
-       2. 搜索功能
+       2. 搜索功能逻辑
     ────────────────────────────────────────── */
     const engineUrls = {
         baidu:  q => `https://www.baidu.com/s?wd=${encodeURIComponent(q)}`,
         google: q => `https://www.google.com/search?q=${encodeURIComponent(q)}`,
-        bing:   q => `https://www.bing.com/search?q=${encodeURIComponent(q)}`,
+        bing:   q => `https://cn.bing.com/search?q=${encodeURIComponent(q)}` // 补全了必应搜索地址
     };
 
-    window.handleSearch = () => {
+    // 执行搜索的函数
+    function doSearch() {
         const query = searchInput.value.trim();
-        if (!query) {
-            // 空查询时输入框抖动提示
-            searchInput.closest('.search-wrapper').classList.add('shake');
-            setTimeout(() => searchInput.closest('.search-wrapper').classList.remove('shake'), 500);
-            return;
+        if (query) {
+            const engine = searchEngine.value;
+            // 打开新窗口进行搜索
+            window.open(engineUrls[engine](query), '_blank');
+        } else {
+            // 如果输入为空，触发一个抖动效果提醒用户
+            searchInput.classList.remove('shake');
+            void searchInput.offsetWidth; // 触发重绘
+            searchInput.classList.add('shake');
         }
-        // 修复：确保获取的是隐藏 select 的最新值
-        const engine = searchEngine.value;
-        const url = (engineUrls[engine] || engineUrls.baidu)(query);
-        window.open(url, '_blank', 'noopener,noreferrer');
-    };
+    }
 
-    // 回车触发搜索
-    searchInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter') window.handleSearch();
-    });
-
-
-    /* ──────────────────────────────────────────
-       3. 汉堡菜单 & 侧边栏
-    ────────────────────────────────────────── */
-    const openSidebar = () => {
-        sidebar.classList.add('open');
-        hamburgerBtn.classList.add('open');
-        overlay.classList.add('visible');
-        document.body.style.overflow = 'hidden'; // 防止背景滚动
-    };
-
-    const closeSidebar = () => {
-        sidebar.classList.remove('open');
-        hamburgerBtn.classList.remove('open');
-        overlay.classList.remove('visible');
-        document.body.style.overflow = '';
-    };
-
-    hamburgerBtn?.addEventListener('click', () => {
-        sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
-    });
-
-    // 遮罩点击关闭
-    overlay?.addEventListener('click', closeSidebar);
-
-    // ESC键关闭侧边栏
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeSidebar();
-    });
-
-    // 窗口变宽时自动重置侧边栏状态（避免从手机转PC后侧边栏卡住）
-    window.addEventListener('resize', () => {
-        if (window.innerWidth >= 1024) {
-            closeSidebar();
-            document.body.style.overflow = ''; // 确保解锁滚动
-        }
-    });
-
-
-    /* ──────────────────────────────────────────
-       4. 卡片入场动画错峰延迟
-    ────────────────────────────────────────── */
-    document.querySelectorAll('.card').forEach((card, i) => {
-        card.style.animationDelay = `${i * 0.06}s`;
-    });
-
-
-    /* ──────────────────────────────────────────
-       5. 导航高亮联动（侧边栏 + 底部导航同步）
-    ────────────────────────────────────────── */
-    const setActiveNav = (sectionId) => {
-        // 同步侧边栏高亮
-        sidebarItems.forEach(item => {
-            const match = item.dataset.section === sectionId;
-            item.classList.toggle('active', match);
+    // 监听搜索框的回车事件
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') doSearch();
         });
-        // 同步底部导航高亮
-        bottomItems.forEach(item => {
-            const match = item.dataset.section === sectionId;
-            item.classList.toggle('active', match);
-        });
-    };
-
-
-    /* ──────────────────────────────────────────
-       6. 点击导航平滑滚动
-    ────────────────────────────────────────── */
-    const handleNavClick = (item, e) => {
-        const sectionId = item.dataset.section;
-        const target = document.getElementById(sectionId);
-
-        if (target) {
-            e.preventDefault();
-            // 计算滚动偏移（考虑顶部导航栏高度）
-            const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 64;
-            const targetTop = target.getBoundingClientRect().top + window.scrollY - headerH - 12;
-
-            // 在主内容区滚动（PC端）或整页滚动（移动端）
-            if (mainContent && window.innerWidth >= 1024) {
-                mainContent.scrollTo({ top: target.offsetTop - 12, behavior: 'smooth' });
-            } else {
-                window.scrollTo({ top: targetTop, behavior: 'smooth' });
-            }
-
-            setActiveNav(sectionId);
-
-            // 移动端点击后关闭侧边栏
-            if (window.innerWidth < 1024) closeSidebar();
-        }
-    };
-
-    sidebarItems.forEach(item => {
-        item.addEventListener('click', e => handleNavClick(item, e));
-    });
-
-    bottomItems.forEach(item => {
-        item.addEventListener('click', e => handleNavClick(item, e));
-    });
-
-
-    /* ──────────────────────────────────────────
-       7. 滚动监听自动高亮（IntersectionObserver）
-    ────────────────────────────────────────── */
-    if (sections.length > 0) {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                // 找到当前可见度最高的section
-                let maxRatio = 0;
-                let activeSectionId = null;
-                entries.forEach(entry => {
-                    if (entry.intersectionRatio > maxRatio) {
-                        maxRatio = entry.intersectionRatio;
-                        activeSectionId = entry.target.id;
-                    }
-                });
-                if (activeSectionId) setActiveNav(activeSectionId);
-            },
-            {
-                root: null,
-                rootMargin: `-${parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h') || '64')}px 0px -40% 0px`,
-                threshold: [0, 0.25, 0.5, 0.75, 1.0],
-            }
-        );
-
-        sections.forEach(section => observer.observe(section));
     }
 
 
     /* ──────────────────────────────────────────
-       8. 卡片波纹点击效果（Ripple Effect）
+       3. 侧边栏（菜单）切换逻辑
     ────────────────────────────────────────── */
-    document.querySelectorAll('.card:not(.card-placeholder)').forEach(card => {
-        card.addEventListener('pointerdown', function(e) {
+    // 打开/关闭侧边栏
+    function toggleSidebar(state) {
+        if (sidebar) sidebar.classList.toggle('active', state);
+        if (overlay) overlay.classList.toggle('active', state);
+        // 侧边栏打开时禁用主体滚动
+        document.body.style.overflow = state ? 'hidden' : '';
+    }
+
+    if (hamburgerBtn) {
+        hamburgerBtn.addEventListener('click', () => toggleSidebar(true));
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', () => toggleSidebar(false));
+    }
+
+
+    /* ──────────────────────────────────────────
+       4. 导航高亮同步处理
+    ────────────────────────────────────────── */
+    function setActiveNav(sectionId) {
+        // 清除所有侧边栏项的激活状态
+        sidebarItems.forEach(item => {
+            item.classList.toggle('active', item.getAttribute('data-section') === sectionId);
+        });
+        // 清除所有底部导航项的激活状态
+        bottomItems.forEach(item => {
+            item.classList.toggle('active', item.getAttribute('data-section') === sectionId);
+        });
+    }
+
+    // 侧边栏点击事件：点击后自动关闭侧边栏并高亮
+    sidebarItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const sectionId = item.getAttribute('data-section');
+            setActiveNav(sectionId);
+            if (window.innerWidth < 1024) toggleSidebar(false);
+        });
+    });
+
+
+    /* ──────────────────────────────────────────
+       5. 滚动监听：随页面滚动自动切换导航高亮
+    ────────────────────────────────────────── */
+    window.addEventListener('scroll', () => {
+        let currentSection = "";
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            // 判断滚动条位置是否进入了某个分区的范围（偏移量60px用于抵消顶栏高度）
+            if (pageYOffset >= sectionTop - 70) {
+                currentSection = section.getAttribute('id');
+            }
+        });
+
+        if (currentSection) {
+            setActiveNav(currentSection);
+        }
+    });
+
+
+    /* ──────────────────────────────────────────
+       6. 卡片入场动画（错峰加载效果）
+    ────────────────────────────────────────── */
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        // 根据卡片的索引顺序，依次延迟动画触发时间
+        card.style.animationDelay = `${index * 0.05}s`;
+    });
+
+
+    /* ──────────────────────────────────────────
+       7. 响应式处理：窗口大小改变时重置状态
+    ────────────────────────────────────────── */
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024) {
+            toggleSidebar(false);
+            document.body.style.overflow = '';
+        }
+    });
+
+
+    /* ──────────────────────────────────────────
+       8. 点击波纹特效（Ripple Effect）
+    ────────────────────────────────────────── */
+    document.querySelectorAll('.card, .nav-item, .bottom-nav-item, .post-btn').forEach(el => {
+        el.addEventListener('pointerdown', function(e) {
+            // 排除掉没有波纹样式的特殊占位符
+            if (this.classList.contains('card-placeholder')) return;
+
             const ripple = document.createElement('span');
             const rect = this.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height) * 1.5;
+            
             ripple.style.cssText = `
                 position:absolute;
                 width:${size}px; height:${size}px;
@@ -203,7 +167,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 transform:scale(0);
                 animation:ripple 0.5s ease-out forwards;
                 pointer-events:none;
+                z-index: 0;
             `;
+            
+            // 确保父元素有定位属性，否则波纹会飘走
+            if (window.getComputedStyle(this).position === 'static') {
+                this.style.position = 'relative';
+            }
+            this.style.overflow = 'hidden';
+            
             this.appendChild(ripple);
             ripple.addEventListener('animationend', () => ripple.remove());
         });
@@ -211,22 +183,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-
 /* ──────────────────────────────────────────
-   9. 全局动态样式注入（Ripple + Shake）
+   9. 动态样式注入：为波纹和抖动提供CSS支持
 ────────────────────────────────────────── */
-const dynamicStyles = document.createElement('style');
-dynamicStyles.textContent = `
-@keyframes ripple {
-    to { transform: scale(1); opacity: 0; }
-}
-@keyframes shake {
-    0%,100% { transform: translateX(0); }
-    20%      { transform: translateX(-6px); }
-    40%      { transform: translateX(6px); }
-    60%      { transform: translateX(-4px); }
-    80%      { transform: translateX(4px); }
-}
-.shake { animation: shake 0.4s var(--ease-smooth); }
-`;
-document.head.appendChild(dynamicStyles);
+(function injectStyles() {
+    if (document.getElementById('injected-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'injected-styles';
+    style.textContent = `
+        @keyframes ripple {
+            to { transform: scale(1); opacity: 0; }
+        }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%      { transform: translateX(-6px); }
+            40%      { transform: translateX(6px); }
+            60%      { transform: translateX(-4px); }
+            80%      { transform: translateX(4px); }
+        }
+        .shake { animation: shake 0.4s ease-in-out; }
+    `;
+    document.head.appendChild(style);
+})();
