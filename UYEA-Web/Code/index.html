@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 首页专属布局与卡片微调 ── */
+        /* ── 首页顶栏布局 ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -76,7 +76,6 @@
             font-weight: 500;
         }
 
-        /* 汉堡菜单加粗 */
         .menu-toggle {
             display: none;
             background: none;
@@ -94,21 +93,7 @@
             border-radius: 2px;
         }
 
-        /* 公告栏区域 */
-        .notice-board {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-        .notice-card {
-            flex: 1;
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 16px;
-        }
-
-        /* ✅ 文字卡片：用于“每日推荐”尽请期待 */
+        /* 状态卡片：用于“尽请期待” */
         .text-status-card {
             background: var(--surface);
             border: 1.5px dashed var(--border);
@@ -117,15 +102,15 @@
             text-align: center;
             color: var(--text-muted);
             font-size: 16px;
-            grid-column: 1 / -1; /* 横跨整行 */
+            grid-column: 1 / -1;
         }
 
-        /* ✅ 图标样式：圆角，无背景，无阴影 */
+        /* ✅ 图标样式：圆角、无阴影、背景透明 */
         .card-icon {
-            width: 40px;
-            height: 40px;
-            background: transparent !important; /* 移除背景 */
-            box-shadow: none !important; /* 移除阴影 */
+            width: 32px;
+            height: 32px;
+            background: transparent !important;
+            box-shadow: none !important;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -135,12 +120,11 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: 8px; /* 图标圆角 */
+            border-radius: 6px;
         }
 
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
-            .notice-board { flex-direction: column; }
         }
     </style>
 </head>
@@ -181,11 +165,6 @@
 
         <div class="content-wrapper">
             
-            <section class="notice-board">
-                <div class="notice-card"><strong>官方动态：</strong> UYEA 2.0 运行中</div>
-                <div class="notice-card"><strong>今日更新：</strong> 新增 AI 工具分类</div>
-            </section>
-
             <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
                 <div class="text-status-card">☕ 尽请期待</div>
@@ -195,23 +174,43 @@
             <div class="grid-container" style="margin-bottom: 40px;">
                 <a href="https://www.deepseek.com/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="https://www.deepseek.com/favicon.ico"></div>
-                    <div class="card-info"><div class="card-title">DeepSeek</div><div class="card-desc">强力国产大模型</div></div>
+                    <div class="card-info"><div class="card-title">DeepSeek</div></div>
                 </a>
                 <a href="https://chatgpt.com/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="https://openai.com/favicon.ico"></div>
-                    <div class="card-info"><div class="card-title">ChatGPT</div><div class="card-desc">OpenAI 旗下产品</div></div>
+                    <div class="card-info"><div class="card-title">ChatGPT</div></div>
                 </a>
                 <a href="https://claude.ai/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="https://claude.ai/images/apple-touch-icon.png"></div>
-                    <div class="card-info"><div class="card-title">Claude</div><div class="card-desc">Anthropic 智能助手</div></div>
+                    <div class="card-info"><div class="card-title">Claude</div></div>
                 </a>
                 <a href="https://yiyan.baidu.com/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="https://yiyan.baidu.com/favicon.ico"></div>
-                    <div class="card-info"><div class="card-title">文心一言</div><div class="card-desc">百度 AI 对话</div></div>
+                    <div class="card-info"><div class="card-title">文心一言</div></div>
                 </a>
                 <a href="https://qianwen.aliyun.com/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="https://img.alicdn.com/imgextra/i4/O1CN01S99m9x1Wp9Fh9O9m9_!!6000000002830-2-tps-32-32.png"></div>
-                    <div class="card-info"><div class="card-title">通义千问</div><div class="card-desc">阿里大模型</div></div>
+                    <div class="card-info"><div class="card-title">通义千问</div></div>
+                </a>
+                <a href="https://www.kimi.ai/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://kimi.moonshot.cn/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">Kimi</div></div>
+                </a>
+                <a href="https://www.doubao.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.doubao.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">豆包</div></div>
+                </a>
+                <a href="https://yuanbao.tencent.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://yuanbao.tencent.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">腾讯元宝</div></div>
+                </a>
+                <a href="https://www.perplexity.ai/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.perplexity.ai/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">Perplexity</div></div>
+                </a>
+                <a href="https://grok.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://grok.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">Grok</div></div>
                 </a>
             </div>
 
@@ -219,11 +218,15 @@
             <div class="grid-container" style="margin-bottom: 40px;">
                 <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
                     <div class="card-icon"><img src="https://www.xiaohongshu.com/favicon.ico"></div>
-                    <div class="card-info"><div class="card-title">小红书</div><div class="card-desc">标记我的生活</div></div>
+                    <div class="card-info"><div class="card-title">小红书</div></div>
                 </a>
                 <a href="https://www.bilibili.com" target="_blank" class="card-item">
                     <div class="card-icon"><img src="https://www.bilibili.com/favicon.ico"></div>
-                    <div class="card-info"><div class="card-title">Bilibili</div><div class="card-desc">弹幕视频网</div></div>
+                    <div class="card-info"><div class="card-title">Bilibili</div></div>
+                </a>
+                <a href="https://www.zhihu.com" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.zhihu.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">知乎</div></div>
                 </a>
             </div>
 
@@ -231,11 +234,15 @@
             <div class="grid-container">
                 <a href="https://github.com" target="_blank" class="card-item">
                     <div class="card-icon"><img src="https://github.com/favicon.ico"></div>
-                    <div class="card-info"><div class="card-title">GitHub</div><div class="card-desc">开源代码托管</div></div>
+                    <div class="card-info"><div class="card-title">GitHub</div></div>
                 </a>
                 <a href="https://tinypng.com" target="_blank" class="card-item">
                     <div class="card-icon"><img src="https://tinypng.com/images/apple-touch-icon.png"></div>
-                    <div class="card-info"><div class="card-title">TinyPNG</div><div class="card-desc">在线图片压缩</div></div>
+                    <div class="card-info"><div class="card-title">TinyPNG</div></div>
+                </a>
+                <a href="https://v0.dev" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://v0.dev/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">v0.dev</div></div>
                 </a>
             </div>
         </div>
