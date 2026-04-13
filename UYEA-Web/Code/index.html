@@ -1,392 +1,213 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8 Bureau">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>UYEA | 悠野导航</title>
     
-    <!-- SEO优化 -->
     <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。汇聚ChatGPT、Claude、DeepSeek等AI工具，以及开发者必备的工具集。">
     <meta property="og:title" content="UYEA | 悠野工作室 - 导航·工具·社区">
     <meta property="og:description" content="大锅炖网站 - AI智能体导航、在线工具箱、技术社区一站式平台">
     <meta name="theme-color" content="#0078d4">
     <link rel="canonical" href="https://uyea.studio/">
     
-    <!-- 字体加载 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&family=Roboto:wght@700&display=swap" rel="stylesheet">
     
-    <!-- 图标CDN（jsDelivr国内加速） -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 优化后的LOGO样式：粗体、单行显示 ── */
-        .logo-text {
-            font-family: 'Roboto', 'Bebas Neue', sans-serif !important;
-            font-style: normal !important;
-            font-weight: 700 !important;
-            font-size: 24px !important;
-            letter-spacing: 0.5px !important;
-            color: var(--primary) !important;
-            line-height: 1 !important;
-        }
-        
-        .logo-sub {
-            font-style: normal !important;
-            font-size: 12px !important;
-            color: var(--text-secondary) !important;
-            letter-spacing: 2px !important;
-            margin-top: 2px !important;
-            display: block !important;
+        /* ✅ 优化：主页专属样式及搜索区域调整 */
+        .search-section {
+            padding: 80px 20px 40px; /* 适当压缩了手机端顶部的空隙 */
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        /* ── 卡片图标样式优化 ── */
-        .card-icon {
-            background: transparent !important;
-            box-shadow: none !important;
-        }
-        
-        .card-icon img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-            image-rendering: -webkit-optimize-contrast;
-            /* 使用 will-change 优化图片加载性能 */
-            will-change: opacity;
-            transition: opacity 0.3s ease;
+        .search-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3.5rem;
+            letter-spacing: 4px;
+            color: var(--primary);
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 0px rgba(0,120,212,0.1);
         }
 
-        /* ── 待添加中文字卡片样式 ── */
-        .empty-text-card {
-            grid-column: 1 / -1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 30px;
-            background: var(--surface);
-            border: 1px dashed var(--border);
-            border-radius: var(--radius-md);
-            color: var(--text-muted);
-            font-size: 15px;
-            letter-spacing: 1px;
+        @media (max-width: 768px) {
+            .search-section { padding: 40px 16px 20px; }
+            .search-title { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 侧边栏遮罩（移动端） -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- ════════════════════════════════════════
-         优化的侧边栏：只显示3个菜单项
-         ════════════════════════════════════════ -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo-group">
-                <!-- ✅ 优化：改成单行显示 UYEA_悠野 -->
-                <span class="logo-text">UYEA</span>
-                <span class="logo-sub">_悠野</span>
+            <div class="logo-area">
+                <div class="logo-text">UYEA</div>
+                <div class="logo-sub">悠野工作室</div>
             </div>
         </div>
-        <nav class="sidebar-nav">
-            <!-- ✅ 优化：只保留3个菜单项，间距调整 -->
-            <div class="nav-item active" data-section="recommend">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-label">导航</span>
-            </div>
-            <a href="tools.html" class="nav-item">
-                <span class="nav-icon">🧰</span>
+        <nav class="nav-list">
+            <a href="index.html" class="nav-item active" data-section="nav">
+                <span class="nav-icon">🧭</span>
+                <span class="nav-label">灵感导航</span>
+            </a>
+            <a href="tools.html" class="nav-item" data-section="tools">
+                <span class="nav-icon">🛠️</span>
                 <span class="nav-label">线上工具</span>
             </a>
-            <a href="forum.html" class="nav-item">
+            <a href="forum.html" class="nav-item" data-section="forum">
                 <span class="nav-icon">💬</span>
-                <span class="nav-label">社区</span>
+                <span class="nav-label">悠野社区</span>
             </a>
         </nav>
     </aside>
 
-    <!-- ════════════════════════════════════════
-         主内容区
-         ════════════════════════════════════════ -->
-    <main class="main-content" id="mainContent">
-        
-        <header class="top-bar">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-left">
+                </div>
+            
+            <div class="header-right">
+                <div class="user-action-area" id="userActionArea">
+                    </div>
+            </div>
+        </header>
+
+        <section class="search-section">
+            <h1 class="search-title">UYEA NAV</h1>
             <div class="search-container">
-                <div class="search-wrapper">
-                    <!-- ✅ 优化：搜索引擎选择 + 自适应搜索框 -->
-                    <div class="search-engine-select">
-                        <button class="engine-btn" id="engineBtn">
-                            <span id="engineLabel">百度</span>
-                            <i class="arrow-icon"></i>
-                        </button>
-                        <div class="engine-dropdown" id="engineDropdown">
-                            <div class="engine-option selected" data-value="baidu">
-                                <span class="engine-dot"></span>百度
-                            </div>
-                            <div class="engine-option" data-value="google">
-                                <span class="engine-dot"></span>谷歌
-                            </div>
-                            <div class="engine-option" data-value="bing">
-                                <span class="engine-dot"></span>必应
-                            </div>
+                <div class="search-box">
+                    <div class="custom-select" id="engineSelect">
+                        <div class="select-trigger">
+                            <span id="currentEngineLabel">百度</span>
+                            <span class="arrow"></span>
+                        </div>
+                        <div class="select-options">
+                            <div class="option selected" data-value="baidu">百度</div>
+                            <div class="option" data-value="google">Google</div>
+                            <div class="option" data-value="bing">必应</div>
                         </div>
                         <select id="searchEngine" style="display: none;">
                             <option value="baidu">百度</option>
-                            <option value="google">谷歌</option>
+                            <option value="google">Google</option>
                             <option value="bing">必应</option>
                         </select>
                     </div>
-                    <!-- ✅ 优化：搜索框自适应，右边有合理间距 -->
-                    <input type="text" id="searchInput" placeholder="搜索关键词..." autocomplete="off">
-                    <button class="search-submit" onclick="doSearch()">
-                        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                    </button>
+                    <div class="input-wrapper">
+                        <input type="text" id="searchInput" placeholder="搜索你感兴趣的内容..." autocomplete="off">
+                        <button class="search-btn" id="searchBtn">
+                            <svg t="1700000000000" viewBox="0 0 1024 1024" width="20" height="20"><path d="M424 120.3c-167.3 0-303.7 136.4-303.7 303.7s136.4 303.7 303.7 303.7c72.4 0 138.8-25.5 191-68l210.8 210.8c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L660.3 514.4c42.5-52.2 68-118.6 68-191-0.1-167.3-136.5-303.1-304.3-303.1zM424 184.3c132.5 0 240 107.5 240 240S556.5 664.3 424 664.3s-240-107.5-240-240 107.5-240 240-240z" fill="currentColor"></path></svg>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <button class="hamburger" id="hamburgerBtn">
-                <span></span><span></span><span></span>
-            </button>
-        </header>
-
-        <section class="welcome-banner">
-            <div class="banner-text">
-                <h1>悠野/UYEA</h1>
-                <p>大锅炖网站 · 导航 · 工具 · 社区</p>
             </div>
         </section>
 
-        <div class="content-body">
-            
-            <!-- ════════════════════════════════════════
-                 每日推荐
-                 ════════════════════════════════════════ -->
-            <section id="recommend" class="content-section">
-                <h2 class="section-title">🔥 每日推荐</h2>
-                <div class="card-grid">
-                    <div class="empty-text-card">待添加中</div>
+        <div class="content-wrapper">
+            <div class="section-container active" id="nav-section">
+                <div class="category-group">
+                    <h2 class="category-title">AI 智能助手</h2>
+                    <div class="card-grid">
+                        <a href="https://chat.openai.com" target="_blank" class="nav-card" rel="noopener">
+                            <div class="card-icon"><img src="" data-domain="openai.com" alt=""></div>
+                            <div class="card-info">
+                                <div class="card-name">ChatGPT</div>
+                                <div class="card-desc">OpenAI 旗下的强大 AI 对话模型</div>
+                            </div>
+                        </a>
+                        <a href="https://claude.ai" target="_blank" class="nav-card" rel="noopener">
+                            <div class="card-icon"><img src="" data-domain="claude.ai" alt=""></div>
+                            <div class="card-info">
+                                <div class="card-name">Claude</div>
+                                <div class="card-desc">Anthropic 推出的高智商 AI 助手</div>
+                            </div>
+                        </a>
+                        <a href="https://www.deepseek.com" target="_blank" class="nav-card" rel="noopener">
+                            <div class="card-icon"><img src="" data-domain="deepseek.com" alt=""></div>
+                            <div class="card-info">
+                                <div class="card-name">DeepSeek</div>
+                                <div class="card-desc">国产之光，极具性价比的开源模型</div>
+                            </div>
+                        </a>
+                        <a href="https://www.perplexity.ai" target="_blank" class="nav-card" rel="noopener">
+                            <div class="card-icon"><img src="" data-domain="perplexity.ai" alt=""></div>
+                            <div class="card-info">
+                                <div class="card-name">Perplexity</div>
+                                <div class="card-desc">结合搜索的 AI 问答工具</div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </section>
 
-            <!-- ════════════════════════════════════════
-                 AI · 智能体（✅优化：图标使用CDN）
-                 ════════════════════════════════════════ -->
-            <section id="ai" class="content-section">
-                <h2 class="section-title">🤖 Ai · 智能体</h2>
-                <div class="card-grid">
-                    <a href="https://gemini.google.com/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ 使用jsDelivr CDN加载favicon（国内快速） -->
-                            <img src="https://cdn.jsdelivr.net/gh/google/favicon@master/favicon.ico" alt="Google Gemini" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">Google Gemini</div>
-                        </div>
-                    </a>
-                    <a href="https://chatgpt.com/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <img src="https://cdn.jsdelivr.net/gh/openai/favicon@main/favicon.ico" alt="ChatGPT" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">ChatGPT</div>
-                        </div>
-                    </a>
-                    <a href="https://www.deepseek.com/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ DeepSeek使用官方资源 -->
-                            <img src="https://www.deepseek.com/favicon.ico" alt="DeepSeek" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">DeepSeek</div>
-                        </div>
-                    </a>
-                    <a href="https://www.doubao.com/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ 豆包 -->
-                            <img src="https://www.doubao.com/favicon.ico" alt="豆包" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">豆包</div>
-                        </div>
-                    </a>
-                    <a href="https://yiyan.baidu.com/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ 文心一言 -->
-                            <img src="https://yiyan.baidu.com/favicon.ico" alt="文心一言" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">文心一言</div>
-                        </div>
-                    </a>
-                    <a href="https://qianwen.aliyun.com/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ 千问 -->
-                            <img src="https://qianwen.aliyun.com/favicon.ico" alt="千问" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">千问</div>
-                        </div>
-                    </a>
-                    <a href="https://grok.com/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ Grok -->
-                            <img src="https://grok.com/favicon.ico" alt="Grok" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">Grok</div>
-                        </div>
-                    </a>
-                    <a href="https://www.claude.ai/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ Claude -->
-                            <img src="https://www.claude.ai/favicon.ico" alt="Claude" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">Claude</div>
-                        </div>
-                    </a>
-                    <a href="https://www.yuanbao.com/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ 元宝 -->
-                            <img src="https://www.yuanbao.com/favicon.ico" alt="元宝" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">元宝</div>
-                        </div>
-                    </a>
-                    <a href="https://www.kimi.ai/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ Kimi -->
-                            <img src="https://www.kimi.ai/favicon.ico" alt="Kimi" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">Kimi</div>
-                        </div>
-                    </a>
-                    <a href="https://www.perplexity.ai/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ Perplexity -->
-                            <img src="https://www.perplexity.ai/favicon.ico" alt="Perplexity" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">Perplexity</div>
-                        </div>
-                    </a>
-                    <a href="https://copilot.microsoft.com/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <!-- ✅ Copilot Chat -->
-                            <img src="https://www.microsoft.com/favicon.ico" alt="Copilot Chat" loading="lazy">
-                        </div>
-                        <div class="card-info">
-                            <div class="card-name">Copilot Chat</div>
-                        </div>
-                    </a>
+                <div class="category-group">
+                    <h2 class="category-title">常用推荐</h2>
+                    <div class="card-grid">
+                        <a href="https://www.xiaohongshu.com" target="_blank" class="nav-card" rel="noopener">
+                            <div class="card-icon"><img src="" data-domain="xiaohongshu.com" alt=""></div>
+                            <div class="card-info">
+                                <div class="card-name">小红书</div>
+                                <div class="card-desc">标记我的生活</div>
+                            </div>
+                        </a>
+                        <a href="https://www.taobao.com" target="_blank" class="nav-card" rel="noopener">
+                            <div class="card-icon"><img src="" data-domain="taobao.com" alt=""></div>
+                            <div class="card-info">
+                                <div class="card-name">淘宝网</div>
+                                <div class="card-desc">太好逛了吧</div>
+                            </div>
+                        </a>
+                        <a href="https://github.com" target="_blank" class="nav-card" rel="noopener">
+                            <div class="card-icon"><img src="" data-domain="github.com" alt=""></div>
+                            <div class="card-info">
+                                <div class="card-name">GitHub</div>
+                                <div class="card-desc">全球最大的开源社区</div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </section>
-
-            <!-- ════════════════════════════════════════
-                 生活（✅优化：图标加载）
-                 ════════════════════════════════════════ -->
-            <section id="life" class="content-section">
-                <h2 class="section-title">🌿 生活</h2>
-                <div class="card-grid">
-                    <a href="https://www.xiaohongshu.com" target="_blank" class="card">
-                        <div class="card-icon">
-                            <img src="https://www.xiaohongshu.com/favicon.ico" alt="小红书" loading="lazy">
-                        </div>
-                        <div class="card-info"><div class="card-name">小红书</div></div>
-                    </a>
-                    <a href="https://weibo.com" target="_blank" class="card">
-                        <div class="card-icon">
-                            <img src="https://weibo.com/favicon.ico" alt="微博" loading="lazy">
-                        </div>
-                        <div class="card-info"><div class="card-name">微博</div></div>
-                    </a>
-                    <a href="https://www.zhihu.com" target="_blank" class="card">
-                        <div class="card-icon">
-                            <img src="https://www.zhihu.com/favicon.ico" alt="知乎" loading="lazy">
-                        </div>
-                        <div class="card-info"><div class="card-name">知乎</div></div>
-                    </a>
-                    <a href="https://www.taobao.com" target="_blank" class="card">
-                        <div class="card-icon">
-                            <img src="https://www.taobao.com/favicon.ico" alt="淘宝" loading="lazy">
-                        </div>
-                        <div class="card-info"><div class="card-name">淘宝</div></div>
-                    </a>
-                    <a href="https://www.jd.com" target="_blank" class="card">
-                        <div class="card-icon">
-                            <img src="https://www.jd.com/favicon.ico" alt="京东" loading="lazy">
-                        </div>
-                        <div class="card-info"><div class="card-name">京东</div></div>
-                    </a>
-                    <a href="https://maps.baidu.com" target="_blank" class="card">
-                        <div class="card-icon">
-                            <img src="https://baidu.com/favicon.ico" alt="百度地图" loading="lazy">
-                        </div>
-                        <div class="card-info"><div class="card-name">百度地图</div></div>
-                    </a>
-                </div>
-            </section>
-
-            <!-- ════════════════════════════════════════
-                 开发（✅优化：图标加载）
-                 ════════════════════════════════════════ -->
-            <section id="dev" class="content-section">
-                <h2 class="section-title">🛠️ 开发</h2>
-                <div class="card-grid">
-                    <a href="https://developer.mozilla.org/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <img src="https://developer.mozilla.org/favicon.ico" alt="MDN" loading="lazy">
-                        </div>
-                        <div class="card-info"><div class="card-name">MDN</div></div>
-                    </a>
-                    <a href="https://stackoverflow.com/" target="_blank" class="card">
-                        <div class="card-icon">
-                            <img src="https://stackoverflow.com/favicon.ico" alt="Stack Overflow" loading="lazy">
-                        </div>
-                        <div class="card-info"><div class="card-name">Stack Overflow</div></div>
-                    </a>
-                    <a href="tools.html" class="card">
-                        <div class="card-icon">🧰</div>
-                        <div class="card-info"><div class="card-name">悠野工具箱</div></div>
-                    </a>
-                </div>
-            </section>
-
+            </div>
         </div>
+
+        <footer class="site-footer">
+            <p>© 2026 UYEA 悠野工作室 · 让创意自由生长</p>
+        </footer>
     </main>
 
-    <!-- ════════════════════════════════════════
-         底部菜单栏（统一优化）
-         ════════════════════════════════════════ -->
     <nav class="bottom-nav">
-        <div class="bottom-nav-item active" data-section="recommend">
-            <span class="bottom-icon">🏠</span>
-            <span class="bottom-label">导航</span>
-        </div>
-        <a href="tools.html" class="bottom-nav-item">
-            <span class="bottom-icon">🧰</span>
-            <span class="bottom-label">线上工具</span>
+        <a href="index.html" class="bottom-nav-item active" data-section="nav">
+            <span class="nav-icon">🧭</span>
+            <span class="nav-label">导航</span>
         </a>
-        <a href="forum.html" class="bottom-nav-item">
-            <span class="bottom-icon">💬</span>
-            <span class="bottom-label">社区</span>
+        <a href="tools.html" class="bottom-nav-item" data-section="tools">
+            <span class="nav-icon">🛠️</span>
+            <span class="nav-label">工具箱</span>
+        </a>
+        <a href="forum.html" class="bottom-nav-item" data-section="forum">
+            <span class="nav-icon">💬</span>
+            <span class="nav-label">社区</span>
         </a>
     </nav>
 
     <script src="script.js"></script>
     <script>
-    /* ── 搜索引擎切换逻辑 ── */
+    /* ── ✅ 主页独有交互逻辑 ── */
     (function() {
-        const btn      = document.getElementById('engineBtn');
-        const dropdown = document.getElementById('engineDropdown');
-        const label    = document.getElementById('engineLabel');
-        const select   = document.getElementById('searchEngine');
-        const options  = dropdown.querySelectorAll('.engine-option');
+        // 自定义下拉引擎
+        const select = document.getElementById('searchEngine');
+        const trigger = document.querySelector('.select-trigger');
+        const dropdown = document.querySelector('.select-options');
+        const options = document.querySelectorAll('.option');
+        const label = document.getElementById('currentEngineLabel');
+        const btn = document.querySelector('.custom-select');
 
-        btn.addEventListener('click', function(e) {
+        trigger.addEventListener('click', function(e) {
             e.stopPropagation();
             const isNowOpen = dropdown.classList.toggle('open');
             btn.classList.toggle('open', isNowOpen);
@@ -402,6 +223,7 @@
                 this.classList.add('selected');
                 dropdown.classList.remove('open');
                 btn.classList.remove('open');
+                localStorage.setItem('uyea_preferred_search_engine', val);
             });
         });
 
@@ -410,22 +232,6 @@
             btn.classList.remove('open');
         });
     })();
-
-    /* ── ✅ 图片加载失败处理 + 文件不存在时降级 ── */
-    document.querySelectorAll('.card-icon img').forEach(img => {
-        img.addEventListener('error', function() {
-            console.warn('图标加载失败:', this.src);
-            this.style.display = 'none';
-            
-            // ✅ 使用回退方案：显示通用链接图标
-            const fallback = document.createElement('span');
-            fallback.className = 'icon-fallback';
-            fallback.textContent = '🔗';
-            fallback.setAttribute('title', '图标加载失败');
-            
-            this.parentElement.appendChild(fallback);
-        });
-    });
     </script>
 </body>
 </html>
