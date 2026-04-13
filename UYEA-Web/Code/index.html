@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8 Bureau">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>UYEA | 悠野导航</title>
     
@@ -19,9 +19,9 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ✅ 优化：主页专属样式及搜索区域调整 */
+        /* ── 优化：主页专属样式 ── */
         .search-section {
-            padding: 80px 20px 40px; /* 适当压缩了手机端顶部的空隙 */
+            padding: 100px 20px 60px;
             text-align: center;
             max-width: 800px;
             margin: 0 auto;
@@ -29,16 +29,16 @@
 
         .search-title {
             font-family: 'Bebas Neue', cursive;
-            font-size: 3.5rem;
+            font-size: 4rem;
             letter-spacing: 4px;
             color: var(--primary);
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             text-shadow: 2px 2px 0px rgba(0,120,212,0.1);
         }
 
         @media (max-width: 768px) {
-            .search-section { padding: 40px 16px 20px; }
-            .search-title { font-size: 2.5rem; }
+            .search-section { padding: 60px 20px 30px; }
+            .search-title { font-size: 3rem; }
         }
     </style>
 </head>
@@ -75,8 +75,7 @@
                 </div>
             
             <div class="header-right">
-                <div class="user-action-area" id="userActionArea">
-                    </div>
+                <div id="userActionArea"></div>
             </div>
         </header>
 
@@ -116,31 +115,24 @@
                     <h2 class="category-title">AI 智能助手</h2>
                     <div class="card-grid">
                         <a href="https://chat.openai.com" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="openai.com" alt=""></div>
+                            <div class="card-icon"><img src="" data-domain="openai.com" alt="ChatGPT"></div>
                             <div class="card-info">
                                 <div class="card-name">ChatGPT</div>
                                 <div class="card-desc">OpenAI 旗下的强大 AI 对话模型</div>
                             </div>
                         </a>
                         <a href="https://claude.ai" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="claude.ai" alt=""></div>
+                            <div class="card-icon"><img src="" data-domain="claude.ai" alt="Claude"></div>
                             <div class="card-info">
                                 <div class="card-name">Claude</div>
                                 <div class="card-desc">Anthropic 推出的高智商 AI 助手</div>
                             </div>
                         </a>
                         <a href="https://www.deepseek.com" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="deepseek.com" alt=""></div>
+                            <div class="card-icon"><img src="" data-domain="deepseek.com" alt="DeepSeek"></div>
                             <div class="card-info">
                                 <div class="card-name">DeepSeek</div>
-                                <div class="card-desc">国产之光，极具性价比的开源模型</div>
-                            </div>
-                        </a>
-                        <a href="https://www.perplexity.ai" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="perplexity.ai" alt=""></div>
-                            <div class="card-info">
-                                <div class="card-name">Perplexity</div>
-                                <div class="card-desc">结合搜索的 AI 问答工具</div>
+                                <div class="card-desc">极具性价比的开源模型</div>
                             </div>
                         </a>
                     </div>
@@ -150,24 +142,17 @@
                     <h2 class="category-title">常用推荐</h2>
                     <div class="card-grid">
                         <a href="https://www.xiaohongshu.com" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="xiaohongshu.com" alt=""></div>
+                            <div class="card-icon"><img src="" data-domain="xiaohongshu.com" alt="小红书"></div>
                             <div class="card-info">
                                 <div class="card-name">小红书</div>
                                 <div class="card-desc">标记我的生活</div>
                             </div>
                         </a>
                         <a href="https://www.taobao.com" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="taobao.com" alt=""></div>
+                            <div class="card-icon"><img src="" data-domain="taobao.com" alt="淘宝"></div>
                             <div class="card-info">
                                 <div class="card-name">淘宝网</div>
                                 <div class="card-desc">太好逛了吧</div>
-                            </div>
-                        </a>
-                        <a href="https://github.com" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="github.com" alt=""></div>
-                            <div class="card-info">
-                                <div class="card-name">GitHub</div>
-                                <div class="card-desc">全球最大的开源社区</div>
                             </div>
                         </a>
                     </div>
@@ -197,9 +182,8 @@
 
     <script src="script.js"></script>
     <script>
-    /* ── ✅ 主页独有交互逻辑 ── */
+    /* ── 主页搜索下拉逻辑 ── */
     (function() {
-        // 自定义下拉引擎
         const select = document.getElementById('searchEngine');
         const trigger = document.querySelector('.select-trigger');
         const dropdown = document.querySelector('.select-options');
@@ -207,7 +191,7 @@
         const label = document.getElementById('currentEngineLabel');
         const btn = document.querySelector('.custom-select');
 
-        trigger.addEventListener('click', function(e) {
+        trigger?.addEventListener('click', function(e) {
             e.stopPropagation();
             const isNowOpen = dropdown.classList.toggle('open');
             btn.classList.toggle('open', isNowOpen);
@@ -223,13 +207,12 @@
                 this.classList.add('selected');
                 dropdown.classList.remove('open');
                 btn.classList.remove('open');
-                localStorage.setItem('uyea_preferred_search_engine', val);
             });
         });
 
         document.addEventListener('click', () => {
-            dropdown.classList.remove('open');
-            btn.classList.remove('open');
+            dropdown?.classList.remove('open');
+            btn?.classList.remove('open');
         });
     })();
     </script>
