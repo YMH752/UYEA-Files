@@ -1,6 +1,7 @@
 /* ============================================================
    UYEA 悠野工作室 · script.js (优化版)
    优化内容：菜单统一、图标加载、localStorage保存、汉堡菜单
+   ✅ 新增：A+C方案图标加载 + 随机颜色备用方案
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -227,35 +228,171 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ────────────────────────────────────────────
-       10. ✅ 图片加载失败处理（重要：快速显示）
+       ✅ 10. 新增：A+C方案图标加载机制
+       方案说明：
+       - 方案A（第一优先）：使用DuckDuckGo图标服务，稳定性高
+       - 方案C（第二优先）：直接访问官网favicon + 超时处理
+       - 降级方案：随机颜色渐变 + 网站首字母
        ──────────────────────────────────────────── */
-    document.querySelectorAll('.card-icon img').forEach(img => {
-        // ✅ 添加加载中的视觉反馈
-        img.loading = 'lazy';
-        
-        img.addEventListener('error', function() {
-            console.warn('Failed to load icon:', this.src);
-            this.style.display = 'none';
-            
-            // ✅ 加载失败时显示备用图标
-            const fallback = document.createElement('span');
-            fallback.className = 'icon-fallback';
-            fallback.textContent = '🔗';
-            fallback.setAttribute('title', '图标加载失败，点击访问');
-            
-            this.parentElement.appendChild(fallback);
-        });
 
-        // ✅ 添加加载成功的过度效果
-        img.addEventListener('load', function() {
-            this.style.opacity = '1';
+    /* ✅ 生成随机颜色函数（支持渐变） */
+    function generateRandomGradient() {
+        // 生成两个随机HSL颜色用于渐变
+        const hue1 = Math.random() * 360;
+        const hue2 = (hue1 + 60 + Math.random() * 60) % 360; // 相隔60-120度保证颜色搭配
+        const saturation = 60 + Math.random() * 30; // 60-90%饱和度
+        const lightness = 50 + Math.random() * 20; // 50-70%亮度
+        
+        const color1 = `hsl(${hue1}, ${saturation}%, ${lightness}%)`;
+        const color2 = `hsl(${hue2}, ${saturation}%, ${lightness}%)`;
+        
+        return `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`;
+    }
+
+    /* ✅ 获取网站名称的首个字符 */
+    function getFirstChar(siteName) {
+        // 移除特殊字符，提取首个有意义的字符
+        const cleanName = siteName.replace(/[^a-zA-Z\u4e00-\u9fa5]/g, '');
+        return cleanName.charAt(0).toUpperCase() || '?';
+    }
+
+    /* ✅ 方案A：DuckDuckGo图标服务（第一优先） */
+    function loadIconFromDuckDuckGo(domain, fallbackCallback) {
+        const ddgIconUrl = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+        
+        // 使用带超时的fetch请求
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+        
+        fetch(ddgIconUrl, { 
+            mode: 'no-cors',
+            signal: controller.signal 
+        })
+        .then(response => {
+            clearTimeout(timeoutId);
+            if (response.ok || response.status === 0) {
+                return ddgIconUrl; // 返回URL用于img标签
+            }
+            throw new Error('DuckDuckGo loading failed');
+        })
+        .catch(error => {
+            clearTimeout(timeoutId);
+            console.warn(`DuckDuckGo icon failed for ${domain}:`, error.message);
+            // 降级到方案C
+            fallbackCallback();
         });
-    });
+    }
+
+    /* ✅ 方案C：直接从官网加载favicon（第二优先） + 降级处理 */
+    function loadIconFromWebsite(domain, siteName, img) {
+        const officialIconUrl = `https://${domain}/favicon.ico`;
+        
+        // 为img标签添加加载成功和失败的处理
+        let loadTimeout = setTimeout(() => {
+            // 超时处理：7秒还没加载则认为失败
+            if (!img.complete || img.naturalHeight === 0) {
+                clearTimeout(loadTimeout);
+                handleIconLoadFailure(img, siteName);
+            }
+        }, 7000);
+
+        img.onload = () => {
+            clearTimeout(loadTimeout);
+            img.style.opacity = '1';
+            console.log(`Icon loaded successfully for ${domain}`);
+        };
+
+        img.onerror = () => {
+            clearTimeout(loadTimeout);
+            console.warn(`Official favicon failed for ${domain}`);
+            handleIconLoadFailure(img, siteName);
+        };
+
+        // 设置带crossorigin处理的src
+        img.crossOrigin = 'anonymous';
+        img.src = officialIconUrl;
+    }
+
+    /* ✅ 降级方案：生成随机颜色背景 + 网站首字母 */
+    function handleIconLoadFailure(img, siteName) {
+        img.style.display = 'none';
+        
+        // 生成随机颜色备用方案
+        const fallback = document.createElement('div');
+        fallback.className = 'icon-fallback';
+        fallback.textContent = getFirstChar(siteName);
+        fallback.style.background = generateRandomGradient();
+        
+        // 将备用方案插入到父容器
+        img.parentElement.appendChild(fallback);
+        console.log(`Using fallback for ${siteName} with first char: ${getFirstChar(siteName)}`);
+    }
+
+    /* ✅ 初始化所有卡片的图标加载 */
+    function initializeIconLoading() {
+        document.querySelectorAll('.card-icon img').forEach(img => {
+            const domain = img.getAttribute('data-domain');
+            const siteName = img.getAttribute('data-site-name');
+            
+            if (!domain || !siteName) {
+                console.warn('Missing domain or site-name attribute');
+                return;
+            }
+
+            // ✅ 优先使用方案A（DuckDuckGo）
+            const ddgUrl = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+            
+            // 设置超时机制：DuckDuckGo失败则降级到方案C
+            let ddgTimeout = setTimeout(() => {
+                if (!img.complete || img.naturalHeight === 0) {
+                    // DuckDuckGo超时或失败
+                    console.warn(`DuckDuckGo icon timeout for ${domain}, falling back to official favicon`);
+                    loadIconFromWebsite(domain, siteName, img);
+                }
+            }, 4000); // 4秒超时
+
+            img.onload = () => {
+                clearTimeout(ddgTimeout);
+                img.style.opacity = '1';
+                console.log(`✅ DuckDuckGo icon loaded for ${domain}`);
+            };
+
+            img.onerror = () => {
+                clearTimeout(ddgTimeout);
+                console.warn(`DuckDuckGo icon error for ${domain}, trying official favicon`);
+                loadIconFromWebsite(domain, siteName, img);
+            };
+
+            // 设置DuckDuckGo URL
+            img.crossOrigin = 'anonymous';
+            img.src = ddgUrl;
+        });
+    }
+
+    /* ✅ 页面加载完成后初始化图标 */
+    initializeIconLoading();
+
+    /* ────────────────────────────────────────────
+       11. ✅ 可选：定期清理过期的localStorage缓存
+       ──────────────────────────────────────────── */
+    function cleanupLocalStorage() {
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+            if (key.startsWith('icon_cache_') && Date.now() - parseInt(localStorage.getItem(key + '_time')) > 7 * 24 * 60 * 60 * 1000) {
+                // 清理7天以前的缓存
+                localStorage.removeItem(key);
+                localStorage.removeItem(key + '_time');
+            }
+        });
+    }
+
+    // 每次页面加载时清理缓存
+    cleanupLocalStorage();
 
 });
 
 /* ────────────────────────────────────────────
-   11. 动态样式注入
+   12. 动态样式注入
    ──────────────────────────────────────────── */
 (function() {
     const style = document.createElement('style');
@@ -290,12 +427,27 @@ document.addEventListener('DOMContentLoaded', () => {
         .shake { 
             animation: shake 0.3s ease-in-out; 
         }
+
+        /* ✅ 新增：图标加载失败时的备用样式 */
+        .icon-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            user-select: none;
+        }
     `;
     document.head.appendChild(style);
 })();
 
 /* ────────────────────────────────────────────
-   12. ✅ 图标URL映射表（便于后续更新）
+   13. ✅ 图标URL映射表（便于后续更新）
    ──────────────────────────────────────────── */
 /* 
  * 说明：这个映射表用于快速更新图标源
@@ -308,43 +460,26 @@ document.addEventListener('DOMContentLoaded', () => {
  * 3. 更新对应的URL即可
  * 
  * 当前策略：
- * - 优先使用官网favicon：website.com/favicon.ico
- * - 备选使用jsDelivr CDN：cdn.jsdelivr.net
+ * - 优先使用DuckDuckGo服务：icons.duckduckgo.com/ip3/domain.ico
+ * - 备选使用官网favicon：website.com/favicon.ico
  */
 const ICON_URLS = {
-    'gemini.google.com': 'https://www.google.com/favicon.ico',
-    'chatgpt.com': 'https://chatgpt.com/favicon.ico',
-    'deepseek.com': 'https://www.deepseek.com/favicon.ico',
-    'doubao.com': 'https://www.doubao.com/favicon.ico',
-    'yiyan.baidu.com': 'https://yiyan.baidu.com/favicon.ico',
-    'qianwen.aliyun.com': 'https://qianwen.aliyun.com/favicon.ico',
-    'grok.com': 'https://grok.com/favicon.ico',
-    'claude.ai': 'https://www.claude.ai/favicon.ico',
-    'yuanbao.com': 'https://www.yuanbao.com/favicon.ico',
-    'kimi.ai': 'https://www.kimi.ai/favicon.ico',
-    'perplexity.ai': 'https://www.perplexity.ai/favicon.ico',
-    'microsoft.com': 'https://www.microsoft.com/favicon.ico',
-    'xiaohongshu.com': 'https://www.xiaohongshu.com/favicon.ico',
-    'weibo.com': 'https://weibo.com/favicon.ico',
-    'zhihu.com': 'https://www.zhihu.com/favicon.ico',
-    'taobao.com': 'https://www.taobao.com/favicon.ico',
-    'jd.com': 'https://www.jd.com/favicon.ico',
-    'baidu.com': 'https://www.baidu.com/favicon.ico',
-    'mozilla.org': 'https://developer.mozilla.org/favicon.ico',
-    'stackoverflow.com': 'https://stackoverflow.com/favicon.ico'
+    'gemini.google.com': 'https://icons.duckduckgo.com/ip3/gemini.google.com.ico',
+    'chatgpt.com': 'https://icons.duckduckgo.com/ip3/chatgpt.com.ico',
+    'deepseek.com': 'https://icons.duckduckgo.com/ip3/deepseek.com.ico',
+    'doubao.com': 'https://icons.duckduckgo.com/ip3/doubao.com.ico',
+    'yiyan.baidu.com': 'https://icons.duckduckgo.com/ip3/yiyan.baidu.com.ico',
+    'qianwen.aliyun.com': 'https://icons.duckduckgo.com/ip3/qianwen.aliyun.com.ico',
+    'grok.com': 'https://icons.duckduckgo.com/ip3/grok.com.ico',
+    'claude.ai': 'https://icons.duckduckgo.com/ip3/claude.ai.ico',
+    'yuanbao.tencent.com': 'https://icons.duckduckgo.com/ip3/yuanbao.tencent.com.ico',
+    'kimi.ai': 'https://icons.duckduckgo.com/ip3/kimi.ai.ico',
+    'perplexity.ai': 'https://icons.duckduckgo.com/ip3/perplexity.ai.ico',
+    'copilot.cloud.microsoft': 'https://icons.duckduckgo.com/ip3/copilot.cloud.microsoft.ico',
+    'xiaohongshu.com': 'https://icons.duckduckgo.com/ip3/xiaohongshu.com.ico',
+    'bilibili.com': 'https://icons.duckduckgo.com/ip3/bilibili.com.ico',
+    'zhihu.com': 'https://icons.duckduckgo.com/ip3/zhihu.com.ico',
+    'github.com': 'https://icons.duckduckgo.com/ip3/github.com.ico',
+    'tinypng.com': 'https://icons.duckduckgo.com/ip3/tinypng.com.ico',
+    'v0.dev': 'https://icons.duckduckgo.com/ip3/v0.dev.ico'
 };
-
-// ✅ 可选：定期清理过期的localStorage缓存
-function cleanupLocalStorage() {
-    const keys = Object.keys(localStorage);
-    keys.forEach(key => {
-        if (key.startsWith('icon_cache_') && Date.now() - parseInt(localStorage.getItem(key + '_time')) > 7 * 24 * 60 * 60 * 1000) {
-            // 清理7天以前的缓存
-            localStorage.removeItem(key);
-            localStorage.removeItem(key + '_time');
-        }
-    });
-}
-
-// 每次页面加载时清理缓存
-cleanupLocalStorage();
