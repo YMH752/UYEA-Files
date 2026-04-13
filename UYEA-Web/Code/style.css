@@ -1,6 +1,6 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   优化：移除描述，仅保留主标题，适配 API 图标加载
+   优化：去除副标题，精简图标样式，适配国内高速加载
    ============================================================ */
 
 :root {
@@ -29,7 +29,7 @@ body {
     overflow-x: hidden;
 }
 
-/* 侧边栏 */
+/* 侧边栏样式 */
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
@@ -53,11 +53,11 @@ body {
 .nav-item.active { background: var(--primary-light); color: var(--primary); }
 .nav-icon { margin-right: 12px; font-size: 18px; }
 
-/* 内容区域 */
+/* 主内容 */
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
 .content-wrapper { padding: 32px; max-width: 1200px; margin: 0 auto; }
 
-/* 栏目标题 */
+/* 标题样式 */
 .section-header { margin-bottom: 16px; }
 .section-title {
     font-size: 18px; font-weight: 700; position: relative; padding-left: 12px;
@@ -67,14 +67,14 @@ body {
     width: 4px; background: var(--primary); border-radius: 2px;
 }
 
-/* 网格布局 */
+/* 网格 */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 12px;
 }
 
-/* 卡片样式 */
+/* 卡片 - 仅保留主标题 */
 .card-item {
     background: var(--surface);
     border: 1.5px solid var(--border);
@@ -102,7 +102,7 @@ body {
     text-overflow: ellipsis;
 }
 
-/* 移动端适配 */
+/* 移动端 */
 @media (max-width: 1024px) {
     .main-content { margin-left: 0; }
     .sidebar { transform: translateX(-100%); }
