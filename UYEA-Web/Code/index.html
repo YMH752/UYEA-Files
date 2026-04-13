@@ -5,216 +5,241 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>UYEA | 悠野导航</title>
     
-    <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。汇聚ChatGPT、Claude、DeepSeek等AI工具，以及开发者必备的工具集。">
-    <meta property="og:title" content="UYEA | 悠野工作室 - 导航·工具·社区">
-    <meta property="og:description" content="大锅炖网站 - AI智能体导航、在线工具箱、技术社区一站式平台">
+    <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
+    <meta property="og:title" content="UYEA | 悠野工作室">
     <meta name="theme-color" content="#0078d4">
-    <link rel="canonical" href="https://uyea.studio/">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&family=Roboto:wght@700&display=swap" rel="stylesheet">
-    
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 优化：主页专属样式 ── */
-        .search-section {
-            padding: 100px 20px 60px;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
+        /* ── 首页顶栏布局逻辑 ── */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 0 24px;
+            height: var(--header-h);
+            background: var(--surface);
+            border-bottom: 1.5px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .search-title {
-            font-family: 'Bebas Neue', cursive;
-            font-size: 4rem;
-            letter-spacing: 4px;
+        /* 左侧 LOGO */
+        .header-logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
             color: var(--primary);
-            margin-bottom: 40px;
-            text-shadow: 2px 2px 0px rgba(0,120,212,0.1);
+            text-decoration: none;
+            flex-shrink: 0; /* 防止LOGO被挤压 */
         }
 
+        /* 中间搜索框容器 - 负责自适应和居中 */
+        .search-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            max-width: 600px; /* 限制最大宽度，避免PC端过长 */
+        }
+
+        .header-search-wrapper {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0 12px;
+            height: 40px;
+            transition: all var(--duration);
+        }
+
+        .header-search-wrapper:focus-within {
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        #searchInput {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            padding: 0 8px;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        /* 右侧按钮组 */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .login-btn {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: opacity var(--duration);
+        }
+
+        .login-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* 加粗的汉堡菜单图标 */
+        .menu-toggle {
+            display: none; /* 默认PC端隐藏 */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            flex-direction: column;
+            gap: 5px; /* 三条线的间距 */
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px; /* 线条加粗 */
+            background: var(--text-primary);
+            border-radius: 2px;
+        }
+
+        /* 移动端适配 */
         @media (max-width: 768px) {
-            .search-section { padding: 60px 20px 30px; }
-            .search-title { font-size: 3rem; }
+            .menu-toggle {
+                display: flex; /* 移动端显示 */
+            }
+            .header-logo {
+                font-size: 20px;
+            }
+            .login-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            .search-container {
+                max-width: none; /* 移动端占满剩余空间 */
+            }
         }
     </style>
 </head>
 <body>
 
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo-area">
-                <div class="logo-text">UYEA</div>
-                <div class="logo-sub">悠野工作室</div>
+            <div class="logo-group">
+                <span class="logo-text">UYEA</span>
+                <span class="logo-sub">悠野工作室</span>
             </div>
         </div>
-        <nav class="nav-list">
-            <a href="index.html" class="nav-item active" data-section="nav">
-                <span class="nav-icon">🧭</span>
-                <span class="nav-label">灵感导航</span>
-            </a>
-            <a href="tools.html" class="nav-item" data-section="tools">
+        
+        <nav class="nav-menu">
+            <div class="nav-item active" data-section="all">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">全部导航</span>
+            </div>
+            <a href="tools.html" class="nav-item">
                 <span class="nav-icon">🛠️</span>
-                <span class="nav-label">线上工具</span>
+                <span class="nav-text">实用工具</span>
             </a>
-            <a href="forum.html" class="nav-item" data-section="forum">
+            <a href="forum.html" class="nav-item">
                 <span class="nav-icon">💬</span>
-                <span class="nav-label">悠野社区</span>
+                <span class="nav-text">悠野社区</span>
             </a>
+            <div class="nav-separator">分类</div>
+            <div class="nav-item" data-section="ai">
+                <span class="nav-icon">🤖</span>
+                <span class="nav-text">人工智能</span>
+            </div>
+            <div class="nav-item" data-section="dev">
+                <span class="nav-icon">💻</span>
+                <span class="nav-text">开发工具</span>
+            </div>
+            <div class="nav-item" data-section="design">
+                <span class="nav-icon">🎨</span>
+                <span class="nav-text">设计资源</span>
+            </div>
+            <div class="nav-item" data-section="social">
+                <span class="nav-icon">📱</span>
+                <span class="nav-text">社交媒体</span>
+            </div>
         </nav>
     </aside>
 
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
     <main class="main-content">
-        <header class="top-header">
-            <div class="header-left">
+        <header class="top-bar">
+            <a href="#" class="header-logo">UYEA</a>
+
+            <div class="search-container">
+                <div class="header-search-wrapper">
+                    <select id="searchEngine" class="sr-only">
+                        <option value="baidu">百度</option>
+                    </select>
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="搜索你需要的资源..." autocomplete="off">
                 </div>
-            
-            <div class="header-right">
-                <div id="userActionArea"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="#" class="login-btn">登录 / 注册</a>
+                <button class="menu-toggle" id="hamburgerBtn" aria-label="切换菜单">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </header>
 
-        <section class="search-section">
-            <h1 class="search-title">UYEA NAV</h1>
-            <div class="search-container">
-                <div class="search-box">
-                    <div class="custom-select" id="engineSelect">
-                        <div class="select-trigger">
-                            <span id="currentEngineLabel">百度</span>
-                            <span class="arrow"></span>
-                        </div>
-                        <div class="select-options">
-                            <div class="option selected" data-value="baidu">百度</div>
-                            <div class="option" data-value="google">Google</div>
-                            <div class="option" data-value="bing">必应</div>
-                        </div>
-                        <select id="searchEngine" style="display: none;">
-                            <option value="baidu">百度</option>
-                            <option value="google">Google</option>
-                            <option value="bing">必应</option>
-                        </select>
-                    </div>
-                    <div class="input-wrapper">
-                        <input type="text" id="searchInput" placeholder="搜索你感兴趣的内容..." autocomplete="off">
-                        <button class="search-btn" id="searchBtn">
-                            <svg t="1700000000000" viewBox="0 0 1024 1024" width="20" height="20"><path d="M424 120.3c-167.3 0-303.7 136.4-303.7 303.7s136.4 303.7 303.7 303.7c72.4 0 138.8-25.5 191-68l210.8 210.8c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L660.3 514.4c42.5-52.2 68-118.6 68-191-0.1-167.3-136.5-303.1-304.3-303.1zM424 184.3c132.5 0 240 107.5 240 240S556.5 664.3 424 664.3s-240-107.5-240-240 107.5-240 240-240z" fill="currentColor"></path></svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <div class="content-wrapper">
-            <div class="section-container active" id="nav-section">
-                <div class="category-group">
-                    <h2 class="category-title">AI 智能助手</h2>
-                    <div class="card-grid">
-                        <a href="https://chat.openai.com" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="openai.com" alt="ChatGPT"></div>
-                            <div class="card-info">
-                                <div class="card-name">ChatGPT</div>
-                                <div class="card-desc">OpenAI 旗下的强大 AI 对话模型</div>
-                            </div>
-                        </a>
-                        <a href="https://claude.ai" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="claude.ai" alt="Claude"></div>
-                            <div class="card-info">
-                                <div class="card-name">Claude</div>
-                                <div class="card-desc">Anthropic 推出的高智商 AI 助手</div>
-                            </div>
-                        </a>
-                        <a href="https://www.deepseek.com" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="deepseek.com" alt="DeepSeek"></div>
-                            <div class="card-info">
-                                <div class="card-name">DeepSeek</div>
-                                <div class="card-desc">极具性价比的开源模型</div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="category-group">
-                    <h2 class="category-title">常用推荐</h2>
-                    <div class="card-grid">
-                        <a href="https://www.xiaohongshu.com" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="xiaohongshu.com" alt="小红书"></div>
-                            <div class="card-info">
-                                <div class="card-name">小红书</div>
-                                <div class="card-desc">标记我的生活</div>
-                            </div>
-                        </a>
-                        <a href="https://www.taobao.com" target="_blank" class="nav-card" rel="noopener">
-                            <div class="card-icon"><img src="" data-domain="taobao.com" alt="淘宝"></div>
-                            <div class="card-info">
-                                <div class="card-name">淘宝网</div>
-                                <div class="card-desc">太好逛了吧</div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+            <div class="section-header">
+                <h2 class="section-title">智能体导航</h2>
+                <p class="section-desc">汇聚全球最顶尖的 AI 智能工具</p>
             </div>
+
+            <div class="grid-container" id="cardGrid">
+                <a href="https://www.deepseek.com/" target="_blank" class="card-item" data-category="ai">
+                    <div class="card-icon">
+                        <img src="https://www.deepseek.com/favicon.ico" alt="DeepSeek">
+                    </div>
+                    <div class="card-info">
+                        <div class="card-title">DeepSeek</div>
+                        <div class="card-desc">国产之光，极简高效的 AI 对话助手</div>
+                    </div>
+                </a>
+                
+                </div>
         </div>
-
-        <footer class="site-footer">
-            <p>© 2026 UYEA 悠野工作室 · 让创意自由生长</p>
-        </footer>
     </main>
-
-    <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item active" data-section="nav">
-            <span class="nav-icon">🧭</span>
-            <span class="nav-label">导航</span>
-        </a>
-        <a href="tools.html" class="bottom-nav-item" data-section="tools">
-            <span class="nav-icon">🛠️</span>
-            <span class="nav-label">工具箱</span>
-        </a>
-        <a href="forum.html" class="bottom-nav-item" data-section="forum">
-            <span class="nav-icon">💬</span>
-            <span class="nav-label">社区</span>
-        </a>
-    </nav>
 
     <script src="script.js"></script>
     <script>
-    /* ── 主页搜索下拉逻辑 ── */
-    (function() {
-        const select = document.getElementById('searchEngine');
-        const trigger = document.querySelector('.select-trigger');
-        const dropdown = document.querySelector('.select-options');
-        const options = document.querySelectorAll('.option');
-        const label = document.getElementById('currentEngineLabel');
-        const btn = document.querySelector('.custom-select');
-
-        trigger?.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const isNowOpen = dropdown.classList.toggle('open');
-            btn.classList.toggle('open', isNowOpen);
+    /* ── 首页专属交互逻辑 ── */
+    
+    /* ✅ 图片加载失败处理 */
+    document.querySelectorAll('.card-icon img').forEach(img => {
+        img.addEventListener('error', function() {
+            this.style.display = 'none';
+            const fallback = document.createElement('span');
+            fallback.className = 'icon-fallback';
+            fallback.textContent = '🔗';
+            this.parentElement.appendChild(fallback);
         });
-
-        options.forEach(opt => {
-            opt.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const val = this.dataset.value;
-                select.value = val;
-                label.textContent = this.textContent.trim();
-                options.forEach(o => o.classList.remove('selected'));
-                this.classList.add('selected');
-                dropdown.classList.remove('open');
-                btn.classList.remove('open');
-            });
-        });
-
-        document.addEventListener('click', () => {
-            dropdown?.classList.remove('open');
-            btn?.classList.remove('open');
-        });
-    })();
+    });
     </script>
 </body>
 </html>
