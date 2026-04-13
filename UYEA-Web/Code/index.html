@@ -6,7 +6,6 @@
     <title>UYEA | 悠野导航</title>
     
     <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
-    <meta property="og:title" content="UYEA | 悠野工作室">
     <meta name="theme-color" content="#0078d4">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +14,7 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 首页顶栏布局逻辑 ── */
+        /* ── 首页专属布局与卡片微调 ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -36,7 +35,6 @@
             font-size: 24px;
             color: var(--primary);
             text-decoration: none;
-            flex-shrink: 0;
         }
 
         .search-container {
@@ -55,13 +53,6 @@
             border-radius: var(--radius-md);
             padding: 0 12px;
             height: 40px;
-            transition: all var(--duration);
-        }
-
-        .header-search-wrapper:focus-within {
-            border-color: var(--primary);
-            background: var(--surface);
-            box-shadow: 0 0 0 3px var(--primary-light);
         }
 
         #searchInput {
@@ -71,15 +62,9 @@
             width: 100%;
             padding: 0 8px;
             font-size: 14px;
-            color: var(--text-primary);
         }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
+        .header-actions { display: flex; align-items: center; gap: 12px; }
 
         .login-btn {
             padding: 8px 16px;
@@ -89,9 +74,9 @@
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            transition: opacity var(--duration);
         }
 
+        /* 汉堡菜单加粗 */
         .menu-toggle {
             display: none;
             background: none;
@@ -101,7 +86,6 @@
             flex-direction: column;
             gap: 5px;
         }
-
         .menu-toggle span {
             display: block;
             width: 24px;
@@ -110,88 +94,52 @@
             border-radius: 2px;
         }
 
-        /* ── 新增：公告栏样式（方案A：搜索框下方） ── */
+        /* 公告栏区域 */
         .notice-board {
             display: flex;
             gap: 16px;
             margin-bottom: 32px;
-            flex-wrap: wrap; /* 适配移动端换行 */
         }
-
         .notice-card {
             flex: 1;
-            min-width: 280px;
             background: var(--surface);
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
             padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            transition: all var(--duration);
         }
 
-        .notice-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .notice-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--text-primary);
-        }
-
-        .notice-tag {
-            padding: 2px 8px;
-            background: var(--primary-light);
-            color: var(--primary);
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        .notice-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .notice-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            color: var(--text-secondary);
-            padding-bottom: 4px;
-            border-bottom: 1px dashed var(--border);
-        }
-
-        .notice-item:last-child {
-            border-bottom: none;
-        }
-
-        .notice-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            margin-right: 8px;
-            display: inline-block;
-        }
-
-        .notice-date {
-            font-size: 12px;
+        /* ✅ 文字卡片：用于“每日推荐”尽请期待 */
+        .text-status-card {
+            background: var(--surface);
+            border: 1.5px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            text-align: center;
             color: var(--text-muted);
+            font-size: 16px;
+            grid-column: 1 / -1; /* 横跨整行 */
+        }
+
+        /* ✅ 图标样式：圆角，无背景，无阴影 */
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: transparent !important; /* 移除背景 */
+            box-shadow: none !important; /* 移除阴影 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px; /* 图标圆角 */
         }
 
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
-            .header-logo { font-size: 20px; }
-            .search-container { max-width: none; }
             .notice-board { flex-direction: column; }
         }
     </style>
@@ -208,27 +156,9 @@
             </div>
         </div>
         <nav class="nav-menu">
-            <div class="nav-item active" data-section="all">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-text">全部导航</span>
-            </div>
-            <a href="tools.html" class="nav-item">
-                <span class="nav-icon">🛠️</span>
-                <span class="nav-text">实用工具</span>
-            </a>
-            <a href="forum.html" class="nav-item">
-                <span class="nav-icon">💬</span>
-                <span class="nav-text">悠野社区</span>
-            </a>
-            <div class="nav-separator">分类</div>
-            <div class="nav-item" data-section="ai">
-                <span class="nav-icon">🤖</span>
-                <span class="nav-text">人工智能</span>
-            </div>
-            <div class="nav-item" data-section="dev">
-                <span class="nav-icon">💻</span>
-                <span class="nav-text">开发工具</span>
-            </div>
+            <div class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></div>
+            <a href="tools.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></a>
+            <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
         </nav>
     </aside>
 
@@ -238,7 +168,7 @@
             <div class="search-container">
                 <div class="header-search-wrapper">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="searchInput" placeholder="搜索你需要的资源..." autocomplete="off">
+                    <input type="text" id="searchInput" placeholder="搜索你需要的资源...">
                 </div>
             </div>
             <div class="header-actions">
@@ -252,69 +182,65 @@
         <div class="content-wrapper">
             
             <section class="notice-board">
-                <div class="notice-card">
-                    <div class="notice-header">
-                        <span class="notice-tag">公告</span>
-                        <span>官方动态</span>
-                    </div>
-                    <ul class="notice-list">
-                        <li class="notice-item">
-                            <span><span class="notice-dot"></span>UYEA 导航 2.0 正式上线测试</span>
-                            <span class="notice-date">04-13</span>
-                        </li>
-                        <li class="notice-item">
-                            <span><span class="notice-dot"></span>关于社区积分系统调整的通知</span>
-                            <span class="notice-date">04-10</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="notice-card">
-                    <div class="notice-header">
-                        <span class="notice-tag" style="background:#fff7ed; color:#ea580c;">更新</span>
-                        <span>今日新增资源</span>
-                    </div>
-                    <ul class="notice-list">
-                        <li class="notice-item">
-                            <span><span class="notice-dot" style="background:#ea580c;"></span>DeepSeek R1 模型接口集成</span>
-                            <span class="notice-date">刚刚</span>
-                        </li>
-                        <li class="notice-item">
-                            <span><span class="notice-dot" style="background:#ea580c;"></span>新增 5 款开发者实用插件</span>
-                            <span class="notice-date">2小时前</span>
-                        </li>
-                    </ul>
-                </div>
+                <div class="notice-card"><strong>官方动态：</strong> UYEA 2.0 运行中</div>
+                <div class="notice-card"><strong>今日更新：</strong> 新增 AI 工具分类</div>
             </section>
 
-            <div class="section-header">
-                <h2 class="section-title">智能体导航</h2>
+            <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
+            <div class="grid-container" style="margin-bottom: 40px;">
+                <div class="text-status-card">☕ 尽请期待</div>
             </div>
 
-            <div class="grid-container" id="cardGrid">
-                <a href="https://www.deepseek.com/" target="_blank" class="card-item" data-category="ai">
-                    <div class="card-icon"><img src="https://www.deepseek.com/favicon.ico" alt="DS"></div>
-                    <div class="card-info">
-                        <div class="card-title">DeepSeek</div>
-                        <div class="card-desc">国产之光，极简高效的 AI 对话助手</div>
-                    </div>
+            <div class="section-header"><h2 class="section-title">Ai</h2></div>
+            <div class="grid-container" style="margin-bottom: 40px;">
+                <a href="https://www.deepseek.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.deepseek.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">DeepSeek</div><div class="card-desc">强力国产大模型</div></div>
                 </a>
-                </div>
+                <a href="https://chatgpt.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://openai.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">ChatGPT</div><div class="card-desc">OpenAI 旗下产品</div></div>
+                </a>
+                <a href="https://claude.ai/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://claude.ai/images/apple-touch-icon.png"></div>
+                    <div class="card-info"><div class="card-title">Claude</div><div class="card-desc">Anthropic 智能助手</div></div>
+                </a>
+                <a href="https://yiyan.baidu.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://yiyan.baidu.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">文心一言</div><div class="card-desc">百度 AI 对话</div></div>
+                </a>
+                <a href="https://qianwen.aliyun.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://img.alicdn.com/imgextra/i4/O1CN01S99m9x1Wp9Fh9O9m9_!!6000000002830-2-tps-32-32.png"></div>
+                    <div class="card-info"><div class="card-title">通义千问</div><div class="card-desc">阿里大模型</div></div>
+                </a>
+            </div>
+
+            <div class="section-header"><h2 class="section-title">生活</h2></div>
+            <div class="grid-container" style="margin-bottom: 40px;">
+                <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.xiaohongshu.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">小红书</div><div class="card-desc">标记我的生活</div></div>
+                </a>
+                <a href="https://www.bilibili.com" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://www.bilibili.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">Bilibili</div><div class="card-desc">弹幕视频网</div></div>
+                </a>
+            </div>
+
+            <div class="section-header"><h2 class="section-title">工具</h2></div>
+            <div class="grid-container">
+                <a href="https://github.com" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://github.com/favicon.ico"></div>
+                    <div class="card-info"><div class="card-title">GitHub</div><div class="card-desc">开源代码托管</div></div>
+                </a>
+                <a href="https://tinypng.com" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="https://tinypng.com/images/apple-touch-icon.png"></div>
+                    <div class="card-info"><div class="card-title">TinyPNG</div><div class="card-desc">在线图片压缩</div></div>
+                </a>
+            </div>
         </div>
     </main>
 
     <script src="script.js"></script>
-    <script>
-    /* 图片加载失败处理 */
-    document.querySelectorAll('.card-icon img').forEach(img => {
-        img.addEventListener('error', function() {
-            this.style.display = 'none';
-            const fallback = document.createElement('span');
-            fallback.className = 'icon-fallback';
-            fallback.textContent = '🔗';
-            this.parentElement.appendChild(fallback);
-        });
-    });
-    </script>
 </body>
 </html>
