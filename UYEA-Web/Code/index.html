@@ -30,22 +30,20 @@
             z-index: 100;
         }
 
-        /* 左侧 LOGO */
         .header-logo {
             font-family: 'Inter', sans-serif;
             font-weight: 800;
             font-size: 24px;
             color: var(--primary);
             text-decoration: none;
-            flex-shrink: 0; /* 防止LOGO被挤压 */
+            flex-shrink: 0;
         }
 
-        /* 中间搜索框容器 - 负责自适应和居中 */
         .search-container {
             flex: 1;
             display: flex;
             justify-content: center;
-            max-width: 600px; /* 限制最大宽度，避免PC端过长 */
+            max-width: 600px;
         }
 
         .header-search-wrapper {
@@ -76,7 +74,6 @@
             color: var(--text-primary);
         }
 
-        /* 右侧按钮组 */
         .header-actions {
             display: flex;
             align-items: center;
@@ -95,44 +92,107 @@
             transition: opacity var(--duration);
         }
 
-        .login-btn:hover {
-            opacity: 0.9;
-        }
-
-        /* 加粗的汉堡菜单图标 */
         .menu-toggle {
-            display: none; /* 默认PC端隐藏 */
+            display: none;
             background: none;
             border: none;
             cursor: pointer;
             padding: 8px;
             flex-direction: column;
-            gap: 5px; /* 三条线的间距 */
+            gap: 5px;
         }
 
         .menu-toggle span {
             display: block;
             width: 24px;
-            height: 3px; /* 线条加粗 */
+            height: 3px;
             background: var(--text-primary);
             border-radius: 2px;
         }
 
-        /* 移动端适配 */
+        /* ── 新增：公告栏样式（方案A：搜索框下方） ── */
+        .notice-board {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap; /* 适配移动端换行 */
+        }
+
+        .notice-card {
+            flex: 1;
+            min-width: 280px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all var(--duration);
+        }
+
+        .notice-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .notice-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .notice-tag {
+            padding: 2px 8px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .notice-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .notice-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding-bottom: 4px;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .notice-item:last-child {
+            border-bottom: none;
+        }
+
+        .notice-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        .notice-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
         @media (max-width: 768px) {
-            .menu-toggle {
-                display: flex; /* 移动端显示 */
-            }
-            .header-logo {
-                font-size: 20px;
-            }
-            .login-btn {
-                padding: 6px 12px;
-                font-size: 13px;
-            }
-            .search-container {
-                max-width: none; /* 移动端占满剩余空间 */
-            }
+            .menu-toggle { display: flex; }
+            .header-logo { font-size: 20px; }
+            .search-container { max-width: none; }
+            .notice-board { flex-direction: column; }
         }
     </style>
 </head>
@@ -147,7 +207,6 @@
                 <span class="logo-sub">悠野工作室</span>
             </div>
         </div>
-        
         <nav class="nav-menu">
             <div class="nav-item active" data-section="all">
                 <span class="nav-icon">🏠</span>
@@ -170,67 +229,83 @@
                 <span class="nav-icon">💻</span>
                 <span class="nav-text">开发工具</span>
             </div>
-            <div class="nav-item" data-section="design">
-                <span class="nav-icon">🎨</span>
-                <span class="nav-text">设计资源</span>
-            </div>
-            <div class="nav-item" data-section="social">
-                <span class="nav-icon">📱</span>
-                <span class="nav-text">社交媒体</span>
-            </div>
         </nav>
     </aside>
 
     <main class="main-content">
         <header class="top-bar">
             <a href="#" class="header-logo">UYEA</a>
-
             <div class="search-container">
                 <div class="header-search-wrapper">
-                    <select id="searchEngine" class="sr-only">
-                        <option value="baidu">百度</option>
-                    </select>
                     <span class="search-icon">🔍</span>
                     <input type="text" id="searchInput" placeholder="搜索你需要的资源..." autocomplete="off">
                 </div>
             </div>
-
             <div class="header-actions">
                 <a href="#" class="login-btn">登录 / 注册</a>
-                <button class="menu-toggle" id="hamburgerBtn" aria-label="切换菜单">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <button class="menu-toggle" id="hamburgerBtn">
+                    <span></span><span></span><span></span>
                 </button>
             </div>
         </header>
 
         <div class="content-wrapper">
+            
+            <section class="notice-board">
+                <div class="notice-card">
+                    <div class="notice-header">
+                        <span class="notice-tag">公告</span>
+                        <span>官方动态</span>
+                    </div>
+                    <ul class="notice-list">
+                        <li class="notice-item">
+                            <span><span class="notice-dot"></span>UYEA 导航 2.0 正式上线测试</span>
+                            <span class="notice-date">04-13</span>
+                        </li>
+                        <li class="notice-item">
+                            <span><span class="notice-dot"></span>关于社区积分系统调整的通知</span>
+                            <span class="notice-date">04-10</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="notice-card">
+                    <div class="notice-header">
+                        <span class="notice-tag" style="background:#fff7ed; color:#ea580c;">更新</span>
+                        <span>今日新增资源</span>
+                    </div>
+                    <ul class="notice-list">
+                        <li class="notice-item">
+                            <span><span class="notice-dot" style="background:#ea580c;"></span>DeepSeek R1 模型接口集成</span>
+                            <span class="notice-date">刚刚</span>
+                        </li>
+                        <li class="notice-item">
+                            <span><span class="notice-dot" style="background:#ea580c;"></span>新增 5 款开发者实用插件</span>
+                            <span class="notice-date">2小时前</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
             <div class="section-header">
                 <h2 class="section-title">智能体导航</h2>
-                <p class="section-desc">汇聚全球最顶尖的 AI 智能工具</p>
             </div>
 
             <div class="grid-container" id="cardGrid">
                 <a href="https://www.deepseek.com/" target="_blank" class="card-item" data-category="ai">
-                    <div class="card-icon">
-                        <img src="https://www.deepseek.com/favicon.ico" alt="DeepSeek">
-                    </div>
+                    <div class="card-icon"><img src="https://www.deepseek.com/favicon.ico" alt="DS"></div>
                     <div class="card-info">
                         <div class="card-title">DeepSeek</div>
                         <div class="card-desc">国产之光，极简高效的 AI 对话助手</div>
                     </div>
                 </a>
-                
                 </div>
         </div>
     </main>
 
     <script src="script.js"></script>
     <script>
-    /* ── 首页专属交互逻辑 ── */
-    
-    /* ✅ 图片加载失败处理 */
+    /* 图片加载失败处理 */
     document.querySelectorAll('.card-icon img').forEach(img => {
         img.addEventListener('error', function() {
             this.style.display = 'none';
