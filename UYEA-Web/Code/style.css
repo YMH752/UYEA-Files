@@ -1,34 +1,116 @@
+/* ============================================================
+   UYEA 悠野工作室 · style.css
+   修改：移除所有描述(desc)样式，优化图标，仅保留主标题
+   ============================================================ */
+
 :root {
-    --primary: #0078d4; --primary-light: #e8f3fc; --bg: #f8fafc; --surface: #ffffff;
-    --border: #e2e8f0; --text-primary: #0f172a; --text-secondary: #475569; --text-muted: #94a3b8;
-    --header-h: 60px; --sidebar-w: 240px; --radius-md: 12px;
+    --primary:        #0078d4;
+    --primary-light:  #e8f3fc;
+    --bg:             #f8fafc;
+    --surface:        #ffffff;
+    --border:         #e2e8f0;
+    --text-primary:   #0f172a;
+    --text-secondary: #475569;
+    --text-muted:     #94a3b8;
+    
+    --header-h:       64px;
+    --sidebar-w:      240px;
+    --radius-sm:      8px;
+    --radius-md:      12px;
+    --duration:       0.3s;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Noto Sans SC', sans-serif; background: var(--bg); color: var(--text-primary); }
 
-.sidebar { width: var(--sidebar-w); height: 100vh; background: var(--surface); border-right: 1.5px solid var(--border); position: fixed; top: 0; left: 0; z-index: 1000; transition: 0.3s; }
-.sidebar-header { padding: 20px; font-weight: 800; font-size: 22px; color: var(--primary); }
-.nav-item { display: block; padding: 12px 20px; color: var(--text-secondary); text-decoration: none; border-radius: 8px; margin: 4px 10px; }
-.nav-item.active { background: var(--primary-light); color: var(--primary); font-weight: bold; }
+body {
+    font-family: 'Noto Sans SC', system-ui, sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
 
+/* 侧边栏 */
+.sidebar {
+    width: var(--sidebar-w);
+    height: 100vh;
+    background: var(--surface);
+    border-right: 1.5px solid var(--border);
+    position: fixed;
+    top: 0; left: 0; z-index: 1000;
+    transition: transform var(--duration);
+}
+
+.sidebar-header { padding: 24px; border-bottom: 1px solid var(--border); }
+.logo-text { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 22px; color: var(--primary); }
+.logo-sub { display: block; font-size: 11px; color: var(--text-secondary); }
+
+.nav-menu { padding: 16px 12px; }
+.nav-item {
+    display: flex; align-items: center; padding: 12px 16px;
+    border-radius: var(--radius-sm); color: var(--text-secondary);
+    text-decoration: none; margin-bottom: 4px;
+}
+.nav-item.active { background: var(--primary-light); color: var(--primary); }
+.nav-icon { margin-right: 12px; font-size: 18px; }
+
+/* 主内容区域 */
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
-.content-wrapper { padding: 25px; max-width: 1200px; margin: 0 auto; }
+.content-wrapper { padding: 32px; max-width: 1200px; margin: 0 auto; }
 
-.section { margin-bottom: 30px; }
-.section-title { font-size: 17px; font-weight: 700; border-left: 4px solid var(--primary); padding-left: 10px; margin-bottom: 15px; }
+/* 栏目标题 */
+.section-header { margin-bottom: 16px; }
+.section-title {
+    font-size: 18px; font-weight: 700; position: relative; padding-left: 12px;
+}
+.section-title::before {
+    content: ""; position: absolute; left: 0; top: 4px; bottom: 4px;
+    width: 4px; background: var(--primary); border-radius: 2px;
+}
 
-.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+/* 网格 */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 减小最小宽度，适配纯标题卡片 */
+    gap: 12px;
+}
 
-.card-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 12px; display: flex; align-items: center; gap: 10px; text-decoration: none; transition: 0.2s; }
-.card-item:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+/* 卡片 - 仅保留主标题逻辑 */
+.card-item {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: all var(--duration);
+}
 
-.card-title { font-weight: 600; font-size: 14px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
 
-/* 移动端逻辑 */
+.card-title { 
+    font-weight: 600; 
+    font-size: 14px; 
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ✅ 彻底移除 card-desc 相关的代码，减少体积 */
+
+/* 移动端适配 */
 @media (max-width: 1024px) {
     .main-content { margin-left: 0; }
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
-    .sidebar-overlay.open { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; }
+    .sidebar-overlay.open {
+        display: block; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.4); z-index: 999;
+    }
 }
