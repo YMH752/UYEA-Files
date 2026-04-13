@@ -4,44 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>UYEA | 悠野导航</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <!-- SEO优化 -->
+    <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。汇聚ChatGPT、Claude、DeepSeek等AI工具，以及开发者必备的工具集。">
+    <meta property="og:title" content="UYEA | 悠野工作室 - 导航·工具·社区">
+    <meta property="og:description" content="大锅炖网站 - AI智能体导航、在线工具箱、技术社区一站式平台">
+    <meta name="theme-color" content="#0078d4">
+    <link rel="canonical" href="https://uyea.studio/">
+    
+    <!-- 字体加载 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&family=Roboto:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- 图标CDN（jsDelivr国内加速） -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+    <link rel="stylesheet" href="style.css">
+    
     <style>
-        /* ── UYEA Logo：Bebas Neue ── */
+        /* ── 优化后的LOGO样式：粗体、单行显示 ── */
         .logo-text {
-            font-family: 'Bebas Neue', sans-serif !important;
+            font-family: 'Roboto', 'Bebas Neue', sans-serif !important;
             font-style: normal !important;
-            font-weight: 900 !important;
-            font-size: 26px !important;
-            letter-spacing: 1px !important;
+            font-weight: 700 !important;
+            font-size: 24px !important;
+            letter-spacing: 0.5px !important;
             color: var(--primary) !important;
+            line-height: 1 !important;
         }
+        
         .logo-sub {
             font-style: normal !important;
+            font-size: 12px !important;
+            color: var(--text-secondary) !important;
+            letter-spacing: 2px !important;
+            margin-top: 2px !important;
+            display: block !important;
         }
 
-        /* ── 卡片图标样式 ── */
+        /* ── 卡片图标样式优化 ── */
         .card-icon {
             background: transparent !important;
             box-shadow: none !important;
         }
+        
         .card-icon img {
             width: 40px;
             height: 40px;
             object-fit: contain;
             image-rendering: -webkit-optimize-contrast;
+            /* 使用 will-change 优化图片加载性能 */
+            will-change: opacity;
+            transition: opacity 0.3s ease;
         }
 
-        /* ── 待添加中文字卡片样式 (新增) ── */
+        /* ── 待添加中文字卡片样式 ── */
         .empty-text-card {
-            grid-column: 1 / -1; /* 横跨整行 */
+            grid-column: 1 / -1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 30px;
             background: var(--surface);
-            border: 1px dashed var(--border); /* 使用虚线框表示待定 */
+            border: 1px dashed var(--border);
             border-radius: var(--radius-md);
             color: var(--text-muted);
             font-size: 15px;
@@ -51,31 +76,25 @@
 </head>
 <body>
 
+    <!-- 侧边栏遮罩（移动端） -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <!-- ════════════════════════════════════════
+         优化的侧边栏：只显示3个菜单项
+         ════════════════════════════════════════ -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
+                <!-- ✅ 优化：改成单行显示 UYEA_悠野 -->
                 <span class="logo-text">UYEA</span>
-                <span class="logo-sub">悠野工作室</span>
+                <span class="logo-sub">_悠野</span>
             </div>
         </div>
         <nav class="sidebar-nav">
+            <!-- ✅ 优化：只保留3个菜单项，间距调整 -->
             <div class="nav-item active" data-section="recommend">
-                <span class="nav-icon">🔥</span>
-                <span class="nav-label">每日推荐</span>
-            </div>
-            <div class="nav-item" data-section="ai">
-                <span class="nav-icon">🤖</span>
-                <span class="nav-label">AI · 智能体</span>
-            </div>
-            <div class="nav-item" data-section="life">
-                <span class="nav-icon">🌿</span>
-                <span class="nav-label">生活</span>
-            </div>
-            <div class="nav-item" data-section="dev">
-                <span class="nav-icon">🛠️</span>
-                <span class="nav-label">开发</span>
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">导航</span>
             </div>
             <a href="tools.html" class="nav-item">
                 <span class="nav-icon">🧰</span>
@@ -88,11 +107,15 @@
         </nav>
     </aside>
 
+    <!-- ════════════════════════════════════════
+         主内容区
+         ════════════════════════════════════════ -->
     <main class="main-content" id="mainContent">
         
         <header class="top-bar">
             <div class="search-container">
                 <div class="search-wrapper">
+                    <!-- ✅ 优化：搜索引擎选择 + 自适应搜索框 -->
                     <div class="search-engine-select">
                         <button class="engine-btn" id="engineBtn">
                             <span id="engineLabel">百度</span>
@@ -115,6 +138,7 @@
                             <option value="bing">必应</option>
                         </select>
                     </div>
+                    <!-- ✅ 优化：搜索框自适应，右边有合理间距 -->
                     <input type="text" id="searchInput" placeholder="搜索关键词..." autocomplete="off">
                     <button class="search-submit" onclick="doSearch()">
                         <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
@@ -135,6 +159,9 @@
 
         <div class="content-body">
             
+            <!-- ════════════════════════════════════════
+                 每日推荐
+                 ════════════════════════════════════════ -->
             <section id="recommend" class="content-section">
                 <h2 class="section-title">🔥 每日推荐</h2>
                 <div class="card-grid">
@@ -142,77 +169,115 @@
                 </div>
             </section>
 
+            <!-- ════════════════════════════════════════
+                 AI · 智能体（✅优化：图标使用CDN）
+                 ════════════════════════════════════════ -->
             <section id="ai" class="content-section">
                 <h2 class="section-title">🤖 Ai · 智能体</h2>
                 <div class="card-grid">
                     <a href="https://gemini.google.com/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/gemini.google.com" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ 使用jsDelivr CDN加载favicon（国内快速） -->
+                            <img src="https://cdn.jsdelivr.net/gh/google/favicon@master/favicon.ico" alt="Google Gemini" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">Google Gemini</div>
                         </div>
                     </a>
                     <a href="https://chatgpt.com/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/chatgpt.com" alt=""></div>
+                        <div class="card-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/openai/favicon@main/favicon.ico" alt="ChatGPT" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">ChatGPT</div>
                         </div>
                     </a>
                     <a href="https://www.deepseek.com/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/deepseek.com" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ DeepSeek使用官方资源 -->
+                            <img src="https://www.deepseek.com/favicon.ico" alt="DeepSeek" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">DeepSeek</div>
                         </div>
                     </a>
                     <a href="https://www.doubao.com/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/doubao.com" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ 豆包 -->
+                            <img src="https://www.doubao.com/favicon.ico" alt="豆包" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">豆包</div>
                         </div>
                     </a>
                     <a href="https://yiyan.baidu.com/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/yiyan.baidu.com" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ 文心一言 -->
+                            <img src="https://yiyan.baidu.com/favicon.ico" alt="文心一言" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">文心一言</div>
                         </div>
                     </a>
                     <a href="https://qianwen.aliyun.com/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/qianwen.aliyun.com" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ 千问 -->
+                            <img src="https://qianwen.aliyun.com/favicon.ico" alt="千问" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">千问</div>
                         </div>
                     </a>
                     <a href="https://grok.com/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/grok.com" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ Grok -->
+                            <img src="https://grok.com/favicon.ico" alt="Grok" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">Grok</div>
                         </div>
                     </a>
                     <a href="https://www.claude.ai/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/claude.ai" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ Claude -->
+                            <img src="https://www.claude.ai/favicon.ico" alt="Claude" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">Claude</div>
                         </div>
                     </a>
                     <a href="https://www.yuanbao.com/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/yuanbao.com" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ 元宝 -->
+                            <img src="https://www.yuanbao.com/favicon.ico" alt="元宝" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">元宝</div>
                         </div>
                     </a>
                     <a href="https://www.kimi.ai/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/kimi.ai" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ Kimi -->
+                            <img src="https://www.kimi.ai/favicon.ico" alt="Kimi" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">Kimi</div>
                         </div>
                     </a>
                     <a href="https://www.perplexity.ai/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/perplexity.ai" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ Perplexity -->
+                            <img src="https://www.perplexity.ai/favicon.ico" alt="Perplexity" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">Perplexity</div>
                         </div>
                     </a>
                     <a href="https://copilot.microsoft.com/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/microsoft.com" alt=""></div>
+                        <div class="card-icon">
+                            <!-- ✅ Copilot Chat -->
+                            <img src="https://www.microsoft.com/favicon.ico" alt="Copilot Chat" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">Copilot Chat</div>
                         </div>
@@ -220,45 +285,67 @@
                 </div>
             </section>
 
+            <!-- ════════════════════════════════════════
+                 生活（✅优化：图标加载）
+                 ════════════════════════════════════════ -->
             <section id="life" class="content-section">
                 <h2 class="section-title">🌿 生活</h2>
                 <div class="card-grid">
                     <a href="https://www.xiaohongshu.com" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/xiaohongshu.com" alt=""></div>
+                        <div class="card-icon">
+                            <img src="https://www.xiaohongshu.com/favicon.ico" alt="小红书" loading="lazy">
+                        </div>
                         <div class="card-info"><div class="card-name">小红书</div></div>
                     </a>
                     <a href="https://weibo.com" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/weibo.com" alt=""></div>
+                        <div class="card-icon">
+                            <img src="https://weibo.com/favicon.ico" alt="微博" loading="lazy">
+                        </div>
                         <div class="card-info"><div class="card-name">微博</div></div>
                     </a>
                     <a href="https://www.zhihu.com" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/zhihu.com" alt=""></div>
+                        <div class="card-icon">
+                            <img src="https://www.zhihu.com/favicon.ico" alt="知乎" loading="lazy">
+                        </div>
                         <div class="card-info"><div class="card-name">知乎</div></div>
                     </a>
                     <a href="https://www.taobao.com" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/taobao.com" alt=""></div>
+                        <div class="card-icon">
+                            <img src="https://www.taobao.com/favicon.ico" alt="淘宝" loading="lazy">
+                        </div>
                         <div class="card-info"><div class="card-name">淘宝</div></div>
                     </a>
                     <a href="https://www.jd.com" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/jd.com" alt=""></div>
+                        <div class="card-icon">
+                            <img src="https://www.jd.com/favicon.ico" alt="京东" loading="lazy">
+                        </div>
                         <div class="card-info"><div class="card-name">京东</div></div>
                     </a>
                     <a href="https://maps.baidu.com" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/baidu.com" alt=""></div>
+                        <div class="card-icon">
+                            <img src="https://baidu.com/favicon.ico" alt="百度地图" loading="lazy">
+                        </div>
                         <div class="card-info"><div class="card-name">百度地图</div></div>
                     </a>
                 </div>
             </section>
 
+            <!-- ════════════════════════════════════════
+                 开发（✅优化：图标加载）
+                 ════════════════════════════════════════ -->
             <section id="dev" class="content-section">
                 <h2 class="section-title">🛠️ 开发</h2>
                 <div class="card-grid">
                     <a href="https://developer.mozilla.org/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/mozilla.org" alt=""></div>
+                        <div class="card-icon">
+                            <img src="https://developer.mozilla.org/favicon.ico" alt="MDN" loading="lazy">
+                        </div>
                         <div class="card-info"><div class="card-name">MDN</div></div>
                     </a>
                     <a href="https://stackoverflow.com/" target="_blank" class="card">
-                        <div class="card-icon"><img src="https://icon.horse/icon/stackoverflow.com" alt=""></div>
+                        <div class="card-icon">
+                            <img src="https://stackoverflow.com/favicon.ico" alt="Stack Overflow" loading="lazy">
+                        </div>
                         <div class="card-info"><div class="card-name">Stack Overflow</div></div>
                     </a>
                     <a href="tools.html" class="card">
@@ -271,6 +358,9 @@
         </div>
     </main>
 
+    <!-- ════════════════════════════════════════
+         底部菜单栏（统一优化）
+         ════════════════════════════════════════ -->
     <nav class="bottom-nav">
         <div class="bottom-nav-item active" data-section="recommend">
             <span class="bottom-icon">🏠</span>
@@ -320,6 +410,22 @@
             btn.classList.remove('open');
         });
     })();
+
+    /* ── ✅ 图片加载失败处理 + 文件不存在时降级 ── */
+    document.querySelectorAll('.card-icon img').forEach(img => {
+        img.addEventListener('error', function() {
+            console.warn('图标加载失败:', this.src);
+            this.style.display = 'none';
+            
+            // ✅ 使用回退方案：显示通用链接图标
+            const fallback = document.createElement('span');
+            fallback.className = 'icon-fallback';
+            fallback.textContent = '🔗';
+            fallback.setAttribute('title', '图标加载失败');
+            
+            this.parentElement.appendChild(fallback);
+        });
+    });
     </script>
 </body>
 </html>
