@@ -1,7 +1,7 @@
 /* ============================================================
    UYEA 悠野工作室 · script.js (优化版)
    优化内容：菜单统一、图标加载、localStorage保存、汉堡菜单
-   ✅ 新增：国内百度+搜狗favicon服务 + Promise.race并行加载
+   ✅ 新增：GitHub本地ico图标加载 + 随机颜色备用方案
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -228,17 +228,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ────────────────────────────────────────────
-       ✅ 10. 新增：国内favicon服务 + Promise.race并行加载
+       ✅ 10. 新增：GitHub本地ico图标加载
        方案说明：
-       - 方案1：百度favicon服务（国内可用）
-       - 方案2：搜狗favicon服务（国内可用）
-       - 降级方案：随机颜色渐变 + 网站首字母
+       - 从GitHub raw.githubusercontent.com加载本地ico文件
+       - 5秒超时防止加载过慢
+       - 加载失败则显示随机颜色渐变 + 网站首字母
        
-       核心特点：
-       - 使用Promise.race()并行加载，谁快用谁
-       - 每个请求4秒超时，保证不会太慢
-       - 支持所有跨域加载方式
+       GitHub图标URL格式：
+       https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/chatgpt.ico
        ──────────────────────────────────────────── */
+
+    /* ✅ GitHub配置（请根据实际修改） */
+    const GITHUB_CONFIG = {
+        username: 'YMH752',        // ✅ 你的GitHub用户名
+        repo: 'UYEA-Files',        // ✅ 你的仓库名
+        branch: 'main',            // ✅ 分支名（通常是main或master）
+        path: 'UYEA-Web/Code/icons' // ✅ 图标文件夹路径
+    };
 
     /* ✅ 生成随机颜色函数（支持渐变） */
     function generateRandomGradient() {
@@ -263,71 +269,42 @@ document.addEventListener('DOMContentLoaded', () => {
         return cleanName.charAt(0).toUpperCase() || '?';
     }
 
-    /* ✅ 为单个img标签加载图标（使用Promise.race） */
-    function loadIconWithRace(img, domain, siteName) {
-        // ✅ 构建百度和搜狗的favicon URL
-        const baiduUrl = `https://www.baidu.com/favicon.ico?domain=${domain}`;
-        const sogouUrl = `https://www.sogou.com/favicon.ico?domain=${domain}`;
+    /* ✅ 构建GitHub RAW URL */
+    function buildGitHubIconUrl(iconFileName) {
+        // ✅ 构建完整的GitHub Raw CDN URL
+        return `https://raw.githubusercontent.com/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.path}/${iconFileName}`;
+    }
+
+    /* ✅ 加载单个图标 */
+    function loadLocalIcon(img, iconFileName, siteName) {
+        // ✅ 构建GitHub图标URL
+        const iconUrl = buildGitHubIconUrl(iconFileName);
         
-        // ✅ 创建百度Promise - 4秒超时
-        const baiduPromise = new Promise((resolve, reject) => {
-            const timer = setTimeout(() => {
-                reject(new Error('Baidu timeout'));
-            }, 4000);
-
-            const testImg = new Image();
-            testImg.crossOrigin = 'anonymous';
-            testImg.onload = () => {
-                clearTimeout(timer);
-                resolve(baiduUrl);
-            };
-            testImg.onerror = () => {
-                clearTimeout(timer);
-                reject(new Error('Baidu failed'));
-            };
-            testImg.src = baiduUrl;
-        });
-
-        // ✅ 创建搜狗Promise - 4秒超时
-        const sogouPromise = new Promise((resolve, reject) => {
-            const timer = setTimeout(() => {
-                reject(new Error('Sogou timeout'));
-            }, 4000);
-
-            const testImg = new Image();
-            testImg.crossOrigin = 'anonymous';
-            testImg.onload = () => {
-                clearTimeout(timer);
-                resolve(sogouUrl);
-            };
-            testImg.onerror = () => {
-                clearTimeout(timer);
-                reject(new Error('Sogou failed'));
-            };
-            testImg.src = sogouUrl;
-        });
-
-        // ✅ 使用Promise.race - 哪个先成功就用哪个
-        Promise.race([baiduPromise, sogouPromise])
-            .then(successUrl => {
-                // ✅ 有一个成功，立即设置src并加载
-                img.onload = () => {
-                    img.style.opacity = '1';
-                    const source = successUrl.includes('baidu') ? 'Baidu' : 'Sogou';
-                    console.log(`✅ Icon loaded successfully for ${domain} from ${source}`);
-                };
-                img.onerror = () => {
-                    console.warn(`Icon load failed after race success for ${domain}`);
-                    handleIconLoadFailure(img, siteName);
-                };
-                img.crossOrigin = 'anonymous';
-                img.src = successUrl;
-            })
-            .catch(error => {
-                // ✅ 两个都失败，使用随机颜色备用方案
-                console.warn(`Both Baidu and Sogou failed for ${domain}:`, error.message);
+        // ✅ 设置5秒超时
+        const timeoutId = setTimeout(() => {
+            if (!img.complete || img.naturalHeight === 0) {
+                console.warn(`Icon load timeout for ${siteName}`);
                 handleIconLoadFailure(img, siteName);
-            });
+            }
+        }, 5000);
+
+        // ✅ 图标加载成功
+        img.onload = () => {
+            clearTimeout(timeoutId);
+            img.style.opacity = '1';
+            console.log(`✅ Icon loaded successfully for ${siteName} from GitHub`);
+        };
+
+        // ✅ 图标加载失败
+        img.onerror = () => {
+            clearTimeout(timeoutId);
+            console.warn(`Failed to load icon for ${siteName} from GitHub`);
+            handleIconLoadFailure(img, siteName);
+        };
+
+        // ✅ 设置跨域属性并加载
+        img.crossOrigin = 'anonymous';
+        img.src = iconUrl;
     }
 
     /* ✅ 降级方案：生成随机颜色背景 + 网站首字母 */
@@ -346,6 +323,33 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`📌 Using fallback for ${siteName} with first char: ${getFirstChar(siteName)}`);
     }
 
+    /* ✅ 图标文件名映射表 */
+    const ICON_FILE_MAPPING = {
+        // ✅ AI部分
+        'gemini.google.com': 'gemini.ico',
+        'chatgpt.com': 'chatgpt.ico',
+        'claude.ai': 'claude.ico',
+        'deepseek.com': 'deepseek.ico',
+        'yiyan.baidu.com': 'yiyan.ico',
+        'qianwen.aliyun.com': 'qianwen.ico',
+        'kimi.ai': 'kimi.ico',
+        'doubao.com': 'doubao.ico',
+        'yuanbao.tencent.com': 'yuanbao.ico',
+        'perplexity.ai': 'perplexity.ico',
+        'grok.com': 'grok.ico',
+        'copilot.cloud.microsoft': 'copilot.ico',
+        
+        // ✅ 生活部分
+        'xiaohongshu.com': 'xiaohongshu.ico',
+        'bilibili.com': 'bilibili.ico',
+        'zhihu.com': 'zhihu.ico',
+        
+        // ✅ 工具部分
+        'github.com': 'github.ico',
+        'tinypng.com': 'tinypng.ico',
+        'v0.dev': 'v0dev.ico'
+    };
+
     /* ✅ 初始化所有卡片的图标加载 */
     function initializeIconLoading() {
         document.querySelectorAll('.card-icon img').forEach(img => {
@@ -357,8 +361,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // ✅ 使用Promise.race方案加载图标
-            loadIconWithRace(img, domain, siteName);
+            // ✅ 从映射表获取图标文件名
+            const iconFileName = ICON_FILE_MAPPING[domain];
+            
+            if (!iconFileName) {
+                console.warn(`No icon file mapping found for ${domain}`);
+                handleIconLoadFailure(img, siteName);
+                return;
+            }
+
+            // ✅ 加载本地GitHub图标
+            loadLocalIcon(img, iconFileName, siteName);
         });
     }
 
@@ -440,28 +453,33 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 
 /* ────────────────────────────────────────────
-   13. 图标服务配置说明
+   13. GitHub本地图标加载配置说明
    ──────────────────────────────────────────── */
 /* 
- * 国内favicon服务配置
+ * GitHub Raw CDN 图标加载配置
  * 
- * 使用的服务：
- * 1. 百度图标服务：https://www.baidu.com/favicon.ico?domain=xxx
- * 2. 搜狗图标服务：https://www.sogou.com/favicon.ico?domain=xxx
+ * 配置说明：
+ * - GITHUB_CONFIG.username：你的GitHub用户名（YMH752）
+ * - GITHUB_CONFIG.repo：仓库名称（UYEA-Files）
+ * - GITHUB_CONFIG.branch：分支名称（main 或 master）
+ * - GITHUB_CONFIG.path：图标文件夹路径（UYEA-Web/Code/icons）
+ * 
+ * 完整URL示例：
+ * https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/chatgpt.ico
  * 
  * 加载策略：
- * - 使用Promise.race()并行请求两个服务
- * - 谁先成功就用谁的结果
- * - 每个请求4秒超时
- * - 都失败则显示随机颜色+首字母
+ * - 从GitHub Raw CDN加载本地ico文件
+ * - 5秒超时，防止加载过慢
+ * - 加载失败则显示随机颜色+首字母
  * 
- * 为什么选择这两个？
- * - 百度和搜狗是国内最大的搜索引擎
- * - 在国内网络环境最稳定
- * - 都提供免费的favicon查询API
- * - 使用并行加载可以充分利用它们的速度优势
+ * 为什么用GitHub Raw CDN？
+ * - raw.githubusercontent.com 在中国相对稳定
+ * - 完全免费，无需额外部署
+ * - 版本管理和代码在一起
+ * - 修改图标直接push更新
+ * 
+ * 注意事项：
+ * - 确保GitHub仓库设置为public（否则无法访问Raw文件）
+ * - 提交后可能需要1-2分钟才能生效（GitHub缓存）
+ * - 如果修改配置，只需改上面的GITHUB_CONFIG即可
  */
-const FAVICON_SERVICES = {
-    baidu: (domain) => `https://www.baidu.com/favicon.ico?domain=${domain}`,
-    sogou: (domain) => `https://www.sogou.com/favicon.ico?domain=${domain}`
-};
