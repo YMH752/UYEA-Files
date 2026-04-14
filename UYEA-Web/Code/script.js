@@ -1,7 +1,7 @@
 /* ============================================================
    UYEA 悠野工作室 · script.js (优化版)
    优化内容：菜单统一、图标加载、localStorage保存、汉堡菜单
-   ✅ 新增：GitHub本地ico图标加载 + 随机颜色备用方案
+   ✅ 新增：GitHub本地ico图标加载 + emoji备用方案
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
        方案说明：
        - 从GitHub raw.githubusercontent.com加载本地ico文件
        - 5秒超时防止加载过慢
-       - 加载失败则显示随机颜色渐变 + 网站首字母
+       - 加载失败则显示emoji（不显示渐变）
        
        GitHub图标URL格式：
        https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/chatgpt.ico
@@ -246,28 +246,32 @@ document.addEventListener('DOMContentLoaded', () => {
         path: 'UYEA-Web/Code/icons' // ✅ 图标文件夹路径
     };
 
-    /* ✅ 生成随机颜色函数（支持渐变） */
-    function generateRandomGradient() {
-        // ✅ 生成两个随机HSL颜色用于渐变
-        const hue1 = Math.random() * 360;
-        // ✅ 第二个颜色相隔60-120度，保证颜色搭配美观
-        const hue2 = (hue1 + 60 + Math.random() * 60) % 360;
-        // ✅ 中等饱和度和亮度，保证易读性
-        const saturation = 60 + Math.random() * 30; // 60-90%
-        const lightness = 50 + Math.random() * 20; // 50-70%
+    /* ✅ Emoji映射表（加载失败时显示） */
+    const EMOJI_FALLBACK = {
+        // ✅ AI部分
+        'gemini.google.com': '🔮',
+        'chatgpt.com': '🤖',
+        'claude.ai': '💬',
+        'deepseek.com': '🔍',
+        'yiyan.baidu.com': '💡',
+        'qianwen.aliyun.com': '✨',
+        'kimi.ai': '🎯',
+        'doubao.com': '🎁',
+        'yuanbao.tencent.com': '💎',
+        'perplexity.ai': '🧠',
+        'grok.com': '⚡',
+        'copilot.cloud.microsoft': '🚀',
         
-        const color1 = `hsl(${hue1}, ${saturation}%, ${lightness}%)`;
-        const color2 = `hsl(${hue2}, ${saturation}%, ${lightness}%)`;
+        // ✅ 生活部分
+        'xiaohongshu.com': '📸',
+        'bilibili.com': '🎬',
+        'zhihu.com': '❓',
         
-        return `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`;
-    }
-
-    /* ✅ 获取网站名称的首个字符 */
-    function getFirstChar(siteName) {
-        // ✅ 移除特殊字符，提取首个有意义的字符
-        const cleanName = siteName.replace(/[^a-zA-Z\u4e00-\u9fa5]/g, '');
-        return cleanName.charAt(0).toUpperCase() || '?';
-    }
+        // ✅ 工具部分
+        'github.com': '🐙',
+        'tinypng.com': '🗜️',
+        'v0.dev': '⚙️'
+    };
 
     /* ✅ 构建GitHub RAW URL */
     function buildGitHubIconUrl(iconFileName) {
@@ -276,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ✅ 加载单个图标 */
-    function loadLocalIcon(img, iconFileName, siteName) {
+    function loadLocalIcon(img, iconFileName, siteName, domain) {
         // ✅ 构建GitHub图标URL
         const iconUrl = buildGitHubIconUrl(iconFileName);
         
@@ -284,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeoutId = setTimeout(() => {
             if (!img.complete || img.naturalHeight === 0) {
                 console.warn(`Icon load timeout for ${siteName}`);
-                handleIconLoadFailure(img, siteName);
+                handleIconLoadFailure(img, siteName, domain);
             }
         }, 5000);
 
@@ -299,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
         img.onerror = () => {
             clearTimeout(timeoutId);
             console.warn(`Failed to load icon for ${siteName} from GitHub`);
-            handleIconLoadFailure(img, siteName);
+            handleIconLoadFailure(img, siteName, domain);
         };
 
         // ✅ 设置跨域属性并加载
@@ -307,20 +311,23 @@ document.addEventListener('DOMContentLoaded', () => {
         img.src = iconUrl;
     }
 
-    /* ✅ 降级方案：生成随机颜色背景 + 网站首字母 */
-    function handleIconLoadFailure(img, siteName) {
+    /* ✅ 降级方案：显示emoji */
+    function handleIconLoadFailure(img, siteName, domain) {
         // ✅ 隐藏失败的img标签
         img.style.display = 'none';
         
-        // ✅ 创建随机颜色的备用方案
-        const fallback = document.createElement('div');
-        fallback.className = 'icon-fallback';
-        fallback.textContent = getFirstChar(siteName);
-        fallback.style.background = generateRandomGradient();
+        // ✅ 获取对应的emoji（如果没有则用默认的链接emoji）
+        const emoji = EMOJI_FALLBACK[domain] || '🔗';
         
-        // ✅ 将备用方案插入到父容器中
-        img.parentElement.appendChild(fallback);
-        console.log(`📌 Using fallback for ${siteName} with first char: ${getFirstChar(siteName)}`);
+        // ✅ 创建emoji元素
+        const emojiElement = document.createElement('div');
+        emojiElement.className = 'icon-emoji';
+        emojiElement.textContent = emoji;
+        emojiElement.title = `${siteName} - 图标加载失败`;
+        
+        // ✅ 将emoji元素插入到父容器中
+        img.parentElement.appendChild(emojiElement);
+        console.log(`😊 Using emoji for ${siteName}: ${emoji}`);
     }
 
     /* ✅ 图标文件名映射表 */
@@ -366,12 +373,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (!iconFileName) {
                 console.warn(`No icon file mapping found for ${domain}`);
-                handleIconLoadFailure(img, siteName);
+                handleIconLoadFailure(img, siteName, domain);
                 return;
             }
 
             // ✅ 加载本地GitHub图标
-            loadLocalIcon(img, iconFileName, siteName);
+            loadLocalIcon(img, iconFileName, siteName, domain);
         });
     }
 
@@ -434,18 +441,15 @@ document.addEventListener('DOMContentLoaded', () => {
             animation: shake 0.3s ease-in-out; 
         }
 
-        /* ✅ 图标加载失败时的备用样式 */
-        .icon-fallback {
+        /* ✅ 图标加载失败时的emoji样式 */
+        .icon-emoji {
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 14px;
-            color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            font-size: 18px;
+            font-weight: 600;
             user-select: none;
         }
     `;
@@ -456,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
    13. GitHub本地图标加载配置说明
    ──────────────────────────────────────────── */
 /* 
- * GitHub Raw CDN 图标加载配置
+ * GitHub Raw CDN 本地ico图标加载配置
  * 
  * 配置说明：
  * - GITHUB_CONFIG.username：你的GitHub用户名（YMH752）
@@ -470,7 +474,12 @@ document.addEventListener('DOMContentLoaded', () => {
  * 加载策略：
  * - 从GitHub Raw CDN加载本地ico文件
  * - 5秒超时，防止加载过慢
- * - 加载失败则显示随机颜色+首字母
+ * - 加载失败则显示对应的emoji（不显示渐变）
+ * 
+ * Emoji映射表（EMOJI_FALLBACK）：
+ * - 每个网站域名对应一个独特的emoji
+ * - 如果没有对应的emoji，则使用默认的链接emoji（🔗）
+ * - 可以根据需要修改emoji映射
  * 
  * 为什么用GitHub Raw CDN？
  * - raw.githubusercontent.com 在中国相对稳定
@@ -482,4 +491,5 @@ document.addEventListener('DOMContentLoaded', () => {
  * - 确保GitHub仓库设置为public（否则无法访问Raw文件）
  * - 提交后可能需要1-2分钟才能生效（GitHub缓存）
  * - 如果修改配置，只需改上面的GITHUB_CONFIG即可
+ * - emoji加载失败时会显示，不影响页面效果
  */
