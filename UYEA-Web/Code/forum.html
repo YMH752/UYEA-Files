@@ -6,16 +6,16 @@
     <title>悠野社区 | UYEA</title>
     
     <meta name="description" content="悠野社区 - 分享想法、互帮互助、共同成长的技术社区平台。">
-    <meta property=\"og:title\" content=\"悠野社区 | UYEA工作室\">
-    <meta property=\"og:description\" content=\"分享想法、互帮互助、共同成长\">
-    <meta name=\"theme-color\" content=\"#0078d4\">
+    <meta property="og:title" content="悠野社区 | UYEA工作室">
+    <meta property="og:description" content="分享想法、互帮互助、共同成长">
+    <meta name="theme-color" content="#000000">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── ✅ 任务：同步主页顶栏样式 ── */
+        /* ── 顶栏样式同步 ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -30,7 +30,6 @@
             z-index: 100;
         }
 
-        /* 登录按钮样式 */
         .header-actions { 
             display: flex; 
             align-items: center; 
@@ -38,9 +37,10 @@
             margin-left: auto; 
         }
 
+        /* ✅ 修改：登录按钮改为黑色 */
         .login-btn {
             padding: 8px 16px;
-            background: var(--primary);
+            background: var(--secondary);
             color: white;
             border-radius: var(--radius-sm);
             text-decoration: none;
@@ -48,7 +48,6 @@
             font-weight: 500;
         }
 
-        /* 汉堡菜单样式 */
         .menu-toggle {
             display: none;
             background: none;
@@ -66,7 +65,6 @@
             border-radius: 2px;
         }
 
-        /* 响应式：手机端显示汉堡菜单 */
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
         }
@@ -81,12 +79,13 @@
             margin-bottom: 20px;
         }
 
+        /* ✅ 修改：发帖按钮改为黑色 */
         .post-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             padding: 10px 20px;
-            background: var(--primary);
+            background: var(--secondary);
             color: white;
             border-radius: var(--radius-md);
             text-decoration: none;
@@ -134,7 +133,7 @@
             transition: border-color 0.2s;
         }
 
-        .post-item:hover { border-color: var(--primary); }
+        .post-item:hover { border-color: var(--secondary); }
 
         .post-meta {
             display: flex;
@@ -225,9 +224,6 @@
 
     <script src="script.js"></script>
     <script>
-    /* ════════════════════════════════════════════
-       社区页专用交互逻辑
-       ════════════════════════════════════════════ */
     const forumSearchInput = document.getElementById('forumSearchInput');
     const postItems = document.querySelectorAll('.post-item');
 
