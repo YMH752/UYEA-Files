@@ -1,21 +1,23 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
    风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
-   改进内容：加深对比度、全局大圆角矩形优化、同步全站视觉
+   修改记录：根据要求将按钮及核心强调色改为黑色，增加对比度
    ============================================================ */
 
 :root {
-    /* ✅ 改进点3：增强对比度的配色方案 */
+    /* ✅ 修改：将核心强调色改为纯黑，增加对比 */
     --primary:        #A63A26;    /* 复古铁锈红 - 核心强调色 */
     --primary-dark:   #8E2F1E;    /* 深红 - 用于悬浮点击 */
     --primary-light:  #F7EFED;    /* 极浅红 - 用于卡片悬浮背景 */
-    --secondary:      #1F2D3D;    /* 沉稳深蓝 - 用于按钮和标题 */
     
-    --bg:             #EEEAE3;    /* ✅ 改进点3：加深米色底，增加对比感 */
+    /* ✅ 修改：将次要强调色（按钮主要色）改为纯黑 */
+    --secondary:      #000000;    /* 纯黑色 - 用于按钮、标题、关键装饰 */
+    
+    --bg:             #EEEAE3;    /* 复古米色底 */
     --surface:        #FCFBF9;    /* 白色表面 - 卡片色 */
     --border:         #D1CCC0;    /* 灰陶边框 */
     
-    --text-primary:   #2C2A26;    /* ✅ 改进点3：文字加深，更高级 */
+    --text-primary:   #2C2A26;    /* 主要文字色 */
     --text-secondary: #5D5954;
     --text-muted:     #A8A49E;
     
@@ -23,16 +25,16 @@
     --header-h:       64px;
     --sidebar-w:      240px;
     
-    /* ✅ 改进点1：全局舒适圆角矩形 */
-    --radius-sm:      10px;       /* 小圆角：用于小按钮 */
-    --radius-md:      16px;       /* ✅ 核心：链接方块圆角，更舒服 */
-    --radius-lg:      20px;       /* 大圆角：用于搜索框 */
+    /* 全局圆角 */
+    --radius-sm:      10px;       
+    --radius-md:      16px;       
+    --radius-lg:      20px;       
     
     --duration:       0.3s;
     
-    /* 更有层次感的阴影 */
-    --shadow-sm:      0 2px 8px rgba(61, 58, 54, 0.08);
-    --shadow-md:      0 6px 16px rgba(61, 58, 54, 0.12);
+    /* 阴影 */
+    --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md:      0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 /* 基础重置 */
@@ -96,24 +98,29 @@ body {
     position: sticky; top: 0; z-index: 100;
 }
 
-/* ✅ 改进点1：搜索框圆角矩形同步 */
 .header-search-wrapper {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
     background: var(--bg);
     border: 1.5px solid var(--border);
-    border-radius: var(--radius-lg); /* 使用更大的圆角 */
+    border-radius: var(--radius-lg);
     padding: 0 16px; height: 42px;
 }
 
+/* ✅ 按钮样式：应用黑色背景 */
 .login-btn {
     padding: 8px 20px;
-    background: var(--secondary);
+    background: var(--secondary); /* 已在:root中定义为黑色 */
     color: #FFFFFF;
     border-radius: var(--radius-sm);
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
+    transition: opacity var(--duration);
+}
+
+.login-btn:hover {
+    opacity: 0.8;
 }
 
 /* ── 栏目与标题 ── */
@@ -127,17 +134,17 @@ body {
     width: 6px; background: var(--primary); border-radius: 3px;
 }
 
-/* ── ✅ 改进点1：全站圆角矩形链接方块 ── */
+/* ── 链接方块 ── */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px; /* 增大间距，呼吸感更强 */
+    gap: 20px;
 }
 
 .card-item {
     background: var(--surface);
     border: 1.5px solid var(--border);
-    border-radius: var(--radius-md); /* 核心改进：16px圆角 */
+    border-radius: var(--radius-md);
     padding: 18px;
     display: flex; align-items: center; gap: 14px;
     text-decoration: none;
@@ -147,7 +154,7 @@ body {
 
 .card-item:hover {
     transform: translateY(-4px);
-    border-color: var(--primary);
+    border-color: var(--secondary); /* 悬浮时边框变黑 */
     box-shadow: var(--shadow-md);
 }
 
@@ -155,10 +162,9 @@ body {
     font-size: 15px; font-weight: 600; color: var(--text-primary);
 }
 
-/* 图标容器样式 */
 .card-icon {
     width: 36px; height: 36px;
-    border-radius: 8px; /* 图标自带圆角 */
+    border-radius: 8px;
     background: #f0f0f0;
     overflow: hidden;
 }
