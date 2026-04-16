@@ -2,174 +2,33 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>悠野社区 | UYEA</title>
-    
-    <meta name="description" content="悠野社区 - 分享想法、互帮互助、共同成长的技术社区平台。">
-    <meta property=\"og:title\" content=\"悠野社区 | UYEA工作室\">
-    <meta property=\"og:description\" content=\"分享想法、互帮互助、共同成长\">
-    <meta name=\"theme-color\" content=\"#0078d4\">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    
     <style>
-        /* ── ✅ 任务：同步主页顶栏样式 ── */
-        .top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 0 24px;
-            height: var(--header-h);
-            background: var(--surface);
-            border-bottom: 1.5px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        /* 登录按钮样式 */
-        .header-actions { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            margin-left: auto; 
-        }
-
-        .login-btn {
-            padding: 8px 16px;
-            background: var(--primary);
-            color: white;
-            border-radius: var(--radius-sm);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        /* 汉堡菜单样式 */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .menu-toggle span {
-            display: block;
-            width: 24px;
-            height: 3px;
-            background: var(--text-primary);
-            border-radius: 2px;
-        }
-
-        /* 响应式：手机端显示汉堡菜单 */
-        @media (max-width: 768px) {
-            .menu-toggle { display: flex; }
-        }
-
-        /* ── 论坛页专属样式 ── */
-        .forum-toolbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .post-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 20px;
-            background: var(--primary);
-            color: white;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            font-weight: 500;
-            transition: opacity 0.2s;
-        }
-
-        .post-btn:hover { opacity: 0.9; }
-
-        .forum-search {
-            position: relative;
-            flex: 1;
-            min-width: 200px;
-            max-width: 400px;
-        }
-
-        .forum-search input {
-            width: 100%;
-            padding: 10px 16px 10px 40px;
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-md);
-            outline: none;
-        }
-
-        .forum-search::before {
-            content: "🔍";
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 14px;
-            opacity: 0.6;
-        }
-
-        /* 帖子列表 */
-        .post-list { display: flex; flex-direction: column; gap: 12px; }
-
+        /* 论坛列表圆角矩形优化 */
         .post-item {
             background: var(--surface);
             border: 1.5px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 20px;
+            border-radius: var(--radius-md); /* ✅ 改进点1：大圆角 */
+            padding: 24px;
             text-decoration: none;
-            transition: border-color 0.2s;
+            display: block;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-sm);
         }
-
-        .post-item:hover { border-color: var(--primary); }
-
-        .post-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .post-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .post-excerpt {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.6;
+        .post-item:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .post-btn {
+            background: var(--primary); color: white;
+            padding: 10px 24px; border-radius: var(--radius-sm);
+            text-decoration: none; font-weight: 600;
         }
     </style>
 </head>
 <body>
-
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo-group">
-                <span class="logo-text">UYEA</span>
-                <span class="logo-sub">悠野</span>
-            </div>
-        </div>
+        <div class="sidebar-header"><div class="logo-group"><span class="logo-text">UYEA</span></div></div>
         <nav class="nav-menu">
             <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></a>
             <a href="tools.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></a>
@@ -179,65 +38,26 @@
 
     <main class="main-content">
         <header class="top-bar">
-            <div class="header-actions">
+            <div class="header-actions" style="margin-left:auto;">
                 <a href="#" class="login-btn">登录 / 注册</a>
-                <button class="menu-toggle" id="hamburgerBtn">
-                    <span></span><span></span><span></span>
-                </button>
             </div>
         </header>
 
         <div class="content-wrapper">
-            <div class="section-header">
+            <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
                 <h2 class="section-title">悠野社区</h2>
+                <a href="#" class="post-btn">＋ 发布帖子</a>
             </div>
 
-            <div class="forum-toolbar">
-                <a href="#" class="post-btn">＋ 发布新帖子</a>
-                <div class="forum-search">
-                    <input type="text" id="forumSearchInput" placeholder="搜索帖子内容...">
-                </div>
-            </div>
-
-            <div class="post-list" id="postList">
+            <div class="post-list">
                 <a href="#" class="post-item">
-                    <div class="post-meta">
-                        <span>👤 管理员</span>
-                        <span>•</span>
-                        <span>📅 2024-05-20</span>
-                    </div>
-                    <div class="post-title">欢迎来到悠野工作室新版社区！</div>
-                    <div class="post-excerpt">我们在这里分享技术、生活和一切有趣的想法。请遵守社区规范，共同维护良好的交流环境。</div>
-                </a>
-
-                <a href="#" class="post-item">
-                    <div class="post-meta">
-                        <span>👤 技术小哥</span>
-                        <span>•</span>
-                        <span>📅 2024-05-18</span>
-                    </div>
-                    <div class="post-title">关于 AI 导航工具的更新说明</div>
-                    <div class="post-excerpt">本次更新新增了多款国产大模型入口，并优化了图标加载速度...</div>
+                    <div style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">👤 管理员 • 2024-05-20</div>
+                    <div style="font-size:20px; font-weight:700; color:var(--text-primary); margin-bottom:10px;">欢迎来到复古新版社区！</div>
+                    <div style="color:var(--text-secondary); font-size:14px;">我们优化了视觉对比度和圆角矩形，让阅读体验更佳。</div>
                 </a>
             </div>
         </div>
     </main>
-
     <script src="script.js"></script>
-    <script>
-    /* ════════════════════════════════════════════
-       社区页专用交互逻辑
-       ════════════════════════════════════════════ */
-    const forumSearchInput = document.getElementById('forumSearchInput');
-    const postItems = document.querySelectorAll('.post-item');
-
-    forumSearchInput?.addEventListener('input', function() {
-        const keyword = this.value.toLowerCase();
-        postItems.forEach(item => {
-            const text = item.textContent.toLowerCase();
-            item.style.display = text.includes(keyword) ? '' : 'none';
-        });
-    });
-    </script>
 </body>
 </html>
