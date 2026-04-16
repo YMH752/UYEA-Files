@@ -8,14 +8,14 @@
     <meta name="description" content="悠野工具箱 - 提供实用的在线工具集合，包括格式转换、代码工具、文本处理等。">
     <meta property="og:title" content="实用工具箱 | UYEA悠野工作室">
     <meta property="og:description" content="提供格式转换、代码工具、文本处理等实用在线工具">
-    <meta name="theme-color" content="#0078d4">
+    <meta name="theme-color" content="#000000">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── ✅ 任务：同步主页顶栏样式 ── */
+        /* ── 顶栏样式同步 ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -30,7 +30,6 @@
             z-index: 100;
         }
 
-        /* 登录按钮样式 */
         .header-actions { 
             display: flex; 
             align-items: center; 
@@ -38,9 +37,10 @@
             margin-left: auto; 
         }
 
+        /* ✅ 修改：登录按钮改为黑色 */
         .login-btn {
             padding: 8px 16px;
-            background: var(--primary);
+            background: var(--secondary);
             color: white;
             border-radius: var(--radius-sm);
             text-decoration: none;
@@ -48,7 +48,6 @@
             font-weight: 500;
         }
 
-        /* 汉堡菜单样式 */
         .menu-toggle {
             display: none;
             background: none;
@@ -66,7 +65,6 @@
             border-radius: 2px;
         }
 
-        /* 响应式：手机端显示汉堡菜单 */
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
         }
@@ -111,10 +109,11 @@
             transition: all 0.2s;
         }
 
+        /* ✅ 修改：激活分类标签背景改为黑色 */
         .tab-item.active {
-            background: var(--primary);
+            background: var(--secondary);
             color: white;
-            border-color: var(--primary);
+            border-color: var(--secondary);
         }
 
         .tool-group { margin-bottom: 40px; }
@@ -204,9 +203,6 @@
 
     <script src="script.js"></script>
     <script>
-    /* ════════════════════════════════════════════
-       工具页专用交互逻辑
-       ════════════════════════════════════════════ */
     const toolSearchInput = document.getElementById('toolSearchInput');
     const tabItems = document.querySelectorAll('.tab-item');
     const toolGroups = document.querySelectorAll('.tool-group');
@@ -214,20 +210,16 @@
 
     let currentCategory = 'all';
 
-    // 搜索功能逻辑
     toolSearchInput.addEventListener('input', function() {
         const keyword = this.value.toLowerCase();
-        
         toolCards.forEach(card => {
             const title = card.querySelector('.card-title').textContent.toLowerCase();
             const parentGroup = card.closest('.tool-group');
             const matchesSearch = title.includes(keyword);
             const matchesCategory = currentCategory === 'all' || parentGroup.dataset.category === currentCategory;
-
             card.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
         });
 
-        // 隐藏没有可见卡片的分组
         toolGroups.forEach(group => {
             const visibleCards = group.querySelectorAll('.card-item[style=""]');
             const matchesCategory = currentCategory === 'all' || group.dataset.category === currentCategory;
@@ -235,14 +227,11 @@
         });
     });
 
-    // 分类切换逻辑
     tabItems.forEach(tab => {
         tab.addEventListener('click', function() {
             tabItems.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
-
             currentCategory = this.dataset.category;
-
             toolGroups.forEach(group => {
                 if (currentCategory === 'all') {
                     group.style.display = '';
@@ -250,8 +239,6 @@
                     group.style.display = group.dataset.category === currentCategory ? '' : 'none';
                 }
             });
-
-            // 重新触发搜索以应用新的过滤
             const event = new Event('input');
             toolSearchInput.dispatchEvent(event);
         });
