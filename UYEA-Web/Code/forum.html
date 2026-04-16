@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>悠野社区 | UYEA</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 论坛列表圆角矩形优化 */
+        .post-item {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md); /* ✅ 改进点1：大圆角 */
+            padding: 24px;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-sm);
+        }
+        .post-item:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .post-btn {
+            background: var(--primary); color: white;
+            padding: 10px 24px; border-radius: var(--radius-sm);
+            text-decoration: none; font-weight: 600;
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
