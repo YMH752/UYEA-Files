@@ -37,15 +37,20 @@
             text-decoration: none;
         }
 
+        /* ✅ 任务一优化：搜索框站C位（水平绝对居中） */
         .search-container {
-            flex: 1;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 600px;
             display: flex;
             justify-content: center;
-            max-width: 600px;
+            pointer-events: none; /* 防止容器遮挡两侧点击 */
         }
 
         .header-search-wrapper {
-            width: 100%;
+            width: 90%;
             display: flex;
             align-items: center;
             background: var(--bg);
@@ -53,6 +58,7 @@
             border-radius: var(--radius-md);
             padding: 0 12px;
             height: 40px;
+            pointer-events: auto; /* 恢复搜索框区域的点击 */
         }
 
         #searchInput {
@@ -64,7 +70,12 @@
             font-size: 14px;
         }
 
-        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin-left: auto; /* 确保右侧动作栏推至最右 */
+        }
 
         .login-btn {
             padding: 8px 16px;
@@ -93,7 +104,7 @@
             border-radius: 2px;
         }
 
-        /* ✅ 新增：PC端（min-width: 1025px）隐藏顶栏logo */
+        /* PC端（min-width: 1025px）隐藏顶栏logo */
         @media (min-width: 1025px) {
             .header-logo {
                 display: none;
@@ -112,7 +123,7 @@
             grid-column: 1 / -1;
         }
 
-        /* ✅ 图标样式：圆角、无阴影、背景透明 */
+        /* 图标样式：圆角、无阴影、背景透明 */
         .card-icon {
             width: 32px;
             height: 32px;
@@ -130,7 +141,7 @@
             border-radius: 6px;
         }
 
-        /* ✅ 图标加载失败时的emoji样式 */
+        /* 图标加载失败时的emoji样式 */
         .card-icon .icon-emoji {
             width: 100%;
             height: 100%;
@@ -144,6 +155,10 @@
 
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
+            /* 移动端搜索框宽度适配，防止遮挡 */
+            .search-container {
+                max-width: 45%; 
+            }
         }
     </style>
 </head>
@@ -155,7 +170,6 @@
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
-                <!-- ✅ 修改：副标题改为"悠野" -->
                 <span class="logo-sub">悠野</span>
             </div>
         </div>
@@ -168,14 +182,15 @@
 
     <main class="main-content">
         <header class="top-bar">
-            <!-- ✅ 修改：PC端会被CSS隐藏（@media min-width: 1025px），手机端保留 -->
             <a href="#" class="header-logo">UYEA</a>
+            
             <div class="search-container">
                 <div class="header-search-wrapper">
                     <span class="search-icon">🔍</span>
                     <input type="text" id="searchInput" placeholder="搜索你需要的资源...">
                 </div>
             </div>
+
             <div class="header-actions">
                 <a href="#" class="login-btn">登录 / 注册</a>
                 <button class="menu-toggle" id="hamburgerBtn">
@@ -193,7 +208,6 @@
 
             <div class="section-header"><h2 class="section-title">Ai</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
-                <!-- ✅ Google Gemini -->
                 <a href="https://www.gemini.google.com/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="gemini.google.com" data-site-name="Google Gemini"></div>
                     <div class="card-info"><div class="card-title">Google Gemini</div></div>
@@ -218,11 +232,6 @@
                     <div class="card-icon"><img src="" data-domain="qianwen.aliyun.com" data-site-name="通义千问"></div>
                     <div class="card-info"><div class="card-title">通义千问</div></div>
                 </a>
-                <!-- ✅ 千问（阿里通义千问中文别名） -->
-                <a href="https://www.qianwen.aliyun.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="" data-domain="qianwen.aliyun.com" data-site-name="千问"></div>
-                    <div class="card-info"><div class="card-title">千问</div></div>
-                </a>
                 <a href="https://www.kimi.ai/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="kimi.ai" data-site-name="Kimi"></div>
                     <div class="card-info"><div class="card-title">Kimi</div></div>
@@ -243,7 +252,6 @@
                     <div class="card-icon"><img src="" data-domain="grok.com" data-site-name="Grok"></div>
                     <div class="card-info"><div class="card-title">Grok</div></div>
                 </a>
-                <!-- ✅ Microsoft 365 Copilot Chat -->
                 <a href="https://copilot.cloud.microsoft/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="copilot.cloud.microsoft" data-site-name="Copilot"></div>
                     <div class="card-info"><div class="card-title">Microsoft 365 Copilot Chat</div></div>
