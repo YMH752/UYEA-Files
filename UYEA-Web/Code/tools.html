@@ -6,28 +6,15 @@
     <title>实用工具箱 | UYEA</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 工具页特定圆角优化 */
-        .tool-search-bar {
-            display: flex; align-items: center;
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 0 16px; height: 48px;
-            margin-bottom: 24px;
-        }
-        .tab-item {
-            padding: 8px 20px;
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: 30px; /* 胶囊型圆角 */
-            cursor: pointer; transition: all 0.2s;
-        }
+        .tool-search-bar { display: flex; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 0 16px; height: 48px; margin-bottom: 24px; }
+        .tab-item { padding: 8px 20px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 30px; cursor: pointer; transition: all 0.2s; font-size: 14px; font-weight: 500; }
         .tab-item.active { background: var(--primary); color: white; border-color: var(--primary); }
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><div class="logo-group"><span class="logo-text">UYEA</span></div></div>
+        <div class="sidebar-header"><div class="logo-group"><span class="logo-text">UYEA</span><span class="logo-sub">悠野</span></div></div>
         <nav class="nav-menu">
             <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></a>
             <div class="nav-item active"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></div>
@@ -37,34 +24,49 @@
 
     <main class="main-content">
         <header class="top-bar">
-            <div class="header-actions" style="margin-left:auto;">
+            <a href="#" class="header-logo">UYEA</a>
+            <div class="header-actions">
                 <a href="#" class="login-btn">登录 / 注册</a>
+                <button class="menu-toggle" id="hamburgerBtn">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </header>
 
         <div class="content-wrapper">
             <div class="section-header"><h2 class="section-title">实用工具箱</h2></div>
-            <div class="tool-search-bar">
-                <span>🔍</span>
-                <input type="text" placeholder="搜索工具..." style="border:none; background:transparent; outline:none; width:100%; margin-left:10px;">
-            </div>
+            <div class="tool-search-bar"><span>🔍</span><input type="text" id="toolSearchInput" placeholder="搜索工具..." style="border:none; background:transparent; outline:none; width:100%; margin-left:10px;"></div>
             
-            <div style="display:flex; gap:10px; margin-bottom:30px;">
-                <div class="tab-item active">全部</div>
-                <div class="tab-item">开发者</div>
-                <div class="tab-item">多媒体</div>
+            <div class="category-tabs" style="display:flex; gap:10px; margin-bottom:30px;">
+                <div class="tab-item active" data-category="all">全部</div>
+                <div class="tab-item" data-category="dev">开发者</div>
+                <div class="tab-item" data-category="media">多媒体</div>
             </div>
 
-            <div class="grid-container">
-                <a href="#" class="card-item">
-                    <div class="card-info"><div class="card-title">JSON 格式化</div></div>
-                </a>
-                <a href="#" class="card-item">
-                    <div class="card-info"><div class="card-title">图片无损压缩</div></div>
-                </a>
+            <div id="toolsContainer" class="grid-container">
+                <div class="tool-group" data-category="dev">
+                    <a href="#" class="card-item"><div class="card-info"><div class="card-title">JSON 格式化</div></div></a>
+                </div>
+                <div class="tool-group" data-category="media">
+                    <a href="#" class="card-item"><div class="card-info"><div class="card-title">图片无损压缩</div></div></a>
+                </div>
             </div>
         </div>
     </main>
     <script src="script.js"></script>
+    <script>
+        // 工具过滤逻辑保留
+        const toolSearchInput = document.getElementById('toolSearchInput');
+        const tabItems = document.querySelectorAll('.tab-item');
+        const toolGroups = document.querySelectorAll('.tool-group');
+        tabItems.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabItems.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const cat = this.dataset.category;
+                toolGroups.forEach(g => g.style.display = (cat === 'all' || g.dataset.category === cat) ? '' : 'none');
+            });
+        });
+    </script>
 </body>
 </html>
