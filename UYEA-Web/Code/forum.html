@@ -5,30 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>悠野社区 | UYEA</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* 论坛列表圆角矩形优化 */
-        .post-item {
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-md); /* ✅ 改进点1：大圆角 */
-            padding: 24px;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 16px;
-            transition: all 0.3s;
-            box-shadow: var(--shadow-sm);
-        }
-        .post-item:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--shadow-md); }
-        .post-btn {
-            background: var(--primary); color: white;
-            padding: 10px 24px; border-radius: var(--radius-sm);
-            text-decoration: none; font-weight: 600;
-        }
-    </style>
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><div class="logo-group"><span class="logo-text">UYEA</span></div></div>
+        <div class="sidebar-header"><div class="logo-group"><span class="logo-text">UYEA</span><span class="logo-sub">悠野</span></div></div>
         <nav class="nav-menu">
             <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></a>
             <a href="tools.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></a>
@@ -38,19 +19,23 @@
 
     <main class="main-content">
         <header class="top-bar">
-            <div class="header-actions" style="margin-left:auto;">
+            <a href="#" class="header-logo">UYEA</a>
+            <div class="header-actions">
                 <a href="#" class="login-btn">登录 / 注册</a>
+                <button class="menu-toggle" id="hamburgerBtn">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </header>
 
         <div class="content-wrapper">
             <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
                 <h2 class="section-title">悠野社区</h2>
-                <a href="#" class="post-btn">＋ 发布帖子</a>
+                <a href="#" class="login-btn" style="background:var(--primary);">＋ 发布帖子</a>
             </div>
 
             <div class="post-list">
-                <a href="#" class="post-item">
+                <a href="#" class="card-item" style="display:block; margin-bottom:16px; padding:24px;">
                     <div style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">👤 管理员 • 2024-05-20</div>
                     <div style="font-size:20px; font-weight:700; color:var(--text-primary); margin-bottom:10px;">欢迎来到复古新版社区！</div>
                     <div style="color:var(--text-secondary); font-size:14px;">我们优化了视觉对比度和圆角矩形，让阅读体验更佳。</div>
