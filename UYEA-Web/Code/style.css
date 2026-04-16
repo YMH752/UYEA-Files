@@ -1,93 +1,99 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   风格方案：旧时代网站风 (Win95 Retro)
-   特点：系统灰、硬边框、高对比度、无圆角
+   风格方案：未来科技风 (Cyber-Tech Dark)
+   特点：极深背景、半透明感、霓虹发光边框
    ============================================================ */
 
 :root {
-    --primary:        #000080;    /* 经典系统深蓝 */
-    --primary-light:  #C0C0C0;    /* 系统灰 */
-    --secondary:      #808080;    /* 阴影灰 */
+    --primary:        #00F2FF;    /* 霓虹青 - 核心发光色 */
+    --primary-glow:   rgba(0, 242, 255, 0.3);
+    --secondary:      #7000FF;    /* 赛博紫 - 次要强调 */
     
-    --bg:             #008080;    /* ✅ 经典 Win95 桌面青色 */
-    --surface:        #C0C0C0;    /* 按钮/卡片灰色 */
-    --border:         #FFFFFF;    /* 用于模拟高光边缘 */
-    --border-dark:    #808080;    /* 用于模拟阴影边缘 */
+    --bg:             #0B0E14;    /* ✅ 极深蓝黑底 */
+    --surface:        #161B22;    /* 深灰蓝色卡片 */
+    --border:         #30363D;    /* 冷灰色边框 */
     
-    --text-primary:   #000000;    /* 纯黑文字 */
-    --text-secondary: #000080;    /* 链接蓝 */
-    --text-muted:     #444444;
+    --text-primary:   #E6EDF3;    /* 高亮白 */
+    --text-secondary: #8B949E;    /* 灰蓝文字 */
+    --text-muted:     #484F58;
     
     --header-h:       64px;
     --sidebar-w:      240px;
-    --radius-sm:      0px;        /* ✅ 核心：完全直角，模拟老旧系统 */
-    --radius-md:      0px;
-    --duration:       0.1s;       /* 交互极快，无过渡动画 */
+    --radius-sm:      2px;        /* 极小圆角或直角 */
+    --radius-md:      4px;
+    --duration:       0.4s;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: "MS Sans Serif", "Courier New", "Noto Sans SC", sans-serif;
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
     background-color: var(--bg);
     color: var(--text-primary);
+    background-image: radial-gradient(circle at 50% 0%, #1a1f2e 0%, #0b0e14 100%); /* 增加顶部渐变微光 */
 }
 
-/* 侧边栏：模拟系统窗口面板 */
+/* 侧边栏：科技通透感 */
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
-    background: var(--surface);
-    border-right: 3px double #808080;
+    background: rgba(22, 27, 34, 0.8);
+    backdrop-filter: blur(12px); /* 磨砂玻璃效果 */
+    border-right: 1px solid var(--border);
     position: fixed;
     top: 0; left: 0; z-index: 1000;
 }
 
 .logo-text { 
-    font-weight: 900; 
     color: var(--primary);
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    text-shadow: 0 0 10px var(--primary-glow);
+    letter-spacing: 2px;
 }
 
-.nav-item.active { 
-    background: var(--primary); 
-    color: #FFFFFF; 
-    outline: 1px dotted #FFFFFF;
-    outline-offset: -4px;
+.nav-item:hover {
+    color: var(--primary);
+    background: rgba(0, 242, 255, 0.05);
 }
 
-/* 顶栏：系统标题栏感 */
+.nav-item.active {
+    background: linear-gradient(90deg, var(--primary-glow), transparent);
+    border-left: 3px solid var(--primary);
+    color: var(--primary);
+}
+
+/* 顶栏 */
 .top-bar {
-    background: var(--surface);
-    border-bottom: 2px solid var(--border-dark);
-    box-shadow: 0 2px 0 #FFFFFF;
+    background: rgba(11, 14, 20, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
 }
 
-/* 卡片：模拟 Win95 按钮 */
+/* 卡片：发光边缘感 */
 .card-item {
     background: var(--surface);
-    border-top: 2px solid #FFFFFF;
-    border-left: 2px solid #FFFFFF;
-    border-right: 2px solid #808080;
-    border-bottom: 2px solid #808080;
-    padding: 12px;
-    display: flex; align-items: center; gap: 12px;
-    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 16px;
+    display: flex; align-items: center; gap: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-item:hover {
-    border-top: 2px solid #808080;
-    border-left: 2px solid #808080;
-    border-right: 2px solid #FFFFFF;
-    border-bottom: 2px solid #FFFFFF;
-    background: #D0D0D0;
+    border-color: var(--primary);
+    box-shadow: 0 0 15px var(--primary-glow);
+    transform: translateY(-2px) scale(1.02);
 }
 
 .section-title {
-    background: #000080;
-    color: white;
-    padding: 2px 8px;
-    font-size: 16px;
-    display: inline-block;
+    color: var(--text-primary);
+    border-left: 4px solid var(--primary);
+    padding-left: 12px;
+    text-transform: uppercase;
+}
+
+/* 登录按钮：发光感 */
+.login-btn {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    box-shadow: inset 0 0 8px var(--primary-glow);
 }
