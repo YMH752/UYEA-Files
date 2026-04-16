@@ -5,54 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>UYEA | 悠野导航</title>
     
+    <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
+    <meta name="theme-color" content="#0078d4">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* 针对首页顶栏的精准布局修复 */
+        /* ── 首页顶栏布局 ── */
         .top-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 20px;
             padding: 0 24px;
             height: var(--header-h);
             background: var(--surface);
-            border-bottom: 2px solid var(--border);
+            border-bottom: 1.5px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
+        .header-logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* ✅ 任务一优化：搜索框站C位（水平绝对居中） */
         .search-container {
-            flex: 1;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 600px;
             display: flex;
             justify-content: center;
-            padding: 0 20px;
+            pointer-events: none; /* 防止容器遮挡两侧点击 */
         }
 
         .header-search-wrapper {
-            width: 100%;
-            max-width: 500px;
+            width: 90%;
             display: flex;
             align-items: center;
             background: var(--bg);
             border: 1.5px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 0 16px;
-            height: 42px;
+            border-radius: var(--radius-md);
+            padding: 0 12px;
+            height: 40px;
+            pointer-events: auto; /* 恢复搜索框区域的点击 */
         }
 
-        .header-actions {
+        #searchInput {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            padding: 0 8px;
+            font-size: 14px;
+        }
+
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin-left: auto; /* 确保右侧动作栏推至最右 */
+        }
+
+        .login-btn {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 2px;
+        }
+
+        /* PC端（min-width: 1025px）隐藏顶栏logo */
+        @media (min-width: 1025px) {
+            .header-logo {
+                display: none;
+            }
+        }
+
+        /* 状态卡片：用于"尽请期待" */
+        .text-status-card {
+            background: var(--surface);
+            border: 1.5px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 16px;
+            grid-column: 1 / -1;
+        }
+
+        /* 图标样式：圆角、无阴影、背景透明 */
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: transparent !important;
+            box-shadow: none !important;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 6px;
         }
 
-        /* 移动端汉堡菜单显示逻辑 */
-        @media (max-width: 1024px) {
-            .search-container { display: none; } /* 移动端隐藏中间搜索框，防止挤压 */
-            .menu-toggle { display: flex !important; }
+        /* 图标加载失败时的emoji样式 */
+        .card-icon .icon-emoji {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            user-select: none;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            /* 移动端搜索框宽度适配，防止遮挡 */
+            .search-container {
+                max-width: 45%; 
+            }
         }
     </style>
 </head>
@@ -68,56 +174,43 @@
             </div>
         </div>
         <nav class="nav-menu">
-            <div class="nav-item active">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-text">全部导航</span>
-            </div>
-            <a href="tools.html" class="nav-item">
-                <span class="nav-icon">🛠️</span>
-                <span class="nav-text">实用工具</span>
-            </a>
-            <a href="forum.html" class="nav-item">
-                <span class="nav-icon">💬</span>
-                <span class="nav-text">悠野社区</span>
-            </a>
+            <div class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></div>
+            <a href="tools.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></a>
+            <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
         </nav>
     </aside>
 
     <main class="main-content">
         <header class="top-bar">
-            <button class="menu-toggle" id="hamburgerBtn" style="display:none;">
-                <span></span><span></span><span></span>
-            </button>
-
+            <a href="#" class="header-logo">UYEA</a>
+            
             <div class="search-container">
                 <div class="header-search-wrapper">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="searchInput" placeholder="搜索资源..." style="border:none; background:transparent; outline:none; width:100%; margin-left:8px;">
+                    <input type="text" id="searchInput" placeholder="搜索你需要的资源...">
                 </div>
             </div>
 
             <div class="header-actions">
                 <a href="#" class="login-btn">登录 / 注册</a>
+                <button class="menu-toggle" id="hamburgerBtn">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </header>
 
         <div class="content-wrapper">
-            <div class="section-header">
-                <h2 class="section-title">每日推荐</h2>
-            </div>
+            
+            <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
-                <div style="grid-column: 1/-1; padding: 40px; text-align: center; border: 2px dashed var(--border); border-radius: var(--radius-md); color: var(--text-muted); background: var(--surface);">
-                    ☕ 暂无推荐，尽请期待
-                </div>
+                <div class="text-status-card">☕ 尽请期待</div>
             </div>
 
-            <div class="section-header">
-                <h2 class="section-title">Ai</h2>
-            </div>
+            <div class="section-header"><h2 class="section-title">Ai</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
-                <a href="https://www.deepseek.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="" data-domain="deepseek.com" data-site-name="DeepSeek"></div>
-                    <div class="card-info"><div class="card-title">DeepSeek</div></div>
+                <a href="https://www.gemini.google.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="gemini.google.com" data-site-name="Google Gemini"></div>
+                    <div class="card-info"><div class="card-title">Google Gemini</div></div>
                 </a>
                 <a href="https://chatgpt.com/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="chatgpt.com" data-site-name="ChatGPT"></div>
@@ -126,6 +219,10 @@
                 <a href="https://claude.ai/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="claude.ai" data-site-name="Claude"></div>
                     <div class="card-info"><div class="card-title">Claude</div></div>
+                </a>
+                <a href="https://www.deepseek.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="deepseek.com" data-site-name="DeepSeek"></div>
+                    <div class="card-info"><div class="card-title">DeepSeek</div></div>
                 </a>
                 <a href="https://yiyan.baidu.com/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="yiyan.baidu.com" data-site-name="文心一言"></div>
@@ -139,15 +236,29 @@
                     <div class="card-icon"><img src="" data-domain="kimi.ai" data-site-name="Kimi"></div>
                     <div class="card-info"><div class="card-title">Kimi</div></div>
                 </a>
-                <a href="https://hunyuan.tencent.com/" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="" data-domain="hunyuan.tencent.com" data-site-name="腾讯混元"></div>
-                    <div class="card-info"><div class="card-title">腾讯混元</div></a>
+                <a href="https://www.doubao.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="doubao.com" data-site-name="豆包"></div>
+                    <div class="card-info"><div class="card-title">豆包</div></div>
+                </a>
+                <a href="https://yuanbao.tencent.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="yuanbao.tencent.com" data-site-name="腾讯元宝"></div>
+                    <div class="card-info"><div class="card-title">腾讯元宝</div></div>
+                </a>
+                <a href="https://www.perplexity.ai/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="perplexity.ai" data-site-name="Perplexity"></div>
+                    <div class="card-info"><div class="card-title">Perplexity</div></div>
+                </a>
+                <a href="https://grok.com/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="grok.com" data-site-name="Grok"></div>
+                    <div class="card-info"><div class="card-title">Grok</div></div>
+                </a>
+                <a href="https://copilot.cloud.microsoft/" target="_blank" class="card-item">
+                    <div class="card-icon"><img src="" data-domain="copilot.cloud.microsoft" data-site-name="Copilot"></div>
+                    <div class="card-info"><div class="card-title">Microsoft 365 Copilot Chat</div></div>
                 </a>
             </div>
 
-            <div class="section-header">
-                <h2 class="section-title">生活</h2>
-            </div>
+            <div class="section-header"><h2 class="section-title">生活</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
                 <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="xiaohongshu.com" data-site-name="小红书"></div>
@@ -161,15 +272,9 @@
                     <div class="card-icon"><img src="" data-domain="zhihu.com" data-site-name="知乎"></div>
                     <div class="card-info"><div class="card-title">知乎</div></div>
                 </a>
-                <a href="https://www.douban.com" target="_blank" class="card-item">
-                    <div class="card-icon"><img src="" data-domain="douban.com" data-site-name="豆瓣"></div>
-                    <div class="card-info"><div class="card-title">豆瓣</div></div>
-                </a>
             </div>
 
-            <div class="section-header">
-                <h2 class="section-title">工具</h2>
-            </div>
+            <div class="section-header"><h2 class="section-title">工具</h2></div>
             <div class="grid-container">
                 <a href="https://github.com" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="github.com" data-site-name="GitHub"></div>
