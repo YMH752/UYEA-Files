@@ -2,19 +2,144 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>实用工具箱 | UYEA</title>
+    
+    <meta name="description" content="悠野工具箱 - 提供实用的在线工具集合，包括格式转换、代码工具、文本处理等。">
+    <meta property="og:title" content="实用工具箱 | UYEA悠野工作室">
+    <meta property="og:description" content="提供格式转换、代码工具、文本处理等实用在线工具">
+    <meta name="theme-color" content="#0078d4">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
     <style>
-        .tool-search-bar { display: flex; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 0 16px; height: 48px; margin-bottom: 24px; }
-        .tab-item { padding: 8px 20px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 30px; cursor: pointer; transition: all 0.2s; font-size: 14px; font-weight: 500; }
-        .tab-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+        /* ── ✅ 任务：同步主页顶栏样式 ── */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 0 24px;
+            height: var(--header-h);
+            background: var(--surface);
+            border-bottom: 1.5px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        /* 登录按钮样式 */
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin-left: auto; 
+        }
+
+        .login-btn {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 汉堡菜单样式 */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 2px;
+        }
+
+        /* 响应式：手机端显示汉堡菜单 */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+        }
+
+        /* ── 工具页专属样式 ── */
+        .tool-search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0 16px;
+            height: 44px;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .tool-search-input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 15px;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .tab-item {
+            padding: 8px 18px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .tool-group { margin-bottom: 40px; }
+        .tool-group-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
     </style>
 </head>
 <body>
+
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><div class="logo-group"><span class="logo-text">UYEA</span><span class="logo-sub">悠野</span></div></div>
+        <div class="sidebar-header">
+            <div class="logo-group">
+                <span class="logo-text">UYEA</span>
+                <span class="logo-sub">悠野</span>
+            </div>
+        </div>
         <nav class="nav-menu">
             <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></a>
             <div class="nav-item active"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></div>
@@ -24,7 +149,6 @@
 
     <main class="main-content">
         <header class="top-bar">
-            <a href="#" class="header-logo">UYEA</a>
             <div class="header-actions">
                 <a href="#" class="login-btn">登录 / 注册</a>
                 <button class="menu-toggle" id="hamburgerBtn">
@@ -34,39 +158,104 @@
         </header>
 
         <div class="content-wrapper">
-            <div class="section-header"><h2 class="section-title">实用工具箱</h2></div>
-            <div class="tool-search-bar"><span>🔍</span><input type="text" id="toolSearchInput" placeholder="搜索工具..." style="border:none; background:transparent; outline:none; width:100%; margin-left:10px;"></div>
-            
-            <div class="category-tabs" style="display:flex; gap:10px; margin-bottom:30px;">
-                <div class="tab-item active" data-category="all">全部</div>
-                <div class="tab-item" data-category="dev">开发者</div>
-                <div class="tab-item" data-category="media">多媒体</div>
+            <div class="section-header">
+                <h2 class="section-title">实用工具箱</h2>
             </div>
 
-            <div id="toolsContainer" class="grid-container">
+            <div class="tool-search-bar">
+                <span>🔍</span>
+                <input type="text" class="tool-search-input" id="toolSearchInput" placeholder="搜索在线工具...">
+            </div>
+
+            <div class="category-tabs">
+                <div class="tab-item active" data-category="all">全部</div>
+                <div class="tab-item" data-category="dev">开发者工具</div>
+                <div class="tab-item" data-category="media">多媒体工具</div>
+                <div class="tab-item" data-category="text">文本处理</div>
+            </div>
+
+            <div id="toolsContainer">
                 <div class="tool-group" data-category="dev">
-                    <a href="#" class="card-item"><div class="card-info"><div class="card-title">JSON 格式化</div></div></a>
+                    <div class="tool-group-title"><span>💻</span> 开发者工具</div>
+                    <div class="grid-container">
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">JSON 格式化</div></div>
+                        </a>
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">Base64 编解码</div></div>
+                        </a>
+                    </div>
                 </div>
+
                 <div class="tool-group" data-category="media">
-                    <a href="#" class="card-item"><div class="card-info"><div class="card-title">图片无损压缩</div></div></a>
+                    <div class="tool-group-title"><span>🖼️</span> 多媒体工具</div>
+                    <div class="grid-container">
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">图片压缩</div></div>
+                        </a>
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">SVG 编辑器</div></div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+
     <script src="script.js"></script>
     <script>
-        // 工具过滤逻辑保留
-        const toolSearchInput = document.getElementById('toolSearchInput');
-        const tabItems = document.querySelectorAll('.tab-item');
-        const toolGroups = document.querySelectorAll('.tool-group');
-        tabItems.forEach(tab => {
-            tab.addEventListener('click', function() {
-                tabItems.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                const cat = this.dataset.category;
-                toolGroups.forEach(g => g.style.display = (cat === 'all' || g.dataset.category === cat) ? '' : 'none');
-            });
+    /* ════════════════════════════════════════════
+       工具页专用交互逻辑
+       ════════════════════════════════════════════ */
+    const toolSearchInput = document.getElementById('toolSearchInput');
+    const tabItems = document.querySelectorAll('.tab-item');
+    const toolGroups = document.querySelectorAll('.tool-group');
+    const toolCards = document.querySelectorAll('.card-item');
+
+    let currentCategory = 'all';
+
+    // 搜索功能逻辑
+    toolSearchInput.addEventListener('input', function() {
+        const keyword = this.value.toLowerCase();
+        
+        toolCards.forEach(card => {
+            const title = card.querySelector('.card-title').textContent.toLowerCase();
+            const parentGroup = card.closest('.tool-group');
+            const matchesSearch = title.includes(keyword);
+            const matchesCategory = currentCategory === 'all' || parentGroup.dataset.category === currentCategory;
+
+            card.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
         });
+
+        // 隐藏没有可见卡片的分组
+        toolGroups.forEach(group => {
+            const visibleCards = group.querySelectorAll('.card-item[style=""]');
+            const matchesCategory = currentCategory === 'all' || group.dataset.category === currentCategory;
+            group.style.display = (visibleCards.length > 0 && matchesCategory) ? '' : 'none';
+        });
+    });
+
+    // 分类切换逻辑
+    tabItems.forEach(tab => {
+        tab.addEventListener('click', function() {
+            tabItems.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            currentCategory = this.dataset.category;
+
+            toolGroups.forEach(group => {
+                if (currentCategory === 'all') {
+                    group.style.display = '';
+                } else {
+                    group.style.display = group.dataset.category === currentCategory ? '' : 'none';
+                }
+            });
+
+            // 重新触发搜索以应用新的过滤
+            const event = new Event('input');
+            toolSearchInput.dispatchEvent(event);
+        });
+    });
     </script>
 </body>
 </html>
