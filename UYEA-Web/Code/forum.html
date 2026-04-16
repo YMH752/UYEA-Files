@@ -5,20 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>悠野社区 | UYEA</title>
     
-    <!-- SEO优化 -->
     <meta name="description" content="悠野社区 - 分享想法、互帮互助、共同成长的技术社区平台。">
-    <meta property="og:title" content="悠野社区 | UYEA工作室">
-    <meta property="og:description" content="分享想法、互帮互助、共同成长">
-    <meta name="theme-color" content="#0078d4">
+    <meta property=\"og:title\" content=\"悠野社区 | UYEA工作室\">
+    <meta property=\"og:description\" content=\"分享想法、互帮互助、共同成长\">
+    <meta name=\"theme-color\" content=\"#0078d4\">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 论坛页专属样式 ── */
+        /* ── ✅ 任务：同步主页顶栏样式 ── */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 0 24px;
+            height: var(--header-h);
+            background: var(--surface);
+            border-bottom: 1.5px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-        /* 论坛顶栏 */
+        /* 登录按钮样式 */
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin-left: auto; 
+        }
+
+        .login-btn {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 汉堡菜单样式 */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 2px;
+        }
+
+        /* 响应式：手机端显示汉堡菜单 */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+        }
+
+        /* ── 论坛页专属样式 ── */
         .forum-toolbar {
             display: flex;
             align-items: center;
@@ -32,501 +85,158 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            padding: 10px 20px;
             background: var(--primary);
-            color: #fff;
-            padding: 9px 20px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            transition: background var(--duration), transform var(--duration), box-shadow var(--duration);
-            flex-shrink: 0;
+            color: white;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
         }
-        .post-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 14px rgba(0,120,212,0.3);
-        }
-        .post-btn:active { transform: scale(0.97); }
 
-        /* ✅ 新增：社区搜索框（类似工具页）*/
-        .forum-search-bar {
-            display: flex;
-            align-items: center;
+        .post-btn:hover { opacity: 0.9; }
+
+        .forum-search {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+            max-width: 400px;
+        }
+
+        .forum-search input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
             background: var(--surface);
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 0 16px;
-            height: 44px;
-            gap: 10px;
-            margin-bottom: 24px;
-            transition: border-color var(--duration), box-shadow var(--duration);
-            box-shadow: var(--shadow-sm);
-        }
-        .forum-search-bar:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0,120,212,0.10);
-        }
-        .forum-search-bar .search-icon {
-            color: var(--text-muted);
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-        .forum-search-bar input {
-            flex: 1;
-            border: none;
             outline: none;
-            background: transparent;
+        }
+
+        .forum-search::before {
+            content: "🔍";
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
             font-size: 14px;
-            font-family: inherit;
-            color: var(--text-primary);
-        }
-        .forum-search-bar input::placeholder { color: var(--text-muted); }
-        .forum-search-count {
-            font-size: 12px;
-            color: var(--text-muted);
-            flex-shrink: 0;
-            transition: color var(--duration);
+            opacity: 0.6;
         }
 
-        /* 帖子列表容器 */
-        .post-list {
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            border: 1.5px solid var(--border);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
+        /* 帖子列表 */
+        .post-list { display: flex; flex-direction: column; gap: 12px; }
 
-        /* 单条帖子 */
         .post-item {
-            display: flex;
-            align-items: center;
-            padding: 18px 20px;
-            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
             text-decoration: none;
-            color: inherit;
-            transition: background var(--duration);
-            position: relative;
-            overflow: hidden;
-            gap: 16px;
-            cursor: pointer;
-        }
-        .post-item:last-child { border-bottom: none; }
-        .post-item:hover {
-            background: var(--primary-light);
-        }
-        .post-item:active { background: #dbeeff; }
-
-        /* 帖子左侧：回复数 */
-        .post-stats {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-width: 50px;
-            padding-right: 12px;
-            border-right: 1px solid var(--border);
-        }
-        .post-count {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary);
-            line-height: 1;
-        }
-        .post-count-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 4px;
+            transition: border-color 0.2s;
         }
 
-        /* 帖子中间：标题和元数据 */
-        .post-content {
-            flex: 1;
-            min-width: 0;
-        }
-        .post-title {
-            font-weight: 600;
-            font-size: 15px;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+        .post-item:hover { border-color: var(--primary); }
+
         .post-meta {
             display: flex;
+            align-items: center;
             gap: 12px;
-            font-size: 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
             color: var(--text-muted);
         }
-        .post-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
+
+        .post-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
         }
 
-        /* 帖子右侧：标签 */
-        .post-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            background: var(--primary-light);
-            color: var(--primary);
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        /* 空状态 */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-        .empty-state-text {
+        .post-excerpt {
             font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        /* 响应式 */
-        @media (max-width: 768px) {
-            .post-item {
-                gap: 12px;
-                padding: 14px 16px;
-            }
-            .post-title {
-                font-size: 14px;
-                margin-bottom: 4px;
-            }
-            .post-meta {
-                gap: 8px;
-                font-size: 11px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .forum-toolbar {
-                gap: 8px;
-                margin-bottom: 16px;
-            }
-            .post-btn {
-                padding: 8px 16px;
-                font-size: 13px;
-            }
-            .post-item {
-                gap: 10px;
-                padding: 12px 14px;
-            }
-            .post-stats {
-                min-width: 45px;
-                padding-right: 10px;
-            }
-            .post-count {
-                font-size: 18px;
-            }
-            .post-title {
-                font-size: 13px;
-            }
-            .post-meta {
-                gap: 6px;
-                font-size: 10px;
-                -webkit-line-clamp: 1;
-                overflow: hidden;
-            }
-            .post-tag {
-                display: none;
-            }
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
 
-    <!-- 侧边栏遮罩（移动端） -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- ════════════════════════════════════════
-         侧边栏（✅优化：统一菜单）
-         ════════════════════════════════════════ -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
-                <span class="logo-sub">_悠野</span>
+                <span class="logo-sub">悠野</span>
             </div>
         </div>
-        <nav class="sidebar-nav">
-            <!-- ✅ 统一菜单：只显示3个选项 -->
-            <a href="index.html" class="nav-item">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-label">导航</span>
-            </a>
-            <a href="tools.html" class="nav-item">
-                <span class="nav-icon">🧰</span>
-                <span class="nav-label">线上工具</span>
-            </a>
-            <div class="nav-item active">
-                <span class="nav-icon">💬</span>
-                <span class="nav-label">社区</span>
-            </div>
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></a>
+            <a href="tools.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></a>
+            <div class="nav-item active"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></div>
         </nav>
     </aside>
 
-    <!-- ════════════════════════════════════════
-         主内容区（✅优化：删除搜索引擎选择）
-         ════════════════════════════════════════ -->
-    <main class="main-content" id="mainContent">
-        
-        <!-- ✅ 优化：删除搜索引擎选择栏，只保留标题和汉堡菜单 -->
-        <header style="display: flex; align-items: center; justify-content: space-between; padding: 0 0 16px 0; margin-bottom: 24px; border-bottom: 1px solid var(--border);">
-            <h1 style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0;">悠野社区</h1>
-            <button class="hamburger" id="hamburgerBtn">
-                <span></span><span></span><span></span>
-            </button>
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="header-actions">
+                <a href="#" class="login-btn">登录 / 注册</a>
+                <button class="menu-toggle" id="hamburgerBtn">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
         </header>
 
-        <!-- 社区欢迎横幅 -->
-        <section class="welcome-banner" style="margin-bottom: 32px; background: linear-gradient(135deg, var(--primary), var(--accent));">
-            <div class="banner-text">
-                <h2 style="font-size: 20px; color: #fff; margin: 0 0 6px 0;">悠野社区</h2>
-                <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 14px;">分享想法 · 互帮互助 · 共同成长</p>
+        <div class="content-wrapper">
+            <div class="section-header">
+                <h2 class="section-title">悠野社区</h2>
             </div>
-        </section>
 
-        <!-- ✅ 新增：社区搜索框（本地搜索） -->
-        <div class="forum-search-bar">
-            <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16">
-                <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </svg>
-            <input type="text" id="forumSearchInput" placeholder="搜索文章或关键词..." autocomplete="off">
-            <span class="forum-search-count"><span id="postCount">3</span>篇文章</span>
-        </div>
-
-        <!-- 论坛顶栏：发布按钮 -->
-        <div class="forum-toolbar">
-            <span style="font-size: 13px; color: var(--text-muted); font-weight: 500;">综合讨论区</span>
-            <button class="post-btn">
-                <span>+</span>
-                <span>发布新帖</span>
-            </button>
-        </div>
-
-        <!-- ════════════════════════════════════════
-             帖子列表（✅优化：搜索功能集成）
-             ════════════════════════════════════════ -->
-        <div class="post-list" id="postList">
-            <!-- ✅ 帖子1 -->
-            <div class="post-item" data-post-id="1">
-                <div class="post-stats">
-                    <div class="post-count">128</div>
-                    <div class="post-count-label">回复</div>
+            <div class="forum-toolbar">
+                <a href="#" class="post-btn">＋ 发布新帖子</a>
+                <div class="forum-search">
+                    <input type="text" id="forumSearchInput" placeholder="搜索帖子内容...">
                 </div>
-                <div class="post-content">
-                    <div class="post-title">关于2026年前开发开源趋势的深度讨论</div>
+            </div>
+
+            <div class="post-list" id="postList">
+                <a href="#" class="post-item">
                     <div class="post-meta">
-                        <span class="post-meta-item">👤 提问小哥哥</span>
-                        <span class="post-meta-item">⏰ 3小时前</span>
+                        <span>👤 管理员</span>
+                        <span>•</span>
+                        <span>📅 2024-05-20</span>
                     </div>
-                </div>
-                <span class="post-tag">技术</span>
-            </div>
+                    <div class="post-title">欢迎来到悠野工作室新版社区！</div>
+                    <div class="post-excerpt">我们在这里分享技术、生活和一切有趣的想法。请遵守社区规范，共同维护良好的交流环境。</div>
+                </a>
 
-            <!-- ✅ 帖子2 -->
-            <div class="post-item" data-post-id="2">
-                <div class="post-stats">
-                    <div class="post-count">45</div>
-                    <div class="post-count-label">回复</div>
-                </div>
-                <div class="post-content">
-                    <div class="post-title">[置顶] 本站Zeabur部署指南及常见404解决办法</div>
+                <a href="#" class="post-item">
                     <div class="post-meta">
-                        <span class="post-meta-item">👤 管理员</span>
-                        <span class="post-meta-item">⏰ 昨天</span>
+                        <span>👤 技术小哥</span>
+                        <span>•</span>
+                        <span>📅 2024-05-18</span>
                     </div>
-                </div>
-                <span class="post-tag">公告</span>
-            </div>
-
-            <!-- ✅ 帖子3 -->
-            <div class="post-item" data-post-id="3">
-                <div class="post-stats">
-                    <div class="post-count">12</div>
-                    <div class="post-count-label">回复</div>
-                </div>
-                <div class="post-content">
-                    <div class="post-title">有没有好用的AI结语提示词(Prompt)分享站点?</div>
-                    <div class="post-meta">
-                        <span class="post-meta-item">👤 新用户小号</span>
-                        <span class="post-meta-item">⏰ 5小时前</span>
-                    </div>
-                </div>
-                <span class="post-tag">讨论</span>
+                    <div class="post-title">关于 AI 导航工具的更新说明</div>
+                    <div class="post-excerpt">本次更新新增了多款国产大模型入口，并优化了图标加载速度...</div>
+                </a>
             </div>
         </div>
-
-        <!-- ✅ 空状态（当没有搜索结果时显示） -->
-        <div class="empty-state" id="emptyState" style="display: none;">
-            <div class="empty-state-icon">🔍</div>
-            <div class="empty-state-text">没有找到匹配的文章</div>
-        </div>
-
     </main>
-
-    <!-- ════════════════════════════════════════
-         底部菜单栏（✅优化：统一样式）
-         ════════════════════════════════════════ -->
-    <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item">
-            <span class="bottom-icon">🏠</span>
-            <span class="bottom-label">导航</span>
-        </a>
-        <a href="tools.html" class="bottom-nav-item">
-            <span class="bottom-icon">🧰</span>
-            <span class="bottom-label">线上工具</span>
-        </a>
-        <div class="bottom-nav-item active">
-            <span class="bottom-icon">💬</span>
-            <span class="bottom-label">社区</span>
-        </div>
-    </nav>
 
     <script src="script.js"></script>
     <script>
     /* ════════════════════════════════════════════
-       ✅ 社区本地搜索功能
-       这个搜索功能可以根据用户输入的关键词
-       实时在当前页面过滤和显示对应的文章
+       社区页专用交互逻辑
        ════════════════════════════════════════════ */
-
     const forumSearchInput = document.getElementById('forumSearchInput');
-    const postCount = document.getElementById('postCount');
-    const postList = document.getElementById('postList');
-    const emptyState = document.getElementById('emptyState');
     const postItems = document.querySelectorAll('.post-item');
 
-    // ✅ 创建文章数据映射（便于搜索）
-    const postData = [
-        {
-            id: 1,
-            title: '关于2026年前开发开源趋势的深度讨论',
-            keywords: ['2026', '开发', '开源', '趋势', '讨论', '深度'],
-            category: '技术'
-        },
-        {
-            id: 2,
-            title: '[置顶] 本站Zeabur部署指南及常见404解决办法',
-            keywords: ['置顶', 'Zeabur', '部署', '指南', '404', '解决办法'],
-            category: '公告'
-        },
-        {
-            id: 3,
-            title: '有没有好用的AI结语提示词(Prompt)分享站点?',
-            keywords: ['AI', '结语', '提示词', 'Prompt', '分享', '站点'],
-            category: '讨论'
-        }
-    ];
-
-    // ✅ 搜索函数
-    function searchPosts(keyword) {
-        const lowerKeyword = keyword.toLowerCase();
-        let visibleCount = 0;
-
-        postItems.forEach(item => {
-            const postId = item.dataset.postId;
-            const post = postData.find(p => p.id == postId);
-            
-            if (!post) return;
-
-            // ✅ 搜索标题
-            const titleMatch = post.title.toLowerCase().includes(lowerKeyword);
-            
-            // ✅ 搜索关键词
-            const keywordMatch = post.keywords.some(keyword => 
-                keyword.toLowerCase().includes(lowerKeyword)
-            );
-
-            // ✅ 搜索分类
-            const categoryMatch = post.category.toLowerCase().includes(lowerKeyword);
-
-            // ✅ 只要有一个匹配就显示
-            if (titleMatch || keywordMatch || categoryMatch) {
-                item.style.display = '';
-                visibleCount++;
-            } else {
-                item.style.display = 'none';
-            }
-        });
-
-        // ✅ 更新计数和空状态
-        postCount.textContent = visibleCount;
-        
-        if (visibleCount === 0) {
-            emptyState.style.display = 'block';
-            postList.style.opacity = '0.5';
-        } else {
-            emptyState.style.display = 'none';
-            postList.style.opacity = '1';
-        }
-    }
-
-    // ✅ 监听搜索框输入
     forumSearchInput?.addEventListener('input', function() {
-        const keyword = this.value.trim();
-        
-        if (keyword === '') {
-            // ✅ 清空搜索，显示所有文章
-            postItems.forEach(item => item.style.display = '');
-            emptyState.style.display = 'none';
-            postList.style.opacity = '1';
-            postCount.textContent = postItems.length;
-        } else {
-            // ✅ 执行搜索
-            searchPosts(keyword);
-        }
-    });
-
-    // ✅ 支持回车键搜索
-    forumSearchInput?.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            searchPosts(this.value.trim());
-        }
-    });
-
-    /* ════════════════════════════════════════════
-       移动端菜单控制（来自 script.js）
-       ════════════════════════════════════════════ */
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-    function toggleSidebar() {
-        const isOpen = sidebar.classList.toggle('open');
-        sidebarOverlay.classList.toggle('open', isOpen);
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-    }
-
-    if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', toggleSidebar);
-    }
-
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', toggleSidebar);
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebar?.classList.contains('open')) {
-            toggleSidebar();
-        }
+        const keyword = this.value.toLowerCase();
+        postItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(keyword) ? '' : 'none';
+        });
     });
     </script>
 </body>
