@@ -93,6 +93,13 @@
             border-radius: 2px;
         }
 
+        /* ✅ 新增：PC端（min-width: 1025px）隐藏顶栏logo */
+        @media (min-width: 1025px) {
+            .header-logo {
+                display: none;
+            }
+        }
+
         /* 状态卡片：用于"尽请期待" */
         .text-status-card {
             background: var(--surface);
@@ -123,18 +130,16 @@
             border-radius: 6px;
         }
 
-        /* ✅ 新增：图标加载失败时的备用样式 */
-        .card-icon .icon-fallback {
+        /* ✅ 图标加载失败时的emoji样式 */
+        .card-icon .icon-emoji {
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 14px;
-            color: #ffffff;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-size: 18px;
+            font-weight: 600;
+            user-select: none;
         }
 
         @media (max-width: 768px) {
@@ -150,7 +155,8 @@
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
-                <span class="logo-sub">悠野工作室</span>
+                <!-- ✅ 修改：副标题改为"悠野" -->
+                <span class="logo-sub">悠野</span>
             </div>
         </div>
         <nav class="nav-menu">
@@ -162,6 +168,7 @@
 
     <main class="main-content">
         <header class="top-bar">
+            <!-- ✅ 修改：PC端会被CSS隐藏（@media min-width: 1025px），手机端保留 -->
             <a href="#" class="header-logo">UYEA</a>
             <div class="search-container">
                 <div class="header-search-wrapper">
@@ -186,7 +193,7 @@
 
             <div class="section-header"><h2 class="section-title">Ai</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
-                <!-- ✅ 新增：Google Gemini -->
+                <!-- ✅ Google Gemini -->
                 <a href="https://www.gemini.google.com/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="gemini.google.com" data-site-name="Google Gemini"></div>
                     <div class="card-info"><div class="card-title">Google Gemini</div></div>
@@ -211,7 +218,7 @@
                     <div class="card-icon"><img src="" data-domain="qianwen.aliyun.com" data-site-name="通义千问"></div>
                     <div class="card-info"><div class="card-title">通义千问</div></div>
                 </a>
-                <!-- ✅ 新增：千问（阿里通义千问中文别名） -->
+                <!-- ✅ 千问（阿里通义千问中文别名） -->
                 <a href="https://www.qianwen.aliyun.com/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="qianwen.aliyun.com" data-site-name="千问"></div>
                     <div class="card-info"><div class="card-title">千问</div></div>
@@ -236,7 +243,7 @@
                     <div class="card-icon"><img src="" data-domain="grok.com" data-site-name="Grok"></div>
                     <div class="card-info"><div class="card-title">Grok</div></div>
                 </a>
-                <!-- ✅ 新增：Microsoft 365 Copilot Chat -->
+                <!-- ✅ Microsoft 365 Copilot Chat -->
                 <a href="https://copilot.cloud.microsoft/" target="_blank" class="card-item">
                     <div class="card-icon"><img src="" data-domain="copilot.cloud.microsoft" data-site-name="Copilot"></div>
                     <div class="card-info"><div class="card-title">Microsoft 365 Copilot Chat</div></div>
