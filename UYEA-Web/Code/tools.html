@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>实用工具箱 | UYEA</title>
     
-    <!-- SEO优化 -->
     <meta name="description" content="悠野工具箱 - 提供实用的在线工具集合，包括格式转换、代码工具、文本处理等。">
     <meta property="og:title" content="实用工具箱 | UYEA悠野工作室">
     <meta property="og:description" content="提供格式转换、代码工具、文本处理等实用在线工具">
@@ -16,9 +15,63 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 工具页专属样式 ── */
+        /* ── ✅ 任务：同步主页顶栏样式 ── */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 0 24px;
+            height: var(--header-h);
+            background: var(--surface);
+            border-bottom: 1.5px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-        /* 工具搜索栏 */
+        /* 登录按钮样式 */
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin-left: auto; 
+        }
+
+        .login-btn {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 汉堡菜单样式 */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 2px;
+        }
+
+        /* 响应式：手机端显示汉堡菜单 */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+        }
+
+        /* ── 工具页专属样式 ── */
         .tool-search-bar {
             display: flex;
             align-items: center;
@@ -29,484 +82,163 @@
             height: 44px;
             gap: 10px;
             margin-bottom: 24px;
-            transition: border-color var(--duration), box-shadow var(--duration);
-            box-shadow: var(--shadow-sm);
         }
-        .tool-search-bar:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0,120,212,0.10);
-        }
-        .tool-search-bar .search-icon {
-            color: var(--text-muted);
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-        .tool-search-bar input {
-            flex: 1;
+
+        .tool-search-input {
             border: none;
-            outline: none;
             background: transparent;
-            font-size: 14px;
-            font-family: inherit;
-            color: var(--text-primary);
-        }
-        .tool-search-bar input::placeholder { color: var(--text-muted); }
-        .tool-search-count {
-            font-size: 12px;
-            color: var(--text-muted);
-            flex-shrink: 0;
-            transition: color var(--duration);
-        }
-
-        /* 工具分类标签栏 */
-        .tool-filter-bar {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 24px;
-        }
-        .filter-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 14px;
-            border-radius: 99px;
-            font-size: 13px;
-            font-weight: 500;
-            border: 1.5px solid var(--border);
-            background: var(--surface);
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all var(--duration);
-            user-select: none;
-        }
-        .filter-tag:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: var(--primary-light);
-        }
-        .filter-tag.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-            box-shadow: 0 3px 10px rgba(0,120,212,0.25);
-        }
-
-        /* 分组标题 */
-        .tool-group { margin-bottom: 32px; }
-        .tool-group-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 14px;
-            padding-bottom: 10px;
-            border-bottom: 1.5px solid var(--border);
-        }
-        .tool-group-icon { font-size: 18px; }
-        .tool-group-title {
+            outline: none;
+            width: 100%;
             font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
         }
 
-        /* 工具卡片 */
-        .tool-item {
+        .category-tabs {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
+            gap: 8px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .tab-item {
+            padding: 8px 18px;
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all var(--duration);
-            text-decoration: none;
-            color: inherit;
-        }
-        .tool-item:hover {
-            border-color: var(--primary);
-            background: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        .tool-icon {
-            font-size: 24px;
-            flex-shrink: 0;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .tool-info { flex: 1; }
-        .tool-name {
-            font-weight: 600;
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
             font-size: 14px;
-            color: var(--text-primary);
-        }
-        .tool-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 2px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
         }
 
-        /* 响应式 */
-        @media (max-width: 480px) {
-            .tool-filter-bar {
-                gap: 6px;
-            }
-            .filter-tag {
-                padding: 5px 12px;
-                font-size: 12px;
-            }
-            .tool-item {
-                padding: 12px 14px;
-                gap: 10px;
-            }
-            .tool-icon {
-                font-size: 20px;
-                width: 36px;
-                height: 36px;
-            }
-            .tool-name {
-                font-size: 13px;
-            }
-            .tool-desc {
-                font-size: 11px;
-            }
+        .tab-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .tool-group { margin-bottom: 40px; }
+        .tool-group-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
     </style>
 </head>
 <body>
 
-    <!-- 侧边栏遮罩（移动端） -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- ════════════════════════════════════════
-         侧边栏（✅优化：统一菜单）
-         ════════════════════════════════════════ -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
-                <span class="logo-sub">_悠野</span>
+                <span class="logo-sub">悠野</span>
             </div>
         </div>
-        <nav class="sidebar-nav">
-            <!-- ✅ 统一菜单：只显示3个选项 -->
-            <a href="index.html" class="nav-item">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-label">导航</span>
-            </a>
-            <div class="nav-item active">
-                <span class="nav-icon">🧰</span>
-                <span class="nav-label">线上工具</span>
-            </div>
-            <a href="forum.html" class="nav-item">
-                <span class="nav-icon">💬</span>
-                <span class="nav-label">社区</span>
-            </a>
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></a>
+            <div class="nav-item active"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></div>
+            <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
         </nav>
     </aside>
 
-    <!-- ════════════════════════════════════════
-         主内容区（✅优化：删除顶栏搜索引擎选择）
-         ════════════════════════════════════════ -->
-    <main class="main-content" id="mainContent">
-        
-        <!-- ✅ 优化：删除搜索引擎选择栏，只保留标题 -->
-        <header style="display: flex; align-items: center; justify-content: space-between; padding: 0 0 16px 0; margin-bottom: 24px; border-bottom: 1px solid var(--border);">
-            <h1 style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0;">实用工具箱</h1>
-            <button class="hamburger" id="hamburgerBtn">
-                <span></span><span></span><span></span>
-            </button>
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="header-actions">
+                <a href="#" class="login-btn">登录 / 注册</a>
+                <button class="menu-toggle" id="hamburgerBtn">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
         </header>
 
-        <!-- ✅ 保留：工具搜索框 -->
-        <div class="tool-search-bar">
-            <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16">
-                <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </svg>
-            <input type="text" id="toolSearchInput" placeholder="搜索工具名称..." autocomplete="off">
-            <span class="tool-search-count"><span id="toolCount">20</span>个工具</span>
-        </div>
-
-        <!-- ✅ 分类过滤标签 -->
-        <div class="tool-filter-bar">
-            <button class="filter-tag active" data-category="all">全部</button>
-            <button class="filter-tag" data-category="file">文件处理</button>
-            <button class="filter-tag" data-category="dev">开发工具</button>
-            <button class="filter-tag" data-category="text">文本处理</button>
-            <button class="filter-tag" data-category="generate">生成工具</button>
-            <button class="filter-tag" data-category="convert">格式转换</button>
-        </div>
-
-        <!-- ════════════════════════════════════════
-             工具分组
-             ════════════════════════════════════════ -->
-
-        <!-- 文件处理 -->
-        <div class="tool-group" data-category="file">
-            <div class="tool-group-header">
-                <span class="tool-group-icon">📁</span>
-                <span class="tool-group-title">文件处理</span>
-                <span style="margin-left: auto; font-size: 12px; color: var(--text-muted);">3个工具</span>
+        <div class="content-wrapper">
+            <div class="section-header">
+                <h2 class="section-title">实用工具箱</h2>
             </div>
-            <div class="tool-item">
-                <div class="tool-icon">🖼️</div>
-                <div class="tool-info">
-                    <div class="tool-name">图片压缩</div>
-                    <div class="tool-desc">快速压缩图片，保持高质量</div>
+
+            <div class="tool-search-bar">
+                <span>🔍</span>
+                <input type="text" class="tool-search-input" id="toolSearchInput" placeholder="搜索在线工具...">
+            </div>
+
+            <div class="category-tabs">
+                <div class="tab-item active" data-category="all">全部</div>
+                <div class="tab-item" data-category="dev">开发者工具</div>
+                <div class="tab-item" data-category="media">多媒体工具</div>
+                <div class="tab-item" data-category="text">文本处理</div>
+            </div>
+
+            <div id="toolsContainer">
+                <div class="tool-group" data-category="dev">
+                    <div class="tool-group-title"><span>💻</span> 开发者工具</div>
+                    <div class="grid-container">
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">JSON 格式化</div></div>
+                        </a>
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">Base64 编解码</div></div>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">📄</div>
-                <div class="tool-info">
-                    <div class="tool-name">PDF转换</div>
-                    <div class="tool-desc">将PDF转换为其他格式</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">🔒</div>
-                <div class="tool-info">
-                    <div class="tool-name">文件MD5</div>
-                    <div class="tool-desc">计算文件的MD5值</div>
+
+                <div class="tool-group" data-category="media">
+                    <div class="tool-group-title"><span>🖼️</span> 多媒体工具</div>
+                    <div class="grid-container">
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">图片压缩</div></div>
+                        </a>
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">SVG 编辑器</div></div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- 开发工具 -->
-        <div class="tool-group" data-category="dev">
-            <div class="tool-group-header">
-                <span class="tool-group-icon">👨‍💻</span>
-                <span class="tool-group-title">开发工具</span>
-                <span style="margin-left: auto; font-size: 12px; color: var(--text-muted);">6个工具</span>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">{}📝</div>
-                <div class="tool-info">
-                    <div class="tool-name">JSON格式化</div>
-                    <div class="tool-desc">快速格式化和验证JSON</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">➡️</div>
-                <div class="tool-info">
-                    <div class="tool-name">进制转换</div>
-                    <div class="tool-desc">十进制、十六进制、二进制转换</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">📐</div>
-                <div class="tool-info">
-                    <div class="tool-name">正则表达式</div>
-                    <div class="tool-desc">测试和验证正则表达式</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">⏱️</div>
-                <div class="tool-info">
-                    <div class="tool-name">时间戳</div>
-                    <div class="tool-desc">时间戳转换和计算</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">🎨</div>
-                <div class="tool-info">
-                    <div class="tool-name">代码美化</div>
-                    <div class="tool-desc">代码格式化和高亮显示</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">🔗</div>
-                <div class="tool-info">
-                    <div class="tool-name">CSS生成器</div>
-                    <div class="tool-desc">在线CSS属性生成工具</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 文本处理 -->
-        <div class="tool-group" data-category="text">
-            <div class="tool-group-header">
-                <span class="tool-group-icon">✏️</span>
-                <span class="tool-group-title">文本处理</span>
-                <span style="margin-left: auto; font-size: 12px; color: var(--text-muted);">3个工具</span>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">📊</div>
-                <div class="tool-info">
-                    <div class="tool-name">字数统计</div>
-                    <div class="tool-desc">统计文本字数、词数和行数</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">📝</div>
-                <div class="tool-info">
-                    <div class="tool-name">Markdown编辑</div>
-                    <div class="tool-desc">实时Markdown编辑和预览</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">🔤</div>
-                <div class="tool-info">
-                    <div class="tool-name">繁简转换</div>
-                    <div class="tool-desc">中文繁简体互相转换</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 生成工具 -->
-        <div class="tool-group" data-category="generate">
-            <div class="tool-group-header">
-                <span class="tool-group-icon">✨</span>
-                <span class="tool-group-title">生成工具</span>
-                <span style="margin-left: auto; font-size: 12px; color: var(--text-muted);">4个工具</span>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">🔐</div>
-                <div class="tool-info">
-                    <div class="tool-name">随机密码</div>
-                    <div class="tool-desc">生成安全的随机密码</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">🔢</div>
-                <div class="tool-info">
-                    <div class="tool-name">二维码生成</div>
-                    <div class="tool-desc">快速生成二维码</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">🎲</div>
-                <div class="tool-info">
-                    <div class="tool-name">随机机制</div>
-                    <div class="tool-desc">随机抽选、洗牌、排序工具</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">🖼️</div>
-                <div class="tool-info">
-                    <div class="tool-name">随机图片</div>
-                    <div class="tool-desc">获取随机高质量图片</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 格式转换 -->
-        <div class="tool-group" data-category="convert">
-            <div class="tool-group-header">
-                <span class="tool-group-icon">🔄</span>
-                <span class="tool-group-title">格式转换</span>
-                <span style="margin-left: auto; font-size: 12px; color: var(--text-muted);">4个工具</span>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">abc</div>
-                <div class="tool-info">
-                    <div class="tool-name">Base64编码</div>
-                    <div class="tool-desc">Base64编码/解码</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">🔗</div>
-                <div class="tool-info">
-                    <div class="tool-name">URL编码</div>
-                    <div class="tool-desc">URL编码/解码</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">⚙️</div>
-                <div class="tool-info">
-                    <div class="tool-name">单位换算</div>
-                    <div class="tool-desc">长度、重量、温度等单位转换</div>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">🌈</div>
-                <div class="tool-info">
-                    <div class="tool-name">颜色选择器</div>
-                    <div class="tool-desc">RGB/HEX颜色互相转换</div>
-                </div>
-            </div>
-        </div>
-
     </main>
-
-    <!-- ════════════════════════════════════════
-         底部菜单栏（✅优化：统一样式）
-         ════════════════════════════════════════ -->
-    <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item">
-            <span class="bottom-icon">🏠</span>
-            <span class="bottom-label">导航</span>
-        </a>
-        <div class="bottom-nav-item active">
-            <span class="bottom-icon">🧰</span>
-            <span class="bottom-label">线上工具</span>
-        </div>
-        <a href="forum.html" class="bottom-nav-item">
-            <span class="bottom-icon">💬</span>
-            <span class="bottom-label">社区</span>
-        </a>
-    </nav>
 
     <script src="script.js"></script>
     <script>
     /* ════════════════════════════════════════════
-       ✅ 工具页面搜索和过滤功能
+       工具页专用交互逻辑
        ════════════════════════════════════════════ */
-
     const toolSearchInput = document.getElementById('toolSearchInput');
-    const toolCount = document.getElementById('toolCount');
-    const filterTags = document.querySelectorAll('.filter-tag');
+    const tabItems = document.querySelectorAll('.tab-item');
     const toolGroups = document.querySelectorAll('.tool-group');
+    const toolCards = document.querySelectorAll('.card-item');
+
     let currentCategory = 'all';
 
-    // ✅ 工具搜索功能
-    toolSearchInput?.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        let visibleCount = 0;
+    // 搜索功能逻辑
+    toolSearchInput.addEventListener('input', function() {
+        const keyword = this.value.toLowerCase();
+        
+        toolCards.forEach(card => {
+            const title = card.querySelector('.card-title').textContent.toLowerCase();
+            const parentGroup = card.closest('.tool-group');
+            const matchesSearch = title.includes(keyword);
+            const matchesCategory = currentCategory === 'all' || parentGroup.dataset.category === currentCategory;
 
-        toolGroups.forEach(group => {
-            const tools = group.querySelectorAll('.tool-item');
-            let groupVisible = false;
-
-            tools.forEach(tool => {
-                const toolName = tool.querySelector('.tool-name').textContent.toLowerCase();
-                const toolDesc = tool.querySelector('.tool-desc').textContent.toLowerCase();
-
-                // ✅ 匹配搜索词 + 分类过滤
-                if ((toolName.includes(searchTerm) || toolDesc.includes(searchTerm)) && 
-                    (currentCategory === 'all' || group.dataset.category === currentCategory)) {
-                    tool.style.display = '';
-                    groupVisible = true;
-                    visibleCount++;
-                } else {
-                    tool.style.display = 'none';
-                }
-            });
-
-            // ✅ 如果分组中没有可见工具，隐藏分组标题
-            if (groupVisible && (currentCategory === 'all' || group.dataset.category === currentCategory)) {
-                group.style.display = '';
-            } else if (currentCategory !== 'all' && group.dataset.category !== currentCategory) {
-                group.style.display = 'none';
-            } else if (!groupVisible) {
-                group.style.display = 'none';
-            } else {
-                group.style.display = '';
-            }
+            card.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
         });
 
-        // ✅ 更新工具计数
-        toolCount.textContent = visibleCount;
+        // 隐藏没有可见卡片的分组
+        toolGroups.forEach(group => {
+            const visibleCards = group.querySelectorAll('.card-item[style=""]');
+            const matchesCategory = currentCategory === 'all' || group.dataset.category === currentCategory;
+            group.style.display = (visibleCards.length > 0 && matchesCategory) ? '' : 'none';
+        });
     });
 
-    // ✅ 分类过滤功能
-    filterTags.forEach(tag => {
-        tag.addEventListener('click', function() {
-            // ✅ 移除之前的active状态
-            filterTags.forEach(t => t.classList.remove('active'));
+    // 分类切换逻辑
+    tabItems.forEach(tab => {
+        tab.addEventListener('click', function() {
+            tabItems.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
 
             currentCategory = this.dataset.category;
@@ -519,37 +251,10 @@
                 }
             });
 
-            // ✅ 重新触发搜索以应用新的过滤
+            // 重新触发搜索以应用新的过滤
             const event = new Event('input');
             toolSearchInput.dispatchEvent(event);
         });
-    });
-
-    /* ════════════════════════════════════════════
-       移动端菜单控制（来自 script.js）
-       ════════════════════════════════════════════ */
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-    function toggleSidebar() {
-        const isOpen = sidebar.classList.toggle('open');
-        sidebarOverlay.classList.toggle('open', isOpen);
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-    }
-
-    if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', toggleSidebar);
-    }
-
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', toggleSidebar);
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebar?.classList.contains('open')) {
-            toggleSidebar();
-        }
     });
     </script>
 </body>
