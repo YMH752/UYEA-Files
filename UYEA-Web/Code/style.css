@@ -3,7 +3,7 @@
    风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
    修改记录：
    1. 将按钮及核心强调色改为黑色 (任务一)
-   2. 重构搜索栏样式：增加黑色点击色块，调整下拉框及缩短整体长度 (任务二)
+   2. 重构搜索栏样式：增加黑色点击色块，调整下拉框及缩短整体长度 (任务二优化)
    ============================================================ */
 
 :root {
@@ -100,12 +100,12 @@ body {
     position: sticky; top: 0; z-index: 100;
 }
 
-/* ── ✅ 搜索栏重构样式 (任务二) ── */
+/* ── ✅ 搜索栏重写 (针对截图问题的优化版) ── */
 .search-container {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
+    width: 90%;
     max-width: 450px; /* 👈 要求：缩短长度 */
     display: flex;
     justify-content: center;
@@ -113,69 +113,70 @@ body {
 }
 
 .header-search-wrapper {
-    width: 95%;
+    width: 100%;
     display: flex;
     align-items: center;
     background: var(--bg);
     border: 1.5px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 0; /* 清空内边距以适配黑色色块 */
-    height: 42px;
+    height: 40px;
     pointer-events: auto;
-    overflow: hidden; /* 确保色块圆角被裁切 */
-    transition: border-color 0.2s;
+    overflow: hidden; /* 必须溢出隐藏，保证黑色块的圆角衔接 */
+    transition: all 0.2s;
 }
 
 .header-search-wrapper:focus-within {
-    border-color: var(--secondary); /* 聚焦时边框变黑 */
+    border-color: var(--secondary);
+    box-shadow: var(--shadow-sm);
 }
 
-/* ✅ 切换引擎的黑色色块区域 */
+/* ✅ 黑色切换色块 */
 .search-engine-box {
     background: #000000; /* 纯黑背景 */
     height: 100%;
     display: flex;
     align-items: center;
-    padding: 0 12px;
-    position: relative;
+    justify-content: center;
+    padding: 0 15px;
     cursor: pointer;
+    flex-shrink: 0; /* 防止被挤压 */
 }
 
-/* 下拉列表文字样式 */
 .search-engine-select {
     border: none;
     background: transparent;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
-    color: #FFFFFF; /* 文字白色 */
+    color: #FFFFFF; /* 白色文字 */
     cursor: pointer;
     outline: none;
-    padding-right: 4px;
     -webkit-appearance: none;
     appearance: none;
-    z-index: 1;
+    text-align: center;
 }
 
-/* 黑色区域的小箭头装饰 */
+/* 黑色块里的小箭头 */
 .search-engine-box::after {
     content: "▾";
     color: #FFFFFF;
     font-size: 12px;
-    margin-left: 2px;
+    margin-left: 6px;
+    margin-top: 2px;
 }
 
-/* 搜索输入框 */
+/* 输入框 */
 #searchInput {
     border: none;
     background: transparent;
     outline: none;
     flex: 1;
-    padding: 0 12px;
+    padding: 0 15px;
     font-size: 14px;
     color: var(--text-primary);
+    height: 100%;
 }
 
-/* ── 登录按钮与动作区 ── */
+/* ── 动作按钮 ── */
 .header-actions { 
     display: flex; 
     align-items: center; 
@@ -183,19 +184,17 @@ body {
 }
 
 .login-btn {
-    padding: 8px 20px;
-    background: var(--secondary); /* 黑色背景 */
+    padding: 8px 18px;
+    background: var(--secondary);
     color: #FFFFFF;
     border-radius: var(--radius-sm);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
-    transition: opacity var(--duration);
+    transition: opacity 0.2s;
 }
 
-.login-btn:hover {
-    opacity: 0.8;
-}
+.login-btn:hover { opacity: 0.8; }
 
 /* ── 栏目与标题 ── */
 .section-header { margin-bottom: 24px; }
@@ -208,7 +207,7 @@ body {
     width: 6px; background: var(--primary); border-radius: 3px;
 }
 
-/* ── 链接方块 ── */
+/* ── 链接卡片 ── */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -222,7 +221,7 @@ body {
     padding: 18px;
     display: flex; align-items: center; gap: 14px;
     text-decoration: none;
-    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.25s;
     box-shadow: var(--shadow-sm);
 }
 
@@ -232,9 +231,7 @@ body {
     box-shadow: var(--shadow-md);
 }
 
-.card-title {
-    font-size: 15px; font-weight: 600; color: var(--text-primary);
-}
+.card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
 
 .card-icon {
     width: 36px; height: 36px;
@@ -243,15 +240,16 @@ body {
     overflow: hidden;
 }
 
-/* 响应式调整 */
+/* 响应式 */
 @media (max-width: 1024px) {
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
     .main-content { margin-left: 0; }
-    .search-container { max-width: 50%; } /* 移动端搜索框占比控制 */
+    .search-container { max-width: 300px; }
 }
 
 @media (max-width: 768px) {
-    .menu-toggle { display: flex; flex-direction: column; gap: 5px; background: none; border: none; }
-    .menu-toggle span { display: block; width: 24px; height: 3px; background: var(--text-primary); border-radius: 2px; }
+    .menu-toggle { display: flex; flex-direction: column; gap: 4px; background: none; border: none; }
+    .menu-toggle span { display: block; width: 20px; height: 2.5px; background: var(--text-primary); border-radius: 2px; }
+    .header-logo { font-size: 20px; }
 }
