@@ -1,22 +1,25 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
    风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
-   修改记录：根据要求将按钮及核心强调色改为黑色，增加对比度
+   修改记录：
+   1. 将核心强调色改为黑色，增加对比度
+   2. 优化搜索框与登录按钮的间距，增加呼吸感
    ============================================================ */
 
 :root {
-    /* 核心强调色：复古铁锈红与纯黑 */
-    --primary:        #A63A26;    
-    --primary-dark:   #8E2F1E;    
-    --primary-light:  #F7EFED;    
+    /* ✅ 修改：将核心强调色改为纯黑，增加对比 */
+    --primary:        #A63A26;    /* 复古铁锈红 - 核心强调色 */
+    --primary-dark:   #8E2F1E;    /* 深红 - 用于悬浮点击 */
+    --primary-light:  #F7EFED;    /* 极浅红 - 用于卡片悬浮背景 */
     
+    /* ✅ 修改：将次要强调色（按钮主要色）改为纯黑 */
     --secondary:      #000000;    /* 纯黑色 - 用于按钮、标题、关键装饰 */
     
     --bg:             #EEEAE3;    /* 复古米色底 */
     --surface:        #FCFBF9;    /* 白色表面 - 卡片色 */
     --border:         #D1CCC0;    /* 灰陶边框 */
     
-    --text-primary:   #2C2A26;    
+    --text-primary:   #2C2A26;    /* 主要文字色 */
     --text-secondary: #5D5954;
     --text-muted:     #A8A49E;
     
@@ -29,7 +32,7 @@
     --radius-md:      8px;
     --radius-lg:      12px;
     
-    /* 动画时长 */
+    /* 动画配置 */
     --duration:       0.2s;
 }
 
@@ -43,157 +46,62 @@ body {
     overflow-x: hidden;
 }
 
-/* ── 布局结构 ── */
-.main-container {
-    display: flex;
-    min-height: calc(100vh - var(--header-h));
-    max-width: 1600px;
-    margin: 0 auto;
-}
-
-/* ── 顶栏 ── */
-.top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 0 24px;
-    height: var(--header-h);
-    background: var(--surface);
-    border-bottom: 1.5px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.header-logo {
-    font-family: 'Inter', sans-serif;
-    font-weight: 800;
-    font-size: 24px;
-    color: var(--secondary);
-    text-decoration: none;
-    letter-spacing: -0.5px;
-}
-
-/* 搜索区域 */
-.top-search-wrapper {
-    flex: 1;
+/* ── 搜索组件样式 ── */
+.search-container {
     display: flex;
     align-items: center;
     background: var(--bg);
-    border-radius: var(--radius-sm);
-    padding: 4px 12px;
     border: 1.5px solid var(--border);
-    /* ✅ 修改点：限制最大宽度并增加右间距，为按钮留出空间 */
-    max-width: 500px; 
-    margin-right: 20px;
-}
-
-.engine-select {
-    background: transparent;
-    border: none;
-    outline: none;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary);
-    cursor: pointer;
-    padding-right: 8px;
-    border-right: 1.5px solid var(--border);
-    margin-right: 10px;
-}
-
-.top-search-input {
+    border-radius: var(--radius-md);
+    padding: 4px;
     flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    padding: 6px 0;
-    font-size: 14px;
-    width: 100%;
+    max-width: 500px; /* 限制搜索框最大宽度，防止挤压 */
+    margin-right: 15px; /* ✅ 新增：在搜索框右侧增加间距，避免紧贴登录按钮 */
+    transition: border-color var(--duration);
 }
 
-/* 操作区按钮 */
+.search-container:focus-within {
+    border-color: var(--secondary);
+}
+
+.engine-selector {
+    border: none;
+    background: none;
+    padding: 0 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    outline: none;
+    border-right: 1.5px solid var(--border);
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    background: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    outline: none;
+    color: var(--text-primary);
+}
+
+/* ── 登录按钮 ── */
 .login-btn {
     background: var(--secondary);
     color: #FFF;
-    padding: 8px 18px;
+    padding: 8px 20px;
     border-radius: var(--radius-sm);
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
+    white-space: nowrap; /* 防止按钮文字换行 */
     transition: opacity var(--duration);
-    /* ✅ 保证按钮不缩减 */
-    flex-shrink: 0;
-    white-space: nowrap;
 }
 
 .login-btn:hover {
     opacity: 0.8;
 }
-
-/* ── 侧边栏 ── */
-.sidebar {
-    width: var(--sidebar-w);
-    background: var(--surface);
-    border-right: 1.5px solid var(--border);
-    padding: 24px 12px;
-    position: sticky;
-    top: var(--header-h);
-    height: calc(100vh - var(--header-h));
-    overflow-y: auto;
-}
-
-.nav-group { margin-bottom: 32px; }
-.nav-label {
-    font-size: 12px; font-weight: 700; color: var(--text-muted);
-    text-transform: uppercase; letter-spacing: 1px;
-    margin: 0 12px 12px;
-}
-
-.nav-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 10px 16px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    border-radius: var(--radius-sm);
-    transition: all var(--duration);
-    margin-bottom: 4px;
-}
-
-.nav-item:hover, .nav-item.active {
-    background: var(--primary-light);
-    color: var(--primary);
-}
-
-.nav-icon { font-size: 18px; }
-
-/* ── 汉堡菜单 ── */
-.hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 4px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-}
-
-.hamburger span {
-    width: 20px;
-    height: 2px;
-    background: var(--secondary);
-    transition: 0.3s;
-}
-
-/* ── 主内容区 ── */
-.content {
-    flex: 1;
-    padding: 32px;
-    padding-bottom: 100px;
-}
-
-.section-container { margin-bottom: 48px; }
 
 /* ── 栏目与标题 ── */
 .section-header { margin-bottom: 24px; }
@@ -221,61 +129,63 @@ body {
     display: flex; align-items: center; gap: 14px;
     text-decoration: none;
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
 }
 
 .card-item:hover {
-    transform: translateY(-5px);
-    border-color: var(--primary);
-    box-shadow: 0 8px 24px rgba(166, 58, 38, 0.1);
+    transform: translateY(-4px);
+    border-color: var(--secondary);
+    background: var(--primary-light);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
 }
 
 .card-icon {
     width: 44px; height: 44px;
-    background: var(--bg);
     border-radius: var(--radius-sm);
+    background: #FFF;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    overflow: hidden;
+    transition: transform 0.3s;
 }
 
-.card-info { overflow: hidden; }
+.card-item:hover .card-icon { transform: scale(1.1) rotate(-5deg); }
+
+.card-info { flex: 1; overflow: hidden; }
 .card-title {
-    font-weight: 700; color: var(--secondary);
-    font-size: 16px; margin-bottom: 2px;
+    display: block; font-weight: 700; color: var(--secondary);
+    margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .card-desc {
-    font-size: 12px; color: var(--text-muted);
+    display: block; font-size: 12px; color: var(--text-secondary);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-/* ── 移动端导航 ── */
+/* ── 底部导航 (移动端) ── */
 .bottom-nav {
-    display: none;
     position: fixed; bottom: 0; left: 0; right: 0;
-    height: 64px; background: var(--surface);
+    height: 60px; background: var(--surface);
     border-top: 1.5px solid var(--border);
+    display: none; grid-template-columns: repeat(4, 1fr);
     z-index: 1000;
-    justify-content: space-around; align-items: center;
-    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .bottom-nav-item {
-    display: flex; flex-direction: column; align-items: center;
-    text-decoration: none; color: var(--text-muted); font-size: 10px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-decoration: none; color: var(--text-muted); font-size: 10px; gap: 4px;
 }
 
 .bottom-nav-item.active { color: var(--primary); }
-.bottom-nav-icon { font-size: 20px; margin-bottom: 2px; }
+.bottom-nav-item i { font-size: 20px; }
 
-.sidebar-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 900;
-}
-
+/* ── 响应式处理 ── */
 @media (max-width: 768px) {
     .sidebar { display: none; }
-    .hamburger { display: flex; }
-    .bottom-nav { display: flex; }
+    .main-content { margin-left: 0; padding-bottom: 80px; }
     .top-bar { padding: 0 16px; }
+    .header-logo { font-size: 20px; }
+    .search-container { max-width: none; margin-right: 10px; } /* 移动端适当缩小间距 */
+    .login-btn { padding: 6px 12px; font-size: 12px; }
+    .bottom-nav { display: grid; }
 }
