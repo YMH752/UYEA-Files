@@ -19,9 +19,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            /* ✅ 修改点 1：gap 从 20px 增加到 40px。
-               理由：在搜索框与右侧登录按钮之间建立更宽的物理间距，产生不刻意的“呼吸感”。 */
-            gap: 40px;
+            gap: 20px;
             padding: 0 24px;
             height: var(--header-h);
             background: var(--surface);
@@ -45,9 +43,8 @@
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            /* ✅ 修改点 2：将 max-width 从 650px 限制为 450px。
-               理由：缩短搜索框在宽屏下的总长度。配合 flex-grow 让其在大屏下更精致、更居中。 */
-            max-width: 450px;
+            /* ✅ 修改点：限制最大宽度，为左右留出更多呼吸空间 */
+            max-width: 500px; 
             display: flex;
             justify-content: center;
             pointer-events: none;
@@ -55,7 +52,8 @@
 
         /* ── 搜索框整体包裹层 ── */
         .header-search-wrapper {
-            width: 95%;
+            /* ✅ 修改点：将宽度从 95% 降低到 90%，增加搜索框本身的间距感 */
+            width: 90%; 
             display: flex;
             align-items: center;
             background: var(--bg);
@@ -176,11 +174,15 @@
             color: var(--text-primary);
         }
 
+        /* ── 右侧操作区 ── */
         .header-actions { 
             display: flex; 
             align-items: center; 
+            /* ✅ 修改点：调整 gap 并增加 margin-left 确保与搜索框拉开距离 */
             gap: 12px; 
-            margin-left: auto;
+            margin-left: 20px; 
+            position: relative;
+            z-index: 101;
         }
 
         .login-btn {
@@ -191,6 +193,8 @@
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
+            /* ✅ 修改点：移动端下防止文字换行挤压 */
+            white-space: nowrap; 
         }
 
         .menu-toggle {
@@ -255,15 +259,34 @@
             user-select: none;
         }
 
+        /* ── 移动端响应式 ── */
         @media (max-width: 768px) {
+            .top-bar {
+                /* ✅ 减少顶栏左右内边距，给中间留空间 */
+                padding: 0 12px; 
+            }
             .menu-toggle { display: flex; }
             .search-container {
-                /* ✅ 移动端保持相对合理的比例，不显突兀 */
-                max-width: 55%; 
+                /* ✅ 核心修改：将 max-width 降到 45% 左右，彻底与登录按钮拉开 */
+                max-width: 48%; 
+            }
+            .header-search-wrapper {
+                /* ✅ 移动端让搜索框宽度拉满容器 */
+                width: 100%; 
+            }
+            .header-actions {
+                /* ✅ 减少按钮间的 gap */
+                gap: 6px; 
+                margin-left: 10px;
             }
             .engine-trigger-btn {
                 font-size: 12px;
                 padding: 0 8px 0 10px;
+            }
+            .login-btn {
+                /* 稍微减小手机端按钮内边距 */
+                padding: 6px 10px; 
+                font-size: 12px;
             }
         }
     </style>
@@ -298,7 +321,6 @@
                             <span id="engineTriggerLabel">站内搜索</span>
                             <span class="engine-trigger-arrow" aria-hidden="true">▼</span>
                         </button>
-
                         <div class="engine-dropdown-list" id="engineDropdownList" role="listbox">
                             <div class="engine-option-item selected" data-value="site" role="option">站内搜索</div>
                             <div class="engine-option-item" data-value="baidu" role="option">百度搜索</div>
@@ -306,7 +328,6 @@
                             <div class="engine-option-item" data-value="bing" role="option">必应搜索</div>
                         </div>
                     </div>
-
                     <div class="engine-divider"></div>
                     <input type="text" id="searchInput" placeholder="请输入关键词...">
                 </div>
@@ -455,7 +476,6 @@
                 this.classList.add('selected');
                 engineWrapper.classList.remove('open');
                 engineTriggerBtn.setAttribute('aria-expanded', 'false');
-
                 if (selectedValue === 'site') {
                     searchInput.dispatchEvent(new Event('input'));
                 } else {
