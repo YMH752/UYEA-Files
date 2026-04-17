@@ -1,9 +1,7 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
    风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
-   修改记录：
-   1. 将核心强调色改为黑色，增加对比度
-   2. 优化搜索框与登录按钮的间距，增加呼吸感
+   修改记录：根据要求将按钮及核心强调色改为黑色，增加对比度
    ============================================================ */
 
 :root {
@@ -28,74 +26,96 @@
     --sidebar-w:      240px;
     
     /* 全局圆角 */
-    --radius-sm:      4px;
-    --radius-md:      8px;
-    --radius-lg:      12px;
+    --radius-sm:      10px;       
+    --radius-md:      16px;       
+    --radius-lg:      20px;       
     
-    /* 动画配置 */
-    --duration:       0.2s;
+    --duration:       0.3s;
+    
+    /* 阴影 */
+    --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md:      0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* ── 基础重置 ── */
+/* 基础重置 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
 body {
-    background: var(--bg);
+    font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg);
     color: var(--text-primary);
-    font-family: 'Noto Sans SC', sans-serif;
-    line-height: 1.6;
     overflow-x: hidden;
+    line-height: 1.6;
 }
 
-/* ── 搜索组件样式 ── */
-.search-container {
-    display: flex;
-    align-items: center;
+/* ── 侧边栏样式 ── */
+.sidebar {
+    width: var(--sidebar-w);
+    height: 100vh;
+    background: var(--surface);
+    border-right: 2px solid var(--border);
+    position: fixed;
+    top: 0; left: 0; z-index: 1000;
+    transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo-group { display: flex; align-items: baseline; gap: 8px; }
+.logo-text { 
+    font-family: 'Inter', sans-serif; 
+    font-weight: 800; 
+    font-size: 26px; 
+    color: var(--primary);
+    letter-spacing: -1px;
+}
+.logo-sub { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+
+.nav-menu { padding: 16px 12px; }
+.nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: var(--radius-sm);
+    color: var(--text-secondary); text-decoration: none;
+    margin-bottom: 6px; transition: all var(--duration);
+    font-weight: 500;
+}
+.nav-item:hover { background: var(--primary-light); color: var(--primary); }
+.nav-item.active { background: var(--primary); color: #FFFFFF; }
+
+/* ── 主内容区 ── */
+.main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
+.content-wrapper { padding: 40px 32px; max-width: 1200px; margin: 0 auto; }
+
+/* ── 顶栏通用样式 ── */
+.top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: var(--header-h);
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+}
+
+.header-search-wrapper {
+    width: 100%; max-width: 600px;
+    display: flex; align-items: center;
     background: var(--bg);
     border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 4px;
-    flex: 1;
-    max-width: 500px; /* 限制搜索框最大宽度，防止挤压 */
-    margin-right: 15px; /* ✅ 新增：在搜索框右侧增加间距，避免紧贴登录按钮 */
-    transition: border-color var(--duration);
+    border-radius: var(--radius-lg);
+    padding: 0 16px; height: 42px;
 }
 
-.search-container:focus-within {
-    border-color: var(--secondary);
-}
-
-.engine-selector {
-    border: none;
-    background: none;
-    padding: 0 12px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    cursor: pointer;
-    outline: none;
-    border-right: 1.5px solid var(--border);
-}
-
-.search-input {
-    flex: 1;
-    border: none;
-    background: none;
-    padding: 8px 12px;
-    font-size: 14px;
-    outline: none;
-    color: var(--text-primary);
-}
-
-/* ── 登录按钮 ── */
+/* ✅ 按钮样式：应用黑色背景 */
 .login-btn {
-    background: var(--secondary);
-    color: #FFF;
     padding: 8px 20px;
+    background: var(--secondary); /* 已在:root中定义为黑色 */
+    color: #FFFFFF;
     border-radius: var(--radius-sm);
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
-    white-space: nowrap; /* 防止按钮文字换行 */
     transition: opacity var(--duration);
 }
 
@@ -129,63 +149,29 @@ body {
     display: flex; align-items: center; gap: 14px;
     text-decoration: none;
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
 .card-item:hover {
     transform: translateY(-4px);
-    border-color: var(--secondary);
-    background: var(--primary-light);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    border-color: var(--secondary); /* 悬浮时边框变黑 */
+    box-shadow: var(--shadow-md);
+}
+
+.card-title {
+    font-size: 15px; font-weight: 600; color: var(--text-primary);
 }
 
 .card-icon {
-    width: 44px; height: 44px;
-    border-radius: var(--radius-sm);
-    background: #FFF;
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: transform 0.3s;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: #f0f0f0;
+    overflow: hidden;
 }
 
-.card-item:hover .card-icon { transform: scale(1.1) rotate(-5deg); }
-
-.card-info { flex: 1; overflow: hidden; }
-.card-title {
-    display: block; font-weight: 700; color: var(--secondary);
-    margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.card-desc {
-    display: block; font-size: 12px; color: var(--text-secondary);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-
-/* ── 底部导航 (移动端) ── */
-.bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    height: 60px; background: var(--surface);
-    border-top: 1.5px solid var(--border);
-    display: none; grid-template-columns: repeat(4, 1fr);
-    z-index: 1000;
-}
-
-.bottom-nav-item {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-decoration: none; color: var(--text-muted); font-size: 10px; gap: 4px;
-}
-
-.bottom-nav-item.active { color: var(--primary); }
-.bottom-nav-item i { font-size: 20px; }
-
-/* ── 响应式处理 ── */
-@media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main-content { margin-left: 0; padding-bottom: 80px; }
-    .top-bar { padding: 0 16px; }
-    .header-logo { font-size: 20px; }
-    .search-container { max-width: none; margin-right: 10px; } /* 移动端适当缩小间距 */
-    .login-btn { padding: 6px 12px; font-size: 12px; }
-    .bottom-nav { display: grid; }
+/* 响应式调整 */
+@media (max-width: 1024px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-left: 0; }
 }
