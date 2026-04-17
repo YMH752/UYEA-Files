@@ -1,9 +1,7 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
    风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
-   修改记录：
-   1. 根据要求将按钮及核心强调色改为黑色，增加对比度
-   2. [修复]：优化侧边栏 Flex 布局，解决登录按钮无法自适应置底的问题
+   修改记录：根据要求将按钮及核心强调色改为黑色，增加对比度
    ============================================================ */
 
 :root {
@@ -58,16 +56,12 @@ body {
     border-right: 2px solid var(--border);
     position: fixed;
     top: 0; left: 0; z-index: 1000;
-    /* [关键修复]：必须使用 flex 垂直布局，才能让底部容器自动定位 */
-    display: flex;
-    flex-direction: column;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-header {
     padding: 24px;
     border-bottom: 1px solid var(--border);
-    flex-shrink: 0; /* 确保头部高度不被压缩 */
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
@@ -80,13 +74,7 @@ body {
 }
 .logo-sub { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
 
-/* [关键修复]：给 nav-menu 增加 flex-grow，使其占据中间所有空间 */
-.nav-menu { 
-    padding: 16px 12px; 
-    flex: 1; 
-    overflow-y: auto; /* 当菜单项过多时，支持内部滚动 */
-}
-
+.nav-menu { padding: 16px 12px; }
 .nav-item {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 16px; border-radius: var(--radius-sm);
@@ -94,37 +82,45 @@ body {
     margin-bottom: 6px; transition: all var(--duration);
     font-weight: 500;
 }
-
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
 .nav-item.active { background: var(--primary); color: #FFFFFF; }
 
-/* [关键修复]：侧边栏底部容器，确保始终位于侧边栏最下方 */
-.sidebar-footer {
-    padding: 20px 16px;
-    border-top: 1px solid var(--border);
-    background: var(--surface);
-    flex-shrink: 0; /* 确保底部高度固定 */
-    display: flex;
-    justify-content: flex-start; /* 保持登录按钮靠左 */
-}
-
 /* ── 主内容区 ── */
-.main-content {
-    margin-left: var(--sidebar-w);
-    min-height: 100vh;
+.main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
+.content-wrapper { padding: 40px 32px; max-width: 1200px; margin: 0 auto; }
+
+/* ── 顶栏通用样式 ── */
+.top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: var(--header-h);
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
 }
 
-.content-wrapper {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 32px 24px;
+.header-search-wrapper {
+    width: 100%; max-width: 600px;
+    display: flex; align-items: center;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 0 16px; height: 42px;
 }
 
-/* ── 侧边栏遮罩（移动端） ── */
-.sidebar-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);
-    z-index: 999;
+/* ✅ 按钮样式：应用黑色背景 */
+.login-btn {
+    padding: 8px 20px;
+    background: var(--secondary); /* 已在:root中定义为黑色 */
+    color: #FFFFFF;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity var(--duration);
+}
+
+.login-btn:hover {
+    opacity: 0.8;
 }
 
 /* ── 栏目与标题 ── */
@@ -153,41 +149,29 @@ body {
     display: flex; align-items: center; gap: 14px;
     text-decoration: none;
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: var(--shadow-sm);
 }
 
 .card-item:hover {
     transform: translateY(-4px);
-    border-color: var(--primary);
-    box-shadow: 0 10px 20px rgba(166, 58, 38, 0.08);
+    border-color: var(--secondary); /* 悬浮时边框变黑 */
+    box-shadow: var(--shadow-md);
+}
+
+.card-title {
+    font-size: 15px; font-weight: 600; color: var(--text-primary);
 }
 
 .card-icon {
-    width: 44px; height: 44px; background: var(--bg);
-    border-radius: 10px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: #f0f0f0;
+    overflow: hidden;
 }
 
-.card-title { font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
-
-/* 响应式适配 */
+/* 响应式调整 */
 @media (max-width: 1024px) {
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
-    .sidebar-overlay.open { display: block; }
     .main-content { margin-left: 0; }
-}
-
-@media (max-width: 480px) {
-    .grid-container { grid-template-columns: 1fr; }
-}
-
-/* ── 登录按钮（复刻原始版本样式） ── */
-.login-btn {
-    padding: 8px 16px;
-    background: var(--secondary); 
-    color: white;
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
 }
