@@ -35,6 +35,7 @@
             font-size: 24px;
             color: var(--primary);
             text-decoration: none;
+            flex-shrink: 0;
         }
 
         /* ── 搜索容器居中布局 ── */
@@ -43,8 +44,8 @@
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            /* ✅ 修改点：限制最大宽度，为左右留出更多呼吸空间 */
-            max-width: 500px; 
+            /* ✅ 限制最大宽度，为左右留出呼吸空间 */
+            max-width: 450px; 
             display: flex;
             justify-content: center;
             pointer-events: none;
@@ -52,8 +53,7 @@
 
         /* ── 搜索框整体包裹层 ── */
         .header-search-wrapper {
-            /* ✅ 修改点：将宽度从 95% 降低到 90%，增加搜索框本身的间距感 */
-            width: 90%; 
+            width: 100%; 
             display: flex;
             align-items: center;
             background: var(--bg);
@@ -178,11 +178,12 @@
         .header-actions { 
             display: flex; 
             align-items: center; 
-            /* ✅ 修改点：调整 gap 并增加 margin-left 确保与搜索框拉开距离 */
             gap: 12px; 
-            margin-left: 20px; 
+            /* ✅ 关键修正：PC端使用 margin-left: auto 确保按钮群锁定在最右侧 */
+            margin-left: auto; 
             position: relative;
             z-index: 101;
+            flex-shrink: 0;
         }
 
         .login-btn {
@@ -193,7 +194,6 @@
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            /* ✅ 修改点：移动端下防止文字换行挤压 */
             white-space: nowrap; 
         }
 
@@ -220,72 +220,27 @@
             }
         }
 
-        .text-status-card {
-            background: var(--surface);
-            border: 1.5px dashed var(--border);
-            border-radius: var(--radius-md);
-            padding: 40px;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 16px;
-            grid-column: 1 / -1;
-        }
-
-        .card-icon {
-            width: 32px;
-            height: 32px;
-            background: transparent !important;
-            box-shadow: none !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .card-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 6px;
-        }
-
-        .card-icon .icon-emoji {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 600;
-            user-select: none;
-        }
-
-        /* ── 移动端响应式 ── */
+        /* ── 移动端响应式修正 ── */
         @media (max-width: 768px) {
             .top-bar {
-                /* ✅ 减少顶栏左右内边距，给中间留空间 */
                 padding: 0 12px; 
             }
             .menu-toggle { display: flex; }
             .search-container {
-                /* ✅ 核心修改：将 max-width 降到 45% 左右，彻底与登录按钮拉开 */
-                max-width: 48%; 
-            }
-            .header-search-wrapper {
-                /* ✅ 移动端让搜索框宽度拉满容器 */
-                width: 100%; 
+                /* ✅ 移动端限制宽度比例，确保不遮挡右侧按钮 */
+                max-width: 50%; 
             }
             .header-actions {
-                /* ✅ 减少按钮间的 gap */
-                gap: 6px; 
-                margin-left: 10px;
+                /* 移动端保持靠右，但减小间距 */
+                gap: 8px; 
+                margin-left: auto;
             }
             .engine-trigger-btn {
                 font-size: 12px;
-                padding: 0 8px 0 10px;
+                padding: 0 6px 0 8px;
             }
             .login-btn {
-                /* 稍微减小手机端按钮内边距 */
-                padding: 6px 10px; 
+                padding: 6px 8px; 
                 font-size: 12px;
             }
         }
@@ -342,10 +297,9 @@
         </header>
 
         <div class="content-wrapper">
-            
             <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
-                <div class="text-status-card">☕ 尽请期待</div>
+                <div class="text-status-card" style="background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); font-size: 16px; grid-column: 1 / -1;">☕ 尽请期待</div>
             </div>
 
             <div class="section-group">
@@ -487,13 +441,6 @@
 
         document.addEventListener('click', function() {
             if (engineWrapper.classList.contains('open')) {
-                engineWrapper.classList.remove('open');
-                engineTriggerBtn.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && engineWrapper.classList.contains('open')) {
                 engineWrapper.classList.remove('open');
                 engineTriggerBtn.setAttribute('aria-expanded', 'false');
             }
