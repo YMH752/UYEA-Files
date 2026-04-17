@@ -60,15 +60,12 @@
             padding: 0 4px 0 0; /* 左边由触发按钮自带padding */
             height: 42px;
             pointer-events: auto;
-            /* [修改内容]：增加过渡效果，使高亮阴影显示更平滑 */
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s;
             overflow: visible; /* 允许下拉菜单溢出 */
         }
 
-        /* [修改内容]：搜索框聚焦时，增加红色柔和光晕阴影 */
         .header-search-wrapper:focus-within {
-            border-color: var(--primary); 
-            box-shadow: 0 0 12px rgba(166, 58, 38, 0.2); 
+            border-color: var(--secondary); /* 聚焦时边框变黑 */
         }
 
         /* ════════════════════════════════════════════
@@ -209,15 +206,6 @@
             font-weight: 500;
         }
 
-        /* [新增内容]：侧边栏底部容器，用于实现登录按钮置底且靠左 */
-        .sidebar-footer {
-            margin-top: auto; /* 利用 Flex 将其推到底部 */
-            padding: 24px 16px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-start; /* 按钮靠左 */
-        }
-
         /* ── 移动端汉堡菜单按钮 ── */
         .menu-toggle {
             display: none;
@@ -303,7 +291,7 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <aside class="sidebar" id="sidebar" style="display: flex; flex-direction: column;">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
@@ -315,10 +303,6 @@
             <a href="tools.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></a>
             <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
         </nav>
-
-        <div class="sidebar-footer">
-            <a href="#" class="login-btn">登录 / 注册</a>
-        </div>
     </aside>
 
     <main class="main-content">
@@ -328,16 +312,27 @@
             <div class="search-container">
                 <div class="header-search-wrapper">
 
+                    <!-- ════════════════════════════════════════════
+                         自定义搜索引擎下拉菜单
+                         替换了原来的原生 <select id="searchEngineSelector">
+                         隐藏的 <input> 用于保存当前选中的引擎值，供JS读取
+                         ════════════════════════════════════════════ -->
                     <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
 
+                        <!-- 隐藏的input，存储当前选中的搜索引擎值（site/baidu/google/bing） -->
                         <input type="hidden" id="searchEngineSelector" value="site">
 
+                        <!-- 触发按钮：黑色背景，白色文字，右侧箭头 -->
                         <button class="engine-trigger-btn" id="engineTriggerBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+                            <!-- 当前选中的引擎名称，由JS动态更新 -->
                             <span id="engineTriggerLabel">站内搜索</span>
+                            <!-- 箭头，展开时旋转180° -->
                             <span class="engine-trigger-arrow" aria-hidden="true">▼</span>
                         </button>
 
+                        <!-- 下拉选项列表 -->
                         <div class="engine-dropdown-list" id="engineDropdownList" role="listbox">
+                            <!-- data-value 对应搜索引擎标识符，selected class 标记当前选中项 -->
                             <div class="engine-option-item selected" data-value="site" role="option">站内搜索</div>
                             <div class="engine-option-item" data-value="baidu" role="option">百度搜索</div>
                             <div class="engine-option-item" data-value="google" role="option">Google</div>
@@ -345,13 +340,16 @@
                         </div>
                     </div>
 
+                    <!-- 触发按钮与输入框之间的分隔线 -->
                     <div class="engine-divider"></div>
 
+                    <!-- 搜索关键词输入框 -->
                     <input type="text" id="searchInput" placeholder="请输入关键词...">
                 </div>
             </div>
 
             <div class="header-actions">
+                <a href="#" class="login-btn">登录 / 注册</a>
                 <button class="menu-toggle" id="hamburgerBtn">
                     <span></span><span></span><span></span>
                 </button>
