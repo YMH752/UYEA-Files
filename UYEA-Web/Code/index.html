@@ -14,13 +14,13 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 首页顶栏布局（解决拥挤的核心） ── */
+        /* ── 首页顶栏布局 ── */
         .top-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            padding: 0 20px;
+            gap: 20px;
+            padding: 0 24px;
             height: var(--header-h);
             background: var(--surface);
             border-bottom: 1.5px solid var(--border);
@@ -35,18 +35,19 @@
             font-size: 24px;
             color: var(--primary);
             text-decoration: none;
-            flex-shrink: 0; /* 防止LOGO被挤压 */
+            flex-shrink: 0;
         }
 
-        /* ── 搜索容器：弹性自适应 ── */
+        /* ── 搜索容器居中布局 ── */
         .search-container {
-            flex: 1; /* 占据中间所有剩余空间 */
+            flex: 1; /* 占据中间所有剩余空间实现居中 */
             display: flex;
             justify-content: center;
-            max-width: 550px; /* PC端限制最大宽度 */
-            margin: 0 10px;
+            max-width: 650px;
+            margin: 0 auto;
         }
 
+        /* ── 搜索框整体包裹层 ── */
         .header-search-wrapper {
             width: 100%;
             display: flex;
@@ -55,7 +56,7 @@
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
             padding: 0 4px 0 0;
-            height: 40px;
+            height: 42px;
             transition: border-color 0.2s;
             overflow: visible;
         }
@@ -64,14 +65,14 @@
             border-color: var(--secondary);
         }
 
-        /* ── 下拉引擎样式保持 ── */
+        /* 下拉菜单样式 */
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
         .engine-trigger-btn {
             display: flex;
             align-items: center;
             gap: 6px;
             padding: 0 10px 0 12px;
-            height: 40px;
+            height: 42px;
             background: var(--secondary);
             color: #FFFFFF;
             border: none;
@@ -81,7 +82,6 @@
             cursor: pointer;
             white-space: nowrap;
         }
-
         .engine-dropdown-list {
             display: none;
             position: absolute;
@@ -95,13 +95,10 @@
             z-index: 200;
         }
         .engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
-        .engine-option-item {
-            padding: 10px 14px;
-            font-size: 13px;
-            cursor: pointer;
-        }
+        .engine-option-item { padding: 11px 14px; font-size: 13px; cursor: pointer; }
         .engine-option-item:hover { background: var(--bg); }
         .engine-option-item.selected { color: var(--primary); font-weight: 700; }
+        .engine-divider { width: 1.5px; height: 22px; background: var(--border); flex-shrink: 0; }
 
         #searchInput {
             border: none;
@@ -121,21 +118,9 @@
             flex-shrink: 0;
         }
 
-        /* PC端登录按钮 */
-        .login-btn-pc {
-            padding: 8px 16px;
-            background: var(--secondary); 
-            color: white;
-            border-radius: var(--radius-sm);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        /* 汉堡菜单样式 */
+        /* ── 移动端汉堡菜单按钮 ── */
         .menu-toggle {
-            display: none;
+            display: flex; /* 所有端均显示 */
             background: none;
             border: none;
             cursor: pointer;
@@ -151,18 +136,16 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏布局：支持底部按钮 ── */
+        /* ── 侧边栏及底部登录 ── */
         .sidebar {
             display: flex;
             flex-direction: column;
         }
-        .nav-menu {
-            flex: 1; /* 撑开上方空间 */
-        }
+        .nav-menu { flex: 1; }
         .sidebar-footer {
             padding: 20px 16px;
             border-top: 1px solid var(--border);
-            margin-top: auto; /* 核心：推向最底部 */
+            margin-top: auto;
         }
         .sidebar-login-btn {
             display: flex;
@@ -180,26 +163,20 @@
             font-weight: 600;
             transition: all 0.2s;
         }
-        .sidebar-login-btn:hover {
-            background: var(--bg);
-            border-color: var(--secondary);
-        }
 
+        /* ── 桌面端适配 ── */
         @media (min-width: 1025px) {
             .header-logo { display: none; }
         }
 
-        /* ── 移动端响应式修正 ── */
         @media (max-width: 768px) {
-            .menu-toggle { display: flex; }
-            .login-btn-pc { display: none; } /* 顶栏隐藏登录 */
             .top-bar { padding: 0 12px; gap: 8px; }
-            .header-logo { font-size: 20px; }
-            .search-container { margin: 0; }
-            .engine-trigger-btn { font-size: 12px; padding: 0 6px 0 8px; }
+            .header-logo { display: block; font-size: 20px; }
+            .search-container { margin: 0; max-width: 55%; }
+            .engine-trigger-btn { font-size: 12px; padding: 0 8px; }
         }
 
-        /* 卡片图标等原有样式 */
+        /* 卡片及其他基础样式 */
         .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
         .text-status-card { background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); grid-column: 1 / -1; }
@@ -216,13 +193,11 @@
                 <span class="logo-sub">悠野</span>
             </div>
         </div>
-        
         <nav class="nav-menu">
             <div class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></div>
             <a href="tools.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></a>
             <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
         </nav>
-
         <div class="sidebar-footer">
             <a href="#" class="sidebar-login-btn">
                 <span>👤</span>
@@ -240,7 +215,7 @@
                     <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
                         <input type="hidden" id="searchEngineSelector" value="site">
                         <button class="engine-trigger-btn" id="engineTriggerBtn" type="button">
-                            <span id="engineTriggerLabel">站内</span>
+                            <span id="engineTriggerLabel">站内搜索</span>
                             <span class="engine-trigger-arrow">▼</span>
                         </button>
                         <div class="engine-dropdown-list" id="engineDropdownList">
@@ -250,13 +225,12 @@
                             <div class="engine-option-item" data-value="bing">必应搜索</div>
                         </div>
                     </div>
-                    <div style="width:1.5px; height:20px; background:var(--border); margin:0 4px;"></div>
-                    <input type="text" id="searchInput" placeholder="搜索关键词...">
+                    <div class="engine-divider"></div>
+                    <input type="text" id="searchInput" placeholder="请输入关键词...">
                 </div>
             </div>
 
             <div class="header-actions">
-                <a href="#" class="login-btn-pc">登录 / 注册</a>
                 <button class="menu-toggle" id="hamburgerBtn">
                     <span></span><span></span><span></span>
                 </button>
@@ -323,62 +297,26 @@
                 </div>
             </div>
 
-            <div class="section-group">
-                <div class="section-header"><h2 class="section-title">生活</h2></div>
-                <div class="grid-container" style="margin-bottom: 40px;">
-                    <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="xiaohongshu.com" data-site-name="小红书"></div>
-                        <div class="card-info"><div class="card-title">小红书</div></div>
-                    </a>
-                    <a href="https://www.bilibili.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="bilibili.com" data-site-name="Bilibili"></div>
-                        <div class="card-info"><div class="card-title">Bilibili</div></div>
-                    </a>
-                    <a href="https://www.zhihu.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="zhihu.com" data-site-name="知乎"></div>
-                        <div class="card-info"><div class="card-title">知乎</div></div>
-                    </a>
-                </div>
             </div>
-
-            <div class="section-group">
-                <div class="section-header"><h2 class="section-title">工具</h2></div>
-                <div class="grid-container">
-                    <a href="https://github.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="github.com" data-site-name="GitHub"></div>
-                        <div class="card-info"><div class="card-title">GitHub</div></div>
-                    </a>
-                    <a href="https://tinypng.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="tinypng.com" data-site-name="TinyPNG"></div>
-                        <div class="card-info"><div class="card-title">TinyPNG</div></div>
-                    </a>
-                    <a href="https://v0.dev" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="v0.dev" data-site-name="v0.dev"></div>
-                        <div class="card-info"><div class="card-title">v0.dev</div></div>
-                    </a>
-                </div>
-            </div>
-        </div>
     </main>
 
     <script src="script.js"></script>
     <script>
-        const searchInput      = document.getElementById('searchInput');
-        const engineSelector   = document.getElementById('searchEngineSelector');
-        const engineWrapper    = document.getElementById('engineDropdownWrapper');
+        const searchInput = document.getElementById('searchInput');
+        const engineSelector = document.getElementById('searchEngineSelector');
+        const engineWrapper = document.getElementById('engineDropdownWrapper');
         const engineTriggerBtn = document.getElementById('engineTriggerBtn');
         const engineTriggerLabel = document.getElementById('engineTriggerLabel');
-        const engineOptionItems  = document.querySelectorAll('.engine-option-item');
-        const cardItems        = document.querySelectorAll('.card-item');
-        const sections         = document.querySelectorAll('.section-group');
+        const engineOptionItems = document.querySelectorAll('.engine-option-item');
+        const cardItems = document.querySelectorAll('.card-item');
+        const sections = document.querySelectorAll('.section-group');
 
         const engineUrls = {
-            baidu:  "https://www.baidu.com/s?wd=",
+            baidu: "https://www.baidu.com/s?wd=",
             google: "https://www.google.com/search?q=",
-            bing:   "https://cn.bing.com/search?q="
+            bing: "https://cn.bing.com/search?q="
         };
 
-        // 下拉菜单逻辑
         engineTriggerBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             engineWrapper.classList.toggle('open');
@@ -398,7 +336,6 @@
 
         document.addEventListener('click', () => engineWrapper.classList.remove('open'));
 
-        // 搜索逻辑
         searchInput.addEventListener('input', function() {
             if (engineSelector.value === 'site') {
                 const keyword = this.value.toLowerCase().trim();
@@ -422,18 +359,6 @@
                 }
             }
         });
-
-        // 补全图标自动填充逻辑 (如果script.js里没写的话)
-        function initIcons() {
-            document.querySelectorAll('.card-icon img').forEach(img => {
-                const domain = img.getAttribute('data-domain');
-                if (domain && !img.src) {
-                    img.src = `https://favicon.splitbee.io/?url=${domain}`;
-                    img.onerror = () => { img.style.display='none'; }; 
-                }
-            });
-        }
-        window.addEventListener('DOMContentLoaded', initIcons);
     </script>
 </body>
 </html>
