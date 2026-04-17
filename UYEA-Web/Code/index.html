@@ -19,8 +19,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            padding: 0 16px;
+            gap: 20px;
+            padding: 0 24px;
             height: var(--header-h);
             background: var(--surface);
             border-bottom: 1.5px solid var(--border);
@@ -32,30 +32,31 @@
         .header-logo {
             font-family: 'Inter', sans-serif;
             font-weight: 800;
-            font-size: 22px;
+            font-size: 24px;
             color: var(--primary);
             text-decoration: none;
             flex-shrink: 0;
         }
 
-        /* ── 搜索容器：自适应居中 ── */
+        /* ── 搜索容器居中布局 ── */
         .search-container {
-            flex: 1;
+            flex: 1; /* 占据中间所有剩余空间实现居中 */
             display: flex;
             justify-content: center;
-            min-width: 0; 
-            margin: 0 8px;
+            max-width: 650px;
+            margin: 0 auto;
         }
 
+        /* ── 搜索框整体包裹层 ── */
         .header-search-wrapper {
             width: 100%;
-            max-width: 550px;
             display: flex;
             align-items: center;
             background: var(--bg);
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
-            height: 38px;
+            padding: 0 4px 0 0;
+            height: 42px;
             transition: border-color 0.2s;
             overflow: visible;
         }
@@ -64,85 +65,48 @@
             border-color: var(--secondary);
         }
 
-        .engine-dropdown-wrapper {
-            position: relative;
-            flex-shrink: 0;
-        }
-
+        /* 下拉菜单样式 */
+        .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
         .engine-trigger-btn {
             display: flex;
             align-items: center;
-            gap: 4px;
-            padding: 0 8px 0 10px;
-            height: 38px;
+            gap: 6px;
+            padding: 0 10px 0 12px;
+            height: 42px;
             background: var(--secondary);
             color: #FFFFFF;
             border: none;
             border-radius: var(--radius-md) 0 0 var(--radius-md);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
-            outline: none;
         }
-
-        .engine-trigger-arrow {
-            font-size: 10px;
-            transition: transform 0.25s ease;
-        }
-
-        .engine-dropdown-wrapper.open .engine-trigger-arrow {
-            transform: rotate(180deg);
-        }
-
-        .engine-divider {
-            width: 1.5px;
-            height: 18px;
-            background: var(--border);
-            flex-shrink: 0;
-        }
-
         .engine-dropdown-list {
             display: none;
             position: absolute;
             top: calc(100% + 6px);
             left: 0;
-            min-width: 120px;
+            min-width: 130px;
             background: var(--surface);
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-md);
             z-index: 200;
-            overflow: hidden;
         }
-
-        .engine-dropdown-wrapper.open .engine-dropdown-list {
-            display: block;
-        }
-
-        .engine-option-item {
-            padding: 10px 14px;
-            font-size: 12px;
-            color: var(--text-primary);
-            cursor: pointer;
-        }
-
-        .engine-option-item:hover {
-            background: var(--bg);
-        }
-
-        .engine-option-item.selected {
-            color: var(--primary);
-            font-weight: 700;
-        }
+        .engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
+        .engine-option-item { padding: 11px 14px; font-size: 13px; cursor: pointer; }
+        .engine-option-item:hover { background: var(--bg); }
+        .engine-option-item.selected { color: var(--primary); font-weight: 700; }
+        .engine-divider { width: 1.5px; height: 22px; background: var(--border); flex-shrink: 0; }
 
         #searchInput {
             border: none;
             background: transparent;
             outline: none;
             width: 100%;
-            padding: 0 10px;
-            font-size: 13px;
+            padding: 0 8px;
+            font-size: 14px;
             color: var(--text-primary);
         }
 
@@ -150,37 +114,36 @@
         .header-actions { 
             display: flex; 
             align-items: center; 
+            gap: 12px;
             flex-shrink: 0;
         }
 
-        /* 汉堡按钮样式 */
+        /* ── 移动端汉堡菜单按钮 ── */
         .menu-toggle {
-            display: flex;
+            display: flex; /* 所有端均显示 */
             background: none;
             border: none;
             cursor: pointer;
-            padding: 6px;
+            padding: 8px;
             flex-direction: column;
-            gap: 4px;
+            gap: 5px;
         }
         .menu-toggle span {
             display: block;
-            width: 20px;
-            height: 2px;
+            width: 24px;
+            height: 3px;
             background: var(--text-primary);
-            border-radius: 1px;
+            border-radius: 2px;
         }
 
-        /* ── 侧边栏布局调整 ── */
+        /* ── 侧边栏及底部登录 ── */
         .sidebar {
             display: flex;
             flex-direction: column;
         }
-        .nav-menu {
-            flex: 1;
-        }
+        .nav-menu { flex: 1; }
         .sidebar-footer {
-            padding: 16px;
+            padding: 20px 16px;
             border-top: 1px solid var(--border);
             margin-top: auto;
         }
@@ -188,43 +151,32 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
-            padding: 10px;
-            background: var(--bg);
+            padding: 12px;
+            background: var(--surface);
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
             color: var(--text-primary);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
+            transition: all 0.2s;
         }
 
-        /* ── 响应式自适应 ── */
-        @media (min-width: 769px) {
-            .menu-toggle { display: none; } /* PC端隐藏汉堡菜单 */
-            .header-logo { display: none; } /* PC端隐藏顶栏Logo（侧栏已有） */
+        /* ── 桌面端适配 ── */
+        @media (min-width: 1025px) {
+            .header-logo { display: none; }
         }
 
         @media (max-width: 768px) {
-            .header-logo { display: block; }
-            .search-container { margin: 0; max-width: 60%; }
-            .engine-trigger-btn span:not(.engine-trigger-arrow) {
-                font-size: 11px;
-            }
+            .top-bar { padding: 0 12px; gap: 8px; }
+            .header-logo { display: block; font-size: 20px; }
+            .search-container { margin: 0; max-width: 55%; }
+            .engine-trigger-btn { font-size: 12px; padding: 0 8px; }
         }
 
-        @media (max-width: 480px) {
-            .engine-trigger-btn span:not(.engine-trigger-arrow) {
-                display: none; /* 极窄屏隐藏“站内搜索”文字 */
-            }
-            .engine-trigger-btn::after {
-                content: '站内';
-                font-size: 11px;
-            }
-        }
-
-        /* 其它基础样式 */
+        /* 卡片及其他基础样式 */
         .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
         .text-status-card { background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); grid-column: 1 / -1; }
@@ -247,7 +199,7 @@
             <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
         </nav>
         <div class="sidebar-footer">
-            <a href="login.html" class="sidebar-login-btn">
+            <a href="#" class="sidebar-login-btn">
                 <span>👤</span>
                 <span>登录 / 注册</span>
             </a>
@@ -264,7 +216,7 @@
                         <input type="hidden" id="searchEngineSelector" value="site">
                         <button class="engine-trigger-btn" id="engineTriggerBtn" type="button">
                             <span id="engineTriggerLabel">站内搜索</span>
-                            <span class="engine-trigger-arrow" aria-hidden="true">▼</span>
+                            <span class="engine-trigger-arrow">▼</span>
                         </button>
                         <div class="engine-dropdown-list" id="engineDropdownList">
                             <div class="engine-option-item selected" data-value="site">站内搜索</div>
@@ -274,7 +226,7 @@
                         </div>
                     </div>
                     <div class="engine-divider"></div>
-                    <input type="text" id="searchInput" placeholder="搜索关键词...">
+                    <input type="text" id="searchInput" placeholder="请输入关键词...">
                 </div>
             </div>
 
@@ -345,42 +297,7 @@
                 </div>
             </div>
 
-            <div class="section-group">
-                <div class="section-header"><h2 class="section-title">生活</h2></div>
-                <div class="grid-container" style="margin-bottom: 40px;">
-                    <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="xiaohongshu.com" data-site-name="小红书"></div>
-                        <div class="card-info"><div class="card-title">小红书</div></div>
-                    </a>
-                    <a href="https://www.bilibili.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="bilibili.com" data-site-name="Bilibili"></div>
-                        <div class="card-info"><div class="card-title">Bilibili</div></div>
-                    </a>
-                    <a href="https://www.zhihu.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="zhihu.com" data-site-name="知乎"></div>
-                        <div class="card-info"><div class="card-title">知乎</div></div>
-                    </a>
-                </div>
             </div>
-
-            <div class="section-group">
-                <div class="section-header"><h2 class="section-title">工具</h2></div>
-                <div class="grid-container">
-                    <a href="https://github.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="github.com" data-site-name="GitHub"></div>
-                        <div class="card-info"><div class="card-title">GitHub</div></div>
-                    </a>
-                    <a href="https://tinypng.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="tinypng.com" data-site-name="TinyPNG"></div>
-                        <div class="card-info"><div class="card-title">TinyPNG</div></div>
-                    </a>
-                    <a href="https://v0.dev" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="v0.dev" data-site-name="v0.dev"></div>
-                        <div class="card-info"><div class="card-title">v0.dev</div></div>
-                    </a>
-                </div>
-            </div>
-        </div>
     </main>
 
     <script src="script.js"></script>
@@ -408,13 +325,12 @@
         engineOptionItems.forEach(item => {
             item.addEventListener('click', function(e) {
                 e.stopPropagation();
-                const val = this.getAttribute('data-value');
-                engineSelector.value = val;
+                engineSelector.value = this.dataset.value;
                 engineTriggerLabel.textContent = this.textContent.trim();
                 engineOptionItems.forEach(opt => opt.classList.remove('selected'));
                 this.classList.add('selected');
                 engineWrapper.classList.remove('open');
-                if (val === 'site') searchInput.dispatchEvent(new Event('input'));
+                if (engineSelector.value === 'site') searchInput.dispatchEvent(new Event('input'));
             });
         });
 
@@ -428,17 +344,19 @@
                     card.style.display = title.includes(keyword) ? 'flex' : 'none';
                 });
                 sections.forEach(section => {
-                    const hasVisible = Array.from(section.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                    section.style.display = hasVisible ? 'block' : 'none';
+                    const hasVisibleCards = Array.from(section.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
+                    section.style.display = hasVisibleCards ? 'block' : 'none';
                 });
             }
         });
 
-        searchInput.addEventListener('keypress', (e) => {
+        searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const type = engineSelector.value;
-                const kw = searchInput.value.trim();
-                if (type !== 'site' && kw !== '') window.open(engineUrls[type] + encodeURIComponent(kw), '_blank');
+                const keyword = this.value.trim();
+                if (type !== 'site' && keyword !== '') {
+                    window.open(engineUrls[type] + encodeURIComponent(keyword), '_blank');
+                }
             }
         });
     </script>
