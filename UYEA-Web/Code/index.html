@@ -37,18 +37,19 @@
             text-decoration: none;
         }
 
-        /* ✅ 任务二：重构搜索容器布局 */
+        /* ── 搜索容器居中布局 ── */
         .search-container {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            max-width: 650px; /* 略微加宽以容纳下拉框 */
+            max-width: 650px;
             display: flex;
             justify-content: center;
             pointer-events: none;
         }
 
+        /* ── 搜索框整体包裹层 ── */
         .header-search-wrapper {
             width: 95%;
             display: flex;
@@ -56,33 +57,126 @@
             background: var(--bg);
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 0 4px 0 12px; /* 调整内边距 */
+            padding: 0 4px 0 0; /* 左边由触发按钮自带padding */
             height: 42px;
             pointer-events: auto;
             transition: border-color 0.2s;
+            overflow: visible; /* 允许下拉菜单溢出 */
         }
 
         .header-search-wrapper:focus-within {
             border-color: var(--secondary); /* 聚焦时边框变黑 */
         }
 
-        /* ✅ 任务二：搜索引擎下拉框样式 */
-        .search-engine-select {
-            border: none;
-            background: transparent;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            cursor: pointer;
-            outline: none;
-            padding-right: 8px;
-            border-right: 1.5px solid var(--border);
-            margin-right: 10px;
-            height: 24px;
-            -webkit-appearance: none; /* 隐藏原生箭头增强美观 */
-            appearance: none;
+        /* ════════════════════════════════════════════
+           自定义搜索引擎下拉菜单
+           替换原来的原生 <select> 标签
+           ════════════════════════════════════════════ */
+
+        /* ── 下拉菜单容器（相对定位，用于定位展开列表） ── */
+        .engine-dropdown-wrapper {
+            position: relative;
+            flex-shrink: 0;
         }
 
+        /* ── 触发按钮：黑色背景 + 白色文字 + 箭头 ── */
+        .engine-trigger-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 10px 0 12px;
+            height: 42px;
+            background: var(--secondary); /* 黑色背景 */
+            color: #FFFFFF;              /* 白色文字，与黑色形成对比 */
+            border: none;
+            border-radius: var(--radius-md) 0 0 var(--radius-md); /* 左侧圆角与搜索框一致 */
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Noto Sans SC', sans-serif;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+            outline: none;
+        }
+
+        .engine-trigger-btn:hover {
+            opacity: 0.85; /* 悬浮时轻微透明反馈 */
+        }
+
+        /* ── 触发按钮右侧的箭头图标 ── */
+        .engine-trigger-arrow {
+            font-size: 10px;
+            line-height: 1;
+            transition: transform 0.25s ease; /* 展开/收起时旋转动画 */
+            display: inline-block;
+        }
+
+        /* ── 展开状态：箭头旋转180°朝上 ── */
+        .engine-dropdown-wrapper.open .engine-trigger-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* ── 触发按钮与搜索输入框之间的分隔线 ── */
+        .engine-divider {
+            width: 1.5px;
+            height: 22px;
+            background: var(--border);
+            flex-shrink: 0;
+        }
+
+        /* ── 下拉列表面板 ── */
+        .engine-dropdown-list {
+            display: none; /* 默认隐藏 */
+            position: absolute;
+            top: calc(100% + 6px); /* 在按钮正下方，留6px间距 */
+            left: 0;
+            min-width: 130px; /* 不太窄也不太宽 */
+            background: var(--surface); /* 白色表面背景 #FCFBF9 */
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md); /* 阴影增强层次感 */
+            z-index: 200; /* 确保在顶栏之上 */
+            overflow: hidden;
+        }
+
+        /* ── 展开状态：显示下拉列表 ── */
+        .engine-dropdown-wrapper.open .engine-dropdown-list {
+            display: block;
+        }
+
+        /* ── 每个下拉选项 ── */
+        .engine-option-item {
+            display: flex;
+            align-items: center;
+            padding: 11px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.15s;
+            border-left: 3px solid transparent; /* 预留高亮竖线位置 */
+            background: var(--surface);
+        }
+
+        /* ── 选项悬浮效果：米色背景 ── */
+        .engine-option-item:hover {
+            background: var(--bg); /* 复古米色 #EEEAE3，与白色表面形成区分但不显眼 */
+        }
+
+        /* ── 当前选中项高亮：浅红背景 + 左侧红色竖线 ── */
+        .engine-option-item.selected {
+            background: var(--primary-light); /* 极浅红 #F7EFED */
+            border-left-color: var(--primary); /* 铁锈红竖线 */
+            color: var(--primary);             /* 文字也变红 */
+            font-weight: 700;
+        }
+
+        /* ── 选项之间的细分隔线 ── */
+        .engine-option-item + .engine-option-item {
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── 搜索输入框 ── */
         #searchInput {
             border: none;
             background: transparent;
@@ -93,6 +187,7 @@
             color: var(--text-primary);
         }
 
+        /* ── 右侧操作区 ── */
         .header-actions { 
             display: flex; 
             align-items: center; 
@@ -100,7 +195,7 @@
             margin-left: auto;
         }
 
-        /* ✅ 任务一回顾：登录按钮保持黑色 */
+        /* ── 登录按钮（保持黑色） ── */
         .login-btn {
             padding: 8px 16px;
             background: var(--secondary); 
@@ -111,6 +206,7 @@
             font-weight: 500;
         }
 
+        /* ── 移动端汉堡菜单按钮 ── */
         .menu-toggle {
             display: none;
             background: none;
@@ -128,12 +224,14 @@
             border-radius: 2px;
         }
 
+        /* ── 桌面端隐藏 header-logo（侧边栏已有LOGO） ── */
         @media (min-width: 1025px) {
             .header-logo {
                 display: none;
             }
         }
 
+        /* ── 空状态占位卡片 ── */
         .text-status-card {
             background: var(--surface);
             border: 1.5px dashed var(--border);
@@ -145,6 +243,7 @@
             grid-column: 1 / -1;
         }
 
+        /* ── 卡片图标容器 ── */
         .card-icon {
             width: 32px;
             height: 32px;
@@ -162,6 +261,7 @@
             border-radius: 6px;
         }
 
+        /* ── emoji备用图标样式 ── */
         .card-icon .icon-emoji {
             width: 100%;
             height: 100%;
@@ -173,15 +273,16 @@
             user-select: none;
         }
 
+        /* ── 移动端响应式 ── */
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
             .search-container {
                 max-width: 55%; 
             }
-            .search-engine-select {
+            /* 移动端触发按钮文字字号略小 */
+            .engine-trigger-btn {
                 font-size: 12px;
-                padding-right: 4px;
-                margin-right: 4px;
+                padding: 0 8px 0 10px;
             }
         }
     </style>
@@ -210,12 +311,39 @@
             
             <div class="search-container">
                 <div class="header-search-wrapper">
-                    <select class="search-engine-select" id="searchEngineSelector">
-                        <option value="site">站内搜索</option>
-                        <option value="baidu">百度搜索</option>
-                        <option value="google">Google</option>
-                        <option value="bing">必应搜索</option>
-                    </select>
+
+                    <!-- ════════════════════════════════════════════
+                         自定义搜索引擎下拉菜单
+                         替换了原来的原生 <select id="searchEngineSelector">
+                         隐藏的 <input> 用于保存当前选中的引擎值，供JS读取
+                         ════════════════════════════════════════════ -->
+                    <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
+
+                        <!-- 隐藏的input，存储当前选中的搜索引擎值（site/baidu/google/bing） -->
+                        <input type="hidden" id="searchEngineSelector" value="site">
+
+                        <!-- 触发按钮：黑色背景，白色文字，右侧箭头 -->
+                        <button class="engine-trigger-btn" id="engineTriggerBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+                            <!-- 当前选中的引擎名称，由JS动态更新 -->
+                            <span id="engineTriggerLabel">站内搜索</span>
+                            <!-- 箭头，展开时旋转180° -->
+                            <span class="engine-trigger-arrow" aria-hidden="true">▼</span>
+                        </button>
+
+                        <!-- 下拉选项列表 -->
+                        <div class="engine-dropdown-list" id="engineDropdownList" role="listbox">
+                            <!-- data-value 对应搜索引擎标识符，selected class 标记当前选中项 -->
+                            <div class="engine-option-item selected" data-value="site" role="option">站内搜索</div>
+                            <div class="engine-option-item" data-value="baidu" role="option">百度搜索</div>
+                            <div class="engine-option-item" data-value="google" role="option">Google</div>
+                            <div class="engine-option-item" data-value="bing" role="option">必应搜索</div>
+                        </div>
+                    </div>
+
+                    <!-- 触发按钮与输入框之间的分隔线 -->
+                    <div class="engine-divider"></div>
+
+                    <!-- 搜索关键词输入框 -->
                     <input type="text" id="searchInput" placeholder="请输入关键词...">
                 </div>
             </div>
@@ -331,63 +459,124 @@
     <script>
         /* ════════════════════════════════════════════
            首页专属搜索交互逻辑
+           包含：自定义下拉菜单交互 + 站内搜索过滤 + 外部引擎跳转
            ════════════════════════════════════════════ */
-        const searchInput = document.getElementById('searchInput');
-        const engineSelector = document.getElementById('searchEngineSelector');
-        const cardItems = document.querySelectorAll('.card-item');
-        const sections = document.querySelectorAll('.section-group');
 
-        // 搜索引擎 URL 配置
+        /* ── 获取DOM元素引用 ── */
+        const searchInput      = document.getElementById('searchInput');
+        const engineSelector   = document.getElementById('searchEngineSelector'); // 隐藏的input，存储当前引擎值
+        const engineWrapper    = document.getElementById('engineDropdownWrapper'); // 下拉菜单容器
+        const engineTriggerBtn = document.getElementById('engineTriggerBtn');      // 触发按钮
+        const engineTriggerLabel = document.getElementById('engineTriggerLabel'); // 触发按钮上的文字
+        const engineOptionItems  = document.querySelectorAll('.engine-option-item'); // 所有选项
+        const cardItems        = document.querySelectorAll('.card-item');
+        const sections         = document.querySelectorAll('.section-group');
+
+        /* ── 搜索引擎跳转 URL 配置 ── */
         const engineUrls = {
-            baidu: "https://www.baidu.com/s?wd=",
+            baidu:  "https://www.baidu.com/s?wd=",
             google: "https://www.google.com/search?q=",
-            bing: "https://cn.bing.com/search?q="
+            bing:   "https://cn.bing.com/search?q="
         };
 
-        // 监听输入事件 - 实时过滤（站内搜索模式下）
+        /* ════════════════════════════════════════════
+           自定义下拉菜单交互逻辑
+           ════════════════════════════════════════════ */
+
+        /* ── 点击触发按钮：切换展开/收起状态 ── */
+        engineTriggerBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // 阻止冒泡，防止立即触发document的关闭逻辑
+            const isOpen = engineWrapper.classList.toggle('open');
+            // 同步更新 aria-expanded 无障碍属性
+            engineTriggerBtn.setAttribute('aria-expanded', isOpen);
+        });
+
+        /* ── 点击某个选项：更新选中状态并关闭列表 ── */
+        engineOptionItems.forEach(function(item) {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation(); // 阻止冒泡
+
+                const selectedValue = this.getAttribute('data-value'); // 获取选项值
+                const selectedText  = this.textContent.trim();         // 获取选项显示文字
+
+                /* 更新隐藏input的值，供搜索逻辑读取 */
+                engineSelector.value = selectedValue;
+
+                /* 更新触发按钮上显示的文字 */
+                engineTriggerLabel.textContent = selectedText;
+
+                /* 移除所有选项的 selected 高亮，再给当前项加上 */
+                engineOptionItems.forEach(function(opt) {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+
+                /* 关闭下拉列表 */
+                engineWrapper.classList.remove('open');
+                engineTriggerBtn.setAttribute('aria-expanded', 'false');
+
+                /* 切换到站内搜索时，立即触发一次过滤逻辑 */
+                if (selectedValue === 'site') {
+                    searchInput.dispatchEvent(new Event('input'));
+                } else {
+                    /* 切到外部引擎时，恢复显示所有卡片 */
+                    cardItems.forEach(function(card) { card.style.display = 'flex'; });
+                    sections.forEach(function(section) { section.style.display = 'block'; });
+                }
+            });
+        });
+
+        /* ── 点击页面其他区域：关闭下拉列表 ── */
+        document.addEventListener('click', function() {
+            if (engineWrapper.classList.contains('open')) {
+                engineWrapper.classList.remove('open');
+                engineTriggerBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        /* ── ESC键：关闭下拉列表 ── */
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && engineWrapper.classList.contains('open')) {
+                engineWrapper.classList.remove('open');
+                engineTriggerBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        /* ════════════════════════════════════════════
+           站内搜索：实时过滤卡片
+           ════════════════════════════════════════════ */
         searchInput.addEventListener('input', function() {
+            /* 只在站内搜索模式下过滤 */
             if (engineSelector.value === 'site') {
                 const keyword = this.value.toLowerCase().trim();
                 
-                cardItems.forEach(card => {
+                /* 遍历所有卡片，判断标题是否包含关键词 */
+                cardItems.forEach(function(card) {
                     const title = card.querySelector('.card-title').textContent.toLowerCase();
-                    // ✅ 核心逻辑：不含关键词的卡片隐藏
-                    if (title.includes(keyword)) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    }
+                    card.style.display = title.includes(keyword) ? 'flex' : 'none';
                 });
 
-                // 隐藏没有卡片的分类标题
-                sections.forEach(section => {
+                /* 隐藏所有卡片都被过滤掉的分类标题 */
+                sections.forEach(function(section) {
                     const hasVisibleCards = Array.from(section.querySelectorAll('.card-item'))
-                                                 .some(card => card.style.display !== 'none');
+                                                 .some(function(card) { return card.style.display !== 'none'; });
                     section.style.display = hasVisibleCards ? 'block' : 'none';
                 });
             }
         });
 
-        // 监听回车事件 - 跳转搜索引擎
+        /* ════════════════════════════════════════════
+           回车键：跳转到外部搜索引擎
+           ════════════════════════════════════════════ */
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                const type = engineSelector.value;
+                const type    = engineSelector.value;
                 const keyword = this.value.trim();
 
+                /* 非站内搜索且有关键词时，在新标签页打开搜索结果 */
                 if (type !== 'site' && keyword !== '') {
                     window.open(engineUrls[type] + encodeURIComponent(keyword), '_blank');
                 }
-            }
-        });
-
-        // 切换下拉框时，如果是站内搜索，立即触发一次过滤逻辑
-        engineSelector.addEventListener('change', function() {
-            if (this.value === 'site') {
-                searchInput.dispatchEvent(new Event('input'));
-            } else {
-                // 如果切到外部引擎，显示所有卡片
-                cardItems.forEach(card => card.style.display = 'flex');
-                sections.forEach(section => section.style.display = 'block');
             }
         });
     </script>
