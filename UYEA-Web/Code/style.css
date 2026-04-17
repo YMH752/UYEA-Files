@@ -3,7 +3,7 @@
    风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
    修改记录：
    1. 根据要求将按钮及核心强调色改为黑色，增加对比度
-   2. [本次修改]：调整侧边栏为 Flex 布局，以支持登录按钮置底靠左
+   2. [修复]：优化侧边栏 Flex 布局，解决登录按钮无法自适应置底的问题
    ============================================================ */
 
 :root {
@@ -58,7 +58,7 @@ body {
     border-right: 2px solid var(--border);
     position: fixed;
     top: 0; left: 0; z-index: 1000;
-    /* [修改内容]：改为 Flex 布局，确保内部的 sidebar-footer 可以通过 margin-top: auto 实现置底 */
+    /* [关键修复]：必须使用 flex 垂直布局，才能让底部容器自动定位 */
     display: flex;
     flex-direction: column;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
@@ -67,7 +67,7 @@ body {
 .sidebar-header {
     padding: 24px;
     border-bottom: 1px solid var(--border);
-    flex-shrink: 0; /* 防止头部被压缩 */
+    flex-shrink: 0; /* 确保头部高度不被压缩 */
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
@@ -80,11 +80,11 @@ body {
 }
 .logo-sub { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
 
-/* [修改内容]：导航菜单占据剩余空间，方便底部容器对齐 */
+/* [关键修复]：给 nav-menu 增加 flex-grow，使其占据中间所有空间 */
 .nav-menu { 
     padding: 16px 12px; 
     flex: 1; 
-    overflow-y: auto; /* 菜单过多时允许滚动 */
+    overflow-y: auto; /* 当菜单项过多时，支持内部滚动 */
 }
 
 .nav-item {
@@ -97,6 +97,16 @@ body {
 
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
 .nav-item.active { background: var(--primary); color: #FFFFFF; }
+
+/* [关键修复]：侧边栏底部容器，确保始终位于侧边栏最下方 */
+.sidebar-footer {
+    padding: 20px 16px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0; /* 确保底部高度固定 */
+    display: flex;
+    justify-content: flex-start; /* 保持登录按钮靠左 */
+}
 
 /* ── 主内容区 ── */
 .main-content {
@@ -169,4 +179,15 @@ body {
 
 @media (max-width: 480px) {
     .grid-container { grid-template-columns: 1fr; }
+}
+
+/* ── 登录按钮（复刻原始版本样式） ── */
+.login-btn {
+    padding: 8px 16px;
+    background: var(--secondary); 
+    color: white;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
 }
