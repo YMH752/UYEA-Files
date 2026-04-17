@@ -44,49 +44,46 @@
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            /* ✅ 限制最大宽度，为左右留出呼吸空间 */
-            max-width: 450px; 
+            /* ✅ 限制最大宽度，产生呼吸感 */
+            max-width: 450px;
             display: flex;
             justify-content: center;
             pointer-events: none;
         }
 
-        /* ── 搜索框整体包裹层 ── */
         .header-search-wrapper {
-            width: 100%; 
+            width: 95%;
             display: flex;
             align-items: center;
             background: var(--bg);
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 0 4px 0 0; 
+            padding: 0 4px 0 0;
             height: 42px;
             pointer-events: auto;
             transition: border-color 0.2s;
-            overflow: visible; 
+            overflow: visible;
         }
 
         .header-search-wrapper:focus-within {
-            border-color: var(--secondary); 
+            border-color: var(--secondary);
         }
 
-        /* ── 下拉菜单容器 ── */
         .engine-dropdown-wrapper {
             position: relative;
             flex-shrink: 0;
         }
 
-        /* ── 触发按钮 ── */
         .engine-trigger-btn {
             display: flex;
             align-items: center;
             gap: 6px;
             padding: 0 10px 0 12px;
             height: 42px;
-            background: var(--secondary); 
-            color: #FFFFFF;              
+            background: var(--secondary);
+            color: #FFFFFF;
             border: none;
-            border-radius: var(--radius-md) 0 0 var(--radius-md); 
+            border-radius: var(--radius-md) 0 0 var(--radius-md);
             font-size: 13px;
             font-weight: 600;
             font-family: 'Noto Sans SC', sans-serif;
@@ -97,13 +94,13 @@
         }
 
         .engine-trigger-btn:hover {
-            opacity: 0.85; 
+            opacity: 0.85;
         }
 
         .engine-trigger-arrow {
             font-size: 10px;
             line-height: 1;
-            transition: transform 0.25s ease; 
+            transition: transform 0.25s ease;
             display: inline-block;
         }
 
@@ -119,16 +116,16 @@
         }
 
         .engine-dropdown-list {
-            display: none; 
+            display: none;
             position: absolute;
-            top: calc(100% + 6px); 
+            top: calc(100% + 6px);
             left: 0;
-            min-width: 130px; 
-            background: var(--surface); 
+            min-width: 130px;
+            background: var(--surface);
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md); 
-            z-index: 200; 
+            box-shadow: var(--shadow-md);
+            z-index: 200;
             overflow: hidden;
         }
 
@@ -145,18 +142,18 @@
             color: var(--text-primary);
             cursor: pointer;
             transition: background 0.15s;
-            border-left: 3px solid transparent; 
+            border-left: 3px solid transparent;
             background: var(--surface);
         }
 
         .engine-option-item:hover {
-            background: var(--bg); 
+            background: var(--bg);
         }
 
         .engine-option-item.selected {
-            background: var(--primary-light); 
-            border-left-color: var(--primary); 
-            color: var(--primary);             
+            background: var(--primary-light);
+            border-left-color: var(--primary);
+            color: var(--primary);
             font-weight: 700;
         }
 
@@ -179,8 +176,8 @@
             display: flex; 
             align-items: center; 
             gap: 12px; 
-            /* ✅ 关键修正：PC端使用 margin-left: auto 确保按钮群锁定在最右侧 */
-            margin-left: auto; 
+            /* ✅ 确保在PC端锁定在右边 */
+            margin-left: auto;
             position: relative;
             z-index: 101;
             flex-shrink: 0;
@@ -194,7 +191,7 @@
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            white-space: nowrap; 
+            white-space: nowrap;
         }
 
         .menu-toggle {
@@ -220,27 +217,48 @@
             }
         }
 
-        /* ── 移动端响应式修正 ── */
+        .text-status-card {
+            background: var(--surface);
+            border: 1.5px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 16px;
+            grid-column: 1 / -1;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        /* ── 移动端响应式 ── */
         @media (max-width: 768px) {
-            .top-bar {
-                padding: 0 12px; 
-            }
             .menu-toggle { display: flex; }
             .search-container {
-                /* ✅ 移动端限制宽度比例，确保不遮挡右侧按钮 */
+                /* ✅ 核心修改：缩短移动端搜索框宽度，避免挤压右侧 */
                 max-width: 50%; 
             }
             .header-actions {
-                /* 移动端保持靠右，但减小间距 */
-                gap: 8px; 
-                margin-left: auto;
+                gap: 8px;
             }
             .engine-trigger-btn {
                 font-size: 12px;
-                padding: 0 6px 0 8px;
+                padding: 0 8px 0 10px;
             }
             .login-btn {
-                padding: 6px 8px; 
+                padding: 6px 10px;
                 font-size: 12px;
             }
         }
@@ -297,9 +315,10 @@
         </header>
 
         <div class="content-wrapper">
+            
             <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
-                <div class="text-status-card" style="background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); font-size: 16px; grid-column: 1 / -1;">☕ 尽请期待</div>
+                <div class="text-status-card">☕ 尽请期待</div>
             </div>
 
             <div class="section-group">
@@ -397,11 +416,11 @@
     <script src="script.js"></script>
     <script>
         const searchInput      = document.getElementById('searchInput');
-        const engineSelector   = document.getElementById('searchEngineSelector'); 
-        const engineWrapper    = document.getElementById('engineDropdownWrapper'); 
-        const engineTriggerBtn = document.getElementById('engineTriggerBtn');      
-        const engineTriggerLabel = document.getElementById('engineTriggerLabel'); 
-        const engineOptionItems  = document.querySelectorAll('.engine-option-item'); 
+        const engineSelector   = document.getElementById('searchEngineSelector');
+        const engineWrapper    = document.getElementById('engineDropdownWrapper');
+        const engineTriggerBtn = document.getElementById('engineTriggerBtn');
+        const engineTriggerLabel = document.getElementById('engineTriggerLabel');
+        const engineOptionItems  = document.querySelectorAll('.engine-option-item');
         const cardItems        = document.querySelectorAll('.card-item');
         const sections         = document.querySelectorAll('.section-group');
 
@@ -412,16 +431,16 @@
         };
 
         engineTriggerBtn.addEventListener('click', function(e) {
-            e.stopPropagation(); 
+            e.stopPropagation();
             const isOpen = engineWrapper.classList.toggle('open');
             engineTriggerBtn.setAttribute('aria-expanded', isOpen);
         });
 
         engineOptionItems.forEach(function(item) {
             item.addEventListener('click', function(e) {
-                e.stopPropagation(); 
-                const selectedValue = this.getAttribute('data-value'); 
-                const selectedText  = this.textContent.trim();         
+                e.stopPropagation();
+                const selectedValue = this.getAttribute('data-value');
+                const selectedText  = this.textContent.trim();
                 engineSelector.value = selectedValue;
                 engineTriggerLabel.textContent = selectedText;
                 engineOptionItems.forEach(function(opt) {
@@ -430,6 +449,7 @@
                 this.classList.add('selected');
                 engineWrapper.classList.remove('open');
                 engineTriggerBtn.setAttribute('aria-expanded', 'false');
+
                 if (selectedValue === 'site') {
                     searchInput.dispatchEvent(new Event('input'));
                 } else {
@@ -470,6 +490,17 @@
                 }
             }
         });
+
+        // ✅ 确保图标逻辑运行 (如果你 script.js 里没有这个逻辑，请保留这段)
+        function initIcons() {
+            document.querySelectorAll('.card-icon img').forEach(img => {
+                const domain = img.getAttribute('data-domain');
+                if (domain && !img.src) {
+                    img.src = `https://favicon.splitbee.io/?url=${domain}`;
+                }
+            });
+        }
+        window.addEventListener('DOMContentLoaded', initIcons);
     </script>
 </body>
 </html>
