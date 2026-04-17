@@ -43,7 +43,8 @@
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            max-width: 650px;
+            /* ✅ 修改：稍微调小最大宽度（原650px），为两侧特别是右侧登录按钮留出更多自适应空间 */
+            max-width: 550px;
             display: flex;
             justify-content: center;
             pointer-events: none;
@@ -204,6 +205,11 @@
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .login-btn:hover {
+            opacity: 0.8;
         }
 
         /* ── 移动端汉堡菜单按钮 ── */
@@ -312,27 +318,16 @@
             <div class="search-container">
                 <div class="header-search-wrapper">
 
-                    <!-- ════════════════════════════════════════════
-                         自定义搜索引擎下拉菜单
-                         替换了原来的原生 <select id="searchEngineSelector">
-                         隐藏的 <input> 用于保存当前选中的引擎值，供JS读取
-                         ════════════════════════════════════════════ -->
                     <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
 
-                        <!-- 隐藏的input，存储当前选中的搜索引擎值（site/baidu/google/bing） -->
                         <input type="hidden" id="searchEngineSelector" value="site">
 
-                        <!-- 触发按钮：黑色背景，白色文字，右侧箭头 -->
                         <button class="engine-trigger-btn" id="engineTriggerBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
-                            <!-- 当前选中的引擎名称，由JS动态更新 -->
                             <span id="engineTriggerLabel">站内搜索</span>
-                            <!-- 箭头，展开时旋转180° -->
                             <span class="engine-trigger-arrow" aria-hidden="true">▼</span>
                         </button>
 
-                        <!-- 下拉选项列表 -->
                         <div class="engine-dropdown-list" id="engineDropdownList" role="listbox">
-                            <!-- data-value 对应搜索引擎标识符，selected class 标记当前选中项 -->
                             <div class="engine-option-item selected" data-value="site" role="option">站内搜索</div>
                             <div class="engine-option-item" data-value="baidu" role="option">百度搜索</div>
                             <div class="engine-option-item" data-value="google" role="option">Google</div>
@@ -340,16 +335,14 @@
                         </div>
                     </div>
 
-                    <!-- 触发按钮与输入框之间的分隔线 -->
                     <div class="engine-divider"></div>
 
-                    <!-- 搜索关键词输入框 -->
                     <input type="text" id="searchInput" placeholder="请输入关键词...">
                 </div>
             </div>
 
             <div class="header-actions">
-                <a href="#" class="login-btn">登录 / 注册</a>
+                <a href="javascript:void(0);" class="login-btn" id="loginBtn">登录 / 注册</a>
                 <button class="menu-toggle" id="hamburgerBtn">
                     <span></span><span></span><span></span>
                 </button>
@@ -471,6 +464,15 @@
         const engineOptionItems  = document.querySelectorAll('.engine-option-item'); // 所有选项
         const cardItems        = document.querySelectorAll('.card-item');
         const sections         = document.querySelectorAll('.section-group');
+
+        /* ✅ 修改点：获取登录按钮并绑定点击反馈逻辑 */
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function() {
+                // 点击按钮时弹出“正在开发中...”提示
+                alert('正在开发中...');
+            });
+        }
 
         /* ── 搜索引擎跳转 URL 配置 ── */
         const engineUrls = {
