@@ -1,17 +1,19 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
    风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
-   修改记录：根据要求将按钮及核心强调色改为黑色，增加对比度
+   修改记录：
+   1. 将按钮及核心强调色改为黑色 (任务一)
+   2. 重构搜索栏样式：增加黑色点击色块，调整下拉框及缩短整体长度 (任务二)
    ============================================================ */
 
 :root {
-    /* ✅ 修改：将核心强调色改为纯黑，增加对比 */
+    /* ✅ 强调色：根据要求改为黑色，增加对比 */
     --primary:        #A63A26;    /* 复古铁锈红 - 核心强调色 */
     --primary-dark:   #8E2F1E;    /* 深红 - 用于悬浮点击 */
     --primary-light:  #F7EFED;    /* 极浅红 - 用于卡片悬浮背景 */
     
-    /* ✅ 修改：将次要强调色（按钮主要色）改为纯黑 */
-    --secondary:      #000000;    /* 纯黑色 - 用于按钮、标题、关键装饰 */
+    /* ✅ 次要强调色（按钮主要色）：纯黑 */
+    --secondary:      #000000;    
     
     --bg:             #EEEAE3;    /* 复古米色底 */
     --surface:        #FCFBF9;    /* 白色表面 - 卡片色 */
@@ -98,19 +100,91 @@ body {
     position: sticky; top: 0; z-index: 100;
 }
 
-.header-search-wrapper {
-    width: 100%; max-width: 600px;
-    display: flex; align-items: center;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 0 16px; height: 42px;
+/* ── ✅ 搜索栏重构样式 (任务二) ── */
+.search-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 450px; /* 👈 要求：缩短长度 */
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
 }
 
-/* ✅ 按钮样式：应用黑色背景 */
+.header-search-wrapper {
+    width: 95%;
+    display: flex;
+    align-items: center;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0; /* 清空内边距以适配黑色色块 */
+    height: 42px;
+    pointer-events: auto;
+    overflow: hidden; /* 确保色块圆角被裁切 */
+    transition: border-color 0.2s;
+}
+
+.header-search-wrapper:focus-within {
+    border-color: var(--secondary); /* 聚焦时边框变黑 */
+}
+
+/* ✅ 切换引擎的黑色色块区域 */
+.search-engine-box {
+    background: #000000; /* 纯黑背景 */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    position: relative;
+    cursor: pointer;
+}
+
+/* 下拉列表文字样式 */
+.search-engine-select {
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    color: #FFFFFF; /* 文字白色 */
+    cursor: pointer;
+    outline: none;
+    padding-right: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    z-index: 1;
+}
+
+/* 黑色区域的小箭头装饰 */
+.search-engine-box::after {
+    content: "▾";
+    color: #FFFFFF;
+    font-size: 12px;
+    margin-left: 2px;
+}
+
+/* 搜索输入框 */
+#searchInput {
+    border: none;
+    background: transparent;
+    outline: none;
+    flex: 1;
+    padding: 0 12px;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+/* ── 登录按钮与动作区 ── */
+.header-actions { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+}
+
 .login-btn {
     padding: 8px 20px;
-    background: var(--secondary); /* 已在:root中定义为黑色 */
+    background: var(--secondary); /* 黑色背景 */
     color: #FFFFFF;
     border-radius: var(--radius-sm);
     text-decoration: none;
@@ -154,7 +228,7 @@ body {
 
 .card-item:hover {
     transform: translateY(-4px);
-    border-color: var(--secondary); /* 悬浮时边框变黑 */
+    border-color: var(--secondary);
     box-shadow: var(--shadow-md);
 }
 
@@ -174,4 +248,10 @@ body {
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
     .main-content { margin-left: 0; }
+    .search-container { max-width: 50%; } /* 移动端搜索框占比控制 */
+}
+
+@media (max-width: 768px) {
+    .menu-toggle { display: flex; flex-direction: column; gap: 5px; background: none; border: none; }
+    .menu-toggle span { display: block; width: 24px; height: 3px; background: var(--text-primary); border-radius: 2px; }
 }
