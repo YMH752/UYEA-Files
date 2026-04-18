@@ -150,16 +150,17 @@
             font-weight: 600;
             transition: all 0.2s;
             cursor: pointer;
-            border: none; /* 去掉所有边框 */
+            border: none;
         }
 
-        /* ✅ 基础高亮：颜色同步侧边栏底色 + 阴影反馈 */
+        /* ✅ 基础高亮：纯黑背景 + 白色字体 + 内阴影 */
         .nav-item.active {
-            background: var(--bg);
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05), inset -1px -1px 2px rgba(255,255,255,0.5);
+            background: #000000 !important;
+            color: #FFFFFF !important;
+            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
         }
 
-        /* ✅ 展开态高亮：醒目的铁锈红 */
+        /* ✅ 展开态：铁锈红 + 白色字体 */
         .nav-item.menu-open {
             background: var(--primary) !important;
             color: #FFFFFF !important;
@@ -172,12 +173,10 @@
             margin-left: auto;
             opacity: 0.6;
         }
-
-        /* ✅ 仅在展开时旋转三角形 */
-        .nav-item.menu-open .arrow-icon {
-            transform: rotate(180deg);
-            opacity: 1;
-        }
+        /* 选中或展开时三角形变亮 */
+        .nav-item.active .arrow-icon, 
+        .nav-item.menu-open .arrow-icon { opacity: 1; }
+        .nav-item.menu-open .arrow-icon { transform: rotate(180deg); }
 
         .sub-menu {
             display: none; 
@@ -198,7 +197,7 @@
             background: rgba(0,0,0,0.03);
         }
 
-        /* ── 底部按钮 ── */
+        /* ── 侧边栏底部按钮 (黑白配色修复) ── */
         .sidebar-footer {
             padding: 20px 16px;
             border-top: 1px solid var(--border);
@@ -224,17 +223,21 @@
             cursor: pointer;
         }
 
+        /* 登录：白底黑字黑框 */
         .login-btn {
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            color: var(--text-primary);
+            background: #FFFFFF;
+            border: 1.5px solid #000000;
+            color: #000000;
         }
+        .login-btn:hover { background: #f0f0f0; }
 
+        /* 注册：黑底白字 */
         .register-btn {
-            background: var(--primary);
-            border: 1.5px solid var(--primary);
+            background: #000000;
+            border: 1.5px solid #000000;
             color: #FFFFFF;
         }
+        .register-btn:hover { background: #333333; }
 
         @media (max-width: 1024px) {
             .menu-toggle { display: flex; }
@@ -420,13 +423,12 @@
 
     <script src="script.js"></script>
     <script>
-        /* ── BUG修复逻辑 ── */
+        /* ── BUG修复与菜单交互逻辑 ── */
         const allNavTrigger = document.getElementById('allNavTrigger');
         const subNavMenu    = document.getElementById('subNavMenu');
 
         allNavTrigger.addEventListener('click', function() {
             const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
-            
             if (isHomePage) {
                 const isOpening = !this.classList.contains('menu-open');
                 this.classList.toggle('menu-open', isOpening);
@@ -452,7 +454,7 @@
             });
         });
 
-        /* ── 原有逻辑 (无删减) ── */
+        /* ── 原有逻辑 (一个没动) ── */
         const searchInput      = document.getElementById('searchInput');
         const engineSelector   = document.getElementById('searchEngineSelector');
         const engineWrapper    = document.getElementById('engineDropdownWrapper');
