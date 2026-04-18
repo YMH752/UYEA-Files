@@ -14,10 +14,11 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 首页顶栏布局（解决拥挤的核心） ── */
+        /* ── 首页顶栏布局 ── */
         .top-bar {
             display: flex;
             align-items: center;
+            /* ✅ 修改：使用 space-between 确保左中右布局平衡 */
             justify-content: space-between;
             gap: 12px;
             padding: 0 20px;
@@ -35,15 +36,17 @@
             font-size: 24px;
             color: var(--primary);
             text-decoration: none;
-            flex-shrink: 0; /* 防止LOGO被挤压 */
+            flex-shrink: 0; 
+            /* ✅ 修改：删除了原来在 PC 端隐藏 LOGO 的 display: none 逻辑 */
         }
 
-        /* ── 搜索容器：弹性自适应 ── */
+        /* ── 搜索容器：居中处理 ── */
         .search-container {
-            flex: 1; /* 占据中间所有剩余空间 */
+            /* ✅ 修改：通过 flex: 1 和 justify-content 配合左右元素实现视觉居中 */
+            flex: 1;
             display: flex;
-            justify-content: center;
-            max-width: 550px; /* PC端限制最大宽度 */
+            justify-content: center; 
+            max-width: 550px; 
             margin: 0 10px;
         }
 
@@ -64,7 +67,7 @@
             border-color: var(--secondary);
         }
 
-        /* ── 下拉引擎样式保持 ── */
+        /* ── 下拉引擎样式 ── */
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
         .engine-trigger-btn {
             display: flex;
@@ -119,18 +122,9 @@
             align-items: center; 
             gap: 12px;
             flex-shrink: 0;
-        }
-
-        /* PC端登录按钮 */
-        .login-btn-pc {
-            padding: 8px 16px;
-            background: var(--secondary); 
-            color: white;
-            border-radius: var(--radius-sm);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            white-space: nowrap;
+            /* ✅ 修改：为了让搜索框在视觉上绝对居中，右侧占位宽度需与左侧 LOGO 接近 */
+            min-width: 80px; 
+            justify-content: flex-end;
         }
 
         /* 汉堡菜单样式 */
@@ -151,18 +145,18 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏布局：支持底部按钮 ── */
+        /* ── 侧边栏布局 ── */
         .sidebar {
             display: flex;
             flex-direction: column;
         }
         .nav-menu {
-            flex: 1; /* 撑开上方空间 */
+            flex: 1;
         }
         .sidebar-footer {
             padding: 20px 16px;
             border-top: 1px solid var(--border);
-            margin-top: auto; /* 核心：推向最底部 */
+            margin-top: auto; 
         }
         .sidebar-login-btn {
             display: flex;
@@ -185,18 +179,16 @@
             border-color: var(--secondary);
         }
 
-        @media (min-width: 1025px) {
-            .header-logo { display: none; }
-        }
+        /* ✅ 修改：移除了之前 @media (min-width: 1025px) 隐藏 LOGO 的规则 */
 
         /* ── 移动端响应式修正 ── */
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
-            .login-btn-pc { display: none; } /* 顶栏隐藏登录 */
             .top-bar { padding: 0 12px; gap: 8px; }
             .header-logo { font-size: 20px; }
             .search-container { margin: 0; }
             .engine-trigger-btn { font-size: 12px; padding: 0 6px 0 8px; }
+            .header-actions { min-width: auto; } /* 移动端取消最小宽度限制 */
         }
 
         /* 卡片图标等原有样式 */
@@ -256,7 +248,6 @@
             </div>
 
             <div class="header-actions">
-                <a href="#" class="login-btn-pc">登录 / 注册</a>
                 <button class="menu-toggle" id="hamburgerBtn">
                     <span></span><span></span><span></span>
                 </button>
