@@ -14,13 +14,12 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 首页顶栏布局 ── */
+        /* ── 顶栏布局优化（极简模式） ── */
         .top-bar {
             display: flex;
             align-items: center;
-            /* ✅ 修改：使用 space-between 确保左中右布局平衡 */
-            justify-content: space-between;
-            gap: 12px;
+            /* ✅ 修改：使用 center 使搜索容器居中，移除 space-between */
+            justify-content: center;
             padding: 0 20px;
             height: var(--header-h);
             background: var(--surface);
@@ -30,24 +29,17 @@
             z-index: 100;
         }
 
+        /* ✅ 修改：在 PC 端完全隐藏顶栏 LOGO，只在侧边栏保留品牌 */
         .header-logo {
-            font-family: 'Inter', sans-serif;
-            font-weight: 800;
-            font-size: 24px;
-            color: var(--primary);
-            text-decoration: none;
-            flex-shrink: 0; 
-            /* ✅ 修改：删除了原来在 PC 端隐藏 LOGO 的 display: none 逻辑 */
+            display: none;
         }
 
-        /* ── 搜索容器：居中处理 ── */
+        /* ── 搜索容器：绝对居中 ── */
         .search-container {
-            /* ✅ 修改：通过 flex: 1 和 justify-content 配合左右元素实现视觉居中 */
-            flex: 1;
+            width: 100%;
+            max-width: 600px; /* PC 端略微加宽搜索框，视觉更协调 */
             display: flex;
-            justify-content: center; 
-            max-width: 550px; 
-            margin: 0 10px;
+            justify-content: center;
         }
 
         .header-search-wrapper {
@@ -58,7 +50,7 @@
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
             padding: 0 4px 0 0;
-            height: 40px;
+            height: 42px; /* 稍微增加高度提升质感 */
             transition: border-color 0.2s;
             overflow: visible;
         }
@@ -73,8 +65,8 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 0 10px 0 12px;
-            height: 40px;
+            padding: 0 12px;
+            height: 42px;
             background: var(--secondary);
             color: #FFFFFF;
             border: none;
@@ -111,25 +103,21 @@
             background: transparent;
             outline: none;
             width: 100%;
-            padding: 0 8px;
-            font-size: 14px;
+            padding: 0 12px;
+            font-size: 15px;
             color: var(--text-primary);
         }
 
-        /* ── 右侧操作区 ── */
+        /* ── 右侧操作区：仅保留汉堡菜单 ── */
         .header-actions { 
+            position: absolute;
+            right: 20px;
             display: flex; 
             align-items: center; 
-            gap: 12px;
-            flex-shrink: 0;
-            /* ✅ 修改：为了让搜索框在视觉上绝对居中，右侧占位宽度需与左侧 LOGO 接近 */
-            min-width: 80px; 
-            justify-content: flex-end;
         }
 
-        /* 汉堡菜单样式 */
         .menu-toggle {
-            display: none;
+            display: none; /* PC 默认隐藏 */
             background: none;
             border: none;
             cursor: pointer;
@@ -145,56 +133,29 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏布局 ── */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-        }
-        .nav-menu {
-            flex: 1;
-        }
-        .sidebar-footer {
-            padding: 20px 16px;
-            border-top: 1px solid var(--border);
-            margin-top: auto; 
-        }
+        /* ── 侧边栏及其他原有样式保持 ── */
+        .sidebar-footer { padding: 20px 16px; border-top: 1px solid var(--border); margin-top: auto; }
         .sidebar-login-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 12px;
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-md);
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px;
+            background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-md);
+            color: var(--text-primary); text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s;
         }
-        .sidebar-login-btn:hover {
-            background: var(--bg);
-            border-color: var(--secondary);
-        }
+        .sidebar-login-btn:hover { background: var(--bg); border-color: var(--secondary); }
 
-        /* ✅ 修改：移除了之前 @media (min-width: 1025px) 隐藏 LOGO 的规则 */
-
-        /* ── 移动端响应式修正 ── */
-        @media (max-width: 768px) {
+        /* ── 移动端响应式兼容 ── */
+        @media (max-width: 1024px) {
             .menu-toggle { display: flex; }
-            .top-bar { padding: 0 12px; gap: 8px; }
-            .header-logo { font-size: 20px; }
-            .search-container { margin: 0; }
-            .engine-trigger-btn { font-size: 12px; padding: 0 6px 0 8px; }
-            .header-actions { min-width: auto; } /* 移动端取消最小宽度限制 */
+            .top-bar { justify-content: flex-start; padding-left: 50px; } /* 为移动端侧边栏预留视觉空间 */
+            .search-container { max-width: none; }
+        }
+        
+        @media (max-width: 768px) {
+            .top-bar { padding: 0 12px; justify-content: space-between; }
+            .search-container { margin-right: 40px; } /* 避开右侧汉堡按钮 */
         }
 
-        /* 卡片图标等原有样式 */
         .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
-        .text-status-card { background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); grid-column: 1 / -1; }
     </style>
 </head>
 <body>
@@ -236,10 +197,10 @@
                             <span class="engine-trigger-arrow">▼</span>
                         </button>
                         <div class="engine-dropdown-list" id="engineDropdownList">
-                            <div class="engine-option-item selected" data-value="site">站内搜索</div>
-                            <div class="engine-option-item" data-value="baidu">百度搜索</div>
-                            <div class="engine-option-item" data-value="google">Google</div>
-                            <div class="engine-option-item" data-value="bing">必应搜索</div>
+                            <div class="engine-option-item selected" data-value="site">站内</div>
+                            <div class="engine-option-item" data-value="google">谷歌</div>
+                            <div class="engine-option-item" data-value="bing">必应</div>
+                            <div class="engine-option-item" data-value="baidu">百度</div>
                         </div>
                     </div>
                     <div style="width:1.5px; height:20px; background:var(--border); margin:0 4px;"></div>
@@ -257,7 +218,7 @@
         <div class="content-wrapper">
             <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
-                <div class="text-status-card">☕ 尽请期待</div>
+                <div class="text-status-card" style="background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); grid-column: 1 / -1;">☕ 尽请期待</div>
             </div>
 
             <div class="section-group">
@@ -414,7 +375,7 @@
             }
         });
 
-        // 补全图标自动填充逻辑 (如果script.js里没写的话)
+        // 补全图标自动填充
         function initIcons() {
             document.querySelectorAll('.card-icon img').forEach(img => {
                 const domain = img.getAttribute('data-domain');
