@@ -18,7 +18,6 @@
         .top-bar {
             display: flex;
             align-items: center;
-            /* ✅ 修改：使用 center 使搜索容器居中，移除 space-between */
             justify-content: center;
             padding: 0 20px;
             height: var(--header-h);
@@ -29,15 +28,14 @@
             z-index: 100;
         }
 
-        /* ✅ 修改：在 PC 端完全隐藏顶栏 LOGO，只在侧边栏保留品牌 */
         .header-logo {
             display: none;
         }
 
-        /* ── 搜索容器：绝对居中 ── */
+        /* ── 搜索容器 ── */
         .search-container {
             width: 100%;
-            max-width: 600px; /* PC 端略微加宽搜索框，视觉更协调 */
+            max-width: 600px; 
             display: flex;
             justify-content: center;
         }
@@ -50,7 +48,7 @@
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
             padding: 0 4px 0 0;
-            height: 42px; /* 稍微增加高度提升质感 */
+            height: 42px; 
             transition: border-color 0.2s;
             overflow: visible;
         }
@@ -59,7 +57,7 @@
             border-color: var(--secondary);
         }
 
-        /* ── 下拉引擎样式 ── */
+        /* ── 下拉引擎样式优化 ── */
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
         .engine-trigger-btn {
             display: flex;
@@ -82,19 +80,35 @@
             position: absolute;
             top: calc(100% + 6px);
             left: 0;
-            min-width: 130px;
+            /* ✅ 修改：缩小宽度，使其与按钮更匹配 */
+            min-width: 80px; 
+            width: 100%; /* 与父级按钮同宽 */
             background: var(--surface);
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-md);
             z-index: 200;
+            padding: 0; /* 移除内边距以实现格子线到边框 */
+            overflow: hidden; /* 确保圆角能剪裁内部的格子线 */
         }
+        
         .engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
+
         .engine-option-item {
-            padding: 10px 14px;
+            padding: 10px 12px;
             font-size: 13px;
             cursor: pointer;
+            text-align: center; /* 居中文字 */
+            /* ✅ 修改：增加底部格子线 */
+            border-bottom: 1px solid var(--border); 
+            transition: background 0.2s;
         }
+
+        /* ✅ 细节：最后一个选项不需要底部分割线 */
+        .engine-option-item:last-child {
+            border-bottom: none;
+        }
+
         .engine-option-item:hover { background: var(--bg); }
         .engine-option-item.selected { color: var(--primary); font-weight: 700; }
 
@@ -108,7 +122,7 @@
             color: var(--text-primary);
         }
 
-        /* ── 右侧操作区：仅保留汉堡菜单 ── */
+        /* ── 右侧操作区 ── */
         .header-actions { 
             position: absolute;
             right: 20px;
@@ -117,7 +131,7 @@
         }
 
         .menu-toggle {
-            display: none; /* PC 默认隐藏 */
+            display: none; 
             background: none;
             border: none;
             cursor: pointer;
@@ -133,25 +147,16 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏及其他原有样式保持 ── */
-        .sidebar-footer { padding: 20px 16px; border-top: 1px solid var(--border); margin-top: auto; }
-        .sidebar-login-btn {
-            display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px;
-            background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-md);
-            color: var(--text-primary); text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s;
-        }
-        .sidebar-login-btn:hover { background: var(--bg); border-color: var(--secondary); }
-
-        /* ── 移动端响应式兼容 ── */
+        /* ── 侧边栏及响应式保持不变 ── */
         @media (max-width: 1024px) {
             .menu-toggle { display: flex; }
-            .top-bar { justify-content: flex-start; padding-left: 50px; } /* 为移动端侧边栏预留视觉空间 */
+            .top-bar { justify-content: flex-start; padding-left: 50px; }
             .search-container { max-width: none; }
         }
         
         @media (max-width: 768px) {
             .top-bar { padding: 0 12px; justify-content: space-between; }
-            .search-container { margin-right: 40px; } /* 避开右侧汉堡按钮 */
+            .search-container { margin-right: 40px; }
         }
 
         .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -330,12 +335,13 @@
             bing:   "https://cn.bing.com/search?q="
         };
 
-        // 下拉菜单逻辑
+        // 下拉菜单展示/隐藏
         engineTriggerBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             engineWrapper.classList.toggle('open');
         });
 
+        // 切换逻辑
         engineOptionItems.forEach(item => {
             item.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -344,13 +350,17 @@
                 engineOptionItems.forEach(opt => opt.classList.remove('selected'));
                 this.classList.add('selected');
                 engineWrapper.classList.remove('open');
-                if (engineSelector.value === 'site') searchInput.dispatchEvent(new Event('input'));
+                
+                // 如果切换回站内，触发一次搜索过滤
+                if (engineSelector.value === 'site') {
+                    searchInput.dispatchEvent(new Event('input'));
+                }
             });
         });
 
         document.addEventListener('click', () => engineWrapper.classList.remove('open'));
 
-        // 搜索逻辑
+        // 站内搜索过滤
         searchInput.addEventListener('input', function() {
             if (engineSelector.value === 'site') {
                 const keyword = this.value.toLowerCase().trim();
@@ -365,6 +375,7 @@
             }
         });
 
+        // 外部引擎跳转
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const type = engineSelector.value;
@@ -375,7 +386,7 @@
             }
         });
 
-        // 补全图标自动填充
+        // 图标加载
         function initIcons() {
             document.querySelectorAll('.card-icon img').forEach(img => {
                 const domain = img.getAttribute('data-domain');
