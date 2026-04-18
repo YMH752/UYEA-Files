@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏布局优化（极简模式） ── */
+        /* ── 顶栏布局 ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -30,7 +30,6 @@
 
         .header-logo { display: none; }
 
-        /* ── 搜索容器 ── */
         .search-container {
             width: 100%;
             max-width: 600px; 
@@ -88,6 +87,7 @@
         }
         
         .engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
+
         .engine-option-item {
             padding: 10px 12px;
             font-size: 13px;
@@ -96,6 +96,7 @@
             border-bottom: 1px solid var(--border); 
             transition: background 0.2s;
         }
+
         .engine-option-item:last-child { border-bottom: none; }
         .engine-option-item:hover { background: var(--bg); }
         .engine-option-item.selected { color: var(--primary); font-weight: 700; }
@@ -110,7 +111,6 @@
             color: var(--text-primary);
         }
 
-        /* ── 右侧操作区 ── */
         .header-actions { 
             position: absolute;
             right: 20px;
@@ -135,74 +135,122 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏菜单：下拉增强 ── */
+        /* ── 侧边栏菜单样式 (BUG修复处) ── */
         .nav-group {
             display: flex;
             flex-direction: column;
         }
 
-        /* ✅ 全部导航整行容器 */
-        .nav-dropdown-trigger {
+        .nav-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s;
             cursor: pointer;
+            border: 1.5px solid transparent;
         }
 
-        /* ✅ 小三角动画样式 */
+        /* ✅ 修复逻辑：基础选中态(淡淡背景色) */
+        .nav-item.active {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: var(--border);
+        }
+
+        /* ✅ 修复逻辑：点击展开时的状态(变铁锈红) */
+        .nav-item.menu-open {
+            background: var(--primary) !important;
+            border-color: var(--primary) !important;
+            color: #FFFFFF !important;
+        }
+
         .arrow-icon {
             font-size: 10px;
             transition: transform 0.3s ease;
-            margin-right: 15px;
+            margin-left: auto;
             opacity: 0.6;
         }
-        .nav-item.active .arrow-icon {
-            transform: rotate(180deg); /* ✅ 180度翻转 */
+
+        /* ✅ 仅在展开时旋转三角形 */
+        .nav-item.menu-open .arrow-icon {
+            transform: rotate(180deg);
+            opacity: 1;
         }
 
-        /* ✅ 下拉子项容器 */
         .sub-menu {
-            display: none; /* 默认隐藏 */
-            background: rgba(0,0,0,0.02);
-            padding: 5px 0;
-        }
-        /* 当父级 active 时显示（可通过 JS 控制此逻辑） */
-        .nav-item.open + .sub-menu {
-            display: block;
+            display: none; 
+            padding-bottom: 8px;
         }
 
-        /* ✅ 子项文字样式：细一点、小一点、缩进 */
         .sub-nav-item {
             display: block;
-            padding: 8px 16px 8px 52px; /* 增加左缩进 */
-            font-size: 13px; /* ✅ 小一点 */
-            font-weight: 400; /* ✅ 细一点 */
+            padding: 8px 16px 8px 52px;
+            font-size: 13px;
+            font-weight: 400;
             color: var(--text-secondary);
             text-decoration: none;
             transition: all 0.2s;
         }
         .sub-nav-item:hover {
             color: var(--primary);
-            background: var(--primary-light);
+            background: rgba(0,0,0,0.03);
         }
 
         /* ── 侧边栏底部按钮 ── */
-        .sidebar-footer { padding: 20px 16px; border-top: 1px solid var(--border); margin-top: auto; }
-        .auth-buttons { display: flex; gap: 10px; }
-        .auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px 5px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; cursor: pointer; }
-        .login-btn { background: var(--surface); border: 1.5px solid var(--border); color: var(--text-primary); }
-        .register-btn { background: var(--primary); border: 1.5px solid var(--primary); color: #FFFFFF; }
+        .sidebar-footer {
+            padding: 20px 16px;
+            border-top: 1px solid var(--border);
+            margin-top: auto; 
+        }
 
-        /* ── 响应式 ── */
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 5px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            color: var(--text-primary);
+        }
+        .login-btn:hover { background: var(--bg); border-color: var(--secondary); }
+
+        .register-btn {
+            background: var(--primary);
+            border: 1.5px solid var(--primary);
+            color: #FFFFFF;
+        }
+        .register-btn:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+
         @media (max-width: 1024px) {
             .menu-toggle { display: flex; }
             .top-bar { justify-content: flex-start; padding-left: 50px; }
             .search-container { max-width: none; }
         }
+        
         @media (max-width: 768px) {
             .top-bar { padding: 0 12px; justify-content: space-between; }
             .search-container { margin-right: 40px; }
         }
+
         .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
     </style>
@@ -222,10 +270,8 @@
         <nav class="nav-menu">
             <div class="nav-group">
                 <div class="nav-item active nav-dropdown-trigger" id="allNavTrigger">
-                    <div style="display:flex; align-items:center;">
-                        <span class="nav-icon">🏠</span>
-                        <span class="nav-text">全部导航</span>
-                    </div>
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">全部导航</span>
                     <span class="arrow-icon">▼</span>
                 </div>
                 <div class="sub-menu" id="subNavMenu">
@@ -250,6 +296,7 @@
     <main class="main-content">
         <header class="top-bar">
             <a href="#" class="header-logo">UYEA</a>
+            
             <div class="search-container">
                 <div class="header-search-wrapper">
                     <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
@@ -269,8 +316,11 @@
                     <input type="text" id="searchInput" placeholder="搜索关键词...">
                 </div>
             </div>
+
             <div class="header-actions">
-                <button class="menu-toggle" id="hamburgerBtn"><span></span><span></span><span></span></button>
+                <button class="menu-toggle" id="hamburgerBtn">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </header>
 
@@ -374,29 +424,26 @@
 
     <script src="script.js"></script>
     <script>
-        /* ── 下拉导航控制逻辑 ── */
+        /* ── BUG修复逻辑 ── */
         const allNavTrigger = document.getElementById('allNavTrigger');
         const subNavMenu    = document.getElementById('subNavMenu');
 
-        allNavTrigger.addEventListener('click', function(e) {
-            // ✅ 判断是否在首页 (检查路径名或是否有首页特定元素)
+        allNavTrigger.addEventListener('click', function() {
             const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
             
             if (isHomePage) {
-                // 如果在首页：收起/展开下拉菜单
-                const isOpen = subNavMenu.style.display === 'block';
-                subNavMenu.style.display = isOpen ? 'none' : 'block';
-                this.classList.toggle('active', !isOpen);
+                // 仅切换 menu-open，让它独立于 active
+                const isOpening = !this.classList.contains('menu-open');
+                this.classList.toggle('menu-open', isOpening);
+                subNavMenu.style.display = isOpening ? 'block' : 'none';
                 
-                // 平滑回到顶部
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                // 如果在其他页面：直接跳转回首页
                 window.location.href = 'index.html';
             }
         });
 
-        // ✅ 点击子项锚点平滑滚动
+        // 子项点击
         document.querySelectorAll('.sub-nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -404,7 +451,6 @@
                 const targetEl = document.getElementById(targetId);
                 if (targetEl) {
                     targetEl.scrollIntoView({ behavior: 'smooth' });
-                    // 如果在手机端，点击后自动关闭侧边栏（可选，调用 script.js 中的 toggle）
                     if (window.innerWidth <= 1024) {
                         document.getElementById('sidebar').classList.remove('active');
                         document.getElementById('sidebarOverlay').classList.remove('active');
@@ -413,7 +459,7 @@
             });
         });
 
-        /* ── 原有搜索及引擎逻辑 ── */
+        /* ── 原有逻辑 (一个没动) ── */
         const searchInput      = document.getElementById('searchInput');
         const engineSelector   = document.getElementById('searchEngineSelector');
         const engineWrapper    = document.getElementById('engineDropdownWrapper');
