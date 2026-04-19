@@ -5,19 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>实用工具 | UYEA 悠野导航</title>
     
+    <meta name="description" content="悠野工作室(UYEA)提供便捷的在线工具箱，涵盖媒体处理、开发者工具及办公效率。">
+    <meta name="theme-color" content="#000000">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 侧边栏美化同步逻辑 ── */
+        /* ── 顶栏布局 ── */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            height: var(--header-h);
+            background: var(--surface);
+            border-bottom: 1.5px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-logo { display: none; }
+
+        .search-container {
+            width: 100%;
+            max-width: 600px; 
+            display: flex;
+            justify-content: center;
+        }
+
+        .header-search-wrapper {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0 4px 0 0;
+            height: 42px; 
+            transition: border-color 0.2s;
+        }
+
+        #searchInput {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            padding: 0 12px;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .header-actions { 
+            position: absolute;
+            right: 20px;
+            display: flex; 
+            align-items: center; 
+        }
+
+        .menu-toggle {
+            display: none; 
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 2px;
+        }
+
+        /* ── 侧边栏菜单样式 (同步美化逻辑) ── */
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+        }
+
         .nav-item {
             display: flex;
             align-items: center;
-            /* ✅ 同步首页：加大内边距 */
+            /* ✅ 同步：增加内边距 */
             padding: 14px 18px;
-            /* ✅ 同步首页：加大间距，解决空洞感 */
+            /* ✅ 同步：增加间距 */
             margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
@@ -28,17 +105,18 @@
             border: none;
         }
 
-        /* 基础高亮：黑底白字内阴影 */
+        /* 基础高亮：纯黑背景 + 白色字体 + 内阴影 */
         .nav-item.active {
             background: #000000 !important;
             color: #FFFFFF !important;
             box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
         }
 
-        /* 展开态：铁锈红 */
+        /* 展开态：铁锈红 + 白色字体 */
         .nav-item.menu-open {
             background: var(--primary) !important;
             color: #FFFFFF !important;
+            box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
         }
 
         .arrow-icon {
@@ -56,10 +134,10 @@
 
         .sub-nav-item {
             display: block;
-            /* ✅ 同步首页：加大纵向间距 */
+            /* ✅ 同步：垂直间距与缩进 */
             padding: 10px 16px 10px 56px;
             font-size: 14px;
-            /* ✅ 同步首页：800 极粗体副标题感 */
+            /* ✅ 同步：极粗体(800) */
             font-weight: 800;
             color: var(--text-secondary);
             text-decoration: none;
@@ -70,7 +148,7 @@
             background: rgba(0,0,0,0.03);
         }
 
-        /* ── 底部按钮同步 ── */
+        /* ── 侧边栏底部按钮 (同步黑白配色) ── */
         .sidebar-footer {
             padding: 24px 16px;
             border-top: 1px solid var(--border);
@@ -84,15 +162,16 @@
 
         .auth-btn {
             flex: 1;
-            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
+            height: 42px;
             border-radius: var(--radius-md);
             font-size: 13px;
             font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
             cursor: pointer;
-            transition: 0.2s;
         }
 
         .login-btn {
@@ -106,12 +185,15 @@
             color: #FFFFFF;
         }
 
-        /* 工具页特有样式保持 */
+        @media (max-width: 1024px) {
+            .menu-toggle { display: flex; }
+        }
+
+        /* 工具页专用网格 */
         .tool-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
-            padding: 20px 0;
         }
     </style>
 </head>
@@ -129,63 +211,82 @@
         
         <nav class="nav-menu">
             <a href="index.html" class="nav-item">
-                <span class="nav-icon">🏠</span><span class="nav-text">首页导航</span>
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">首页导航</span>
             </a>
 
             <div class="nav-group">
-                <div class="nav-item active nav-dropdown-trigger" id="toolsTrigger">
+                <div class="nav-item active nav-dropdown-trigger" id="toolsNavTrigger">
                     <span class="nav-icon">🛠️</span>
                     <span class="nav-text">实用工具</span>
                     <span class="arrow-icon">▼</span>
                 </div>
                 <div class="sub-menu" id="toolsSubMenu" style="display: block;">
-                    <a href="#media-tools" class="sub-nav-item">媒体处理</a>
-                    <a href="#dev-tools" class="sub-nav-item">开发者工具</a>
-                    <a href="#office-tools" class="sub-nav-item">办公效率</a>
+                    <a href="#media-section" class="sub-nav-item">媒体处理</a>
+                    <a href="#dev-section" class="sub-nav-item">开发者工具</a>
+                    <a href="#office-section" class="sub-nav-item">办公效率</a>
                 </div>
             </div>
-            
-            <a href="forum.html" class="nav-item">
-                <span class="nav-icon">💬</span><span class="nav-text">悠野社区</span>
-            </a>
+
+            <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
         </nav>
 
         <div class="sidebar-footer">
             <div class="auth-buttons">
-                <div class="auth-btn login-btn" onclick="alert('登录跳转...')">登录</div>
-                <div class="auth-btn register-btn" onclick="alert('注册跳转...')">注册</div>
+                <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')"><span>登录</span></div>
+                <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')"><span>注册</span></div>
             </div>
         </div>
     </aside>
 
     <main class="main-content">
         <header class="top-bar">
-            <div class="section-header" style="margin: 0;"><h2 class="section-title">实用工具箱</h2></div>
+            <div class="search-container">
+                <div class="header-search-wrapper">
+                    <input type="text" id="searchInput" placeholder="在工具库中搜索...">
+                </div>
+            </div>
             <div class="header-actions">
-                <button class="menu-toggle" id="hamburgerBtn"><span></span><span></span><span></span></button>
+                <button class="menu-toggle" id="hamburgerBtn">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </header>
 
         <div class="content-wrapper">
-            <div class="section-group" id="media-tools">
+            <div class="section-header"><h2 class="section-title">实用工具箱</h2></div>
+
+            <div class="section-group" id="media-section">
                 <div class="section-header"><h3 class="section-title">媒体处理</h3></div>
                 <div class="tool-grid">
                     <div class="card-item">
                         <div class="card-info">
-                            <div class="card-title">图片压缩</div>
-                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">在线无损压缩图片大小</div>
+                            <div class="card-title">图片格式转换</div>
+                            <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">支持 WebP, PNG, JPG 互转</p>
                         </div>
                     </div>
+                    <div class="card-item">
+                        <div class="card-info">
+                            <div class="card-title">视频提取音频</div>
+                            <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">在线快速提取 MP3</p>
+                        </div>
                     </div>
+                </div>
             </div>
 
-            <div class="section-group" id="dev-tools" style="margin-top: 40px;">
+            <div class="section-group" id="dev-section" style="margin-top: 40px;">
                 <div class="section-header"><h3 class="section-title">开发者工具</h3></div>
                 <div class="tool-grid">
                     <div class="card-item">
                         <div class="card-info">
                             <div class="card-title">JSON 格式化</div>
-                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">快速美化、校验 JSON 代码</div>
+                            <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">美化及压缩 JSON 数据</p>
+                        </div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-info">
+                            <div class="card-title">Base64 编解码</div>
+                            <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">文本与图片 Base64 转换</p>
                         </div>
                     </div>
                 </div>
@@ -195,25 +296,25 @@
 
     <script src="script.js"></script>
     <script>
-        // 下拉逻辑
-        const toolsTrigger = document.getElementById('toolsTrigger');
-        const toolsSubMenu = document.getElementById('toolsSubMenu');
+        // 侧边栏菜单交互
+        const toolsNavTrigger = document.getElementById('toolsNavTrigger');
+        const toolsSubMenu    = document.getElementById('toolsSubMenu');
 
-        toolsTrigger.addEventListener('click', function() {
+        toolsNavTrigger.addEventListener('click', function() {
             const isOpening = !this.classList.contains('menu-open');
             this.classList.toggle('menu-open', isOpening);
             toolsSubMenu.style.display = isOpening ? 'block' : 'none';
         });
 
-        // 锚点平滑滚动
-        document.querySelectorAll('.sub-nav-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                const targetId = this.getAttribute('href').substring(1);
-                const targetEl = document.getElementById(targetId);
-                if (targetEl) {
-                    e.preventDefault();
-                    targetEl.scrollIntoView({ behavior: 'smooth' });
-                }
+        // 搜索逻辑 (简易本地搜索)
+        const searchInput = document.getElementById('searchInput');
+        const cardItems   = document.querySelectorAll('.card-item');
+
+        searchInput.addEventListener('input', function() {
+            const keyword = this.value.toLowerCase().trim();
+            cardItems.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                card.style.display = title.includes(keyword) ? 'flex' : 'none';
             });
         });
     </script>
