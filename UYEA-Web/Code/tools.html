@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏：仅保留右侧汉堡菜单 ── */
+        /* ── 顶栏：保持你要求的工具页布局 ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -42,7 +42,7 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏：同步首页样式 ── */
+        /* ── 侧边栏菜单：像素级对齐首页 ── */
         .nav-group {
             display: flex;
             flex-direction: column;
@@ -51,18 +51,20 @@
         .nav-item {
             display: flex;
             align-items: center;
+            /* ✅ 对齐首页：高度与内边距 */
             padding: 14px 18px;
+            /* ✅ 对齐首页：完全一致的间距 */
             margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
             color: var(--text-primary);
             font-weight: 600;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             cursor: pointer;
             border: none;
         }
 
-        /* 高亮：黑底白字 + 内阴影 */
+        /* 基础高亮：黑底白字 */
         .nav-item.active {
             background: #000000 !important;
             color: #FFFFFF !important;
@@ -73,12 +75,13 @@
         .nav-item.menu-open {
             background: var(--primary) !important;
             color: #FFFFFF !important;
+            box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
         }
 
         .arrow-icon {
             font-size: 10px;
             margin-left: auto;
-            transition: transform 0.3s;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0.6;
         }
         .nav-item.menu-open .arrow-icon {
@@ -86,26 +89,35 @@
             opacity: 1;
         }
 
-        /* ── 下拉子菜单样式 ── */
+        /* ── 子菜单：优化过渡感 ── */
         .sub-menu {
             display: none; 
             padding-bottom: 10px;
+            /* 增加一个极其微小的淡入 */
+            animation: fadeInSub 0.2s ease-out;
         }
+        @keyframes fadeInSub {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .sub-nav-item {
             display: block;
+            /* ✅ 对齐首页：子项缩进与间距 */
             padding: 10px 16px 10px 56px;
             font-size: 14px;
+            /* ✅ 对齐首页：800 极粗体 */
             font-weight: 800; 
             color: var(--text-secondary);
             text-decoration: none;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
         .sub-nav-item:hover {
             color: var(--primary);
             background: rgba(0,0,0,0.03);
         }
 
-        /* 底部按钮：黑白配色 */
+        /* 底部按钮：完全对齐首页 */
         .sidebar-footer {
             padding: 24px 16px;
             border-top: 1px solid var(--border);
@@ -122,10 +134,10 @@
             justify-content: center;
             height: 42px;
             border-radius: var(--radius-md);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
         .login-btn {
             background: #FFFFFF;
@@ -138,7 +150,7 @@
             color: #FFFFFF;
         }
 
-        /* ── 工具页专属功能样式 ── */
+        /* ── 工具页内容区 ── */
         .tool-search-bar {
             display: flex;
             align-items: center;
@@ -304,18 +316,31 @@
 
     <script src="script.js"></script>
     <script>
-        // --- 实用工具侧边栏展开折叠逻辑 ---
+        // --- 核心交互逻辑修正 ---
         const toolsNavTrigger = document.getElementById('toolsNavTrigger');
         const toolsSubMenu = document.getElementById('toolsSubMenu');
 
         toolsNavTrigger.addEventListener('click', function() {
-            // 切换 active 类（用于背景色/内阴影）和 menu-open 类（用于箭头旋转/铁锈红背景）
-            // 这里我们保持 active 状态，主要切换 menu-open 状态
+            // 切换 menu-open 状态（触发旋转箭头和颜色变化）
             const isOpening = this.classList.toggle('menu-open');
+            
+            // 使用 display 切换，配合 CSS 里的 fadeInSub 动画
             toolsSubMenu.style.display = isOpening ? 'block' : 'none';
         });
 
-        // --- 工具页搜索逻辑 ---
+        // 锚点平滑滚动对齐首页体验
+        document.querySelectorAll('.sub-nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href').substring(1);
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    e.preventDefault();
+                    targetEl.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // --- 保持原有的工具页搜索/分类功能 ---
         const toolSearchInput = document.getElementById('toolSearchInput');
         const toolCards = document.querySelectorAll('.card-item');
         const toolGroups = document.querySelectorAll('.tool-group');
@@ -332,7 +357,6 @@
             });
         });
 
-        // --- 分类切换逻辑 ---
         const tabItems = document.querySelectorAll('.tab-item');
         tabItems.forEach(tab => {
             tab.addEventListener('click', function() {
