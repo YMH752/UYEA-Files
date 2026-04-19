@@ -42,7 +42,7 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏：同步首页优化后的样式 ── */
+        /* ── 侧边栏：同步首页样式 ── */
         .nav-group {
             display: flex;
             flex-direction: column;
@@ -51,9 +51,7 @@
         .nav-item {
             display: flex;
             align-items: center;
-            /* ✅ 同步：增加高度与内边距 */
             padding: 14px 18px;
-            /* ✅ 同步：增加间距，解决空洞感 */
             margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
@@ -95,10 +93,8 @@
         }
         .sub-nav-item {
             display: block;
-            /* ✅ 同步：增加缩进与垂直间距 */
             padding: 10px 16px 10px 56px;
             font-size: 14px;
-            /* ✅ 同步：字重设为 800，营造副标题感 */
             font-weight: 800; 
             color: var(--text-secondary);
             text-decoration: none;
@@ -109,7 +105,7 @@
             background: rgba(0,0,0,0.03);
         }
 
-        /* 底部按钮：黑白配色同步 */
+        /* 底部按钮：黑白配色 */
         .sidebar-footer {
             padding: 24px 16px;
             border-top: 1px solid var(--border);
@@ -142,7 +138,7 @@
             color: #FFFFFF;
         }
 
-        /* ── 工具页专属功能样式 (保持原样) ── */
+        /* ── 工具页专属功能样式 ── */
         .tool-search-bar {
             display: flex;
             align-items: center;
@@ -220,7 +216,7 @@
                     <span class="nav-text">实用工具</span>
                     <span class="arrow-icon">▼</span>
                 </div>
-                <div class="sub-menu" id="toolsSubMenu" style="display: block;">
+                <div class="sub-menu" id="toolsSubMenu">
                     <a href="#dev-tools" class="sub-nav-item">开发者工具</a>
                     <a href="#design-tools" class="sub-nav-item">设计美化</a>
                     <a href="#office-tools" class="sub-nav-item">办公效率</a>
@@ -313,8 +309,9 @@
         const toolsSubMenu = document.getElementById('toolsSubMenu');
 
         toolsNavTrigger.addEventListener('click', function() {
-            const isOpening = !this.classList.contains('menu-open');
-            this.classList.toggle('menu-open', isOpening);
+            // 切换 active 类（用于背景色/内阴影）和 menu-open 类（用于箭头旋转/铁锈红背景）
+            // 这里我们保持 active 状态，主要切换 menu-open 状态
+            const isOpening = this.classList.toggle('menu-open');
             toolsSubMenu.style.display = isOpening ? 'block' : 'none';
         });
 
