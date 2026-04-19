@@ -5,14 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>悠野社区 | UYEA | 悠野导航</title>
     
+    <meta name="description" content="悠野社区 - 分享想法、互帮互助、共同成长的技术社区平台。">
+    <meta name="theme-color" content="#000000">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏：精简为仅汉堡菜单 ── */
+        /* ── 顶栏：仅保留右侧汉堡菜单 ── */
         .top-bar {
             display: flex;
             align-items: center;
-            justify-content: flex-end; /* 按钮靠右 */
+            justify-content: flex-end;
             padding: 0 24px;
             height: var(--header-h);
             background: var(--surface);
@@ -39,7 +45,7 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏样式 ── */
+        /* ── 侧边栏：同步黑白配色与直接跳转模式 ── */
         .nav-item {
             display: flex;
             align-items: center;
@@ -53,14 +59,14 @@
             cursor: pointer;
         }
 
-        /* 基础高亮：黑底白字 + 内阴影 */
+        /* 高亮：黑底白字 + 内阴影 */
         .nav-item.active {
             background: #000000 !important;
             color: #FFFFFF !important;
-            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
+            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important;
         }
 
-        /* 箭头样式：在本页（非首页）默认不显示 */
+        /* 隐藏箭头逻辑（非首页不显示下拉箭头） */
         .arrow-icon {
             display: none; 
             font-size: 10px;
@@ -68,7 +74,7 @@
             opacity: 0.6;
         }
 
-        /* 侧边栏底部按钮：黑白配色 */
+        /* 侧边栏底部按钮：黑白配色方案 */
         .sidebar-footer {
             padding: 20px 16px;
             border-top: 1px solid var(--border);
@@ -89,6 +95,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
+            text-decoration: none;
         }
         .login-btn {
             background: #FFFFFF;
@@ -101,15 +108,97 @@
             color: #FFFFFF;
         }
 
-        /* 社区页列表样式保留 */
+        /* ── 社区页专属原始完整样式 ── */
+        .forum-toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            align-items: center;
+        }
+        .post-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background: #000000;
+            color: #FFFFFF;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .post-btn:hover { background: #333333; }
+        
+        .forum-search {
+            flex: 1;
+            position: relative;
+        }
+        .forum-search input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .forum-search input:focus { border-color: var(--secondary); }
+        .forum-search span {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
         .post-item {
             background: var(--surface);
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 20px;
+            padding: 24px;
             text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
             display: block;
-            margin-bottom: 16px;
+        }
+        .post-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .post-tag {
+            padding: 2px 8px;
+            background: var(--bg);
+            border-radius: 4px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .post-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .post-excerpt {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -129,7 +218,7 @@
             <a href="index.html" class="nav-item">
                 <span class="nav-icon">🏠</span>
                 <span class="nav-text">全部导航</span>
-                <span class="arrow-icon">▼</span> 
+                <span class="arrow-icon">▼</span>
             </a>
 
             <a href="tools.html" class="nav-item">
@@ -145,8 +234,8 @@
 
         <div class="sidebar-footer">
             <div class="auth-buttons">
-                <div class="auth-btn login-btn">登录</div>
-                <div class="auth-btn register-btn">注册</div>
+                <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')">登录</div>
+                <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')">注册</div>
             </div>
         </div>
     </aside>
@@ -163,15 +252,86 @@
                 <h2 class="section-title">悠野社区</h2>
             </div>
 
-            <div class="post-list">
+            <div class="forum-toolbar">
+                <a href="#" class="post-btn" onclick="alert('发帖功能开发中...')">＋ 发布新帖子</a>
+                <div class="forum-search">
+                    <span>🔍</span>
+                    <input type="text" id="forumSearchInput" placeholder="搜索帖子、话题或用户...">
+                </div>
+            </div>
+
+            <div class="post-list" id="postList">
                 <a href="#" class="post-item">
-                    <div style="font-weight:700; color:var(--text-primary); margin-bottom:8px;">欢迎来到社区</div>
-                    <div style="font-size:14px; color:var(--text-secondary);">侧边栏已恢复直接跳转模式，箭头已在当前页隐藏。</div>
+                    <div class="post-meta">
+                        <span class="post-tag">公告</span>
+                        <span>• 悠野管理员</span>
+                        <span>• 1小时前</span>
+                    </div>
+                    <div class="post-title">欢迎来到悠野工作室(UYEA) 2.0 版本社区！</div>
+                    <div class="post-excerpt">
+                        我们致力于打造一个纯粹的技术与生活分享平台。在这里，你可以分享 AI 使用心得、展示你的工具作品，或者仅仅是记录生活点滴。
+                    </div>
+                </a>
+
+                <a href="#" class="post-item">
+                    <div class="post-meta">
+                        <span class="post-tag">AI 探讨</span>
+                        <span>• 用户_7721</span>
+                        <span>• 3小时前</span>
+                    </div>
+                    <div class="post-title">关于 DeepSeek-V3 在本地部署中的显存占用问题探讨</div>
+                    <div class="post-excerpt">
+                        最近尝试在 4090 环境下进行量化部署，发现了一些有趣的内存分配逻辑，想跟大家交流一下...
+                    </div>
+                </a>
+
+                <a href="#" class="post-item">
+                    <div class="post-meta">
+                        <span class="post-tag">生活</span>
+                        <span>• 悠野老汪</span>
+                        <span>• 昨天</span>
+                    </div>
+                    <div class="post-title">推荐几个超好用的极简桌面壁纸资源站</div>
+                    <div class="post-excerpt">
+                        厌倦了花哨的桌面？这几个网站提供的 4K 极简壁纸绝对能治愈你的审美疲劳。
+                    </div>
+                </a>
+
+                <a href="#" class="post-item">
+                    <div class="post-meta">
+                        <span class="post-tag">反馈</span>
+                        <span>• 访客9527</span>
+                        <span>• 2026-04-18</span>
+                    </div>
+                    <div class="post-title">建议导航页增加一个“常用收藏”的自定义功能</div>
+                    <div class="post-excerpt">
+                        如果能让用户自己把最常用的几个工具顶在最前面，体验会更好，希望采纳！
+                    </div>
                 </a>
             </div>
         </div>
     </main>
 
     <script src="script.js"></script>
+    <script>
+        // --- 保持完整功能的社区搜索逻辑 ---
+        const forumSearchInput = document.getElementById('forumSearchInput');
+        const postItems = document.querySelectorAll('.post-item');
+
+        if (forumSearchInput) {
+            forumSearchInput.addEventListener('input', function() {
+                const keyword = this.value.toLowerCase().trim();
+                postItems.forEach(post => {
+                    const title = post.querySelector('.post-title').textContent.toLowerCase();
+                    const excerpt = post.querySelector('.post-excerpt').textContent.toLowerCase();
+                    if (title.includes(keyword) || excerpt.includes(keyword)) {
+                        post.style.display = 'block';
+                    } else {
+                        post.style.display = 'none';
+                    }
+                });
+            });
+        }
+    </script>
 </body>
 </html>
