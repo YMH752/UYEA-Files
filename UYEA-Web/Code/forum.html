@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏：精简为汉堡菜单 ── */
+        /* ── 顶栏：精简为仅汉堡菜单 ── */
         .top-bar {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: flex-end; /* 按钮靠右 */
             padding: 0 24px;
             height: var(--header-h);
             background: var(--surface);
@@ -39,7 +39,7 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏样式同步 ── */
+        /* ── 侧边栏样式 ── */
         .nav-item {
             display: flex;
             align-items: center;
@@ -53,59 +53,64 @@
             cursor: pointer;
         }
 
-        /* 基础高亮：黑底白字内阴影 */
+        /* 基础高亮：黑底白字 + 内阴影 */
         .nav-item.active {
             background: #000000 !important;
             color: #FFFFFF !important;
             box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
         }
 
-        /* 下拉展开时的状态颜色（铁锈红） */
-        .nav-item.menu-open {
-            background: var(--primary) !important;
-            color: #FFFFFF !important;
-        }
-
+        /* 箭头样式：在本页（非首页）默认不显示 */
         .arrow-icon {
+            display: none; 
             font-size: 10px;
             margin-left: auto;
-            transition: transform 0.3s;
             opacity: 0.6;
         }
-        .nav-item.menu-open .arrow-icon {
-            transform: rotate(180deg);
-            opacity: 1;
-        }
 
-        /* 子菜单样式 */
-        .sub-menu {
-            display: none; /* 默认折叠 */
-            padding-bottom: 8px;
+        /* 侧边栏底部按钮：黑白配色 */
+        .sidebar-footer {
+            padding: 20px 16px;
+            border-top: 1px solid var(--border);
+            margin-top: auto; 
         }
-        .sub-nav-item {
-            display: block;
-            padding: 8px 16px 8px 52px;
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .auth-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 38px;
+            border-radius: var(--radius-md);
             font-size: 13px;
-            color: var(--text-secondary);
-            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
             transition: 0.2s;
         }
-        .sub-nav-item:hover {
-            color: var(--primary);
-            background: rgba(0,0,0,0.03);
+        .login-btn {
+            background: #FFFFFF;
+            border: 1.5px solid #000000;
+            color: #000000;
+        }
+        .register-btn {
+            background: #000000;
+            border: 1.5px solid #000000;
+            color: #FFFFFF;
         }
 
-        /* 底部按钮 */
-        .sidebar-footer { padding: 20px 16px; border-top: 1px solid var(--border); margin-top: auto; }
-        .auth-buttons { display: flex; gap: 10px; }
-        .auth-btn { flex: 1; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; }
-        .login-btn { background: #FFFFFF; border: 1.5px solid #000000; color: #000000; }
-        .register-btn { background: #000000; border: 1.5px solid #000000; color: #FFFFFF; }
-
-        /* 社区列表样式保留 */
-        .forum-toolbar { display: flex; gap: 12px; margin-bottom: 24px; }
-        .post-btn { padding: 10px 24px; background: #000000; color: #FFFFFF; border-radius: var(--radius-md); text-decoration: none; font-weight: 600; }
-        .post-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 20px; text-decoration: none; display: block; margin-bottom: 16px; }
+        /* 社区页列表样式保留 */
+        .post-item {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 16px;
+        }
     </style>
 </head>
 <body>
@@ -114,29 +119,27 @@
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo-group"><span class="logo-text">UYEA</span><span class="logo-sub">悠野</span></div>
+            <div class="logo-group">
+                <span class="logo-text">UYEA</span>
+                <span class="logo-sub">悠野</span>
+            </div>
         </div>
         
         <nav class="nav-menu">
-            <div class="nav-group">
-                <div class="nav-item nav-dropdown-trigger" id="allNavTrigger">
-                    <span class="nav-icon">🏠</span>
-                    <span class="nav-text">全部导航</span>
-                    <span class="arrow-icon">▼</span>
-                </div>
-                <div class="sub-menu" id="subNavMenu">
-                    <a href="index.html#ai-section" class="sub-nav-item">Ai</a>
-                    <a href="index.html#life-section" class="sub-nav-item">生活</a>
-                    <a href="index.html#tool-section" class="sub-nav-item">工具</a>
-                </div>
-            </div>
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">全部导航</span>
+                <span class="arrow-icon">▼</span> 
+            </a>
 
             <a href="tools.html" class="nav-item">
-                <span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span>
+                <span class="nav-icon">🛠️</span>
+                <span class="nav-text">实用工具</span>
             </a>
             
             <a href="forum.html" class="nav-item active">
-                <span class="nav-icon">💬</span><span class="nav-text">悠野社区</span>
+                <span class="nav-icon">💬</span>
+                <span class="nav-text">悠野社区</span>
             </a>
         </nav>
 
@@ -150,37 +153,25 @@
 
     <main class="main-content">
         <header class="top-bar">
-            <button class="menu-toggle" id="hamburgerBtn"><span></span><span></span><span></span></button>
+            <button class="menu-toggle" id="hamburgerBtn">
+                <span></span><span></span><span></span>
+            </button>
         </header>
 
         <div class="content-wrapper">
-            <div class="section-header"><h2 class="section-title">悠野社区</h2></div>
-            <div class="forum-toolbar">
-                <a href="#" class="post-btn">＋ 发布新帖子</a>
+            <div class="section-header">
+                <h2 class="section-title">悠野社区</h2>
             </div>
 
             <div class="post-list">
                 <a href="#" class="post-item">
-                    <div style="font-weight:700; color:var(--text-primary); margin-bottom:8px;">测试帖子：侧边栏下拉功能同步</div>
-                    <div style="font-size:14px; color:var(--text-secondary);">现在点击左侧“全部导航”可以展开子类目了。</div>
+                    <div style="font-weight:700; color:var(--text-primary); margin-bottom:8px;">欢迎来到社区</div>
+                    <div style="font-size:14px; color:var(--text-secondary);">侧边栏已恢复直接跳转模式，箭头已在当前页隐藏。</div>
                 </a>
             </div>
         </div>
     </main>
 
     <script src="script.js"></script>
-    <script>
-        // 控制下拉展开逻辑
-        const allNavTrigger = document.getElementById('allNavTrigger');
-        const subNavMenu = document.getElementById('subNavMenu');
-
-        allNavTrigger.addEventListener('click', function() {
-            const isOpening = !this.classList.contains('menu-open');
-            
-            // 切换状态
-            this.classList.toggle('menu-open', isOpening);
-            subNavMenu.style.display = isOpening ? 'block' : 'none';
-        });
-    </script>
 </body>
 </html>
