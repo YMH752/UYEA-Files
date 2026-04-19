@@ -3,67 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>实用工具箱 | UYEA | 悠野导航</title>
+    <title>实用工具 | UYEA 悠野导航</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏：仅保留右侧汉堡菜单 ── */
-        .top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 0 24px;
-            height: var(--header-h);
-            background: var(--surface);
-            border-bottom: 1.5px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .menu-toggle {
-            display: flex;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .menu-toggle span {
-            display: block;
-            width: 24px;
-            height: 3px;
-            background: var(--text-primary);
-            border-radius: 2px;
-        }
-
-        /* ── 侧边栏：同步样式 ── */
+        /* ── 侧边栏美化同步逻辑 ── */
         .nav-item {
             display: flex;
             align-items: center;
+            /* ✅ 同步首页：加大内边距 */
             padding: 14px 18px;
-            margin: 4px 12px;
+            /* ✅ 同步首页：加大间距，解决空洞感 */
+            margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
             color: var(--text-primary);
             font-weight: 600;
             transition: all 0.2s;
             cursor: pointer;
+            border: none;
         }
 
-        /* 高亮：黑底白字 + 内阴影 */
+        /* 基础高亮：黑底白字内阴影 */
         .nav-item.active {
             background: #000000 !important;
             color: #FFFFFF !important;
-            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important;
+            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
         }
 
-        /* 展开态颜色：铁锈红 */
+        /* 展开态：铁锈红 */
         .nav-item.menu-open {
             background: var(--primary) !important;
             color: #FFFFFF !important;
@@ -71,56 +43,58 @@
 
         .arrow-icon {
             font-size: 10px;
+            transition: transform 0.3s ease;
             margin-left: auto;
-            transition: transform 0.3s;
             opacity: 0.6;
         }
-        .nav-item.menu-open .arrow-icon {
-            transform: rotate(180deg);
-            opacity: 1;
+        .nav-item.menu-open .arrow-icon { transform: rotate(180deg); opacity: 1; }
+
+        .sub-menu {
+            display: none; 
+            padding-bottom: 10px;
         }
 
-        /* ── 下拉子菜单样式 ── */
-        .sub-menu {
-            display: none; /* 默认隐藏 */
-            padding-bottom: 8px;
-        }
         .sub-nav-item {
             display: block;
+            /* ✅ 同步首页：加大纵向间距 */
             padding: 10px 16px 10px 56px;
             font-size: 14px;
-            font-weight: 800; /* 加粗，营造副标题感 */
+            /* ✅ 同步首页：800 极粗体副标题感 */
+            font-weight: 800;
             color: var(--text-secondary);
             text-decoration: none;
-            transition: 0.2s;
+            transition: all 0.2s;
         }
         .sub-nav-item:hover {
             color: var(--primary);
             background: rgba(0,0,0,0.03);
         }
 
-        /* 底部按钮：黑白配色 */
+        /* ── 底部按钮同步 ── */
         .sidebar-footer {
-            padding: 20px 16px;
+            padding: 24px 16px;
             border-top: 1px solid var(--border);
             margin-top: auto; 
         }
+
         .auth-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
+
         .auth-btn {
             flex: 1;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 42px;
             border-radius: var(--radius-md);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
         }
+
         .login-btn {
             background: #FFFFFF;
             border: 1.5px solid #000000;
@@ -132,57 +106,12 @@
             color: #FFFFFF;
         }
 
-        /* ── 工具页专属功能样式 ── */
-        .tool-search-bar {
-            display: flex;
-            align-items: center;
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 0 16px;
-            height: 48px;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        .tool-search-input {
-            border: none;
-            background: transparent;
-            outline: none;
-            width: 100%;
-            font-size: 15px;
-            color: var(--text-primary);
-        }
-        .category-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-        .tab-item {
-            padding: 8px 20px;
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-        .tab-item.active {
-            background: #000000;
-            color: #FFFFFF;
-            border-color: #000000;
-        }
-        .tool-group-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-left: 4px;
+        /* 工具页特有样式保持 */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
         }
     </style>
 </head>
@@ -200,96 +129,64 @@
         
         <nav class="nav-menu">
             <a href="index.html" class="nav-item">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-text">全部导航</span>
+                <span class="nav-icon">🏠</span><span class="nav-text">首页导航</span>
             </a>
 
             <div class="nav-group">
-                <div class="nav-item active nav-dropdown-trigger" id="toolsNavTrigger">
+                <div class="nav-item active nav-dropdown-trigger" id="toolsTrigger">
                     <span class="nav-icon">🛠️</span>
                     <span class="nav-text">实用工具</span>
                     <span class="arrow-icon">▼</span>
                 </div>
-                <div class="sub-menu" id="toolsSubMenu">
+                <div class="sub-menu" id="toolsSubMenu" style="display: block;">
+                    <a href="#media-tools" class="sub-nav-item">媒体处理</a>
                     <a href="#dev-tools" class="sub-nav-item">开发者工具</a>
-                    <a href="#design-tools" class="sub-nav-item">设计美化</a>
                     <a href="#office-tools" class="sub-nav-item">办公效率</a>
-                    <a href="#media-tools" class="sub-nav-item">多媒体处理</a>
                 </div>
             </div>
             
             <a href="forum.html" class="nav-item">
-                <span class="nav-icon">💬</span>
-                <span class="nav-text">悠野社区</span>
+                <span class="nav-icon">💬</span><span class="nav-text">悠野社区</span>
             </a>
         </nav>
 
         <div class="sidebar-footer">
             <div class="auth-buttons">
-                <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')">登录</div>
-                <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')">注册</div>
+                <div class="auth-btn login-btn" onclick="alert('登录跳转...')">登录</div>
+                <div class="auth-btn register-btn" onclick="alert('注册跳转...')">注册</div>
             </div>
         </div>
     </aside>
 
     <main class="main-content">
         <header class="top-bar">
-            <button class="menu-toggle" id="hamburgerBtn">
-                <span></span><span></span><span></span>
-            </button>
+            <div class="section-header" style="margin: 0;"><h2 class="section-title">实用工具箱</h2></div>
+            <div class="header-actions">
+                <button class="menu-toggle" id="hamburgerBtn"><span></span><span></span><span></span></button>
+            </div>
         </header>
 
         <div class="content-wrapper">
-            <div class="section-header">
-                <h2 class="section-title">实用工具箱</h2>
+            <div class="section-group" id="media-tools">
+                <div class="section-header"><h3 class="section-title">媒体处理</h3></div>
+                <div class="tool-grid">
+                    <div class="card-item">
+                        <div class="card-info">
+                            <div class="card-title">图片压缩</div>
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">在线无损压缩图片大小</div>
+                        </div>
+                    </div>
+                    </div>
             </div>
 
-            <div class="tool-search-bar">
-                <span style="font-size: 18px;">🔍</span>
-                <input type="text" class="tool-search-input" id="toolSearchInput" placeholder="搜索在线工具...">
-            </div>
-
-            <div class="category-tabs" id="categoryTabs">
-                <div class="tab-item active" data-category="all">全部</div>
-                <div class="tab-item" data-category="dev">开发者工具</div>
-                <div class="tab-item" data-category="design">设计美化</div>
-                <div class="tab-item" data-category="office">办公效率</div>
-                <div class="tab-item" data-category="media">多媒体处理</div>
-            </div>
-
-            <div id="toolsContainer">
-                <div class="tool-group" data-category="dev" id="dev-tools">
-                    <div class="tool-group-title"><span>💻</span> 开发者工具</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">JSON 格式化</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">Base64 编解码</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">正则表达式测试</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">时间戳转换</div></div></a>
-                    </div>
-                </div>
-
-                <div class="tool-group" data-category="design" id="design-tools" style="margin-top: 40px;">
-                    <div class="tool-group-title"><span>🎨</span> 设计美化</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">在线调色板</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">SVG 图标库</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">渐变颜色生成</div></div></a>
-                    </div>
-                </div>
-
-                <div class="tool-group" data-category="office" id="office-tools" style="margin-top: 40px;">
-                    <div class="tool-group-title"><span>📂</span> 办公效率</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">PDF 转 Word</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">流程图绘制</div></div></a>
-                    </div>
-                </div>
-
-                <div class="tool-group" data-category="media" id="media-tools" style="margin-top: 40px;">
-                    <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">图片压缩</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">视频转 GIF</div></div></a>
+            <div class="section-group" id="dev-tools" style="margin-top: 40px;">
+                <div class="section-header"><h3 class="section-title">开发者工具</h3></div>
+                <div class="tool-grid">
+                    <div class="card-item">
+                        <div class="card-info">
+                            <div class="card-title">JSON 格式化</div>
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">快速美化、校验 JSON 代码</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -298,43 +195,25 @@
 
     <script src="script.js"></script>
     <script>
-        // --- 实用工具侧边栏展开折叠逻辑 ---
-        const toolsNavTrigger = document.getElementById('toolsNavTrigger');
+        // 下拉逻辑
+        const toolsTrigger = document.getElementById('toolsTrigger');
         const toolsSubMenu = document.getElementById('toolsSubMenu');
 
-        toolsNavTrigger.addEventListener('click', function() {
+        toolsTrigger.addEventListener('click', function() {
             const isOpening = !this.classList.contains('menu-open');
             this.classList.toggle('menu-open', isOpening);
             toolsSubMenu.style.display = isOpening ? 'block' : 'none';
         });
 
-        // --- 工具页搜索逻辑 ---
-        const toolSearchInput = document.getElementById('toolSearchInput');
-        const toolCards = document.querySelectorAll('.card-item');
-        const toolGroups = document.querySelectorAll('.tool-group');
-
-        toolSearchInput.addEventListener('input', function() {
-            const keyword = this.value.toLowerCase().trim();
-            toolCards.forEach(card => {
-                const title = card.querySelector('.card-title').textContent.toLowerCase();
-                card.style.display = title.includes(keyword) ? 'flex' : 'none';
-            });
-            toolGroups.forEach(group => {
-                const hasVisible = Array.from(group.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                group.style.display = hasVisible ? 'block' : 'none';
-            });
-        });
-
-        // --- 分类切换逻辑 ---
-        const tabItems = document.querySelectorAll('.tab-item');
-        tabItems.forEach(tab => {
-            tab.addEventListener('click', function() {
-                tabItems.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                const cat = this.dataset.category;
-                toolGroups.forEach(g => {
-                    g.style.display = (cat === 'all' || g.dataset.category === cat) ? 'block' : 'none';
-                });
+        // 锚点平滑滚动
+        document.querySelectorAll('.sub-nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href').substring(1);
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    e.preventDefault();
+                    targetEl.scrollIntoView({ behavior: 'smooth' });
+                }
             });
         });
     </script>
