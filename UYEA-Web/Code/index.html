@@ -133,8 +133,11 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏样式同步 ── */
-        .nav-group { display: flex; flex-direction: column; }
+        /* ── 侧边栏菜单样式 ── */
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+        }
 
         .nav-item {
             display: flex;
@@ -157,7 +160,44 @@
             box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
         }
 
-        /* ✅ 侧边栏底部按钮 (黑白配色) */
+        /* ✅ 展开态：铁锈红 + 白色字体 */
+        .nav-item.menu-open {
+            background: var(--primary) !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
+        }
+
+        .arrow-icon {
+            font-size: 10px;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+            opacity: 0.6;
+        }
+        /* 选中或展开时三角形变亮 */
+        .nav-item.active .arrow-icon, 
+        .nav-item.menu-open .arrow-icon { opacity: 1; }
+        .nav-item.menu-open .arrow-icon { transform: rotate(180deg); }
+
+        .sub-menu {
+            display: none; 
+            padding-bottom: 8px;
+        }
+
+        .sub-nav-item {
+            display: block;
+            padding: 8px 16px 8px 52px;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .sub-nav-item:hover {
+            color: var(--primary);
+            background: rgba(0,0,0,0.03);
+        }
+
+        /* ── 侧边栏底部按钮 (黑白配色修复) ── */
         .sidebar-footer {
             padding: 20px 16px;
             border-top: 1px solid var(--border);
@@ -183,6 +223,7 @@
             cursor: pointer;
         }
 
+        /* 登录：白底黑字黑框 */
         .login-btn {
             background: #FFFFFF;
             border: 1.5px solid #000000;
@@ -190,6 +231,7 @@
         }
         .login-btn:hover { background: #f0f0f0; }
 
+        /* 注册：黑底白字 */
         .register-btn {
             background: #000000;
             border: 1.5px solid #000000;
@@ -225,7 +267,19 @@
         </div>
         
         <nav class="nav-menu">
-            <div class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></div>
+            <div class="nav-group">
+                <div class="nav-item active nav-dropdown-trigger" id="allNavTrigger">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">全部导航</span>
+                    <span class="arrow-icon">▼</span>
+                </div>
+                <div class="sub-menu" id="subNavMenu">
+                    <a href="#ai-section" class="sub-nav-item">Ai</a>
+                    <a href="#life-section" class="sub-nav-item">生活</a>
+                    <a href="#tool-section" class="sub-nav-item">工具</a>
+                </div>
+            </div>
+
             <a href="tools.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></a>
             <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
         </nav>
@@ -369,6 +423,38 @@
 
     <script src="script.js"></script>
     <script>
+        /* ── BUG修复与菜单交互逻辑 ── */
+        const allNavTrigger = document.getElementById('allNavTrigger');
+        const subNavMenu    = document.getElementById('subNavMenu');
+
+        allNavTrigger.addEventListener('click', function() {
+            const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
+            if (isHomePage) {
+                const isOpening = !this.classList.contains('menu-open');
+                this.classList.toggle('menu-open', isOpening);
+                subNavMenu.style.display = isOpening ? 'block' : 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        document.querySelectorAll('.sub-nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth' });
+                    if (window.innerWidth <= 1024) {
+                        document.getElementById('sidebar').classList.remove('active');
+                        document.getElementById('sidebarOverlay').classList.remove('active');
+                    }
+                }
+            });
+        });
+
+        /* ── 原有逻辑 (一个没动) ── */
         const searchInput      = document.getElementById('searchInput');
         const engineSelector   = document.getElementById('searchEngineSelector');
         const engineWrapper    = document.getElementById('engineDropdownWrapper');
