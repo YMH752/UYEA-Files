@@ -14,11 +14,11 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏：仅保留汉堡菜单 ── */
+        /* ── 顶栏：仅保留右侧汉堡菜单 ── */
         .top-bar {
             display: flex;
             align-items: center;
-            justify-content: flex-end; /* 按钮靠右 */
+            justify-content: flex-end;
             padding: 0 24px;
             height: var(--header-h);
             background: var(--surface);
@@ -45,12 +45,7 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏样式同步 ── */
-        .nav-group {
-            display: flex;
-            flex-direction: column;
-        }
-
+        /* ── 侧边栏：同步黑白配色与直接跳转模式 ── */
         .nav-item {
             display: flex;
             align-items: center;
@@ -62,65 +57,58 @@
             font-weight: 600;
             transition: all 0.2s;
             cursor: pointer;
-            border: none;
         }
 
-        /* 基础高亮：纯黑背景 + 白色字体 + 内阴影 */
+        /* 高亮：黑底白字 + 内阴影 */
         .nav-item.active {
             background: #000000 !important;
             color: #FFFFFF !important;
-            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
+            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important;
         }
 
+        /* 隐藏箭头逻辑（因为不是首页） */
         .arrow-icon {
+            display: none; 
             font-size: 10px;
-            transition: transform 0.3s ease;
             margin-left: auto;
             opacity: 0.6;
         }
-        .nav-item.active .arrow-icon { opacity: 1; }
 
-        /* 侧边栏底部按钮 (黑白配色) */
+        /* 侧边栏底部按钮：黑白配色 */
         .sidebar-footer {
             padding: 20px 16px;
             border-top: 1px solid var(--border);
             margin-top: auto; 
         }
-
         .auth-buttons {
             display: flex;
             gap: 10px;
         }
-
         .auth-btn {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 5px;
+            height: 38px;
             border-radius: var(--radius-md);
             font-size: 13px;
             font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
             cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
         }
-
         .login-btn {
             background: #FFFFFF;
             border: 1.5px solid #000000;
             color: #000000;
         }
-        .login-btn:hover { background: #f0f0f0; }
-
         .register-btn {
             background: #000000;
             border: 1.5px solid #000000;
             color: #FFFFFF;
         }
-        .register-btn:hover { background: #333333; }
 
-        /* ── 工具页专属样式 ── */
+        /* ── 工具页专属完整样式 ── */
         .tool-search-bar {
             display: flex;
             align-items: center;
@@ -172,10 +160,6 @@
             margin-bottom: 20px;
             padding-left: 4px;
         }
-
-        @media (max-width: 1024px) {
-            .top-bar { padding-left: 50px; }
-        }
     </style>
 </head>
 <body>
@@ -191,13 +175,11 @@
         </div>
         
         <nav class="nav-menu">
-            <div class="nav-group">
-                <div class="nav-item" onclick="window.location.href='index.html'">
-                    <span class="nav-icon">🏠</span>
-                    <span class="nav-text">全部导航</span>
-                    <span class="arrow-icon">▼</span>
-                </div>
-            </div>
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">全部导航</span>
+                <span class="arrow-icon">▼</span>
+            </a>
 
             <a href="tools.html" class="nav-item active">
                 <span class="nav-icon">🛠️</span>
@@ -212,19 +194,17 @@
 
         <div class="sidebar-footer">
             <div class="auth-buttons">
-                <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')"><span>登录</span></div>
-                <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')"><span>注册</span></div>
+                <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')">登录</div>
+                <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')">注册</div>
             </div>
         </div>
     </aside>
 
     <main class="main-content">
         <header class="top-bar">
-            <div class="header-actions">
-                <button class="menu-toggle" id="hamburgerBtn">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
+            <button class="menu-toggle" id="hamburgerBtn">
+                <span></span><span></span><span></span>
+            </button>
         </header>
 
         <div class="content-wrapper">
@@ -249,48 +229,42 @@
                 <div class="tool-group" data-category="dev">
                     <div class="tool-group-title"><span>💻</span> 开发者工具</div>
                     <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">JSON 格式化</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">Base64 编解码</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">正则表达式测试</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">时间戳转换</div></div>
-                        </a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">JSON 格式化</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">Base64 编解码</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">正则表达式测试</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">时间戳转换</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">Markdown 编辑器</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">URL 编码解码</div></div></a>
                     </div>
                 </div>
 
                 <div class="tool-group" data-category="design" style="margin-top: 40px;">
                     <div class="tool-group-title"><span>🎨</span> 设计美化</div>
                     <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">调色板</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">SVG 图标库</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">渐变生成器</div></div>
-                        </a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">在线调色板</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">SVG 图标库</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">渐变颜色生成</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">Favicon 制作</div></div></a>
+                    </div>
+                </div>
+
+                <div class="tool-group" data-category="office" style="margin-top: 40px;">
+                    <div class="tool-group-title"><span>📂</span> 办公效率</div>
+                    <div class="grid-container">
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">PDF 转 Word</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">流程图绘制</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">二维码生成器</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">在线字数统计</div></div></a>
                     </div>
                 </div>
 
                 <div class="tool-group" data-category="media" style="margin-top: 40px;">
                     <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
                     <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">图片压缩</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">视频转码</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">音频剪辑</div></div>
-                        </a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">图片压缩</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">视频转 GIF</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">音频剪辑</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">背景移除 (AI)</div></div></a>
                     </div>
                 </div>
             </div>
@@ -299,7 +273,7 @@
 
     <script src="script.js"></script>
     <script>
-        // 工具页搜索逻辑
+        // --- 保持完整功能的搜索逻辑 ---
         const toolSearchInput = document.getElementById('toolSearchInput');
         const toolCards = document.querySelectorAll('.card-item');
         const toolGroups = document.querySelectorAll('.tool-group');
@@ -317,7 +291,7 @@
             });
         });
 
-        // 标签切换逻辑
+        // --- 保持完整功能的分类切换逻辑 ---
         const tabItems = document.querySelectorAll('.tab-item');
         tabItems.forEach(tab => {
             tab.addEventListener('click', function() {
