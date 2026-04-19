@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>实用工具箱 | UYEA | 悠野导航</title>
     
-    <meta name="description" content="悠野工具箱 - 提供实用的在线工具集合，包括格式转换、代码工具、文本处理等。">
-    <meta name="theme-color" content="#000000">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     
@@ -45,12 +42,12 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏：同步黑白配色与直接跳转模式 ── */
+        /* ── 侧边栏：同步样式 ── */
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
-            margin-bottom: 4px;
+            padding: 14px 18px; /* 稍微增加内边距让菜单更饱满 */
+            margin: 4px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
             color: var(--text-primary);
@@ -66,15 +63,43 @@
             box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important;
         }
 
-        /* 隐藏箭头逻辑（因为不是首页） */
-        .arrow-icon {
-            display: none; 
-            font-size: 10px;
-            margin-left: auto;
-            opacity: 0.6;
+        /* 展开态：铁锈红 */
+        .nav-item.menu-open {
+            background: var(--primary) !important;
+            color: #FFFFFF !important;
         }
 
-        /* 侧边栏底部按钮：黑白配色 */
+        .arrow-icon {
+            font-size: 10px;
+            margin-left: auto;
+            transition: transform 0.3s;
+            opacity: 0.6;
+        }
+        .nav-item.menu-open .arrow-icon {
+            transform: rotate(180deg);
+            opacity: 1;
+        }
+
+        /* ── 下拉子菜单样式 ── */
+        .sub-menu {
+            display: none; /* 默认关闭 */
+            padding-bottom: 8px;
+        }
+        .sub-nav-item {
+            display: block;
+            padding: 10px 16px 10px 56px;
+            font-size: 14px; /* 稍微加大一点点 */
+            font-weight: 700; /* 加粗，形成副标题感 */
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .sub-nav-item:hover {
+            color: var(--primary);
+            background: rgba(0,0,0,0.03);
+        }
+
+        /* 底部按钮：黑白配色 */
         .sidebar-footer {
             padding: 20px 16px;
             border-top: 1px solid var(--border);
@@ -89,13 +114,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 38px;
+            height: 42px;
             border-radius: var(--radius-md);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
-            text-decoration: none;
         }
         .login-btn {
             background: #FFFFFF;
@@ -108,7 +132,7 @@
             color: #FFFFFF;
         }
 
-        /* ── 工具页专属完整样式 ── */
+        /* ── 工具页专属功能样式 ── */
         .tool-search-bar {
             display: flex;
             align-items: center;
@@ -175,11 +199,18 @@
         </div>
         
         <nav class="nav-menu">
-            <a href="index.html" class="nav-item">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-text">全部导航</span>
-                <span class="arrow-icon">▼</span>
-            </a>
+            <div class="nav-group">
+                <div class="nav-item nav-dropdown-trigger" id="allNavTrigger">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">全部导航</span>
+                    <span class="arrow-icon">▼</span>
+                </div>
+                <div class="sub-menu" id="subNavMenu">
+                    <a href="index.html#ai-section" class="sub-nav-item">Ai</a>
+                    <a href="index.html#life-section" class="sub-nav-item">生活</a>
+                    <a href="index.html#tool-section" class="sub-nav-item">工具</a>
+                </div>
+            </div>
 
             <a href="tools.html" class="nav-item active">
                 <span class="nav-icon">🛠️</span>
@@ -233,8 +264,6 @@
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">Base64 编解码</div></div></a>
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">正则表达式测试</div></div></a>
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">时间戳转换</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">Markdown 编辑器</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">URL 编码解码</div></div></a>
                     </div>
                 </div>
 
@@ -244,36 +273,26 @@
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">在线调色板</div></div></a>
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">SVG 图标库</div></div></a>
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">渐变颜色生成</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">Favicon 制作</div></div></a>
                     </div>
                 </div>
-
-                <div class="tool-group" data-category="office" style="margin-top: 40px;">
-                    <div class="tool-group-title"><span>📂</span> 办公效率</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">PDF 转 Word</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">流程图绘制</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">二维码生成器</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">在线字数统计</div></div></a>
-                    </div>
+                
                 </div>
-
-                <div class="tool-group" data-category="media" style="margin-top: 40px;">
-                    <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">图片压缩</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">视频转 GIF</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">音频剪辑</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">背景移除 (AI)</div></div></a>
-                    </div>
-                </div>
-            </div>
         </div>
     </main>
 
     <script src="script.js"></script>
     <script>
-        // --- 保持完整功能的搜索逻辑 ---
+        // --- 侧边栏展开折叠逻辑 ---
+        const allNavTrigger = document.getElementById('allNavTrigger');
+        const subNavMenu = document.getElementById('subNavMenu');
+
+        allNavTrigger.addEventListener('click', function() {
+            const isOpening = !this.classList.contains('menu-open');
+            this.classList.toggle('menu-open', isOpening);
+            subNavMenu.style.display = isOpening ? 'block' : 'none';
+        });
+
+        // --- 工具页搜索与分类逻辑 ---
         const toolSearchInput = document.getElementById('toolSearchInput');
         const toolCards = document.querySelectorAll('.card-item');
         const toolGroups = document.querySelectorAll('.tool-group');
@@ -284,27 +303,20 @@
                 const title = card.querySelector('.card-title').textContent.toLowerCase();
                 card.style.display = title.includes(keyword) ? 'flex' : 'none';
             });
-            
             toolGroups.forEach(group => {
-                const hasVisibleCards = Array.from(group.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                group.style.display = hasVisibleCards ? 'block' : 'none';
+                const hasVisible = Array.from(group.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
+                group.style.display = hasVisible ? 'block' : 'none';
             });
         });
 
-        // --- 保持完整功能的分类切换逻辑 ---
         const tabItems = document.querySelectorAll('.tab-item');
         tabItems.forEach(tab => {
             tab.addEventListener('click', function() {
                 tabItems.forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                
-                const category = this.dataset.category;
-                toolGroups.forEach(group => {
-                    if (category === 'all' || group.dataset.category === category) {
-                        group.style.display = 'block';
-                    } else {
-                        group.style.display = 'none';
-                    }
+                const cat = this.dataset.category;
+                toolGroups.forEach(g => {
+                    g.style.display = (cat === 'all' || g.dataset.category === cat) ? 'block' : 'none';
                 });
             });
         });
