@@ -3,24 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>实用工具箱 | UYEA</title>
+    <title>实用工具箱 | UYEA | 悠野导航</title>
     
     <meta name="description" content="悠野工具箱 - 提供实用的在线工具集合，包括格式转换、代码工具、文本处理等。">
-    <meta property="og:title" content="实用工具箱 | UYEA悠野工作室">
-    <meta property="og:description" content="提供格式转换、代码工具、文本处理等实用在线工具">
     <meta name="theme-color" content="#000000">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏样式同步 ── */
+        /* ── 顶栏：仅保留汉堡菜单 ── */
         .top-bar {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+            justify-content: flex-end; /* 按钮靠右 */
             padding: 0 24px;
             height: var(--header-h);
             background: var(--surface);
@@ -30,26 +28,8 @@
             z-index: 100;
         }
 
-        .header-actions { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            margin-left: auto; 
-        }
-
-        /* ✅ 修改：登录按钮改为黑色 */
-        .login-btn {
-            padding: 8px 16px;
-            background: var(--secondary);
-            color: white;
-            border-radius: var(--radius-sm);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
         .menu-toggle {
-            display: none;
+            display: flex;
             background: none;
             border: none;
             cursor: pointer;
@@ -65,9 +45,80 @@
             border-radius: 2px;
         }
 
-        @media (max-width: 768px) {
-            .menu-toggle { display: flex; }
+        /* ── 侧边栏样式同步 ── */
+        .nav-group {
+            display: flex;
+            flex-direction: column;
         }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* 基础高亮：纯黑背景 + 白色字体 + 内阴影 */
+        .nav-item.active {
+            background: #000000 !important;
+            color: #FFFFFF !important;
+            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
+        }
+
+        .arrow-icon {
+            font-size: 10px;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+            opacity: 0.6;
+        }
+        .nav-item.active .arrow-icon { opacity: 1; }
+
+        /* 侧边栏底部按钮 (黑白配色) */
+        .sidebar-footer {
+            padding: 20px 16px;
+            border-top: 1px solid var(--border);
+            margin-top: auto; 
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 5px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            background: #FFFFFF;
+            border: 1.5px solid #000000;
+            color: #000000;
+        }
+        .login-btn:hover { background: #f0f0f0; }
+
+        .register-btn {
+            background: #000000;
+            border: 1.5px solid #000000;
+            color: #FFFFFF;
+        }
+        .register-btn:hover { background: #333333; }
 
         /* ── 工具页专属样式 ── */
         .tool-search-bar {
@@ -77,54 +128,53 @@
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
             padding: 0 16px;
-            height: 44px;
-            gap: 10px;
+            height: 48px;
+            gap: 12px;
             margin-bottom: 24px;
         }
-
         .tool-search-input {
             border: none;
             background: transparent;
             outline: none;
             width: 100%;
             font-size: 15px;
+            color: var(--text-primary);
         }
-
         .category-tabs {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 30px;
             overflow-x: auto;
-            padding-bottom: 8px;
+            padding-bottom: 10px;
         }
-
         .tab-item {
-            padding: 8px 18px;
+            padding: 8px 20px;
             background: var(--surface);
             border: 1.5px solid var(--border);
             border-radius: 20px;
             font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.2s;
         }
-
-        /* ✅ 修改：激活分类标签背景改为黑色 */
         .tab-item.active {
-            background: var(--secondary);
-            color: white;
-            border-color: var(--secondary);
+            background: #000000;
+            color: #FFFFFF;
+            border-color: #000000;
         }
-
-        .tool-group { margin-bottom: 40px; }
         .tool-group-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-left: 4px;
+        }
+
+        @media (max-width: 1024px) {
+            .top-bar { padding-left: 50px; }
         }
     </style>
 </head>
@@ -139,17 +189,38 @@
                 <span class="logo-sub">悠野</span>
             </div>
         </div>
+        
         <nav class="nav-menu">
-            <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-text">全部导航</span></a>
-            <div class="nav-item active"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></div>
-            <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
+            <div class="nav-group">
+                <div class="nav-item" onclick="window.location.href='index.html'">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">全部导航</span>
+                    <span class="arrow-icon">▼</span>
+                </div>
+            </div>
+
+            <a href="tools.html" class="nav-item active">
+                <span class="nav-icon">🛠️</span>
+                <span class="nav-text">实用工具</span>
+            </a>
+            
+            <a href="forum.html" class="nav-item">
+                <span class="nav-icon">💬</span>
+                <span class="nav-text">悠野社区</span>
+            </a>
         </nav>
+
+        <div class="sidebar-footer">
+            <div class="auth-buttons">
+                <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')"><span>登录</span></div>
+                <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')"><span>注册</span></div>
+            </div>
+        </div>
     </aside>
 
     <main class="main-content">
         <header class="top-bar">
             <div class="header-actions">
-                <a href="#" class="login-btn">登录 / 注册</a>
                 <button class="menu-toggle" id="hamburgerBtn">
                     <span></span><span></span><span></span>
                 </button>
@@ -162,15 +233,16 @@
             </div>
 
             <div class="tool-search-bar">
-                <span>🔍</span>
+                <span style="font-size: 18px;">🔍</span>
                 <input type="text" class="tool-search-input" id="toolSearchInput" placeholder="搜索在线工具...">
             </div>
 
-            <div class="category-tabs">
+            <div class="category-tabs" id="categoryTabs">
                 <div class="tab-item active" data-category="all">全部</div>
                 <div class="tab-item" data-category="dev">开发者工具</div>
-                <div class="tab-item" data-category="media">多媒体工具</div>
-                <div class="tab-item" data-category="text">文本处理</div>
+                <div class="tab-item" data-category="design">设计美化</div>
+                <div class="tab-item" data-category="office">办公效率</div>
+                <div class="tab-item" data-category="media">多媒体处理</div>
             </div>
 
             <div id="toolsContainer">
@@ -183,17 +255,41 @@
                         <a href="#" class="card-item">
                             <div class="card-info"><div class="card-title">Base64 编解码</div></div>
                         </a>
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">正则表达式测试</div></div>
+                        </a>
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">时间戳转换</div></div>
+                        </a>
                     </div>
                 </div>
 
-                <div class="tool-group" data-category="media">
-                    <div class="tool-group-title"><span>🖼️</span> 多媒体工具</div>
+                <div class="tool-group" data-category="design" style="margin-top: 40px;">
+                    <div class="tool-group-title"><span>🎨</span> 设计美化</div>
+                    <div class="grid-container">
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">调色板</div></div>
+                        </a>
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">SVG 图标库</div></div>
+                        </a>
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">渐变生成器</div></div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tool-group" data-category="media" style="margin-top: 40px;">
+                    <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
                     <div class="grid-container">
                         <a href="#" class="card-item">
                             <div class="card-info"><div class="card-title">图片压缩</div></div>
                         </a>
                         <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">SVG 编辑器</div></div>
+                            <div class="card-info"><div class="card-title">视频转码</div></div>
+                        </a>
+                        <a href="#" class="card-item">
+                            <div class="card-info"><div class="card-title">音频剪辑</div></div>
                         </a>
                     </div>
                 </div>
@@ -203,46 +299,41 @@
 
     <script src="script.js"></script>
     <script>
-    const toolSearchInput = document.getElementById('toolSearchInput');
-    const tabItems = document.querySelectorAll('.tab-item');
-    const toolGroups = document.querySelectorAll('.tool-group');
-    const toolCards = document.querySelectorAll('.card-item');
+        // 工具页搜索逻辑
+        const toolSearchInput = document.getElementById('toolSearchInput');
+        const toolCards = document.querySelectorAll('.card-item');
+        const toolGroups = document.querySelectorAll('.tool-group');
 
-    let currentCategory = 'all';
-
-    toolSearchInput.addEventListener('input', function() {
-        const keyword = this.value.toLowerCase();
-        toolCards.forEach(card => {
-            const title = card.querySelector('.card-title').textContent.toLowerCase();
-            const parentGroup = card.closest('.tool-group');
-            const matchesSearch = title.includes(keyword);
-            const matchesCategory = currentCategory === 'all' || parentGroup.dataset.category === currentCategory;
-            card.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
-        });
-
-        toolGroups.forEach(group => {
-            const visibleCards = group.querySelectorAll('.card-item[style=""]');
-            const matchesCategory = currentCategory === 'all' || group.dataset.category === currentCategory;
-            group.style.display = (visibleCards.length > 0 && matchesCategory) ? '' : 'none';
-        });
-    });
-
-    tabItems.forEach(tab => {
-        tab.addEventListener('click', function() {
-            tabItems.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            currentCategory = this.dataset.category;
-            toolGroups.forEach(group => {
-                if (currentCategory === 'all') {
-                    group.style.display = '';
-                } else {
-                    group.style.display = group.dataset.category === currentCategory ? '' : 'none';
-                }
+        toolSearchInput.addEventListener('input', function() {
+            const keyword = this.value.toLowerCase().trim();
+            toolCards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                card.style.display = title.includes(keyword) ? 'flex' : 'none';
             });
-            const event = new Event('input');
-            toolSearchInput.dispatchEvent(event);
+            
+            toolGroups.forEach(group => {
+                const hasVisibleCards = Array.from(group.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
+                group.style.display = hasVisibleCards ? 'block' : 'none';
+            });
         });
-    });
+
+        // 标签切换逻辑
+        const tabItems = document.querySelectorAll('.tab-item');
+        tabItems.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabItems.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const category = this.dataset.category;
+                toolGroups.forEach(group => {
+                    if (category === 'all' || group.dataset.category === category) {
+                        group.style.display = 'block';
+                    } else {
+                        group.style.display = 'none';
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
