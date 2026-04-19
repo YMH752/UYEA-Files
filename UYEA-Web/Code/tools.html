@@ -46,7 +46,7 @@
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 14px 18px; /* 稍微增加内边距让菜单更饱满 */
+            padding: 14px 18px;
             margin: 4px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
@@ -63,7 +63,7 @@
             box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important;
         }
 
-        /* 展开态：铁锈红 */
+        /* 展开态颜色：铁锈红 */
         .nav-item.menu-open {
             background: var(--primary) !important;
             color: #FFFFFF !important;
@@ -82,14 +82,14 @@
 
         /* ── 下拉子菜单样式 ── */
         .sub-menu {
-            display: none; /* 默认关闭 */
+            display: none; /* 默认隐藏 */
             padding-bottom: 8px;
         }
         .sub-nav-item {
             display: block;
             padding: 10px 16px 10px 56px;
-            font-size: 14px; /* 稍微加大一点点 */
-            font-weight: 700; /* 加粗，形成副标题感 */
+            font-size: 14px;
+            font-weight: 800; /* 加粗，营造副标题感 */
             color: var(--text-secondary);
             text-decoration: none;
             transition: 0.2s;
@@ -199,23 +199,24 @@
         </div>
         
         <nav class="nav-menu">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">全部导航</span>
+            </a>
+
             <div class="nav-group">
-                <div class="nav-item nav-dropdown-trigger" id="allNavTrigger">
-                    <span class="nav-icon">🏠</span>
-                    <span class="nav-text">全部导航</span>
+                <div class="nav-item active nav-dropdown-trigger" id="toolsNavTrigger">
+                    <span class="nav-icon">🛠️</span>
+                    <span class="nav-text">实用工具</span>
                     <span class="arrow-icon">▼</span>
                 </div>
-                <div class="sub-menu" id="subNavMenu">
-                    <a href="index.html#ai-section" class="sub-nav-item">Ai</a>
-                    <a href="index.html#life-section" class="sub-nav-item">生活</a>
-                    <a href="index.html#tool-section" class="sub-nav-item">工具</a>
+                <div class="sub-menu" id="toolsSubMenu">
+                    <a href="#dev-tools" class="sub-nav-item">开发者工具</a>
+                    <a href="#design-tools" class="sub-nav-item">设计美化</a>
+                    <a href="#office-tools" class="sub-nav-item">办公效率</a>
+                    <a href="#media-tools" class="sub-nav-item">多媒体处理</a>
                 </div>
             </div>
-
-            <a href="tools.html" class="nav-item active">
-                <span class="nav-icon">🛠️</span>
-                <span class="nav-text">实用工具</span>
-            </a>
             
             <a href="forum.html" class="nav-item">
                 <span class="nav-icon">💬</span>
@@ -257,7 +258,7 @@
             </div>
 
             <div id="toolsContainer">
-                <div class="tool-group" data-category="dev">
+                <div class="tool-group" data-category="dev" id="dev-tools">
                     <div class="tool-group-title"><span>💻</span> 开发者工具</div>
                     <div class="grid-container">
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">JSON 格式化</div></div></a>
@@ -267,7 +268,7 @@
                     </div>
                 </div>
 
-                <div class="tool-group" data-category="design" style="margin-top: 40px;">
+                <div class="tool-group" data-category="design" id="design-tools" style="margin-top: 40px;">
                     <div class="tool-group-title"><span>🎨</span> 设计美化</div>
                     <div class="grid-container">
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">在线调色板</div></div></a>
@@ -275,24 +276,39 @@
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">渐变颜色生成</div></div></a>
                     </div>
                 </div>
-                
+
+                <div class="tool-group" data-category="office" id="office-tools" style="margin-top: 40px;">
+                    <div class="tool-group-title"><span>📂</span> 办公效率</div>
+                    <div class="grid-container">
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">PDF 转 Word</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">流程图绘制</div></div></a>
+                    </div>
                 </div>
+
+                <div class="tool-group" data-category="media" id="media-tools" style="margin-top: 40px;">
+                    <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
+                    <div class="grid-container">
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">图片压缩</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">视频转 GIF</div></div></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
     <script src="script.js"></script>
     <script>
-        // --- 侧边栏展开折叠逻辑 ---
-        const allNavTrigger = document.getElementById('allNavTrigger');
-        const subNavMenu = document.getElementById('subNavMenu');
+        // --- 实用工具侧边栏展开折叠逻辑 ---
+        const toolsNavTrigger = document.getElementById('toolsNavTrigger');
+        const toolsSubMenu = document.getElementById('toolsSubMenu');
 
-        allNavTrigger.addEventListener('click', function() {
+        toolsNavTrigger.addEventListener('click', function() {
             const isOpening = !this.classList.contains('menu-open');
             this.classList.toggle('menu-open', isOpening);
-            subNavMenu.style.display = isOpening ? 'block' : 'none';
+            toolsSubMenu.style.display = isOpening ? 'block' : 'none';
         });
 
-        // --- 工具页搜索与分类逻辑 ---
+        // --- 工具页搜索逻辑 ---
         const toolSearchInput = document.getElementById('toolSearchInput');
         const toolCards = document.querySelectorAll('.card-item');
         const toolGroups = document.querySelectorAll('.tool-group');
@@ -309,6 +325,7 @@
             });
         });
 
+        // --- 分类切换逻辑 ---
         const tabItems = document.querySelectorAll('.tab-item');
         tabItems.forEach(tab => {
             tab.addEventListener('click', function() {
