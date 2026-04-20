@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏布局 (严格保持原件) ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -32,403 +31,273 @@
 
         .search-container {
             width: 100%;
-            max-width: 600px; 
-            display: flex;
-            justify-content: center;
-        }
-
-        .header-search-wrapper {
-            width: 100%;
+            max-width: 600px;
             display: flex;
             align-items: center;
             background: var(--bg);
-            border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 0 4px 0 0;
-            height: 42px; 
-            transition: border-color 0.2s;
-            overflow: visible;
-        }
-
-        .header-search-wrapper:focus-within { border-color: var(--secondary); }
-
-        .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
-        .engine-trigger-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 0 12px;
-            height: 42px;
-            background: var(--secondary);
-            color: #FFFFFF;
-            border: none;
-            border-radius: var(--radius-md) 0 0 var(--radius-md);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .engine-dropdown-list {
-            display: none;
-            position: absolute;
-            top: calc(100% + 6px);
-            left: 0;
-            min-width: 80px; 
-            width: 100%; 
-            background: var(--surface);
+            padding: 4px 8px;
             border: 1.5px solid var(--border);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-            z-index: 200;
-            padding: 0;
-            overflow: hidden;
+            transition: border-color var(--duration);
         }
-        
-        .engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
-        .engine-option-item {
-            padding: 10px 12px;
-            font-size: 13px;
-            cursor: pointer;
-            text-align: center;
-            border-bottom: 1px solid var(--border); 
-            transition: background 0.2s;
-        }
-        .engine-option-item:last-child { border-bottom: none; }
-        .engine-option-item:hover { background: var(--bg); }
-        .engine-option-item.selected { color: var(--primary); font-weight: 700; }
 
-        #searchInput {
+        .search-container:focus-within {
+            border-color: var(--secondary);
+        }
+
+        .engine-selector {
+            background: none;
             border: none;
-            background: transparent;
+            padding: 8px;
+            font-weight: 700;
+            color: var(--secondary);
+            cursor: pointer;
             outline: none;
-            width: 100%;
-            padding: 0 12px;
-            font-size: 15px;
-            color: var(--text-primary);
+            font-family: inherit;
         }
 
-        .header-actions { 
-            position: absolute;
-            right: 20px;
-            display: flex; 
-            align-items: center; 
+        .search-input {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 10px 12px;
+            font-size: 15px;
+            outline: none;
+            color: var(--text-primary);
+            font-family: inherit;
         }
 
         .menu-toggle {
-            display: none; 
+            display: none;
+            position: absolute;
+            right: 20px;
             background: none;
             border: none;
             cursor: pointer;
-            padding: 8px;
+            padding: 10px;
             flex-direction: column;
             gap: 5px;
+            z-index: 1001;
         }
+
         .menu-toggle span {
             display: block;
             width: 24px;
             height: 3px;
-            background: var(--text-primary);
+            background: var(--secondary);
             border-radius: 2px;
+            transition: 0.3s;
         }
 
-        /* ── 侧边栏菜单 (严格保持原件) ── */
-        .nav-item {
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-right: 1.5px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: transform var(--duration);
+        }
+
+        /* ✅ 严格同步工具页：登录按钮位置 */
+        .sidebar-header {
             display: flex;
             align-items: center;
-            padding: 14px 18px;
-            margin: 6px 12px;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            color: var(--text-primary);
-            font-weight: 600;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
+            justify-content: space-between;
+            padding: 20px 24px 10px 24px; 
+            border-bottom: none;
         }
 
-        .nav-item.active {
-            background: #000000 !important;
-            color: #FFFFFF !important;
-            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
-        }
-
-        .nav-item.menu-open {
-            background: var(--primary) !important;
-            color: #FFFFFF !important;
-            box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
-        }
-
-        .sub-nav-item {
-            display: block;
-            padding: 10px 16px 10px 56px;
-            font-size: 14px;
+        .logo-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 24px;
             font-weight: 800;
-            color: var(--text-secondary);
+            color: var(--secondary);
+            letter-spacing: -1px;
             text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        /* ── ✅ 侧边栏底部：严格同步 tools.html 结构 ── */
-        .sidebar-footer {
-            padding: 24px 16px;
-            border-top: 1px solid var(--border);
-            margin-top: auto; 
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .auth-btn {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 42px;
-            border-radius: var(--radius-md);
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            cursor: pointer;
         }
 
         .login-btn {
-            background: #FFFFFF;
-            border: 1.5px solid #000000;
-            color: #000000;
-        }
-        .login-btn:hover { background: #f0f0f0; }
-
-        .register-btn {
-            background: #000000;
-            border: 1.5px solid #000000;
+            background: var(--secondary);
             color: #FFFFFF;
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: opacity var(--duration);
         }
-        .register-btn:hover { background: #333333; }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 10px 16px; 
+            overflow-y: auto;
+        }
+
+        .nav-group { margin-bottom: 24px; }
+        
+        .nav-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 12px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all var(--duration);
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .arrow-icon {
+            font-size: 12px;
+            transition: transform 0.3s;
+            opacity: 0.5;
+        }
+        .nav-item.active .arrow-icon {
+            transform: rotate(180deg);
+            opacity: 1;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-w);
+            padding: 40px;
+            max-width: 1400px;
+        }
 
         @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 24px; }
             .menu-toggle { display: flex; }
-            .top-bar { justify-content: flex-start; padding-left: 50px; }
-            .search-container { max-width: none; }
         }
-        
-        .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
     </style>
 </head>
 <body>
-
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo-group">
-                <span class="logo-text">UYEA</span>
-                <span class="logo-sub">悠野</span>
-            </div>
+            <a href="#" class="logo-text">UYEA.</a>
+            <a href="login.html" class="login-btn">登录</a>
         </div>
         
-        <nav class="nav-menu">
+        <nav class="sidebar-nav">
             <div class="nav-group">
-                <div class="nav-item active nav-dropdown-trigger" id="allNavTrigger">
-                    <span class="nav-icon">🏠</span>
-                    <span class="nav-text">全部导航</span>
+                <div class="nav-label">主要导航</div>
+                <div class="nav-item active" data-section="ai-tools">
+                    <span>🤖 AI 智能体</span>
                     <span class="arrow-icon">▼</span>
                 </div>
-                <div class="sub-menu" id="subNavMenu" style="display: none;">
-                    <a href="#ai-section" class="sub-nav-item">Ai</a>
-                    <a href="#life-section" class="sub-nav-item">生活</a>
-                    <a href="#tool-section" class="sub-nav-item">工具</a>
+                <div class="nav-item" data-section="life-tech">
+                    <span>🌱 生活 & 技术</span>
+                    <span class="arrow-icon">▼</span>
+                </div>
+                <div class="nav-item" data-section="useful-tools">
+                    <span>🛠️ 常用工具</span>
+                    <span class="arrow-icon">▼</span>
                 </div>
             </div>
 
-            <a href="tools.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-text">实用工具</span></a>
-            <a href="forum.html" class="nav-item"><span class="nav-icon">💬</span><span class="nav-text">悠野社区</span></a>
-        </nav>
-
-        <div class="sidebar-footer">
-            <div class="auth-buttons">
-                <div class="auth-btn login-btn">登录</div>
-                <div class="auth-btn register-btn">注册</div>
+            <div class="nav-group">
+                <div class="nav-label">更多服务</div>
+                <a href="tools.html" class="nav-item">
+                    <span>🧰 实用工具箱</span>
+                </a>
+                <a href="forum.html" class="nav-item">
+                    <span>💬 悠野社区</span>
+                </a>
             </div>
-        </div>
+        </nav>
     </aside>
 
-    <main class="main-content">
-        <header class="top-bar">
-            <a href="#" class="header-logo">UYEA</a>
-            
-            <div class="search-container">
-                <div class="header-search-wrapper">
-                    <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
-                        <input type="hidden" id="searchEngineSelector" value="site">
-                        <button class="engine-trigger-btn" id="engineTriggerBtn" type="button">
-                            <span id="engineTriggerLabel">站内</span>
-                            <span class="engine-trigger-arrow">▼</span>
-                        </button>
-                        <div class="engine-dropdown-list" id="engineDropdownList">
-                            <div class="engine-option-item selected" data-value="site">站内</div>
-                            <div class="engine-option-item" data-value="google">谷歌</div>
-                            <div class="engine-option-item" data-value="bing">必应</div>
-                            <div class="engine-option-item" data-value="baidu">百度</div>
-                        </div>
-                    </div>
-                    <div style="width:1.5px; height:20px; background:var(--border); margin:0 4px;"></div>
-                    <input type="text" id="searchInput" placeholder="搜索关键词...">
-                </div>
-            </div>
-
-            <div class="header-actions">
-                <button class="menu-toggle" id="hamburgerBtn">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
-        </header>
-
-        <div class="content-wrapper">
-            <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
-            <div class="grid-container" style="margin-bottom: 40px;">
-                <div class="text-status-card" style="background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); grid-column: 1 / -1;">☕ 尽请期待</div>
-            </div>
-
-            <div class="section-group" id="ai-section">
-                <div class="section-header"><h2 class="section-title">Ai</h2></div>
-                <div class="grid-container" style="margin-bottom: 40px;">
-                    <a href="https://www.gemini.google.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="gemini.google.com"></div>
-                        <div class="card-info"><div class="card-title">Google Gemini</div></div>
-                    </a>
-                    <a href="https://chatgpt.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="chatgpt.com"></div>
-                        <div class="card-info"><div class="card-title">ChatGPT</div></div>
-                    </a>
-                    <a href="https://claude.ai/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="claude.ai"></div>
-                        <div class="card-info"><div class="card-title">Claude</div></div>
-                    </a>
-                    <a href="https://www.deepseek.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="deepseek.com"></div>
-                        <div class="card-info"><div class="card-title">DeepSeek</div></div>
-                    </a>
-                    <a href="https://yiyan.baidu.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="yiyan.baidu.com"></div>
-                        <div class="card-info"><div class="card-title">文心一言</div></div>
-                    </a>
-                    <a href="https://www.qianwen.aliyun.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="qianwen.aliyun.com"></div>
-                        <div class="card-info"><div class="card-title">通义千问</div></div>
-                    </a>
-                    <a href="https://www.kimi.ai/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="kimi.ai"></div>
-                        <div class="card-info"><div class="card-title">Kimi</div></div>
-                    </a>
-                    <a href="https://www.doubao.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="doubao.com"></div>
-                        <div class="card-info"><div class="card-title">豆包</div></div>
-                    </a>
-                    <a href="https://yuanbao.tencent.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="yuanbao.tencent.com"></div>
-                        <div class="card-info"><div class="card-title">腾讯元宝</div></div>
-                    </a>
-                    <a href="https://www.perplexity.ai/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="perplexity.ai"></div>
-                        <div class="card-info"><div class="card-title">Perplexity</div></div>
-                    </a>
-                    <a href="https://grok.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="grok.com"></div>
-                        <div class="card-info"><div class="card-title">Grok</div></div>
-                    </a>
-                    <a href="https://copilot.cloud.microsoft/" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="copilot.cloud.microsoft"></div>
-                        <div class="card-info"><div class="card-title">Microsoft 365 Copilot Chat</div></div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="section-group" id="life-section">
-                <div class="section-header"><h2 class="section-title">生活</h2></div>
-                <div class="grid-container" style="margin-bottom: 40px;">
-                    <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="xiaohongshu.com"></div>
-                        <div class="card-info"><div class="card-title">小红书</div></div>
-                    </a>
-                    <a href="https://www.bilibili.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="bilibili.com"></div>
-                        <div class="card-info"><div class="card-title">Bilibili</div></div>
-                    </a>
-                    <a href="https://www.zhihu.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="zhihu.com"></div>
-                        <div class="card-info"><div class="card-title">知乎</div></div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="section-group" id="tool-section">
-                <div class="section-header"><h2 class="section-title">工具</h2></div>
-                <div class="grid-container">
-                    <a href="https://github.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="github.com"></div>
-                        <div class="card-info"><div class="card-title">GitHub</div></div>
-                    </a>
-                    <a href="https://tinypng.com" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="tinypng.com"></div>
-                        <div class="card-info"><div class="card-title">TinyPNG</div></div>
-                    </a>
-                    <a href="https://v0.dev" target="_blank" class="card-item">
-                        <div class="card-icon"><img data-domain="v0.dev"></div>
-                        <div class="card-info"><div class="card-title">v0.dev</div></div>
-                    </a>
-                </div>
-            </div>
+    <header class="top-bar">
+        <div class="search-container">
+            <select class="engine-selector" id="engineSelector">
+                <option value="baidu">百度</option>
+                <option value="google">谷歌</option>
+                <option value="bing">必应</option>
+                <option value="site">站内</option>
+            </select>
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索资源或发起网页搜索...">
         </div>
+        <button class="menu-toggle" id="hamburgerBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <main class="main-content">
+        <section class="section-container" id="ai-tools">
+            <div class="section-header">
+                <h2 class="section-title">Ai</h2>
+            </div>
+            <div class="grid-container">
+                <a href="https://www.gemini.google.com/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="gemini.google.com"></div><div class="card-title">Google Gemini</div></a>
+                <a href="https://chatgpt.com/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="chatgpt.com"></div><div class="card-title">ChatGPT</div></a>
+                <a href="https://claude.ai/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="claude.ai"></div><div class="card-title">Claude</div></a>
+                <a href="https://www.deepseek.com/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="deepseek.com"></div><div class="card-title">DeepSeek</div></a>
+                <a href="https://yiyan.baidu.com/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="yiyan.baidu.com"></div><div class="card-title">文心一言</div></a>
+                <a href="https://www.qianwen.aliyun.com/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="qianwen.aliyun.com"></div><div class="card-title">通义千问</div></a>
+                <a href="https://www.kimi.ai/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="kimi.ai"></div><div class="card-title">Kimi</div></a>
+                <a href="https://www.doubao.com/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="doubao.com"></div><div class="card-title">豆包</div></a>
+                <a href="https://yuanbao.tencent.com/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="yuanbao.tencent.com"></div><div class="card-title">腾讯元宝</div></a>
+                <a href="https://www.perplexity.ai/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="perplexity.ai"></div><div class="card-title">Perplexity</div></a>
+                <a href="https://grok.com/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="grok.com"></div><div class="card-title">Grok</div></a>
+                <a href="https://copilot.cloud.microsoft/" target="_blank" class="card-item"><div class="card-icon"><img data-domain="copilot.cloud.microsoft"></div><div class="card-title">Microsoft Copilot</div></a>
+            </div>
+        </section>
+
+        <section class="section-container" id="life-tech" style="margin-top: 50px;">
+            <div class="section-header">
+                <h2 class="section-title">生活</h2>
+            </div>
+            <div class="grid-container">
+                <a href="https://www.xiaohongshu.com" target="_blank" class="card-item"><div class="card-icon"><img data-domain="xiaohongshu.com"></div><div class="card-title">小红书</div></a>
+                <a href="https://www.bilibili.com" target="_blank" class="card-item"><div class="card-icon"><img data-domain="bilibili.com"></div><div class="card-title">Bilibili</div></a>
+                <a href="https://www.zhihu.com" target="_blank" class="card-item"><div class="card-icon"><img data-domain="zhihu.com"></div><div class="card-title">知乎</div></a>
+            </div>
+        </section>
+
+        <section class="section-container" id="useful-tools" style="margin-top: 50px;">
+            <div class="section-header">
+                <h2 class="section-title">工具</h2>
+            </div>
+            <div class="grid-container">
+                <a href="https://github.com" target="_blank" class="card-item"><div class="card-icon"><img data-domain="github.com"></div><div class="card-title">GitHub</div></a>
+                <a href="https://tinypng.com" target="_blank" class="card-item"><div class="card-icon"><img data-domain="tinypng.com"></div><div class="card-title">TinyPNG</div></a>
+                <a href="https://v0.dev" target="_blank" class="card-item"><div class="card-icon"><img data-domain="v0.dev"></div><div class="card-title">v0.dev</div></a>
+            </div>
+        </section>
     </main>
 
     <script src="script.js"></script>
     <script>
-        /* ── 严格保留原有脚本逻辑 ── */
-        const allNavTrigger = document.getElementById('allNavTrigger');
-        const subNavMenu    = document.getElementById('subNavMenu');
-
-        allNavTrigger.addEventListener('click', function() {
-            const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
-            if (isHomePage) {
-                const isOpening = !this.classList.contains('menu-open');
-                this.classList.toggle('menu-open', isOpening);
-                subNavMenu.style.display = isOpening ? 'block' : 'none';
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        const searchInput      = document.getElementById('searchInput');
-        const engineSelector   = document.getElementById('searchEngineSelector');
-        const engineWrapper    = document.getElementById('engineDropdownWrapper');
-        const engineTriggerBtn = document.getElementById('engineTriggerBtn');
-        const engineTriggerLabel = document.getElementById('engineTriggerLabel');
-        const engineOptionItems  = document.querySelectorAll('.engine-option-item');
-        const cardItems        = document.querySelectorAll('.card-item');
-        const sections         = document.querySelectorAll('.section-group');
-
-        const engineUrls = { baidu: "https://www.baidu.com/s?wd=", google: "https://www.google.com/search?q=", bing: "https://cn.bing.com/search?q=" };
-
-        engineTriggerBtn.addEventListener('click', (e) => { e.stopPropagation(); engineWrapper.classList.toggle('open'); });
-
-        engineOptionItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
-                engineSelector.value = this.dataset.value;
-                engineTriggerLabel.textContent = this.textContent.trim();
-                engineOptionItems.forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                engineWrapper.classList.remove('open');
-                if (engineSelector.value === 'site') searchInput.dispatchEvent(new Event('input'));
-            });
-        });
-
-        document.addEventListener('click', () => engineWrapper.classList.remove('open'));
+        const engineSelector = document.getElementById('engineSelector');
+        const searchInput = document.getElementById('searchInput');
+        const cardItems = document.querySelectorAll('.card-item');
+        const sections = document.querySelectorAll('.section-container');
+        const engineUrls = { baidu: 'https://www.baidu.com/s?wd=', google: 'https://www.google.com/search?q=', bing: 'https://cn.bing.com/search?q=' };
 
         searchInput.addEventListener('input', function() {
             if (engineSelector.value === 'site') {
@@ -455,10 +324,7 @@
         function initIcons() {
             document.querySelectorAll('.card-icon img').forEach(img => {
                 const domain = img.getAttribute('data-domain');
-                if (domain && !img.src) {
-                    img.src = `https://favicon.splitbee.io/?url=${domain}`;
-                    img.onerror = () => { img.style.display='none'; }; 
-                }
+                if (domain) img.src = `https://favicon.splitbee.io/?url=${domain}`;
             });
         }
         window.addEventListener('DOMContentLoaded', initIcons);
