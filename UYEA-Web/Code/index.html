@@ -142,9 +142,7 @@
         .nav-item {
             display: flex;
             align-items: center;
-            /* ✅ 优化：增加内边距让菜单更厚实饱满 */
             padding: 14px 18px;
-            /* ✅ 优化：增加间距，解决空洞感 */
             margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
@@ -155,14 +153,12 @@
             border: none;
         }
 
-        /* 基础高亮：纯黑背景 + 白色字体 + 内阴影 */
         .nav-item.active {
             background: #000000 !important;
             color: #FFFFFF !important;
             box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1);
         }
 
-        /* 展开态：铁锈红 + 白色字体 */
         .nav-item.menu-open {
             background: var(--primary) !important;
             color: #FFFFFF !important;
@@ -186,10 +182,8 @@
 
         .sub-nav-item {
             display: block;
-            /* ✅ 优化：增加垂直间距和缩进 */
             padding: 10px 16px 10px 56px;
             font-size: 14px;
-            /* ✅ 优化：文字极粗(800)，形成副标题感觉 */
             font-weight: 800;
             color: var(--text-secondary);
             text-decoration: none;
@@ -200,7 +194,6 @@
             background: rgba(0,0,0,0.03);
         }
 
-        /* ── 侧边栏底部按钮 (同步黑白配色与间距) ── */
         .sidebar-footer {
             padding: 24px 16px;
             border-top: 1px solid var(--border);
@@ -217,7 +210,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* ✅ 优化：增加高度 */
             height: 42px;
             border-radius: var(--radius-md);
             font-size: 13px;
