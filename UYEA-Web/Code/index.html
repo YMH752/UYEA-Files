@@ -133,7 +133,6 @@
             border-radius: 2px;
         }
 
-        /* ── 优化后的侧边栏菜单样式 ── */
         /* ── 侧边栏菜单：像素级对齐工具页 ── */
         .nav-menu {
             padding: 16px 12px;
@@ -142,6 +141,8 @@
         .nav-group {
             display: flex;
             flex-direction: column;
+            /* ✅ 补偿：因为nav-group是第一个子元素，需要调整外边距 */
+            margin: 0;
         }
 
         .nav-item {
