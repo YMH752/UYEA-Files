@@ -148,7 +148,7 @@
             text-decoration: none;
             color: var(--text-primary);
             font-weight: 600;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             cursor: pointer;
             border: none;
         }
@@ -167,13 +167,14 @@
 
         .arrow-icon {
             font-size: 10px;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             margin-left: auto;
             opacity: 0.6;
         }
-        .nav-item.active .arrow-icon, 
-        .nav-item.menu-open .arrow-icon { opacity: 1; }
-        .nav-item.menu-open .arrow-icon { transform: rotate(180deg); }
+        .nav-item.menu-open .arrow-icon { 
+            transform: rotate(180deg);
+            opacity: 1;
+        }
 
         .sub-menu {
             display: none; 
@@ -187,7 +188,7 @@
             font-weight: 800;
             color: var(--text-secondary);
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
         .sub-nav-item:hover {
             color: var(--primary);
