@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏：保持社区页布局 ── */
+        /* ── 顶栏：仅保留右侧汉堡菜单 ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -45,21 +45,13 @@
             border-radius: 2px;
         }
 
-        /* ── 侧边栏菜单：完全对齐工具页 ── */
-        .nav-menu {
-            padding: 16px 12px;
-        }
-        .nav-group {
-            display: flex;
-            flex-direction: column;
-        }
-
+        /* ── 侧边栏：同步黑白配色与直接跳转模式 ── */
         .nav-item {
             display: flex;
             align-items: center;
-            /* ✅ 对齐工具页：高度与内边距 */
+            /* ✅ 对齐导航页：高度与内边距 */
             padding: 14px 18px;
-            /* ✅ 对齐工具页：完全一致的间距 */
+            /* ✅ 对齐导航页：完全一致的间距 */
             margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
@@ -70,60 +62,19 @@
             border: none;
         }
 
-        /* 基础高亮：黑底白字 */
+        /* 高亮：黑底白字 + 内阴影 */
         .nav-item.active {
             background: #000000 !important;
             color: #FFFFFF !important;
             box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important;
         }
 
-        /* 展开态：铁锈红 */
-        .nav-item.menu-open {
-            background: var(--primary) !important;
-            color: #FFFFFF !important;
-            box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
-        }
-
+        /* ✅ 社区页隐藏箭头 */
         .arrow-icon {
-            font-size: 10px;
-            margin-left: auto;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0.6;
-        }
-        .nav-item.menu-open .arrow-icon {
-            transform: rotate(180deg);
-            opacity: 1;
-        }
-
-        /* ── 子菜单：优化过渡感 ── */
-        .sub-menu {
             display: none; 
-            padding-bottom: 10px;
-            /* 增加一个极其微小的淡入 */
-            animation: fadeInSub 0.2s ease-out;
-        }
-        @keyframes fadeInSub {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
-        .sub-nav-item {
-            display: block;
-            /* ✅ 对齐工具页：子项缩进与间距 */
-            padding: 10px 16px 10px 56px;
-            font-size: 14px;
-            /* ✅ 对齐工具页：800 极粗体 */
-            font-weight: 800; 
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-        .sub-nav-item:hover {
-            color: var(--primary);
-            background: rgba(0,0,0,0.03);
-        }
-
-        /* 底部按钮：完全对齐工具页 */
+        /* 底部按钮：完全对齐导航页 */
         .sidebar-footer {
             padding: 24px 16px;
             border-top: 1px solid var(--border);
