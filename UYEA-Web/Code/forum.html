@@ -62,7 +62,16 @@
             border: none;
         }
 
-        /* 高亮：黑底白字 + 内阴影 */
+        /* ✅ 微调：补偿社区页缺少nav-group的累计误差 */
+        .nav-menu > a:nth-of-type(2) {
+            transform: translateY(-10px);
+        }
+        
+        .nav-menu > a:nth-of-type(3) {
+            transform: translateY(-10px);
+        }
+
+        /* 基础高亮：黑底白字 */
         .nav-item.active {
             background: #000000 !important;
             color: #FFFFFF !important;
@@ -71,14 +80,16 @@
 
         /* ✅ 社区页隐藏箭头 */
         .arrow-icon {
-            display: none; 
+            display: none;
         }
 
         /* 底部按钮：完全对齐导航页 */
         .sidebar-footer {
             padding: 24px 16px;
             border-top: 1px solid var(--border);
-            margin-top: auto; 
+            margin-top: auto;
+            /* ✅ 微调：补偿下半部分的累计误差 */
+            transform: translateY(-10px);
         }
         .auth-buttons {
             display: flex;
