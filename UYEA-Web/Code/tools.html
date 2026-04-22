@@ -24,7 +24,6 @@
             top: 0;
             z-index: 100;
         }
-
         .menu-toggle {
             display: flex;
             background: none;
@@ -34,15 +33,6 @@
             flex-direction: column;
             gap: 5px;
         }
-        /* 修改位置：.menu-toggle 下方新增媒体查询 */
-        /* 修改目的：PC 端隐藏汉堡按钮，移动端（≤768px）显示 */
-        /* 影响范围：仅 .menu-toggle 元素可见性 */
-        @media (min-width: 769px) {
-            .menu-toggle {
-                display: none;
-            }
-        }
-
         .menu-toggle span {
             display: block;
             width: 24px;
@@ -50,7 +40,16 @@
             background: var(--text-primary);
             border-radius: 2px;
         }
-
+        /* ========== 修改开始 ========== */
+        /* 修改位置：.menu-toggle 样式块下方 */
+        /* 前后逻辑：原按钮在所有屏幕都显示，修改为PC端隐藏、移动端显示 */
+        /* 修改目的：实现PC端隐藏右上角汉堡菜单，仅在手机端显示 */
+        @media (min-width: 768px) {
+            .menu-toggle {
+                display: none;
+            }
+        }
+        /* ========== 修改结束 ========== */
         /* ── 侧边栏菜单：像素级对齐首页 ── */
         .nav-menu {
             padding: 16px 12px;
@@ -59,7 +58,6 @@
             display: flex;
             flex-direction: column;
         }
-
         .nav-item {
             display: flex;
             align-items: center;
@@ -75,21 +73,18 @@
             cursor: pointer;
             border: none;
         }
-
         /* 基础高亮：黑底白字 */
         .nav-item.active {
             background: #000000 !important;
             color: #FFFFFF !important;
             box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important;
         }
-
         /* 展开态：铁锈红 */
         .nav-item.menu-open {
             background: var(--primary) !important;
             color: #FFFFFF !important;
             box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
         }
-
         .arrow-icon {
             font-size: 10px;
             margin-left: auto;
@@ -100,7 +95,6 @@
             transform: rotate(180deg);
             opacity: 1;
         }
-
         /* ── 子菜单：优化过渡感 ── */
         .sub-menu {
             display: none; 
@@ -112,7 +106,6 @@
             from { opacity: 0; transform: translateY(-5px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .sub-nav-item {
             display: block;
             /* ✅ 对齐首页：子项缩进与间距 */
@@ -128,7 +121,6 @@
             color: var(--primary);
             background: rgba(0,0,0,0.03);
         }
-
         /* 底部按钮：完全对齐首页 */
         .sidebar-footer {
             padding: 24px 16px;
@@ -161,7 +153,6 @@
             border: 1.5px solid #000000;
             color: #FFFFFF;
         }
-
         /* ── 工具页内容区 ── */
         .tool-search-bar {
             display: flex;
@@ -217,9 +208,7 @@
     </style>
 </head>
 <body>
-
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
@@ -233,7 +222,6 @@
                 <span class="nav-icon">🏠</span>
                 <span class="nav-text">全部导航</span>
             </a>
-
             <div class="nav-group">
                 <div class="nav-item active nav-dropdown-trigger" id="toolsNavTrigger">
                     <span class="nav-icon">🛠️</span>
@@ -253,7 +241,6 @@
                 <span class="nav-text">悠野社区</span>
             </a>
         </nav>
-
         <div class="sidebar-footer">
             <div class="auth-buttons">
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')">登录</div>
@@ -261,24 +248,20 @@
             </div>
         </div>
     </aside>
-
     <main class="main-content">
         <header class="top-bar">
             <button class="menu-toggle" id="hamburgerBtn">
                 <span></span><span></span><span></span>
             </button>
         </header>
-
         <div class="content-wrapper">
             <div class="section-header">
                 <h2 class="section-title">实用工具箱</h2>
             </div>
-
             <div class="tool-search-bar">
                 <span style="font-size: 18px;">🔍</span>
                 <input type="text" class="tool-search-input" id="toolSearchInput" placeholder="搜索在线工具...">
             </div>
-
             <div class="category-tabs" id="categoryTabs">
                 <div class="tab-item active" data-category="all">全部</div>
                 <div class="tab-item" data-category="dev">开发者工具</div>
@@ -286,7 +269,6 @@
                 <div class="tab-item" data-category="office">办公效率</div>
                 <div class="tab-item" data-category="media">多媒体处理</div>
             </div>
-
             <div id="toolsContainer">
                 <div class="tool-group" data-category="dev" id="dev-tools">
                     <div class="tool-group-title"><span>💻</span> 开发者工具</div>
@@ -297,7 +279,6 @@
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">时间戳转换</div></div></a>
                     </div>
                 </div>
-
                 <div class="tool-group" data-category="design" id="design-tools" style="margin-top: 40px;">
                     <div class="tool-group-title"><span>🎨</span> 设计美化</div>
                     <div class="grid-container">
@@ -306,7 +287,6 @@
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">渐变颜色生成</div></div></a>
                     </div>
                 </div>
-
                 <div class="tool-group" data-category="office" id="office-tools" style="margin-top: 40px;">
                     <div class="tool-group-title"><span>📂</span> 办公效率</div>
                     <div class="grid-container">
@@ -314,7 +294,6 @@
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">流程图绘制</div></div></a>
                     </div>
                 </div>
-
                 <div class="tool-group" data-category="media" id="media-tools" style="margin-top: 40px;">
                     <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
                     <div class="grid-container">
@@ -325,13 +304,11 @@
             </div>
         </div>
     </main>
-
     <script src="script.js"></script>
     <script>
         // --- 核心交互逻辑修正 ---
         const toolsNavTrigger = document.getElementById('toolsNavTrigger');
         const toolsSubMenu = document.getElementById('toolsSubMenu');
-
         toolsNavTrigger.addEventListener('click', function() {
             // 切换 menu-open 状态（触发旋转箭头和颜色变化）
             const isOpening = this.classList.toggle('menu-open');
@@ -339,7 +316,6 @@
             // 使用 display 切换，配合 CSS 里的 fadeInSub 动画
             toolsSubMenu.style.display = isOpening ? 'block' : 'none';
         });
-
         // 锚点平滑滚动对齐首页体验
         document.querySelectorAll('.sub-nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
@@ -351,12 +327,10 @@
                 }
             });
         });
-
         // --- 保持原有的工具页搜索/分类功能 ---
         const toolSearchInput = document.getElementById('toolSearchInput');
         const toolCards = document.querySelectorAll('.card-item');
         const toolGroups = document.querySelectorAll('.tool-group');
-
         toolSearchInput.addEventListener('input', function() {
             const keyword = this.value.toLowerCase().trim();
             toolCards.forEach(card => {
@@ -368,7 +342,6 @@
                 group.style.display = hasVisible ? 'block' : 'none';
             });
         });
-
         const tabItems = document.querySelectorAll('.tab-item');
         tabItems.forEach(tab => {
             tab.addEventListener('click', function() {
