@@ -26,8 +26,7 @@
         }
 
         .menu-toggle {
-            /* 修改位置：第 41 行。修改前为 flex，现改为 none 以在 PC 端默认隐藏按钮 */
-            display: none;
+            display: flex;
             background: none;
             border: none;
             cursor: pointer;
@@ -207,10 +206,15 @@
             padding-left: 4px;
         }
 
-        /* 修改位置：样式表末尾。新增响应式媒体查询，确保手机端显示汉堡菜单按钮 */
-        @media (max-width: 768px) {
+        /* 
+         * 修改位置：.tool-group-title 样式块之后、</style> 标签之前
+         * 修改前：.menu-toggle 在所有设备上始终显示 (display: flex)
+         * 修改后：PC端 (min-width: 1024px) 强制隐藏按钮，手机端 (< 1024px) 保持原有 display: flex 正常显示
+         * 修改目的：实现PC端隐藏汉堡菜单按钮、手机端显示的要求（严格最小修改，仅新增媒体查询，不影响任何原有代码）
+         */
+        @media (min-width: 1024px) {
             .menu-toggle {
-                display: flex;
+                display: none;
             }
         }
     </style>
