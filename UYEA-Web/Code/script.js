@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ────────────────────────────────────────────
        1. 元素引用
        ──────────────────────────────────────────── */
-    const searchEngine = document.getElementById('searchEngine');
+    // 【修改处】修正元素ID为 searchEngineSelector
+    const searchEngine = document.getElementById('searchEngineSelector');
     const searchInput  = document.getElementById('searchInput');
     const sidebarItems = document.querySelectorAll('.sidebar .nav-item[data-section]');
     const bottomItems  = document.querySelectorAll('.bottom-nav .bottom-nav-item[data-section]');
@@ -91,12 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ────────────────────────────────────────────
        5. 搜索引擎切换（带localStorage保存）
+       注意：此段代码用于旧版结构，当前index.html中实际使用内嵌脚本实现，
+       此处保留但增加存在性判断，避免控制台报错。
        ──────────────────────────────────────────── */
     const engineBtn = document.getElementById('engineBtn');
     const engineDropdown = document.getElementById('engineDropdown');
     const engineLabel = document.getElementById('engineLabel');
     const engineOptions = engineDropdown?.querySelectorAll('.engine-option') || [];
 
+    // 【修改处】仅当元素存在时才执行绑定，避免报错
     if (engineBtn) {
         engineBtn.addEventListener('click', function(e) {
             e.stopPropagation();
