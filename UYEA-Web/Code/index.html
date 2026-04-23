@@ -27,13 +27,14 @@
             top: 0;
             z-index: 100;
         }
-        .header-logo { display: none; }
+
         .search-container {
             width: 100%;
             max-width: 600px; 
             display: flex;
             justify-content: center;
         }
+
         .header-search-wrapper {
             width: 100%;
             display: flex;
@@ -46,7 +47,9 @@
             transition: border-color 0.2s;
             overflow: visible;
         }
+
         .header-search-wrapper:focus-within { border-color: var(--secondary); }
+
         /* ── 下拉引擎样式 (保持原样) ── */
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
         .engine-trigger-btn {
@@ -64,6 +67,7 @@
             cursor: pointer;
             white-space: nowrap;
         }
+
         .engine-dropdown-list {
             display: none;
             position: absolute;
@@ -92,6 +96,7 @@
         .engine-option-item:last-child { border-bottom: none; }
         .engine-option-item:hover { background: var(--bg); }
         .engine-option-item.selected { color: var(--primary); font-weight: 700; }
+
         #searchInput {
             border: none;
             background: transparent;
@@ -101,13 +106,155 @@
             font-size: 15px;
             color: var(--text-primary);
         }
+
         .header-actions { 
             position: absolute;
             right: 20px;
             display: flex; 
             align-items: center; 
         }
+
+        .menu-toggle {
+            display: none; 
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 2px;
+        }
+
+        /* ── 优化后的侧边栏菜单样式 ── */
+        /* ── 侧边栏菜单：像素级对齐工具页 ── */
+        .nav-menu {
+            padding: 16px 12px;
+        }
+
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            /* ✅ 对齐工具页：高度与内边距 */
+            padding: 14px 18px;
+            /* ✅ 对齐工具页：完全一致的间距 */
+            margin: 6px 12px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* ✅ 微调：补偿下半部分的累计误差 */
+        .nav-menu > a:nth-of-type(2) {
+            transform: translateY(5px);
+        }
+
+        /* 基础高亮：黑底白字 */
+        .nav-item.active {
+            background: #000000 !important;
+            color: #FFFFFF !important;
+            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important;
+        }
+
+        /* 展开态：铁锈红 */
+        .nav-item.menu-open {
+            background: var(--primary) !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
+        }
+
+        .arrow-icon {
+            font-size: 10px;
+            margin-left: auto;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.6;
+        }
+        .nav-item.menu-open .arrow-icon { 
+            transform: rotate(180deg);
+            opacity: 1;
+        }
+
+        .sub-menu {
+            display: none; 
+            padding-bottom: 10px;
+            /* 增加一个极其微小的淡入 */
+            animation: fadeInSub 0.2s ease-out;
+        }
+        @keyframes fadeInSub {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sub-nav-item {
+            display: block;
+            /* ✅ 对齐工具页：子项缩进与间距 */
+            padding: 10px 16px 10px 56px;
+            font-size: 14px;
+            /* ✅ 对齐工具页：800 极粗体 */
+            font-weight: 800; 
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .sub-nav-item:hover {
+            color: var(--primary);
+            background: rgba(0,0,0,0.03);
+        }
+
+        /* 底部按钮：完全对齐工具页 */
+        .sidebar-footer {
+            padding: 24px 16px;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+            /* ✅ 微调：补偿下半部分的累计误差 */
+            transform: translateY(5px);
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .auth-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 42px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .login-btn {
+            background: #FFFFFF;
+            border: 1.5px solid #000000;
+            color: #000000;
+        }
+
+        .register-btn {
+            background: #000000;
+            border: 1.5px solid #000000;
+            color: #FFFFFF;
+        }
+
         @media (max-width: 1024px) {
+            .menu-toggle { display: flex; }
             .top-bar { justify-content: flex-start; padding-left: 50px; }
             .search-container { max-width: none; }
         }
@@ -116,10 +263,15 @@
             .top-bar { padding: 0 12px; justify-content: space-between; }
             .search-container { margin-right: 40px; }
         }
+
+        .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
     </style>
 </head>
 <body>
+
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
@@ -150,6 +302,7 @@
                 <span class="nav-text">悠野社区</span>
             </a>
         </nav>
+
         <div class="sidebar-footer">
             <div class="auth-buttons">
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')">登录</div>
@@ -157,10 +310,9 @@
             </div>
         </div>
     </aside>
+
     <main class="main-content">
         <header class="top-bar">
-            <a href="#" class="header-logo">UYEA</a>
-            
             <div class="search-container">
                 <div class="header-search-wrapper">
                     <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
@@ -180,17 +332,20 @@
                     <input type="text" id="searchInput" placeholder="搜索关键词...">
                 </div>
             </div>
+
             <div class="header-actions">
                 <button class="menu-toggle" id="hamburgerBtn">
                     <span></span><span></span><span></span>
                 </button>
             </div>
         </header>
+
         <div class="content-wrapper">
             <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
                 <div class="text-status-card" style="background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); grid-column: 1 / -1;">☕ 尽请期待</div>
             </div>
+
             <div class="section-group" id="ai-section">
                 <div class="section-header"><h2 class="section-title">Ai</h2></div>
                 <div class="grid-container" style="margin-bottom: 40px;">
@@ -244,6 +399,7 @@
                     </a>
                 </div>
             </div>
+
             <div class="section-group" id="life-section">
                 <div class="section-header"><h2 class="section-title">生活</h2></div>
                 <div class="grid-container" style="margin-bottom: 40px;">
@@ -261,6 +417,7 @@
                     </a>
                 </div>
             </div>
+
             <div class="section-group" id="tool-section">
                 <div class="section-header"><h2 class="section-title">工具</h2></div>
                 <div class="grid-container">
@@ -280,43 +437,7 @@
             </div>
         </div>
     </main>
-    <!-- ✅ 新增：回到顶部按钮 -->
-    <button class="back-to-top" id="backToTopBtn">↑</button>
-    
+
     <script src="script.js"></script>
-    <script>
-        /* ── 严格保留原有脚本逻辑（首页专属） ── */
-        const allNavTrigger = document.getElementById('allNavTrigger');
-        const subNavMenu    = document.getElementById('subNavMenu');
-        allNavTrigger.addEventListener('click', function() {
-            const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
-            if (isHomePage) {
-                const isOpening = !this.classList.contains('menu-open');
-                this.classList.toggle('menu-open', isOpening);
-                subNavMenu.style.display = isOpening ? 'block' : 'none';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-        // ✅ 首页站内搜索功能（保留原有逻辑）
-        const searchInput      = document.getElementById('searchInput');
-        const engineSelector   = document.getElementById('searchEngineSelector');
-        const cardItems        = document.querySelectorAll('.card-item');
-        const sections         = document.querySelectorAll('.section-group');
-        searchInput.addEventListener('input', function() {
-            if (engineSelector.value === 'site') {
-                const keyword = this.value.toLowerCase().trim();
-                cardItems.forEach(card => {
-                    const title = card.querySelector('.card-title').textContent.toLowerCase();
-                    card.style.display = title.includes(keyword) ? 'flex' : 'none';
-                });
-                sections.forEach(section => {
-                    const hasVisibleCards = Array.from(section.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                    section.style.display = hasVisibleCards ? 'block' : 'none';
-                });
-            }
-        });
-    </script>
 </body>
 </html>
