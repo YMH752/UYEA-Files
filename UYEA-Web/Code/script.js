@@ -2,22 +2,35 @@
    UYEA 悠野工作室 · script.js (优化版)
    优化内容：菜单统一、图标加载、localStorage保存、汉堡菜单
    ✅ 新增：GitHub本地ico图标加载 + emoji备用方案
+   ✅ 2026-04-23 优化：自动设置active状态、修复滚动锁定、统一搜索、回到顶部
    ============================================================ */
-
 document.addEventListener('DOMContentLoaded', () => {
-
     /* ────────────────────────────────────────────
        1. 元素引用
        ──────────────────────────────────────────── */
-    // 【修改处】修正元素ID为 searchEngineSelector
     const searchEngine = document.getElementById('searchEngineSelector');
     const searchInput  = document.getElementById('searchInput');
-    const sidebarItems = document.querySelectorAll('.sidebar .nav-item[data-section]');
-    const bottomItems  = document.querySelectorAll('.bottom-nav .bottom-nav-item[data-section]');
+    const sidebarItems = document.querySelectorAll('.sidebar .nav-item');
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
-
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    
+    /* ────────────────────────────────────────────
+       ✅ 新增：自动设置当前页面active状态
+       ──────────────────────────────────────────── */
+    function setCurrentPageActive() {
+        const currentPath = window.location.pathname;
+        sidebarItems.forEach(item => {
+            const href = item.getAttribute('href');
+            if (href && currentPath.endsWith(href)) {
+                sidebarItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            }
+        });
+    }
+    setCurrentPageActive();
+    
     /* ────────────────────────────────────────────
        2. 搜索引擎配置
        ──────────────────────────────────────────── */
@@ -26,13 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
         google: q => `https://www.google.com/search?q=${encodeURIComponent(q)}`,
         bing:   q => `https://cn.bing.com/search?q=${encodeURIComponent(q)}`
     };
-
     /* ✅ 优化：localStorage 保存搜索引擎选择 */
     const savedEngine = localStorage.getItem('uyea_preferred_search_engine') || 'baidu';
     if (searchEngine && engineUrls[savedEngine]) {
         searchEngine.value = savedEngine;
     }
-
     /* ────────────────────────────────────────────
        3. URL验证函数（安全防护）
        ──────────────────────────────────────────── */
@@ -45,11 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
     }
-
     /* ────────────────────────────────────────────
-       4. 搜索功能
+       4. 统一搜索功能（兼容首页多引擎）
        ──────────────────────────────────────────── */
     window.doSearch = function() {
+        if (!searchInput) return;
+        
         const query = searchInput.value.trim();
         
         if (!query) {
@@ -59,27 +71,21 @@ document.addEventListener('DOMContentLoaded', () => {
             searchInput.classList.add('shake');
             return;
         }
-
         const engine = searchEngine.value;
-
         // ✅ 验证搜索引擎类型是否合法
         if (!engineUrls[engine]) {
             console.error('Invalid search engine:', engine);
             return;
         }
-
         const url = engineUrls[engine](query);
-
         // ✅ 验证生成的URL是否有效
         if (!isValidUrl(url)) {
             console.error('Generated invalid URL:', url);
             return;
         }
-
         // ✅ 使用 noopener,noreferrer 防止安全漏洞
         window.open(url, '_blank', 'noopener,noreferrer');
     };
-
     // ✅ 监听回车键
     if (searchInput) {
         searchInput.addEventListener('keydown', (e) => {
@@ -89,28 +95,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
     /* ────────────────────────────────────────────
        5. 搜索引擎切换（带localStorage保存）
-       注意：此段代码用于旧版结构，当前index.html中实际使用内嵌脚本实现，
-       此处保留但增加存在性判断，避免控制台报错。
        ──────────────────────────────────────────── */
-    const engineBtn = document.getElementById('engineBtn');
-    const engineDropdown = document.getElementById('engineDropdown');
-    const engineLabel = document.getElementById('engineLabel');
-    const engineOptions = engineDropdown?.querySelectorAll('.engine-option') || [];
-
-    // 【修改处】仅当元素存在时才执行绑定，避免报错
-    if (engineBtn) {
-        engineBtn.addEventListener('click', function(e) {
+    const engineWrapper = document.getElementById('engineDropdownWrapper');
+    const engineTriggerBtn = document.getElementById('engineTriggerBtn');
+    const engineTriggerLabel = document.getElementById('engineTriggerLabel');
+    const engineOptionItems  = document.querySelectorAll('.engine-option-item');
+    if (engineTriggerBtn) {
+        engineTriggerBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const isNowOpen = engineDropdown.classList.toggle('open');
-            engineBtn.classList.toggle('open', isNowOpen);
+            engineWrapper.classList.toggle('open');
         });
     }
-
-    engineOptions.forEach(opt => {
-        opt.addEventListener('click', function(e) {
+    engineOptionItems.forEach(item => {
+        item.addEventListener('click', function(e) {
             e.stopPropagation();
             const val = this.dataset.value;
             
@@ -119,9 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Invalid engine option:', val);
                 return;
             }
-
             searchEngine.value = val;
-            engineLabel.textContent = this.textContent.trim();
+            engineTriggerLabel.textContent = this.textContent.trim();
             
             // ✅ 保存到localStorage
             try {
@@ -130,86 +128,68 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn('localStorage not available:', e);
             }
             
-            engineOptions.forEach(o => o.classList.remove('selected'));
+            engineOptionItems.forEach(opt => opt.classList.remove('selected'));
             this.classList.add('selected');
             
-            engineDropdown.classList.remove('open');
-            engineBtn.classList.remove('open');
+            engineWrapper.classList.remove('open');
         });
     });
-
     document.addEventListener('click', () => {
-        engineDropdown?.classList.remove('open');
-        engineBtn?.classList.remove('open');
+        engineWrapper?.classList.remove('open');
     });
-
     /* ────────────────────────────────────────────
-       6. 侧边栏导航点击切换
-       ──────────────────────────────────────────── */
-    function setActiveNav(sectionId) {
-        sidebarItems.forEach(item => {
-            item.classList.toggle('active', item.getAttribute('data-section') === sectionId);
-        });
-        bottomItems.forEach(item => {
-            item.classList.toggle('active', item.getAttribute('data-section') === sectionId);
-        });
-    }
-
-    sidebarItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const sectionId = item.getAttribute('data-section');
-            const target = document.getElementById(sectionId);
-            if (target) {
-                // ✅ 平滑滚动到目标区域
-                window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-            }
-            setActiveNav(sectionId);
-            // ✅ 移动端关闭菜单
-            if (window.innerWidth <= 1023) {
-                toggleSidebar();
-            }
-        });
-    });
-
-    /* ────────────────────────────────────────────
-       7. 移动端汉堡菜单
+       6. 移动端汉堡菜单（修复滚动锁定问题）
        ──────────────────────────────────────────── */
     function toggleSidebar() {
         const isOpen = sidebar.classList.toggle('open');
         sidebarOverlay.classList.toggle('open', isOpen);
-        hamburgerBtn.setAttribute('aria-expanded', isOpen);
+        hamburgerBtn?.setAttribute('aria-expanded', isOpen);
         
-        // ✅ 阻止body滚动
+        // ✅ 修复：正确设置/恢复页面滚动
         document.body.style.overflow = isOpen ? 'hidden' : '';
     }
-
     if (hamburgerBtn) {
         hamburgerBtn.addEventListener('click', toggleSidebar);
     }
-
     if (sidebarOverlay) {
         sidebarOverlay.addEventListener('click', toggleSidebar);
     }
-
     // ✅ ESC键关闭菜单
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && sidebar?.classList.contains('open')) {
             toggleSidebar();
         }
     });
-
     /* ────────────────────────────────────────────
-       8. 卡片动画（性能优化）
+       ✅ 修复：子菜单点击后正确恢复滚动
        ──────────────────────────────────────────── */
-    document.querySelectorAll('.card, .empty-text-card').forEach((el, i) => {
+    document.querySelectorAll('.sub-nav-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth' });
+                if (window.innerWidth <= 1024) {
+                    // ✅ 关闭侧边栏并恢复滚动
+                    sidebar.classList.remove('open');
+                    sidebarOverlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+        });
+    });
+    /* ────────────────────────────────────────────
+       7. 卡片动画（性能优化）
+       ──────────────────────────────────────────── */
+    document.querySelectorAll('.card-item, .empty-text-card').forEach((el, i) => {
         el.style.animation = `fadeUp 0.5s ease backwards`;
         el.style.animationDelay = `${i * 0.05}s`;
     });
-
     /* ────────────────────────────────────────────
-       9. 波纹特效（Ripple Effect）
+       8. 波纹特效（Ripple Effect）
        ──────────────────────────────────────────── */
-    document.querySelectorAll('.card, .nav-item, .bottom-nav-item, .empty-text-card').forEach(el => {
+    document.querySelectorAll('.card-item, .nav-item, .empty-text-card').forEach(el => {
         el.addEventListener('pointerdown', function(e) {
             const ripple = document.createElement('span');
             const rect = this.getBoundingClientRect();
@@ -225,14 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             
             if (window.getComputedStyle(this).position === 'static') this.style.position = 'relative';
-            this.style.overflow = 'hidden';
             this.appendChild(ripple);
             ripple.addEventListener('animationend', () => ripple.remove());
         });
     });
-
     /* ────────────────────────────────────────────
-       ✅ 10. 新增：GitHub本地ico图标加载
+       ✅ 9. GitHub本地ico图标加载
        方案说明：
        - 从GitHub raw.githubusercontent.com加载本地ico文件
        - 5秒超时防止加载过慢
@@ -241,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
        GitHub图标URL格式：
        https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/chatgpt.ico
        ──────────────────────────────────────────── */
-
     /* ✅ GitHub配置（请根据实际修改） */
     const GITHUB_CONFIG = {
         username: 'YMH752',        // ✅ 你的GitHub用户名
@@ -249,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
         branch: 'main',            // ✅ 分支名（通常是main或master）
         path: 'UYEA-Web/Code/icons' // ✅ 图标文件夹路径
     };
-
     /* ✅ Emoji映射表（加载失败时显示） */
     const EMOJI_FALLBACK = {
         // ✅ AI部分
@@ -276,13 +252,11 @@ document.addEventListener('DOMContentLoaded', () => {
         'tinypng.com': '🗜️',
         'v0.dev': '⚙️'
     };
-
     /* ✅ 构建GitHub RAW URL */
     function buildGitHubIconUrl(iconFileName) {
         // ✅ 构建完整的GitHub Raw CDN URL
         return `https://raw.githubusercontent.com/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.path}/${iconFileName}`;
     }
-
     /* ✅ 加载单个图标 */
     function loadLocalIcon(img, iconFileName, siteName, domain) {
         // ✅ 构建GitHub图标URL
@@ -295,26 +269,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleIconLoadFailure(img, siteName, domain);
             }
         }, 5000);
-
         // ✅ 图标加载成功
         img.onload = () => {
             clearTimeout(timeoutId);
             img.style.opacity = '1';
             console.log(`✅ Icon loaded successfully for ${siteName} from GitHub`);
         };
-
         // ✅ 图标加载失败
         img.onerror = () => {
             clearTimeout(timeoutId);
             console.warn(`Failed to load icon for ${siteName} from GitHub`);
             handleIconLoadFailure(img, siteName, domain);
         };
-
         // ✅ 设置跨域属性并加载
         img.crossOrigin = 'anonymous';
         img.src = iconUrl;
     }
-
     /* ✅ 降级方案：显示emoji */
     function handleIconLoadFailure(img, siteName, domain) {
         // ✅ 隐藏失败的img标签
@@ -333,7 +303,6 @@ document.addEventListener('DOMContentLoaded', () => {
         img.parentElement.appendChild(emojiElement);
         console.log(`😊 Using emoji for ${siteName}: ${emoji}`);
     }
-
     /* ✅ 图标文件名映射表 */
     const ICON_FILE_MAPPING = {
         // ✅ AI部分
@@ -360,7 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'tinypng.com': 'tinypng.ico',
         'v0.dev': 'v0dev.ico'
     };
-
     /* ✅ 初始化所有卡片的图标加载 */
     function initializeIconLoading() {
         document.querySelectorAll('.card-icon img').forEach(img => {
@@ -371,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn('Missing domain or site-name attribute');
                 return;
             }
-
             // ✅ 从映射表获取图标文件名
             const iconFileName = ICON_FILE_MAPPING[domain];
             
@@ -380,17 +347,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleIconLoadFailure(img, siteName, domain);
                 return;
             }
-
             // ✅ 加载本地GitHub图标
             loadLocalIcon(img, iconFileName, siteName, domain);
         });
     }
-
     /* ✅ 页面加载完成后初始化图标 */
     initializeIconLoading();
-
     /* ────────────────────────────────────────────
-       11. 可选：定期清理过期的localStorage缓存
+       ✅ 新增：回到顶部按钮功能
+       ──────────────────────────────────────────── */
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+    /* ────────────────────────────────────────────
+       10. 可选：定期清理过期的localStorage缓存
        ──────────────────────────────────────────── */
     function cleanupLocalStorage() {
         const keys = Object.keys(localStorage);
@@ -402,14 +385,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
     // ✅ 每次页面加载时清理缓存
     cleanupLocalStorage();
-
 });
-
 /* ────────────────────────────────────────────
-   12. 动态样式注入
+   11. 动态样式注入
    ──────────────────────────────────────────── */
 (function() {
     const style = document.createElement('style');
@@ -425,7 +405,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 transform: translateY(0); 
             }
         }
-
         /* ── 波纹特效 ── */
         @keyframes ripple { 
             to { 
@@ -433,7 +412,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 opacity: 0; 
             } 
         }
-
         /* ── 抖动反馈 ── */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -444,7 +422,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .shake { 
             animation: shake 0.3s ease-in-out; 
         }
-
         /* ✅ 图标加载失败时的emoji样式 */
         .icon-emoji {
             width: 100%;
@@ -459,41 +436,3 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(style);
 })();
-
-/* ────────────────────────────────────────────
-   13. GitHub本地图标加载配置说明
-   ──────────────────────────────────────────── */
-/* 
- * GitHub Raw CDN 本地ico图标加载配置
- * 
- * 配置说明：
- * - GITHUB_CONFIG.username：你的GitHub用户名（YMH752）
- * - GITHUB_CONFIG.repo：仓库名称（UYEA-Files）
- * - GITHUB_CONFIG.branch：分支名称（main 或 master）
- * - GITHUB_CONFIG.path：图标文件夹路径（UYEA-Web/Code/icons）
- * 
- * 完整URL示例：
- * https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/chatgpt.ico
- * 
- * 加载策略：
- * - 从GitHub Raw CDN加载本地ico文件
- * - 5秒超时，防止加载过慢
- * - 加载失败则显示对应的emoji（不显示渐变）
- * 
- * Emoji映射表（EMOJI_FALLBACK）：
- * - 每个网站域名对应一个独特的emoji
- * - 如果没有对应的emoji，则使用默认的链接emoji（🔗）
- * - 可以根据需要修改emoji映射
- * 
- * 为什么用GitHub Raw CDN？
- * - raw.githubusercontent.com 在中国相对稳定
- * - 完全免费，无需额外部署
- * - 版本管理和代码在一起
- * - 修改图标直接push更新
- * 
- * 注意事项：
- * - 确保GitHub仓库设置为public（否则无法访问Raw文件）
- * - 提交后可能需要1-2分钟才能生效（GitHub缓存）
- * - 如果修改配置，只需改上面的GITHUB_CONFIG即可
- * - emoji加载失败时会显示，不影响页面效果
- */
