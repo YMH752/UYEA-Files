@@ -18,7 +18,8 @@
     --border:         #D1CCC0;    /* 灰陶边框 */
     
     --text-primary:   #2C2A26;    /* 主要文字色 */
-    --text-secondary: #5D5954;
+    /* 【修改处】优化次要文字对比度，提升可读性 */
+    --text-secondary: #4A4742;    /* 原为 #5D5954，调深以提升对比度 */
     --text-muted:     #A8A49E;
     
     /* 布局变量 */
@@ -40,8 +41,9 @@
 /* 基础重置 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* 【修改处】优化字体栈，优先使用 Inter 作为英文字体 */
 body {
-    font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
     background-color: var(--bg);
     color: var(--text-primary);
     overflow-x: hidden;
@@ -152,8 +154,9 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
+/* 【修改处】增强卡片悬浮效果：增加轻微放大 */
 .card-item:hover {
-    transform: translateY(-4px);
+    transform: translateY(-4px) scale(1.02);
     border-color: var(--secondary); /* 悬浮时边框变黑 */
     box-shadow: var(--shadow-md);
 }
