@@ -206,15 +206,15 @@
             padding-left: 4px;
         }
 
-        /* 
-         * 修改位置：.tool-group-title 样式块之后、</style> 标签之前
-         * 修改前：.menu-toggle 在所有设备上始终显示 (display: flex)
-         * 修改后：PC端 (min-width: 1024px) 强制隐藏按钮，手机端 (< 1024px) 保持原有 display: flex 正常显示
-         * 修改目的：实现PC端隐藏汉堡菜单按钮、手机端显示的要求（严格最小修改，仅新增媒体查询，不影响任何原有代码）
-         */
-        @media (min-width: 1024px) {
+        /* [修改] 新增：PC端隐藏汉堡菜单，移动端显示 | 修改前：无此规则，按钮始终可见 | 目的：PC端隐藏，手机端显示 */
+        @media (min-width: 769px) {
             .menu-toggle {
                 display: none;
+            }
+        }
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
             }
         }
     </style>
