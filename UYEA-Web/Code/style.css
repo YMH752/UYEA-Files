@@ -2,8 +2,8 @@
    UYEA 悠野工作室 · style.css
    风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
    修改记录：根据要求将按钮及核心强调色改为黑色，增加对比度
+   ✅ 2026-04-23 优化：统一导航样式、对比度、字体、动画、响应式布局
    ============================================================ */
-
 :root {
     /* ✅ 修改：将核心强调色改为纯黑，增加对比 */
     --primary:        #A63A26;    /* 复古铁锈红 - 核心强调色 */
@@ -18,8 +18,8 @@
     --border:         #D1CCC0;    /* 灰陶边框 */
     
     --text-primary:   #2C2A26;    /* 主要文字色 */
-    /* 【修改处】优化次要文字对比度，提升可读性 */
-    --text-secondary: #4A4742;    /* 原为 #5D5954，调深以提升对比度 */
+    /* ✅ 优化：提高次要文字对比度，符合WCAG标准 */
+    --text-secondary: #4A4742;
     --text-muted:     #A8A49E;
     
     /* 布局变量 */
@@ -37,20 +37,19 @@
     --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.08);
     --shadow-md:      0 6px 16px rgba(0, 0, 0, 0.12);
 }
-
 /* 基础重置 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
-/* 【修改处】优化字体栈，优先使用 Inter 作为英文字体 */
 body {
+    /* ✅ 优化：英文和数字优先使用Inter字体 */
     font-family: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
     background-color: var(--bg);
     color: var(--text-primary);
     overflow-x: hidden;
     line-height: 1.6;
+    /* ✅ 优化：全局平滑滚动 */
+    scroll-behavior: smooth;
 }
-
-/* ── 侧边栏样式 ── */
+/* ── 侧边栏样式（统一三个页面） ── */
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
@@ -59,13 +58,13 @@ body {
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
 }
-
 .sidebar-header {
     padding: 24px;
     border-bottom: 1px solid var(--border);
 }
-
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
 .logo-text { 
     font-family: 'Inter', sans-serif; 
@@ -75,22 +74,102 @@ body {
     letter-spacing: -1px;
 }
 .logo-sub { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
-
-.nav-menu { padding: 16px 12px; }
+.nav-menu { 
+    padding: 16px 12px;
+    flex: 1;
+    overflow-y: auto;
+}
 .nav-item {
     display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px; border-radius: var(--radius-sm);
-    color: var(--text-secondary); text-decoration: none;
-    margin-bottom: 6px; transition: all var(--duration);
-    font-weight: 500;
+    padding: 14px 18px; 
+    margin: 6px 12px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary); 
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
 }
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
-.nav-item.active { background: var(--primary); color: #FFFFFF; }
-
+/* ✅ 统一：基础高亮黑底白字 */
+.nav-item.active { 
+    background: #000000 !important; 
+    color: #FFFFFF !important;
+    box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important;
+}
+/* ✅ 统一：展开态铁锈红 */
+.nav-item.menu-open {
+    background: var(--primary) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
+}
+.arrow-icon {
+    font-size: 10px;
+    margin-left: auto;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.6;
+}
+.nav-item.menu-open .arrow-icon { 
+    transform: rotate(180deg);
+    opacity: 1;
+}
+.sub-menu {
+    display: none; 
+    padding-bottom: 10px;
+    animation: fadeInSub 0.2s ease-out;
+}
+@keyframes fadeInSub {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.sub-nav-item {
+    display: block;
+    padding: 10px 16px 10px 56px;
+    font-size: 14px;
+    font-weight: 800; 
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.sub-nav-item:hover {
+    color: var(--primary);
+    background: rgba(0,0,0,0.03);
+}
+.sidebar-footer {
+    padding: 24px 16px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+}
+.auth-buttons {
+    display: flex;
+    gap: 12px;
+}
+.auth-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.login-btn {
+    background: #FFFFFF;
+    border: 1.5px solid #000000;
+    color: #000000;
+}
+.register-btn {
+    background: #000000;
+    border: 1.5px solid #000000;
+    color: #FFFFFF;
+}
 /* ── 主内容区 ── */
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
 .content-wrapper { padding: 40px 32px; max-width: 1200px; margin: 0 auto; }
-
 /* ── 顶栏通用样式 ── */
 .top-bar {
     display: flex; align-items: center; justify-content: space-between;
@@ -99,7 +178,6 @@ body {
     border-bottom: 2px solid var(--border);
     position: sticky; top: 0; z-index: 100;
 }
-
 .header-search-wrapper {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
@@ -108,7 +186,6 @@ body {
     border-radius: var(--radius-lg);
     padding: 0 16px; height: 42px;
 }
-
 /* ✅ 按钮样式：应用黑色背景 */
 .login-btn {
     padding: 8px 20px;
@@ -120,11 +197,9 @@ body {
     font-weight: 600;
     transition: opacity var(--duration);
 }
-
 .login-btn:hover {
     opacity: 0.8;
 }
-
 /* ── 栏目与标题 ── */
 .section-header { margin-bottom: 24px; }
 .section-title {
@@ -135,14 +210,12 @@ body {
     content: ""; position: absolute; left: 0; top: 15%; bottom: 15%;
     width: 6px; background: var(--primary); border-radius: 3px;
 }
-
-/* ── 链接方块 ── */
+/* ── 链接方块（优化动画） ── */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
 }
-
 .card-item {
     background: var(--surface);
     border: 1.5px solid var(--border);
@@ -152,29 +225,97 @@ body {
     text-decoration: none;
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
 }
-
-/* 【修改处】增强卡片悬浮效果：增加轻微放大 */
 .card-item:hover {
     transform: translateY(-4px) scale(1.02);
     border-color: var(--secondary); /* 悬浮时边框变黑 */
     box-shadow: var(--shadow-md);
 }
-
 .card-title {
     font-size: 15px; font-weight: 600; color: var(--text-primary);
 }
-
 .card-icon {
     width: 36px; height: 36px;
     border-radius: 8px;
     background: #f0f0f0;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
-/* 响应式调整 */
+.card-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+/* ✅ 新增：回到顶部按钮样式 */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    background: var(--secondary);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+}
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+.back-to-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+/* 响应式调整（优化） */
 @media (max-width: 1024px) {
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
     .main-content { margin-left: 0; }
+    .menu-toggle {
+        display: flex;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .menu-toggle span {
+        display: block;
+        width: 24px;
+        height: 3px;
+        background: var(--text-primary);
+        border-radius: 2px;
+    }
+}
+@media (max-width: 768px) {
+    .content-wrapper { padding: 24px 16px; }
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 16px;
+    }
+    .card-item { padding: 14px; }
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+}
+@media (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
