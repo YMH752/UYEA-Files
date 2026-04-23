@@ -14,26 +14,6 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 修改1：补充CSS变量定义，确保无外部依赖时样式正常 (同意项2) ── */
-        :root {
-            --header-h: 64px;
-            --surface: #FFFFFF;
-            --bg: #F9FAFB;
-            --border: #E5E7EB;
-            --text-primary: #1F2937;
-            --text-secondary: #6B7280;
-            --text-muted: #9CA3AF;
-            --primary: #A63A26;
-            --secondary: #1F2937;
-            --radius-md: 12px;
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        /* ── 修改2：添加系统字体回退，提升加载体验 (同意项12) ── */
-        body {
-            font-family: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
-        }
-
         /* ── 顶栏布局 (保持原样) ── */
         .top-bar {
             display: flex;
@@ -48,7 +28,7 @@
             z-index: 100;
         }
 
-        /* ── 修改3：删除.header-logo样式 (同意项7) ── */
+        .header-logo { display: none; }
 
         .search-container {
             width: 100%;
@@ -81,9 +61,7 @@
             padding: 0 12px;
             height: 42px;
             background: var(--secondary);
-            /* ── 修改4：明确设置白色文字并增强对比度 (同意项11) ── */
             color: #FFFFFF;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
             border: none;
             border-radius: var(--radius-md) 0 0 var(--radius-md);
             font-size: 13px;
@@ -212,20 +190,15 @@
             opacity: 1;
         }
 
-        /* ── 修改5：子菜单添加平滑展开/收起动画 (同意项10) ── */
         .sub-menu {
-            max-height: 0;
-            opacity: 0;
-            visibility: hidden;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-            padding-bottom: 0;
-        }
-        .nav-item.menu-open + .sub-menu {
-            max-height: 300px; /* 足够显示子项 */
-            opacity: 1;
-            visibility: visible;
+            display: none; 
             padding-bottom: 10px;
+            /* 增加一个极其微小的淡入 */
+            animation: fadeInSub 0.2s ease-out;
+        }
+        @keyframes fadeInSub {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .sub-nav-item {
@@ -282,32 +255,15 @@
             color: #FFFFFF;
         }
 
-        /* ── 修改6：统一grid容器底部间距，替代内联样式 (同意项6) ── */
-        .section-group .grid-container {
-            margin-bottom: 40px;
-        }
-
         @media (max-width: 1024px) {
             .menu-toggle { display: flex; }
-            /* ── 修改7：优化移动端顶栏布局，防止重叠 (同意项13) ── */
-            .top-bar { 
-                justify-content: flex-start; 
-                padding-left: 16px;
-                padding-right: 60px; /* 为汉堡按钮留出空间 */
-            }
+            .top-bar { justify-content: flex-start; padding-left: 50px; }
             .search-container { max-width: none; }
         }
         
         @media (max-width: 768px) {
-            .top-bar { 
-                padding: 0 12px; 
-                justify-content: space-between; 
-            }
-            .search-container { 
-                margin-right: 48px; /* 避免与汉堡按钮重叠 */
-                width: 100%;
-            }
-            .header-actions { right: 12px; }
+            .top-bar { padding: 0 12px; justify-content: space-between; }
+            .search-container { margin-right: 40px; }
         }
 
         .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -359,7 +315,7 @@
 
     <main class="main-content">
         <header class="top-bar">
-            <!-- ── 修改8：删除闲置的.header-logo元素 (同意项7) ── -->
+            <a href="#" class="header-logo">UYEA</a>
             
             <div class="search-container">
                 <div class="header-search-wrapper">
@@ -390,15 +346,13 @@
 
         <div class="content-wrapper">
             <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
-            <!-- 每日推荐区域未设置内联margin，故无需修改 -->
             <div class="grid-container" style="margin-bottom: 40px;">
                 <div class="text-status-card" style="background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); grid-column: 1 / -1;">☕ 尽请期待</div>
             </div>
 
             <div class="section-group" id="ai-section">
                 <div class="section-header"><h2 class="section-title">Ai</h2></div>
-                <!-- ── 修改9：删除内联margin-bottom，使用统一类控制 (同意项6) ── -->
-                <div class="grid-container">
+                <div class="grid-container" style="margin-bottom: 40px;">
                     <a href="https://www.gemini.google.com/" target="_blank" class="card-item">
                         <div class="card-icon"><img src="" data-domain="gemini.google.com" data-site-name="Google Gemini"></div>
                         <div class="card-info"><div class="card-title">Google Gemini</div></div>
@@ -452,8 +406,7 @@
 
             <div class="section-group" id="life-section">
                 <div class="section-header"><h2 class="section-title">生活</h2></div>
-                <!-- ── 修改10：删除内联margin-bottom (同意项6) ── -->
-                <div class="grid-container">
+                <div class="grid-container" style="margin-bottom: 40px;">
                     <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
                         <div class="card-icon"><img src="" data-domain="xiaohongshu.com" data-site-name="小红书"></div>
                         <div class="card-info"><div class="card-title">小红书</div></div>
@@ -471,7 +424,6 @@
 
             <div class="section-group" id="tool-section">
                 <div class="section-header"><h2 class="section-title">工具</h2></div>
-                <!-- ── 修改11：删除内联margin-bottom (同意项6) ── -->
                 <div class="grid-container">
                     <a href="https://github.com" target="_blank" class="card-item">
                         <div class="card-icon"><img src="" data-domain="github.com" data-site-name="GitHub"></div>
@@ -492,7 +444,7 @@
 
     <script src="script.js"></script>
     <script>
-        /* ── 严格保留原有脚本逻辑，并实施同意项3、4 ── */
+        /* ── 严格保留原有脚本逻辑 ── */
         const allNavTrigger = document.getElementById('allNavTrigger');
         const subNavMenu    = document.getElementById('subNavMenu');
 
@@ -501,7 +453,6 @@
             if (isHomePage) {
                 const isOpening = !this.classList.contains('menu-open');
                 this.classList.toggle('menu-open', isOpening);
-                // 配合CSS动画，无需手动设置display
                 subNavMenu.style.display = isOpening ? 'block' : 'none';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
@@ -539,13 +490,6 @@
             bing:   "https://cn.bing.com/search?q="
         };
 
-        // ── 修改12：引擎切换时重置卡片过滤状态 (同意项3) ──
-        function resetCardFilter() {
-            searchInput.value = ''; // 清空输入框
-            cardItems.forEach(card => card.style.display = 'flex');
-            sections.forEach(section => section.style.display = 'block');
-        }
-
         engineTriggerBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             engineWrapper.classList.toggle('open');
@@ -554,28 +498,32 @@
         engineOptionItems.forEach(item => {
             item.addEventListener('click', function(e) {
                 e.stopPropagation();
-                const newEngine = this.dataset.value;
-                engineSelector.value = newEngine;
+                engineSelector.value = this.dataset.value;
                 engineTriggerLabel.textContent = this.textContent.trim();
                 engineOptionItems.forEach(opt => opt.classList.remove('selected'));
                 this.classList.add('selected');
                 engineWrapper.classList.remove('open');
-                
-                // 修改点：切换引擎时若不为site，重置过滤
-                if (newEngine !== 'site') {
-                    resetCardFilter();
-                } else {
-                    // 切换回站内时，触发一次过滤以显示当前输入关键词的结果
-                    searchInput.dispatchEvent(new Event('input'));
-                }
+                if (engineSelector.value === 'site') searchInput.dispatchEvent(new Event('input'));
             });
         });
 
-        document.addEventListener('click', () => engineWrapper.classList.remove('open'));
+        // 【修改处】优化document点击关闭下拉，避免误关闭，增加目标判断
+        document.addEventListener('click', (e) => {
+            // 如果点击的元素不在engineWrapper内部，则关闭下拉
+            if (!engineWrapper.contains(e.target)) {
+                engineWrapper.classList.remove('open');
+            }
+        });
 
         searchInput.addEventListener('input', function() {
+            const keyword = this.value.toLowerCase().trim();
+            if (keyword === '') {
+                // 【修改处】修复清空搜索后section不显示的问题
+                cardItems.forEach(card => card.style.display = 'flex');
+                sections.forEach(section => section.style.display = 'block');
+                return;
+            }
             if (engineSelector.value === 'site') {
-                const keyword = this.value.toLowerCase().trim();
                 cardItems.forEach(card => {
                     const title = card.querySelector('.card-title').textContent.toLowerCase();
                     card.style.display = title.includes(keyword) ? 'flex' : 'none';
@@ -597,21 +545,7 @@
             }
         });
 
-        // ── 修改13：优化图标错误处理，提取单一函数 (同意项4) ──
-        function handleIconError(img) {
-            img.style.display = 'none';
-        }
-
-        function initIcons() {
-            document.querySelectorAll('.card-icon img').forEach(img => {
-                const domain = img.getAttribute('data-domain');
-                if (domain && !img.src) {
-                    img.src = `https://favicon.splitbee.io/?url=${domain}`;
-                    img.onerror = () => handleIconError(img);
-                }
-            });
-        }
-        window.addEventListener('DOMContentLoaded', initIcons);
+        // 【修改处】删除原initIcons函数及调用，图标加载统一由script.js处理
     </script>
 </body>
 </html>
