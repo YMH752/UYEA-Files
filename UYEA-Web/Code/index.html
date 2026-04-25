@@ -490,6 +490,21 @@
             bing:   "https://cn.bing.com/search?q="
         };
 
+        /* [修改1] 新增：页面加载时从 localStorage 恢复上次选择的引擎
+           修改前：无此逻辑，每次刷新固定显示"站内"
+           修改后：读取 uyea_preferred_search_engine，若有记录则同步 selector、label、selected状态
+           目的：与 script.js 的保存键名统一，修复刷新后引擎选择丢失的问题 */
+        const savedEngine = localStorage.getItem('uyea_preferred_search_engine');
+        if (savedEngine) {
+            const matchedOption = Array.from(engineOptionItems).find(opt => opt.dataset.value === savedEngine);
+            if (matchedOption) {
+                engineSelector.value = savedEngine;
+                engineTriggerLabel.textContent = matchedOption.textContent.trim();
+                engineOptionItems.forEach(opt => opt.classList.remove('selected'));
+                matchedOption.classList.add('selected');
+            }
+        }
+
         engineTriggerBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             engineWrapper.classList.toggle('open');
@@ -503,6 +518,15 @@
                 engineOptionItems.forEach(opt => opt.classList.remove('selected'));
                 this.classList.add('selected');
                 engineWrapper.classList.remove('open');
+                /* [修改2] 新增：引擎切换时写入 localStorage 保存选择
+                   修改前：切换引擎后不保存，刷新即丢失
+                   修改后：每次切换写入 uyea_preferred_search_engine
+                   目的：与修改1配合，实现引擎选择持久化 */
+                try {
+                    localStorage.setItem('uyea_preferred_search_engine', this.dataset.value);
+                } catch (e) {
+                    console.warn('localStorage not available:', e);
+                }
                 if (engineSelector.value === 'site') searchInput.dispatchEvent(new Event('input'));
             });
         });
