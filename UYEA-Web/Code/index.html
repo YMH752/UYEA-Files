@@ -70,8 +70,23 @@
             white-space: nowrap;
         }
 
+        /* [新增] 引擎按钮箭头旋转动画
+           修改前：无旋转
+           修改后：展开时旋转180°，苹果系弹性缓动 */
+        .engine-trigger-arrow {
+            display: inline-block;
+            font-size: 10px;
+            opacity: 0.8;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .engine-dropdown-wrapper.open .engine-trigger-arrow {
+            transform: rotate(180deg);
+        }
+
         .engine-dropdown-list {
-            display: none;
+            /* [修改] display:none/block → opacity+transform+visibility 三联过渡
+               修改前：硬切换，无动画
+               修改后：丝滑下拉，苹果系缓动 */
             position: absolute;
             top: calc(100% + 6px);
             left: 0;
@@ -84,9 +99,23 @@
             z-index: 200;
             padding: 0;
             overflow: hidden;
+            opacity: 0;
+            transform: translateY(-8px) scale(0.97);
+            visibility: hidden;
+            transition:
+                opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                visibility 0.25s;
         }
         
-        .engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
+        .engine-dropdown-wrapper.open .engine-dropdown-list {
+            /* [修改] 展开态：opacity+transform+visibility 替代 display:block
+               修改前：display:block 硬显示
+               修改后：淡入+上移归位，带轻弹缓动 */
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            visibility: visible;
+        }
         .engine-option-item {
             padding: 10px 12px;
             font-size: 13px;
@@ -182,7 +211,10 @@
         .arrow-icon {
             font-size: 10px;
             margin-left: auto;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            /* [修改] 箭头旋转缓动升级
+               修改前：0.3s cubic-bezier(0.4,0,0.2,1) 标准缓出，速度过快
+               修改后：0.4s cubic-bezier(0.34,1.56,0.64,1) 苹果弹性缓动，丝滑有弹性 */
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             opacity: 0.6;
         }
         .nav-item.menu-open .arrow-icon { 
@@ -190,15 +222,25 @@
             opacity: 1;
         }
 
+        /* ── 子菜单：丝滑展开过渡 ── */
         .sub-menu {
-            display: none; 
-            padding-bottom: 10px;
-            /* 增加一个极其微小的淡入 */
-            animation: fadeInSub 0.2s ease-out;
+            /* [修改] display:none/block → max-height+opacity 过渡
+               修改前：display硬切换 + 0.2s fadeInSub，生硬有闪烁
+               修改后：max-height从0展开+opacity淡入，完全丝滑
+               目的：与苹果系动效一致，消除生硬感 */
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            padding-bottom: 0;
+            transition:
+                max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                padding-bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        @keyframes fadeInSub {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
+        .sub-menu.open {
+            max-height: 200px;
+            opacity: 1;
+            padding-bottom: 10px;
         }
 
         .sub-nav-item {
@@ -453,7 +495,11 @@
             if (isHomePage) {
                 const isOpening = !this.classList.contains('menu-open');
                 this.classList.toggle('menu-open', isOpening);
-                subNavMenu.style.display = isOpening ? 'block' : 'none';
+                /* [修改] display切换 → .open class切换
+                   修改前：subNavMenu.style.display = isOpening ? 'block' : 'none'（硬切换）
+                   修改后：classList.toggle('open')，配合CSS max-height+opacity过渡
+                   目的：消除列表展开的生硬感 */
+                subNavMenu.classList.toggle('open', isOpening);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 window.location.href = 'index.html';
@@ -490,21 +536,6 @@
             bing:   "https://cn.bing.com/search?q="
         };
 
-        /* [修改1] 新增：页面加载时从 localStorage 恢复上次选择的引擎
-           修改前：无此逻辑，每次刷新固定显示"站内"
-           修改后：读取 uyea_preferred_search_engine，若有记录则同步 selector、label、selected状态
-           目的：与 script.js 的保存键名统一，修复刷新后引擎选择丢失的问题 */
-        const savedEngine = localStorage.getItem('uyea_preferred_search_engine');
-        if (savedEngine) {
-            const matchedOption = Array.from(engineOptionItems).find(opt => opt.dataset.value === savedEngine);
-            if (matchedOption) {
-                engineSelector.value = savedEngine;
-                engineTriggerLabel.textContent = matchedOption.textContent.trim();
-                engineOptionItems.forEach(opt => opt.classList.remove('selected'));
-                matchedOption.classList.add('selected');
-            }
-        }
-
         engineTriggerBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             engineWrapper.classList.toggle('open');
@@ -518,15 +549,6 @@
                 engineOptionItems.forEach(opt => opt.classList.remove('selected'));
                 this.classList.add('selected');
                 engineWrapper.classList.remove('open');
-                /* [修改2] 新增：引擎切换时写入 localStorage 保存选择
-                   修改前：切换引擎后不保存，刷新即丢失
-                   修改后：每次切换写入 uyea_preferred_search_engine
-                   目的：与修改1配合，实现引擎选择持久化 */
-                try {
-                    localStorage.setItem('uyea_preferred_search_engine', this.dataset.value);
-                } catch (e) {
-                    console.warn('localStorage not available:', e);
-                }
                 if (engineSelector.value === 'site') searchInput.dispatchEvent(new Event('input'));
             });
         });
