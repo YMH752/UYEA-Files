@@ -9,10 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ────────────────────────────────────────────
        1. 元素引用
        ──────────────────────────────────────────── */
-    const searchEngine = document.getElementById('searchEngine');
-    const searchInput  = document.getElementById('searchInput');
-    const sidebarItems = document.querySelectorAll('.sidebar .nav-item[data-section]');
-    const bottomItems  = document.querySelectorAll('.bottom-nav .bottom-nav-item[data-section]');
+    // [修改] 移除 searchEngine/searchInput（与index.html内嵌脚本ID不匹配，造成冲突）
+    // [修改] 移除 sidebarItems/bottomItems（三页均无data-section属性，静默失效）
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -20,17 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ────────────────────────────────────────────
        2. 搜索引擎配置
        ──────────────────────────────────────────── */
-    const engineUrls = {
-        baidu:  q => `https://www.baidu.com/s?wd=${encodeURIComponent(q)}`,
-        google: q => `https://www.google.com/search?q=${encodeURIComponent(q)}`,
-        bing:   q => `https://cn.bing.com/search?q=${encodeURIComponent(q)}`
-    };
-
-    /* ✅ 优化：localStorage 保存搜索引擎选择 */
-    const savedEngine = localStorage.getItem('uyea_preferred_search_engine') || 'baidu';
-    if (searchEngine && engineUrls[savedEngine]) {
-        searchEngine.value = savedEngine;
-    }
+    // [修改] 移除 engineUrls / savedEngine（引擎切换逻辑已移至index.html内嵌脚本，此处不再需要）
 
     /* ────────────────────────────────────────────
        3. URL验证函数（安全防护）
@@ -48,124 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ────────────────────────────────────────────
        4. 搜索功能
        ──────────────────────────────────────────── */
-    window.doSearch = function() {
-        const query = searchInput.value.trim();
-        
-        if (!query) {
-            // ✅ 输入为空时的反馈：抖动动画
-            searchInput.classList.remove('shake');
-            void searchInput.offsetWidth;
-            searchInput.classList.add('shake');
-            return;
-        }
-
-        const engine = searchEngine.value;
-
-        // ✅ 验证搜索引擎类型是否合法
-        if (!engineUrls[engine]) {
-            console.error('Invalid search engine:', engine);
-            return;
-        }
-
-        const url = engineUrls[engine](query);
-
-        // ✅ 验证生成的URL是否有效
-        if (!isValidUrl(url)) {
-            console.error('Generated invalid URL:', url);
-            return;
-        }
-
-        // ✅ 使用 noopener,noreferrer 防止安全漏洞
-        window.open(url, '_blank', 'noopener,noreferrer');
-    };
-
-    // ✅ 监听回车键
-    if (searchInput) {
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                doSearch();
-            }
-        });
-    }
+    // [修改] 移除 doSearch() 函数及 Enter 监听（依赖已移除的searchEngine/searchInput，各页内嵌脚本已独立实现）
 
     /* ────────────────────────────────────────────
        5. 搜索引擎切换（带localStorage保存）
        ──────────────────────────────────────────── */
-    const engineBtn = document.getElementById('engineBtn');
-    const engineDropdown = document.getElementById('engineDropdown');
-    const engineLabel = document.getElementById('engineLabel');
-    const engineOptions = engineDropdown?.querySelectorAll('.engine-option') || [];
-
-    if (engineBtn) {
-        engineBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const isNowOpen = engineDropdown.classList.toggle('open');
-            engineBtn.classList.toggle('open', isNowOpen);
-        });
-    }
-
-    engineOptions.forEach(opt => {
-        opt.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const val = this.dataset.value;
-            
-            // ✅ 验证选项合法性
-            if (!engineUrls[val]) {
-                console.error('Invalid engine option:', val);
-                return;
-            }
-
-            searchEngine.value = val;
-            engineLabel.textContent = this.textContent.trim();
-            
-            // ✅ 保存到localStorage
-            try {
-                localStorage.setItem('uyea_preferred_search_engine', val);
-            } catch (e) {
-                console.warn('localStorage not available:', e);
-            }
-            
-            engineOptions.forEach(o => o.classList.remove('selected'));
-            this.classList.add('selected');
-            
-            engineDropdown.classList.remove('open');
-            engineBtn.classList.remove('open');
-        });
-    });
-
-    document.addEventListener('click', () => {
-        engineDropdown?.classList.remove('open');
-        engineBtn?.classList.remove('open');
-    });
+    // [修改] 移除引擎切换逻辑（engineBtn/engineDropdown ID与index.html不匹配，已移至index.html内嵌脚本）
 
     /* ────────────────────────────────────────────
        6. 侧边栏导航点击切换
        ──────────────────────────────────────────── */
-    function setActiveNav(sectionId) {
-        sidebarItems.forEach(item => {
-            item.classList.toggle('active', item.getAttribute('data-section') === sectionId);
-        });
-        bottomItems.forEach(item => {
-            item.classList.toggle('active', item.getAttribute('data-section') === sectionId);
-        });
-    }
-
-    sidebarItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const sectionId = item.getAttribute('data-section');
-            const target = document.getElementById(sectionId);
-            if (target) {
-                // ✅ 平滑滚动到目标区域
-                window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-            }
-            setActiveNav(sectionId);
-            // ✅ 移动端关闭菜单
-            if (window.innerWidth <= 1023) {
-                toggleSidebar();
-            }
-        });
-    });
+    // [修改] 移除 setActiveNav / sidebarItems 逻辑（三页均无data-section属性，完全静默失效）
 
     /* ────────────────────────────────────────────
        7. 移动端汉堡菜单
@@ -205,7 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ────────────────────────────────────────────
        9. 波纹特效（Ripple Effect）
        ──────────────────────────────────────────── */
-    document.querySelectorAll('.card, .nav-item, .bottom-nav-item, .empty-text-card').forEach(el => {
+    // [修改] .card-item 改为 .card-item:has(.card-icon)
+    // 修改前：对所有.card-item生效，工具页无图标卡片触发后overflow:hidden裁切内容，显示异常
+    // 修改后：仅对含.card-icon的卡片生效，工具页卡片不受影响
+    document.querySelectorAll('.card, .nav-item, .bottom-nav-item, .empty-text-card, .card-item:has(.card-icon)').forEach(el => {
         el.addEventListener('pointerdown', function(e) {
             const ripple = document.createElement('span');
             const rect = this.getBoundingClientRect();
@@ -279,27 +163,23 @@ document.addEventListener('DOMContentLoaded', () => {
         return `https://raw.githubusercontent.com/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.path}/${iconFileName}`;
     }
 
-    /* ✅ 加载单个图标 (优化项 3/5：修改此函数) */
+    /* ✅ 加载单个图标 */
     function loadLocalIcon(img, iconFileName, siteName, domain) {
-        const iconContainer = img.parentElement; // 获取.card-icon容器
-        // 优化项 3/5：为容器添加加载中状态
-        iconContainer.classList.add('loading');
-        
+        // ✅ 构建GitHub图标URL
         const iconUrl = buildGitHubIconUrl(iconFileName);
         
+        // ✅ 设置5秒超时
         const timeoutId = setTimeout(() => {
             if (!img.complete || img.naturalHeight === 0) {
                 console.warn(`Icon load timeout for ${siteName}`);
-                handleIconLoadFailure(img, siteName, domain, iconContainer);
+                handleIconLoadFailure(img, siteName, domain);
             }
         }, 5000);
 
         // ✅ 图标加载成功
         img.onload = () => {
             clearTimeout(timeoutId);
-            // 优化项 3/5：移除加载中状态，添加加载成功类，触发淡入
-            iconContainer.classList.remove('loading');
-            img.classList.add('loaded');
+            img.style.opacity = '1';
             console.log(`✅ Icon loaded successfully for ${siteName} from GitHub`);
         };
 
@@ -307,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         img.onerror = () => {
             clearTimeout(timeoutId);
             console.warn(`Failed to load icon for ${siteName} from GitHub`);
-            handleIconLoadFailure(img, siteName, domain, iconContainer);
+            handleIconLoadFailure(img, siteName, domain);
         };
 
         // ✅ 设置跨域属性并加载
@@ -315,11 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
         img.src = iconUrl;
     }
 
-    /* ✅ 降级方案：显示emoji (优化项 3/5：修改此函数) */
-    function handleIconLoadFailure(img, siteName, domain, iconContainer) {
-        // 优化项 3/5：确保移除加载中状态
-        iconContainer.classList.remove('loading');
-        
+    /* ✅ 降级方案：显示emoji */
+    function handleIconLoadFailure(img, siteName, domain) {
         // ✅ 隐藏失败的img标签
         img.style.display = 'none';
         
@@ -330,10 +207,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const emojiElement = document.createElement('div');
         emojiElement.className = 'icon-emoji';
         emojiElement.textContent = emoji;
-        emojiElement.title = `${siteName}`; // 简化和美化提示文字
+        emojiElement.title = `${siteName} - 图标加载失败`;
         
         // ✅ 将emoji元素插入到父容器中
-        iconContainer.appendChild(emojiElement);
+        img.parentElement.appendChild(emojiElement);
         console.log(`😊 Using emoji for ${siteName}: ${emoji}`);
     }
 
@@ -380,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (!iconFileName) {
                 console.warn(`No icon file mapping found for ${domain}`);
-                handleIconLoadFailure(img, siteName, domain, img.parentElement);
+                handleIconLoadFailure(img, siteName, domain);
                 return;
             }
 
@@ -393,151 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeIconLoading();
 
     /* ────────────────────────────────────────────
-       ✅ 11. 由 index.html 和 tools.html 迁移的通用脚本逻辑
-       ──────────────────────────────────────────── */
-
-    /* 首页 (index.html) 侧边栏“全部导航”下拉菜单逻辑 */
-    const allNavTrigger = document.getElementById('allNavTrigger');
-    const subNavMenu    = document.getElementById('subNavMenu');
-    if (allNavTrigger && subNavMenu) {
-        allNavTrigger.addEventListener('click', function() {
-            const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
-            if (isHomePage) {
-                const isOpening = !this.classList.contains('menu-open');
-                this.classList.toggle('menu-open', isOpening);
-                subNavMenu.style.display = isOpening ? 'block' : 'none';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-    }
-
-    /* 首页 (index.html) 侧边栏子菜单锚点平滑滚动 */
-    document.querySelectorAll('.sub-nav-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetEl = document.getElementById(targetId);
-            if (targetEl) {
-                targetEl.scrollIntoView({ behavior: 'smooth' });
-                if (window.innerWidth <= 1024) {
-                    document.getElementById('sidebar').classList.remove('active');
-                    document.getElementById('sidebarOverlay').classList.remove('active');
-                }
-            }
-        });
-    });
-
-    /* 首页 (index.html) 顶栏搜索引擎切换与搜索逻辑 */
-    const searchInput2      = document.getElementById('searchInput');
-    const engineSelector   = document.getElementById('searchEngineSelector');
-    const engineWrapper    = document.getElementById('engineDropdownWrapper');
-    const engineTriggerBtn = document.getElementById('engineTriggerBtn');
-    const engineTriggerLabel = document.getElementById('engineTriggerLabel');
-    const engineOptionItems  = document.querySelectorAll('.engine-option-item');
-    const cardItems        = document.querySelectorAll('.card-item');
-    const sections         = document.querySelectorAll('.section-group');
-
-    const engineUrls2 = {
-        baidu:  "https://www.baidu.com/s?wd=",
-        google: "https://www.google.com/search?q=",
-        bing:   "https://cn.bing.com/search?q="
-    };
-
-    if (engineTriggerBtn) {
-        engineTriggerBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            engineWrapper.classList.toggle('open');
-        });
-    }
-
-    if (engineOptionItems.length > 0) {
-        engineOptionItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (engineSelector) engineSelector.value = this.dataset.value;
-                engineTriggerLabel.textContent = this.textContent.trim();
-                engineOptionItems.forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                engineWrapper.classList.remove('open');
-                if (engineSelector && engineSelector.value === 'site' && searchInput2) searchInput2.dispatchEvent(new Event('input'));
-            });
-        });
-    }
-
-    document.addEventListener('click', () => { if(engineWrapper) engineWrapper.classList.remove('open'); });
-
-    if (searchInput2) {
-        searchInput2.addEventListener('input', function() {
-            if (engineSelector && engineSelector.value === 'site') {
-                const keyword = this.value.toLowerCase().trim();
-                cardItems.forEach(card => {
-                    const title = card.querySelector('.card-title').textContent.toLowerCase();
-                    card.style.display = title.includes(keyword) ? 'flex' : 'none';
-                });
-                sections.forEach(section => {
-                    const hasVisibleCards = Array.from(section.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                    section.style.display = hasVisibleCards ? 'block' : 'none';
-                });
-            }
-        });
-
-        searchInput2.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const type = engineSelector ? engineSelector.value : 'site';
-                const keyword = this.value.trim();
-                if (type !== 'site' && keyword !== '') {
-                    window.open(engineUrls2[type] + encodeURIComponent(keyword), '_blank');
-                }
-            }
-        });
-    }
-
-    /* 工具页 (tools.html) 侧边栏“实用工具”下拉菜单逻辑 */
-    const toolsNavTrigger = document.getElementById('toolsNavTrigger');
-    const toolsSubMenu = document.getElementById('toolsSubMenu');
-    if (toolsNavTrigger && toolsSubMenu) {
-        toolsNavTrigger.addEventListener('click', function() {
-            const isOpening = this.classList.toggle('menu-open');
-            toolsSubMenu.style.display = isOpening ? 'block' : 'none';
-        });
-    }
-
-    /* 工具页 (tools.html) 内容区分类标签切换与搜索逻辑 */
-    const tabItems = document.querySelectorAll('.tab-item');
-    const toolGroups = document.querySelectorAll('.tool-group');
-    if (tabItems.length > 0) {
-        tabItems.forEach(tab => {
-            tab.addEventListener('click', function() {
-                tabItems.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                const cat = this.dataset.category;
-                toolGroups.forEach(g => {
-                    g.style.display = (cat === 'all' || g.dataset.category === cat) ? 'block' : 'none';
-                });
-            });
-        });
-    }
-
-    const toolSearchInput = document.getElementById('toolSearchInput');
-    const toolCards = document.querySelectorAll('.card-item'); // 注意：此选择器在工具页和首页都会生效，但在不同页面上下文不同
-    if (toolSearchInput && toolGroups.length > 0) {
-        toolSearchInput.addEventListener('input', function() {
-            const keyword = this.value.toLowerCase().trim();
-            toolCards.forEach(card => {
-                const title = card.querySelector('.card-title').textContent.toLowerCase();
-                card.style.display = title.includes(keyword) ? 'flex' : 'none';
-            });
-            toolGroups.forEach(group => {
-                const hasVisible = Array.from(group.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                group.style.display = hasVisible ? 'block' : 'none';
-            });
-        });
-    }
-
-    /* ────────────────────────────────────────────
-       12. 可选：定期清理过期的localStorage缓存
+       11. 可选：定期清理过期的localStorage缓存
        ──────────────────────────────────────────── */
     function cleanupLocalStorage() {
         const keys = Object.keys(localStorage);
@@ -556,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ────────────────────────────────────────────
-   13. 动态样式注入
+   12. 动态样式注入
    ──────────────────────────────────────────── */
 (function() {
     const style = document.createElement('style');
@@ -591,6 +324,56 @@ document.addEventListener('DOMContentLoaded', () => {
         .shake { 
             animation: shake 0.3s ease-in-out; 
         }
+
+        /* ✅ 图标加载失败时的emoji样式 */
+        .icon-emoji {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            user-select: none;
+        }
     `;
     document.head.appendChild(style);
 })();
+
+/* ────────────────────────────────────────────
+   13. GitHub本地图标加载配置说明
+   ──────────────────────────────────────────── */
+/* 
+ * GitHub Raw CDN 本地ico图标加载配置
+ * 
+ * 配置说明：
+ * - GITHUB_CONFIG.username：你的GitHub用户名（YMH752）
+ * - GITHUB_CONFIG.repo：仓库名称（UYEA-Files）
+ * - GITHUB_CONFIG.branch：分支名称（main 或 master）
+ * - GITHUB_CONFIG.path：图标文件夹路径（UYEA-Web/Code/icons）
+ * 
+ * 完整URL示例：
+ * https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/chatgpt.ico
+ * 
+ * 加载策略：
+ * - 从GitHub Raw CDN加载本地ico文件
+ * - 5秒超时，防止加载过慢
+ * - 加载失败则显示对应的emoji（不显示渐变）
+ * 
+ * Emoji映射表（EMOJI_FALLBACK）：
+ * - 每个网站域名对应一个独特的emoji
+ * - 如果没有对应的emoji，则使用默认的链接emoji（🔗）
+ * - 可以根据需要修改emoji映射
+ * 
+ * 为什么用GitHub Raw CDN？
+ * - raw.githubusercontent.com 在中国相对稳定
+ * - 完全免费，无需额外部署
+ * - 版本管理和代码在一起
+ * - 修改图标直接push更新
+ * 
+ * 注意事项：
+ * - 确保GitHub仓库设置为public（否则无法访问Raw文件）
+ * - 提交后可能需要1-2分钟才能生效（GitHub缓存）
+ * - 如果修改配置，只需改上面的GITHUB_CONFIG即可
+ * - emoji加载失败时会显示，不影响页面效果
+ */
