@@ -286,6 +286,39 @@ document.addEventListener('DOMContentLoaded', () => {
     // ✅ 每次页面加载时清理缓存
     cleanupLocalStorage();
 
+    /* ────────────────────────────────────────────
+       [新增] 14. 页面切换过渡（方案C）
+       原生：检测到View Transitions API → startViewTransition跳转
+       降级：无API → body.leaving淡出 → 延迟跳转 → 新页body.loaded淡入
+       仅拦截站内同域链接，外链/hash链接不处理
+       ──────────────────────────────────────────── */
+
+    // 页面进入时触发淡入
+    document.body.classList.add('loaded');
+
+    function navigateTo(url) {
+        if ('startViewTransition' in document) {
+            // 原生 View Transitions API
+            document.startViewTransition(() => {
+                window.location.href = url;
+            });
+        } else {
+            // 降级：淡出后跳转
+            document.body.classList.add('leaving');
+            setTimeout(() => { window.location.href = url; }, 260);
+        }
+    }
+
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[href]');
+        if (!link) return;
+        const href = link.getAttribute('href');
+        // 仅处理站内相对链接（排除外链、hash、javascript:）
+        if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('javascript')) return;
+        e.preventDefault();
+        navigateTo(href);
+    });
+
 });
 
 /* ────────────────────────────────────────────
