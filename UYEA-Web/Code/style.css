@@ -156,8 +156,6 @@ body {
     transform: translateY(-4px);
     border-color: var(--secondary); /* 悬浮时边框变黑 */
     box-shadow: var(--shadow-md);
-    /* 优化项 4/5：微调背景色，增强悬浮的立体感和与背景的对比 */
-    background: #FFFFFF; /* 修改：从 var(--surface) 改为更白的 #FFFFFF */
 }
 
 .card-title {
@@ -167,13 +165,8 @@ body {
 .card-icon {
     width: 36px; height: 36px;
     border-radius: 8px;
-    background: #f0f0f0; /* 加载中的背景色 */
+    background: #f0f0f0;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; /* 防止图片加载时容器被挤压 */
-    position: relative; /* 为内部元素定位提供上下文 */
 }
 
 /* 响应式调整 */
@@ -182,434 +175,36 @@ body {
     .sidebar.open { transform: translateX(0); }
     .main-content { margin-left: 0; }
 }
-/* ============================================================
-   优化项 1/5：由 index.html, tools.html, forum.html 迁移的通用样式
-   ============================================================ */
 
-/* ── 顶栏基础样式 ── */
-.top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 24px;
-    height: var(--header-h);
-    background: var(--surface);
-    border-bottom: 1.5px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+/* ── [新增] 页面切换过渡（方案C：View Transitions API + 降级淡入淡出） ──
+   降级方案：body默认透明，DOMContentLoaded后加.loaded淡入；离开时加.leaving淡出
+   原生方案：支持View Transitions API的浏览器使用::view-transition伪元素动画 */
+body {
+    opacity: 0;
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-.menu-toggle {
-    display: flex;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    flex-direction: column;
-    gap: 5px;
-}
-.menu-toggle span {
-    display: block;
-    width: 24px;
-    height: 3px;
-    background: var(--text-primary);
-    border-radius: 2px;
-}
-
-/* ── 侧边栏导航菜单（核心样式，对齐三个页面）── */
-.nav-menu {
-    padding: 16px 12px;
-}
-
-.nav-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    padding: 14px 18px;
-    margin: 6px 12px;
-    border-radius: var(--radius-md);
-    text-decoration: none;
-    color: var(--text-primary);
-    font-weight: 600;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    border: none;
-}
-
-/* 基础高亮：黑底白字 */
-.nav-item.active {
-    background: #000000 !important;
-    color: #FFFFFF !important;
-    box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important;
-}
-
-/* 展开态：铁锈红 (用于 index.html 和 tools.html 的下拉菜单) */
-.nav-item.menu-open {
-    background: var(--primary) !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
-}
-
-.nav-icon {
-    margin-right: 8px;
-    font-size: 18px;
-}
-
-.arrow-icon {
-    font-size: 10px;
-    margin-left: auto;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.6;
-}
-.nav-item.menu-open .arrow-icon { 
-    transform: rotate(180deg);
+body.loaded {
     opacity: 1;
 }
-
-/* 子菜单样式 */
-.sub-menu {
-    display: none; 
-    padding-bottom: 10px;
-    animation: fadeInSub 0.2s ease-out;
-}
-@keyframes fadeInSub {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.sub-nav-item {
-    display: block;
-    padding: 10px 16px 10px 56px;
-    font-size: 14px;
-    font-weight: 800; 
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
-/* 优化项 4/5 将调整此处的悬停背景色 */
-.sub-nav-item:hover {
-    color: var(--primary);
-    background: rgba(0,0,0,0.08); /* 修改：将 0.03 调整为 0.08 */
-}
-
-/* 侧边栏底部认证按钮 */
-.sidebar-footer {
-    padding: 24px 16px;
-    border-top: 1px solid var(--border);
-    margin-top: auto;
-}
-.auth-buttons {
-    display: flex;
-    gap: 12px;
-}
-.auth-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 42px;
-    border-radius: var(--radius-md);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.login-btn {
-    background: #FFFFFF;
-    border: 1.5px solid #000000;
-    color: #000000;
-}
-.register-btn {
-    background: #000000;
-    border: 1.5px solid #000000;
-    color: #FFFFFF;
-}
-
-/* ── 首页 (index.html) 专用但可复用的样式 ── */
-/* 顶栏搜索容器 */
-.search-container {
-    width: 100%;
-    max-width: 600px; 
-    display: flex;
-    justify-content: center;
-}
-.header-search-wrapper {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 0 4px 0 0;
-    height: 42px; 
-    transition: border-color 0.2s;
-    overflow: visible;
-}
-.header-search-wrapper:focus-within { border-color: var(--secondary); }
-
-/* 搜索引擎下拉框 */
-.engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
-.engine-trigger-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0 12px;
-    height: 42px;
-    background: var(--secondary);
-    color: #FFFFFF;
-    border: none;
-    border-radius: var(--radius-md) 0 0 var(--radius-md);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-}
-.engine-dropdown-list {
-    display: none;
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    min-width: 80px; 
-    width: 100%; 
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    z-index: 200;
-    padding: 0;
-    overflow: hidden;
-}
-.engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
-.engine-option-item {
-    padding: 10px 12px;
-    font-size: 13px;
-    cursor: pointer;
-    text-align: center;
-    border-bottom: 1px solid var(--border); 
-    transition: background 0.2s;
-}
-.engine-option-item:last-child { border-bottom: none; }
-.engine-option-item:hover { background: var(--bg); }
-.engine-option-item.selected { color: var(--primary); font-weight: 700; }
-
-/* 响应式调整 (优化项 2/5 将修改此部分) */
-@media (max-width: 1024px) {
-    .menu-toggle { display: flex; }
-    .top-bar { justify-content: flex-start; padding-left: 50px; }
-    .search-container { max-width: none; }
-}
-@media (max-width: 768px) {
-    .top-bar { padding: 0 12px; justify-content: space-between; }
-    /* 优化项 2/5：修改此处，将固定边距改为灵活值，并允许搜索容器收缩 */
-    .search-container { 
-        margin-right: 12px; /* 修改：减少固定边距 */
-        flex-shrink: 1;     /* 新增：允许容器在空间不足时收缩 */
-        min-width: 0;       /* 新增：覆盖默认最小宽度，允许内容挤压 */
-    }
-}
-
-/* 工具页 (tools.html) 专用但可复用的样式 */
-.tool-search-bar {
-    display: flex;
-    align-items: center;
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 0 16px;
-    height: 48px;
-    gap: 12px;
-    margin-bottom: 24px;
-}
-.tool-search-input {
-    border: none;
-    background: transparent;
-    outline: none;
-    width: 100%;
-    font-size: 15px;
-    color: var(--text-primary);
-}
-.category-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 30px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-}
-.tab-item {
-    padding: 8px 20px;
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s;
-}
-.tab-item.active {
-    background: #000000;
-    color: #FFFFFF;
-    border-color: #000000;
-}
-.tool-group-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    padding-left: 4px;
-}
-
-/* 社区页 (forum.html) 专用但可复用的样式 */
-.forum-toolbar {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-    align-items: center;
-}
-.post-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 24px;
-    background: #000000;
-    color: #FFFFFF;
-    border-radius: var(--radius-md);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: background 0.2s;
-    white-space: nowrap;
-}
-.post-btn:hover { background: #333333; }
-.forum-search {
-    flex: 1;
-    position: relative;
-}
-.forum-search input {
-    width: 100%;
-    padding: 10px 16px 10px 40px;
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    outline: none;
-    font-size: 14px;
-    transition: border-color 0.2s;
-}
-.forum-search input:focus { border-color: var(--secondary); }
-.forum-search span {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-    pointer-events: none;
-}
-.post-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-.post-item {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 24px;
-    text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: block;
-}
-.post-item:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-.post-meta {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-    font-size: 12px;
-    color: var(--text-secondary);
-}
-.post-tag {
-    padding: 2px 8px;
-    background: var(--bg);
-    border-radius: 4px;
-    color: var(--primary);
-    font-weight: 600;
-}
-.post-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-    line-height: 1.4;
-}
-.post-excerpt {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-}
-
-/* ============================================================
-   优化项 3/5：卡片图标加载视觉优化
-   ============================================================ */
-
-/* 图标图片 - 加载成功后的样式 */
-.card-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    border-radius: 6px;
-    opacity: 0; /* 初始不可见，由JS控制淡入 */
-    transition: opacity 0.5s ease-in-out;
-}
-.card-icon img.loaded {
-    opacity: 1; /* JS加载完成后添加此类，触发淡入 */
-}
-
-/* 图标占位/加载指示器 - 加载中显示 */
-.card-icon::before {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border);
-    border-top-color: var(--primary); /* 旋转部分用主题色 */
-    border-radius: 50%;
-    animation: iconLoadingSpin 1s linear infinite;
-    opacity: 0; /* 默认隐藏 */
-    transition: opacity 0.3s ease;
-}
-.card-icon.loading::before {
-    opacity: 1; /* JS添加.loading类时显示旋转动画 */
-}
-@keyframes iconLoadingSpin {
-    to { transform: rotate(360deg); }
-}
-
-/* Emoji备用图标 - 加载失败时显示 */
-.icon-emoji {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px; /* 合适的emoji大小 */
-    font-weight: 600;
-    user-select: none;
-    background-color: var(--bg); /* 使用主题背景色 */
-    border-radius: 8px;
-    color: var(--text-secondary); /* 使用次要文字色 */
+body.leaving {
     opacity: 0;
-    animation: emojiFadeIn 0.5s ease-out 0.2s forwards; /* 延迟淡入，更平滑 */
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-@keyframes emojiFadeIn {
-    to { opacity: 1; }
+
+@keyframes uyea-slide-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes uyea-slide-out {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-8px); }
+}
+
+@supports (view-transition-name: none) {
+    ::view-transition-old(root) {
+        animation: uyea-slide-out 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+    ::view-transition-new(root) {
+        animation: uyea-slide-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
 }
