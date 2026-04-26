@@ -29,7 +29,10 @@
         }
 
         .menu-toggle {
-            display: flex;
+            /* [修改] 移除 display:flex
+               修改前：始终显示，覆盖了style.css的全局隐藏规则，桌面端也显示汉堡按钮
+               修改后：由style.css全局display:none控制，仅在≤1024px媒体查询中显示
+               目的：与index.html的显示逻辑完全一致 */
             background: none;
             border: none;
             cursor: pointer;
@@ -43,6 +46,17 @@
             height: 3px;
             background: var(--text-primary);
             border-radius: 2px;
+        }
+
+        @media (max-width: 1024px) {
+            /* [新增] ≤1024px时才显示汉堡菜单，与index.html逻辑一致 */
+            .menu-toggle { display: flex; }
+            .top-bar { justify-content: flex-start; padding-left: 56px; }
+        }
+
+        @media (max-width: 768px) {
+            /* [新增] 小屏padding对齐index.html */
+            .top-bar { padding: 0 12px; justify-content: space-between; }
         }
 
         /* ── 侧边栏：同步黑白配色与直接跳转模式 ── */
