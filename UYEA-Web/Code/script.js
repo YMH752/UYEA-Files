@@ -323,6 +323,68 @@ document.addEventListener('DOMContentLoaded', () => {
     cleanupLocalStorage();
 
     /* ────────────────────────────────────────────
+       [新增] 主题切换（暗色/亮色模式）
+       ────────────────────────────────────────────
+       功能说明：
+       - 首次访问：检测 prefers-color-scheme，自动适配设备主题
+       - 手动切换：点击圆角矩形按钮，滑块丝滑滑动，emoji 高亮切换
+       - 记忆功能：localStorage 保存用户选择，下次访问优先读取
+       - 系统监听：未手动设置时，跟随系统主题变化自动切换
+       修改目的：按需求重新构建暗色模式切换按钮 */
+    function initThemeToggle() {
+        const STORAGE_KEY = 'uyea-theme';
+        const html = document.documentElement;
+        const toggles = document.querySelectorAll('.theme-toggle');
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+            } else {
+                html.removeAttribute('data-theme');
+            }
+            try {
+                localStorage.setItem(STORAGE_KEY, theme);
+            } catch (e) {}
+        }
+
+        function getSavedTheme() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) return saved;
+            } catch (e) {}
+            return null;
+        }
+
+        // 初始化：优先 localStorage，其次设备偏好
+        const saved = getSavedTheme();
+        if (saved) {
+            applyTheme(saved);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            applyTheme('dark');
+        }
+
+        // 点击切换
+        toggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const current = html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+                applyTheme(current === 'dark' ? 'light' : 'dark');
+            });
+        });
+
+        // 监听系统主题变化（仅在用户未手动设置时生效）
+        if (window.matchMedia) {
+            const mql = window.matchMedia('(prefers-color-scheme: dark)');
+            mql.addEventListener('change', (e) => {
+                if (!getSavedTheme()) {
+                    applyTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
+    }
+
+    initThemeToggle();
+
+    /* ────────────────────────────────────────────
        [新增] 14. 页面切换过渡（方案C）
        原生：检测到View Transitions API → startViewTransition跳转
        降级：无API → body.leaving淡出 → 延迟跳转 → 新页body.loaded淡入
