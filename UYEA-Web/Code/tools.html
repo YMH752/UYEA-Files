@@ -62,10 +62,8 @@
         }
 
         @media (max-width: 768px) {
-            /* [修改] justify-content: space-between → flex-start
-               修改前：space-between在只有汉堡按钮一个元素时，按钮跑到最右边位置异常
-               修改后：flex-start靠左，配合padding-left: 12px，位置与index.html一致 */
-            .top-bar { padding: 0 12px; justify-content: flex-start; }
+            /* [新增] 小屏padding对齐index.html */
+            .top-bar { padding: 0 12px; justify-content: space-between; }
         }
 
         /* ── 侧边栏菜单：像素级对齐首页 ── */
@@ -120,22 +118,18 @@
 
         /* ── 子菜单：优化过渡感 ── */
         .sub-menu {
-            /* [修改] display:none/block → max-height+opacity 过渡
-               修改前：display:none 优先级高于.open的max-height规则，列表永远不显示
-               修改后：默认max-height:0+opacity:0，.open时展开，彻底消除display冲突 */
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-            padding-bottom: 0;
-            transition:
-                max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                padding-bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .sub-menu.open {
-            max-height: 200px;
-            opacity: 1;
+            display: none; 
             padding-bottom: 10px;
+            /* 增加一个极其微小的淡入 */
+            animation: fadeInSub 0.2s ease-out;
+        }
+        /* [修改] 清除滑入效果，改为纯淡出淡入
+           修改前：包含 transform: translateY(-5px) 的滑入
+           修改后：仅保留 opacity 变化，实现纯淡出淡入
+           修改目的：按需求将滑入切换效果全部清除 */
+        @keyframes fadeInSub {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .sub-nav-item {
@@ -245,7 +239,7 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <aside class="sidebar" id="sidebar" >
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
@@ -280,11 +274,6 @@
         </nav>
 
         <div class="sidebar-footer">
-            <!-- [新增] 深色模式切换按钮，位于登录注册上方 -->
-            <button class="theme-toggle-btn" id="themeToggleBtn">
-                <span id="themeToggleLabel">切换深色</span>
-                <span class="theme-toggle-icon" id="themeToggleIcon">🌙</span>
-            </button>
             <div class="auth-buttons">
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')">登录</div>
                 <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')">注册</div>
@@ -292,7 +281,7 @@
         </div>
     </aside>
 
-    <main class="main-content" style="view-transition-name: main;">
+    <main class="main-content">
         <header class="top-bar">
             <button class="menu-toggle" id="hamburgerBtn">
                 <span></span><span></span><span></span>
@@ -366,11 +355,9 @@
         toolsNavTrigger.addEventListener('click', function() {
             // 切换 menu-open 状态（触发旋转箭头和颜色变化）
             const isOpening = this.classList.toggle('menu-open');
-            /* [修改] style.display切换 → .open class切换
-               修改前：toolsSubMenu.style.display = isOpening ? 'block' : 'none'（硬切换，与CSS冲突）
-               修改后：classList.toggle('open')，配合CSS max-height+opacity过渡
-               目的：消除生硬感，与index.html逻辑统一 */
-            toolsSubMenu.classList.toggle('open', isOpening);
+            
+            // 使用 display 切换，配合 CSS 里的 fadeInSub 动画
+            toolsSubMenu.style.display = isOpening ? 'block' : 'none';
         });
 
         // 锚点平滑滚动对齐首页体验
