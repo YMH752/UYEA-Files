@@ -343,7 +343,11 @@
         </div>
     </aside>
 
-    <main class="main-content" style="view-transition-name: main;">
+    <!-- [修改] 删除main元素上的view-transition-name内联样式
+         修改前：<main class="main-content" style="view-transition-name: main;">
+         修改后：<main class="main-content">
+         修改目的：按需求彻底去掉页面切换动画 -->
+    <main class="main-content">
         <header class="top-bar">
             <a href="#" class="header-logo">UYEA</a>
             
