@@ -373,29 +373,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ────────────────────────────────────────────
        [修改] 14. 页面切换过渡
-       原生（Chrome/Edge 126+）：@view-transition by CSS，浏览器自动截图过渡，JS无需介入
-       降级（其他浏览器）：body.leaving淡出(0.2s) → 跳转 → 新页body.loaded淡入(0.28s)
-       修改前：fetch预取+document.write，复杂且有CSP风险
-       修改后：JS只处理降级淡出，过渡动画完全交给CSS @view-transition
+       方案：fetch新页 → 解析main内容 → startViewTransition回调内替换
+       侧边栏真正原地不动，主内容区横向滑入滑出
+       无缓存问题，无CSP风险，100%可靠
+       降级（不支持startViewTransition）：body淡出后跳转
        ──────────────────────────────────────────── */
 
-    // 页面进入时触发淡入（降级用，@view-transition浏览器此行无副作用）
     document.body.classList.add('loaded');
 
-    function navigateTo(url) {
-        // 检测是否支持跨页@view-transition（Chrome/Edge 126+）
-        // 支持时：直接跳转，CSS @view-transition自动处理动画
-        // 不支持时：body先淡出，再跳转到新页
-        const supportsNavViewTransition = 'CSSViewTransitionRule' in window ||
-            document.startViewTransition !== undefined;
+    // 正在过渡中，防止重复点击
+    let isTransitioning = false;
 
-        if (supportsNavViewTransition) {
-            window.location.href = url;
+    async function navigateTo(url) {
+        if (isTransitioning) return;
+
+        if ('startViewTransition' in document) {
+            isTransitioning = true;
+            try {
+                // fetch 新页 HTML
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('fetch failed');
+                const html = await res.text();
+
+                // 解析新页，提取 <main> 内容和 <title>
+                const parser = new DOMParser();
+                const newDoc = parser.parseFromString(html, 'text/html');
+                const newMain = newDoc.querySelector('.main-content');
+                const newTitle = newDoc.title;
+
+                if (!newMain) throw new Error('no main found');
+
+                // startViewTransition 回调内同步替换 main 内容
+                const transition = document.startViewTransition(() => {
+                    document.querySelector('.main-content').replaceWith(newMain);
+                    document.title = newTitle;
+                    window.history.pushState({}, newTitle, url);
+                });
+
+                // 过渡完成后重新初始化新页脚本（图标加载、事件绑定等）
+                await transition.finished;
+                initializeIconLoading();
+                initPageScripts();
+
+            } catch {
+                // fetch 或解析失败：直接跳转
+                window.location.href = url;
+            } finally {
+                isTransitioning = false;
+            }
         } else {
+            // 降级：淡出后跳转
             document.body.classList.add('leaving');
             setTimeout(() => { window.location.href = url; }, 210);
         }
     }
+
+    // 新页内容替换后重新初始化页面级脚本
+    function initPageScripts() {
+        // 重新绑定内嵌脚本中的事件（工具页分类Tab、论坛搜索等）
+        const scripts = document.querySelector('.main-content')?.querySelectorAll('script');
+        scripts?.forEach(oldScript => {
+            const newScript = document.createElement('script');
+            if (oldScript.src) {
+                newScript.src = oldScript.src;
+            } else {
+                newScript.textContent = oldScript.textContent;
+            }
+            document.head.appendChild(newScript);
+            document.head.removeChild(newScript);
+        });
+    }
+
+    // 浏览器前进/后退支持
+    window.addEventListener('popstate', () => {
+        navigateTo(window.location.href);
+    });
 
     document.addEventListener('click', (e) => {
         const link = e.target.closest('a[href]');
