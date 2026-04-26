@@ -176,72 +176,42 @@ body {
     .main-content { margin-left: 0; }
 }
 
-/* ── [新增] 侧边栏遮罩层：点击收起 + 模糊背景效果 ──
-   修改前：.sidebar-overlay 无任何样式，不可见，用户无感知
-   修改后：展开时全屏覆盖，backdrop-filter模糊内容区，半透明蒙层
-   目的：手机端点击侧边栏外区域可收起，视觉上区分侧边栏和内容区 */
-.sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 99;
-    background: rgba(0, 0, 0, 0);
-    backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
-    visibility: hidden;
-    pointer-events: none;
-    transition:
-        background 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-        backdrop-filter 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-        visibility 0.35s;
-}
-
-.sidebar-overlay.open {
-    visibility: visible;
-    pointer-events: auto;
-    background: rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-}
-/* ── [修改] 页面切换过渡：startViewTransition + fetch 替换 main 内容 ──
-   方案：拦截站内链接 → fetch新页HTML → startViewTransition回调内只替换main内容
-   侧边栏真正原地不动（不参与过渡），主内容区横向滑入滑出
-   降级（不支持startViewTransition）：body淡出淡入 */
-
-/* 主内容区标记，startViewTransition动画目标 */
-.main-content {
-    view-transition-name: main;
-}
-
-/* 旧页主内容区：向左滑出 */
-@keyframes uyea-main-out {
-    from { opacity: 1; transform: translateX(0); }
-    to   { opacity: 0; transform: translateX(-48px); }
-}
-
-/* 新页主内容区：从右侧滑入 */
-@keyframes uyea-main-in {
-    from { opacity: 0; transform: translateX(48px); }
-    to   { opacity: 1; transform: translateX(0); }
-}
-
-::view-transition-old(main) {
-    animation: uyea-main-out 0.28s cubic-bezier(0.4, 0, 1, 1) both;
-}
-::view-transition-new(main) {
-    animation: uyea-main-in 0.38s cubic-bezier(0, 0, 0.2, 1) both;
-}
-
-/* 降级：body淡入淡出 */
+/* ── [新增] 页面切换过渡（方案C：View Transitions API + 降级淡入淡出）──
+   降级方案：body默认透明，DOMContentLoaded后加.loaded淡入；离开时加.leaving淡出
+   原生方案：支持View Transitions API的浏览器使用::view-transition伪元素动画
+   动效：B方案，8px轻浮上入，cubic-bezier(0.4,0,0.2,1) 标准缓出，无弹性无震动 */
 body {
     opacity: 0;
-    transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 body.loaded {
     opacity: 1;
 }
 body.leaving {
     opacity: 0;
-    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* [修改] 清除滑入效果，改为纯淡出淡入
+   修改前：包含 transform: translateY(8px/-8px) 的滑入滑出
+   修改后：仅保留 opacity 变化，实现纯淡出淡入切换
+   修改目的：按需求将滑入切换效果全部清除 */
+@keyframes uyea-slide-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes uyea-slide-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+@supports (view-transition-name: none) {
+    ::view-transition-old(root) {
+        animation: uyea-slide-out 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+    ::view-transition-new(root) {
+        animation: uyea-slide-in 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
 }
 
 /* ── [新增] 骨架屏占位（配合懒加载使用）──
@@ -266,84 +236,4 @@ body.leaving {
 
 .card-icon.skeleton img {
     opacity: 0;
-}
-
-/* ── [新增] 深色模式变量覆盖 ──
-   两层：@media自动跟随系统 + .dark-mode手动覆盖（优先级更高）
-   强调色 --primary 铁锈红保持不变，保留品牌识别度 */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg:             #1A1917;
-        --surface:        #242220;
-        --border:         #3A3733;
-        --text-primary:   #F0EDE8;
-        --text-secondary: #A8A49E;
-        --text-muted:     #6B6762;
-        --primary-light:  #2E1A17;
-        --secondary:      #F0EDE8;
-        --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.3);
-        --shadow-md:      0 6px 16px rgba(0, 0, 0, 0.5);
-    }
-}
-
-/* 手动切换优先级高于系统偏好 */
-html.dark-mode {
-    --bg:             #1A1917;
-    --surface:        #242220;
-    --border:         #3A3733;
-    --text-primary:   #F0EDE8;
-    --text-secondary: #A8A49E;
-    --text-muted:     #6B6762;
-    --primary-light:  #2E1A17;
-    --secondary:      #F0EDE8;
-    --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.3);
-    --shadow-md:      0 6px 16px rgba(0, 0, 0, 0.5);
-}
-
-html.light-mode {
-    --bg:             #EEEAE3;
-    --surface:        #FCFBF9;
-    --border:         #D1CCC0;
-    --text-primary:   #2C2A26;
-    --text-secondary: #5D5954;
-    --text-muted:     #A8A49E;
-    --primary-light:  #F7EFED;
-    --secondary:      #000000;
-    --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-md:      0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-/* ── [新增] 深色模式切换按钮样式 ── */
-.theme-toggle-btn {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 10px 14px;
-    margin-bottom: 12px;
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-primary);
-    transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-                color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.theme-toggle-btn:hover {
-    background: var(--primary-light);
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.theme-toggle-icon {
-    font-size: 16px;
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.theme-toggle-btn:hover .theme-toggle-icon {
-    transform: rotate(20deg) scale(1.1);
 }
