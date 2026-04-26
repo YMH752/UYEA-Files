@@ -202,37 +202,72 @@ body {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
-   降级方案：body默认透明，DOMContentLoaded后加.loaded淡入；离开时加.leaving淡出
-   原生方案：支持View Transitions API的浏览器使用::view-transition伪元素动画
-   动效：B方案，8px轻浮上入，cubic-bezier(0.4,0,0.2,1) 标准缓出，无弹性无震动 */
+/* ── [新增] 路B：@view-transition 跨页过渡 + 降级淡入淡出 ──
+   支持浏览器（Chrome/Edge 126+）：
+     - sidebar: view-transition-name固定原地不动
+     - main: 横向滑入滑出，PPT切换感
+   不支持浏览器（降级）：
+     - body透明度淡入淡出，减少生硬感 */
+
+/* 声明跨页过渡，浏览器自动截图做动画 */
+@view-transition {
+    navigation: auto;
+}
+
+/* 侧边栏：切换时原地不动 */
+.sidebar {
+    view-transition-name: sidebar;
+}
+
+/* 主内容区：做横向滑动 */
+.main-content {
+    view-transition-name: main;
+}
+
+/* 旧页主内容区：向左滑出 */
+@keyframes uyea-main-out {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(-40px); }
+}
+
+/* 新页主内容区：从右侧滑入 */
+@keyframes uyea-main-in {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* 侧边栏过渡：原地淡入淡出，不位移 */
+@keyframes uyea-sidebar-in {
+    from { opacity: 0.6; }
+    to   { opacity: 1; }
+}
+
+::view-transition-old(main) {
+    animation: uyea-main-out 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+}
+::view-transition-new(main) {
+    animation: uyea-main-in 0.38s cubic-bezier(0, 0, 0.2, 1) both;
+}
+::view-transition-old(sidebar) {
+    animation: none;
+}
+::view-transition-new(sidebar) {
+    animation: uyea-sidebar-in 0.38s cubic-bezier(0, 0, 0.2, 1) both;
+}
+
+/* ── 降级方案：body淡入淡出（不支持@view-transition的浏览器）──
+   修改前：淡出0.25s，淡入0.35s
+   修改后：淡出压缩至0.2s，淡入0.28s，减少等待感 */
 body {
     opacity: 0;
-    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 body.loaded {
     opacity: 1;
 }
 body.leaving {
     opacity: 0;
-    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes uyea-slide-in {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes uyea-slide-out {
-    from { opacity: 1; transform: translateY(0); }
-    to   { opacity: 0; transform: translateY(-8px); }
-}
-
-@supports (view-transition-name: none) {
-    ::view-transition-old(root) {
-        animation: uyea-slide-out 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
-    }
-    ::view-transition-new(root) {
-        animation: uyea-slide-in 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
-    }
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ── [新增] 骨架屏占位（配合懒加载使用）──
