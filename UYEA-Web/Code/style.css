@@ -198,7 +198,10 @@ body.leaving {
 }
 @keyframes uyea-slide-out {
     from { opacity: 1; transform: translateY(0); }
-    to   { opacity: 0; transform: translateY(-8px); }
+    /* [修改] uyea-slide-out：translateY(-8px) → translateY(8px)
+       修改前：旧页面上滑消失(-8px)，与新页面下滑入场(+8px)方向相反，产生对向震动
+       修改后：旧页面下滑消失(+8px)，与新页面上滑入场同向连贯，消除交叉生硬感 */
+    to   { opacity: 0; transform: translateY(8px); }
 }
 
 @supports (view-transition-name: none) {
