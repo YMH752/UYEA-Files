@@ -323,6 +323,55 @@ document.addEventListener('DOMContentLoaded', () => {
     cleanupLocalStorage();
 
     /* ────────────────────────────────────────────
+       [新增] 15. 深色模式
+       优先级：localStorage手动记录 > 系统prefers-color-scheme > 默认浅色
+       ──────────────────────────────────────────── */
+    function applyTheme(mode) {
+        // mode: 'dark' | 'light' | 'system'
+        const html = document.documentElement;
+        html.classList.remove('dark-mode', 'light-mode');
+        if (mode === 'dark')  html.classList.add('dark-mode');
+        if (mode === 'light') html.classList.add('light-mode');
+        // system: 不加class，由@media prefers-color-scheme自动处理
+        updateThemeBtn(mode);
+    }
+
+    function updateThemeBtn(mode) {
+        const btn = document.getElementById('themeToggleBtn');
+        const icon = document.getElementById('themeToggleIcon');
+        const label = document.getElementById('themeToggleLabel');
+        if (!btn || !icon || !label) return;
+        const isDark = mode === 'dark' ||
+            (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        icon.textContent  = isDark ? '☀️' : '🌙';
+        label.textContent = isDark ? '切换浅色' : '切换深色';
+    }
+
+    // 初始化：读取保存的偏好
+    const savedTheme = localStorage.getItem('uyea_theme') || 'system';
+    applyTheme(savedTheme);
+
+    // 切换按钮点击
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const current = localStorage.getItem('uyea_theme') || 'system';
+            const isDark = current === 'dark' ||
+                (current === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            const next = isDark ? 'light' : 'dark';
+            localStorage.setItem('uyea_theme', next);
+            applyTheme(next);
+        });
+    }
+
+    // 监听系统主题变化（仅在system模式下生效）
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if ((localStorage.getItem('uyea_theme') || 'system') === 'system') {
+            updateThemeBtn('system');
+        }
+    });
+
+    /* ────────────────────────────────────────────
        [新增] 14. 页面切换过渡（方案C）
        原生：检测到View Transitions API → startViewTransition跳转
        降级：无API → body.leaving淡出 → 延迟跳转 → 新页body.loaded淡入
