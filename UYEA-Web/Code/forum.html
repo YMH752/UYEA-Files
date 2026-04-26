@@ -272,6 +272,16 @@
         </nav>
 
         <div class="sidebar-footer">
+            <!-- [新增] 暗色模式切换按钮，位于登录注册上方
+                 结构：☀️/🌙 双 emoji 圆角轨道 + 高亮滑块
+                 目的：按需求重新构建暗色模式切换按钮，三页统一 -->
+            <div class="theme-toggle-wrapper">
+                <div class="theme-toggle" role="button" tabindex="0" aria-label="切换主题">
+                    <div class="theme-slider"></div>
+                    <span class="theme-option light">☀️</span>
+                    <span class="theme-option dark">🌙</span>
+                </div>
+            </div>
             <div class="auth-buttons">
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')">登录</div>
                 <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')">注册</div>
