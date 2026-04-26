@@ -373,20 +373,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ────────────────────────────────────────────
        [新增] 14. 页面切换过渡（方案C）
-       原生：检测到View Transitions API → startViewTransition跳转
+       原生：fetch预取新页HTML → startViewTransition内替换document内容
        降级：无API → body.leaving淡出 → 延迟跳转 → 新页body.loaded淡入
-       仅拦截站内同域链接，外链/hash链接不处理
+       修复：原直接赋值location.href，startViewTransition无法捕获新页渲染
+       现：fetch预取完整HTML后在回调内替换，过渡动画新旧页均完整呈现
+       仅拦截站内相对链接，外链/hash/javascript:不处理
        ──────────────────────────────────────────── */
 
     // 页面进入时触发淡入
     document.body.classList.add('loaded');
 
-    function navigateTo(url) {
+    async function navigateTo(url) {
         if ('startViewTransition' in document) {
-            // 原生 View Transitions API
-            document.startViewTransition(() => {
+            try {
+                // fetch预取目标页HTML
+                const res = await fetch(url);
+                const html = await res.text();
+                document.startViewTransition(() => {
+                    // 在过渡回调内替换整页内容，保证新旧页都参与动画
+                    document.open();
+                    document.write(html);
+                    document.close();
+                    window.history.pushState({}, '', url);
+                });
+            } catch {
+                // fetch失败降级为直接跳转
                 window.location.href = url;
-            });
+            }
         } else {
             // 降级：淡出后跳转
             document.body.classList.add('leaving');
