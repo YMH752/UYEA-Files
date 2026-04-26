@@ -29,10 +29,11 @@
         }
 
         .menu-toggle {
-            /* [修改] 移除 display:flex
-               修改前：始终显示，覆盖了style.css的全局隐藏规则，桌面端也显示汉堡按钮
-               修改后：由style.css全局display:none控制，仅在≤1024px媒体查询中显示
-               目的：与index.html的显示逻辑完全一致 */
+            /* [修改] display:flex → display:none 默认隐藏
+               修改前：display:flex始终显示，桌面端出现异常黑色按钮
+               修改后：默认隐藏，≤1024px媒体查询中再显示
+               目的：正确控制汉堡按钮仅在移动端出现 */
+            display: none;
             background: none;
             border: none;
             cursor: pointer;
