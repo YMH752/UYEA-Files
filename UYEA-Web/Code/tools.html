@@ -26,7 +26,10 @@
         }
 
         .menu-toggle {
-            display: flex;
+            /* [修改] 移除 display:flex
+               修改前：始终显示，覆盖了style.css的全局隐藏规则，桌面端也显示汉堡按钮
+               修改后：由style.css全局display:none控制，仅在≤1024px媒体查询中显示
+               目的：与index.html的显示逻辑完全一致 */
             background: none;
             border: none;
             cursor: pointer;
@@ -40,6 +43,17 @@
             height: 3px;
             background: var(--text-primary);
             border-radius: 2px;
+        }
+
+        @media (max-width: 1024px) {
+            /* [新增] ≤1024px时才显示汉堡菜单，与index.html逻辑一致 */
+            .menu-toggle { display: flex; }
+            .top-bar { justify-content: flex-start; padding-left: 56px; }
+        }
+
+        @media (max-width: 768px) {
+            /* [新增] 小屏padding对齐index.html */
+            .top-bar { padding: 0 12px; justify-content: space-between; }
         }
 
         /* ── 侧边栏菜单：像素级对齐首页 ── */
@@ -84,10 +98,7 @@
         .arrow-icon {
             font-size: 10px;
             margin-left: auto;
-            /* [修改] 箭头旋转缓动升级
-               修改前：0.3s cubic-bezier(0.4,0,0.2,1) 标准缓出，速度过快
-               修改后：0.4s cubic-bezier(0.34,1.56,0.64,1) 苹果弹性缓动，丝滑有弹性 */
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0.6;
         }
         .nav-item.menu-open .arrow-icon {
@@ -95,25 +106,16 @@
             opacity: 1;
         }
 
-        /* ── 子菜单：丝滑展开过渡 ── */
+        /* ── 子菜单：优化过渡感 ── */
         .sub-menu {
-            /* [修改] display:none/block → max-height+opacity 过渡
-               修改前：display硬切换 + 0.2s fadeInSub，生硬有闪烁
-               修改后：max-height从0展开+opacity淡入，完全丝滑
-               目的：与index.html动效统一，消除生硬感 */
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-            padding-bottom: 0;
-            transition:
-                max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                padding-bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .sub-menu.open {
-            max-height: 200px;
-            opacity: 1;
+            display: none; 
             padding-bottom: 10px;
+            /* 增加一个极其微小的淡入 */
+            animation: fadeInSub 0.2s ease-out;
+        }
+        @keyframes fadeInSub {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .sub-nav-item {
@@ -338,11 +340,9 @@
         toolsNavTrigger.addEventListener('click', function() {
             // 切换 menu-open 状态（触发旋转箭头和颜色变化）
             const isOpening = this.classList.toggle('menu-open');
-            /* [修改] display切换 → .open class切换
-               修改前：toolsSubMenu.style.display = isOpening ? 'block' : 'none'（硬切换）
-               修改后：classList.toggle('open')，配合CSS max-height+opacity过渡
-               目的：消除列表展开的生硬感，与index.html统一 */
-            toolsSubMenu.classList.toggle('open', isOpening);
+            
+            // 使用 display 切换，配合 CSS 里的 fadeInSub 动画
+            toolsSubMenu.style.display = isOpening ? 'block' : 'none';
         });
 
         // 锚点平滑滚动对齐首页体验
