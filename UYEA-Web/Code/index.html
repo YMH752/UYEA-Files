@@ -331,11 +331,17 @@
         </nav>
 
         <div class="sidebar-footer">
-            <!-- [新增] 深色模式切换按钮，位于登录注册上方 -->
-            <button class="theme-toggle-btn" id="themeToggleBtn">
-                <span id="themeToggleLabel">切换深色</span>
-                <span class="theme-toggle-icon" id="themeToggleIcon">🌙</span>
-            </button>
+            <!-- [修改] 替换旧主题按钮为圆角矩形滑动切换按钮
+                 修改前：文字+单emoji按钮（theme-toggle-btn）
+                 修改后：☀️/🌙双emoji圆角轨道+高亮滑块，丝滑滑动动画
+                 修改目的：按需求重新构建暗色模式切换按钮，三页统一 -->
+            <div class="theme-toggle-wrapper">
+                <div class="theme-toggle" role="button" tabindex="0" aria-label="切换主题">
+                    <div class="theme-slider"></div>
+                    <span class="theme-option light">☀️</span>
+                    <span class="theme-option dark">🌙</span>
+                </div>
+            </div>
             <div class="auth-buttons">
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')">登录</div>
                 <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')">注册</div>
@@ -343,10 +349,6 @@
         </div>
     </aside>
 
-    <!-- [修改] 删除main元素上的view-transition-name内联样式
-         修改前：<main class="main-content" style="view-transition-name: main;">
-         修改后：<main class="main-content">
-         修改目的：按需求彻底去掉页面切换动画 -->
     <main class="main-content">
         <header class="top-bar">
             <a href="#" class="header-logo">UYEA</a>
