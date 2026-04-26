@@ -59,12 +59,19 @@
         @media (max-width: 1024px) {
             /* [新增] ≤1024px时才显示汉堡菜单，与index.html逻辑一致 */
             .menu-toggle { display: flex; }
-            .top-bar { justify-content: flex-start; padding-left: 56px; }
+            /* [修改] 删除 .top-bar 的 justify-content:flex-start 与 padding-left:56px
+               修改前：强制顶栏内容左对齐，按钮被推到左上角
+               修改后：恢复默认 flex-end，按钮保持在右上角
+               修改目的：按需求将汉堡菜单统一放在右上角 */
         }
 
         @media (max-width: 768px) {
             /* [新增] 小屏padding对齐index.html */
-            .top-bar { padding: 0 12px; justify-content: space-between; }
+            /* [修改] 删除 justify-content: space-between
+               修改前：space-between 会把唯一子元素（按钮）推到左侧
+               修改后：仅保留 padding 调整，按钮靠默认 flex-end 保持在右侧
+               修改目的：按需求将汉堡菜单统一放在右上角 */
+            .top-bar { padding: 0 12px; }
         }
 
         /* ── 侧边栏：同步黑白配色与直接跳转模式 ── */
@@ -238,7 +245,7 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <aside class="sidebar" id="sidebar" >
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
@@ -265,11 +272,6 @@
         </nav>
 
         <div class="sidebar-footer">
-            <!-- [新增] 深色模式切换按钮，位于登录注册上方 -->
-            <button class="theme-toggle-btn" id="themeToggleBtn">
-                <span id="themeToggleLabel">切换深色</span>
-                <span class="theme-toggle-icon" id="themeToggleIcon">🌙</span>
-            </button>
             <div class="auth-buttons">
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')">登录</div>
                 <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')">注册</div>
@@ -277,7 +279,7 @@
         </div>
     </aside>
 
-    <main class="main-content" style="view-transition-name: main;">
+    <main class="main-content">
         <header class="top-bar">
             <button class="menu-toggle" id="hamburgerBtn">
                 <span></span><span></span><span></span>
@@ -340,7 +342,7 @@
                         <span>• 访客9527</span>
                         <span>• 2026-04-18</span>
                     </div>
-                    <div class="post-title">建议导航页增加一个“常用收藏”的自定义功能</div>
+                    <div class="post-title">建议导航页增加一个"常用收藏"的自定义功能</div>
                     <div class="post-excerpt">
                         如果能让用户自己把最常用的几个工具顶在最前面，体验会更好，希望采纳！
                     </div>
