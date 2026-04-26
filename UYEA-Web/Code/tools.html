@@ -381,7 +381,10 @@
             });
             toolGroups.forEach(group => {
                 const hasVisible = Array.from(group.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                group.style.display = hasVisible ? 'block' : 'none';
+                // [修改] toolGroups隐藏逻辑：group.style.display → group.hidden
+                // 修改前：style.display切换可能被其他样式规则覆盖，导致无匹配卡片的分类组标题残留
+                // 修改后：使用HTML5 hidden布尔属性，浏览器解析优先级明确，确保无匹配卡片的分类组（含标题）可靠隐藏
+                group.hidden = !hasVisible;
             });
         });
 
