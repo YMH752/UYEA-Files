@@ -478,7 +478,12 @@
             if (isHomePage) {
                 const isOpening = !this.classList.contains('menu-open');
                 this.classList.toggle('menu-open', isOpening);
-                subNavMenu.style.display = isOpening ? 'block' : 'none';
+                /* [修改] display切换 → .open class切换，配合CSS max-height+opacity过渡 */
+                subNavMenu.classList.toggle('open', isOpening);
+                /* [新增] 同步维护active高亮状态
+                   修改前：active写死在HTML，点击后高亮状态丢失
+                   修改后：展开时保持active，收起时移除active */
+                this.classList.toggle('active', isOpening);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 window.location.href = 'index.html';
