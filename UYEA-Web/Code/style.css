@@ -176,7 +176,32 @@ body {
     .main-content { margin-left: 0; }
 }
 
-/* ── [新增] 页面切换过渡（方案C：View Transitions API + 降级淡入淡出）──
+/* ── [新增] 侧边栏遮罩层：点击收起 + 模糊背景效果 ──
+   修改前：.sidebar-overlay 无任何样式，不可见，用户无感知
+   修改后：展开时全屏覆盖，backdrop-filter模糊内容区，半透明蒙层
+   目的：手机端点击侧边栏外区域可收起，视觉上区分侧边栏和内容区 */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        background 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        backdrop-filter 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.35s;
+}
+
+.sidebar-overlay.open {
+    visibility: visible;
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
    降级方案：body默认透明，DOMContentLoaded后加.loaded淡入；离开时加.leaving淡出
    原生方案：支持View Transitions API的浏览器使用::view-transition伪元素动画
    动效：B方案，8px轻浮上入，cubic-bezier(0.4,0,0.2,1) 标准缓出，无弹性无震动 */
