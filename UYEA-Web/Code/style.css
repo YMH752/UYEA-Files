@@ -180,40 +180,10 @@ body {
    降级方案：body默认透明，DOMContentLoaded后加.loaded淡入；离开时加.leaving淡出
    原生方案：支持View Transitions API的浏览器使用::view-transition伪元素动画
    动效：B方案，8px轻浮上入，cubic-bezier(0.4,0,0.2,1) 标准缓出，无弹性无震动 */
-body {
-    opacity: 0;
-    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-body.loaded {
-    opacity: 1;
-}
-body.leaving {
-    opacity: 0;
-    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* [修改] 清除滑入效果，改为纯淡出淡入
-   修改前：包含 transform: translateY(8px/-8px) 的滑入滑出
-   修改后：仅保留 opacity 变化，实现纯淡出淡入切换
-   修改目的：按需求将滑入切换效果全部清除 */
-@keyframes uyea-slide-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-@keyframes uyea-slide-out {
-    from { opacity: 1; }
-    to   { opacity: 0; }
-}
-
-@supports (view-transition-name: none) {
-    ::view-transition-old(root) {
-        animation: uyea-slide-out 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
-    }
-    ::view-transition-new(root) {
-        animation: uyea-slide-in 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
-    }
-}
-
+/* [修改] 删除此注释下方的页面切换动画代码（body opacity过渡、loaded/leaving类、keyframes、view-transition伪元素）
+   修改前：包含body初始隐藏+loaded淡入+leaving淡出、uyea-slide-in/out关键帧、::view-transition-old/new动画
+   修改后：彻底移除所有页面切换动画CSS，恢复默认浏览器渲染
+   修改目的：按需求彻底去掉三个页面的切换动画 */
 /* ── [新增] 骨架屏占位（配合懒加载使用）──
    图标未加载时显示灰色闪烁占位块，加载完成后由JS移除skeleton class
    shimmer：从左到右扫光效果，视觉上表示"正在加载" */
