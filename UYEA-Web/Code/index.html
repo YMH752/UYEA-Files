@@ -8,8 +8,19 @@
     <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
     <meta name="theme-color" content="#000000">
     
+    <!-- [修改] 补全 fonts.gstatic.com preconnect（字体文件实际所在域）
+         修改前：只预连接了 fonts.googleapis.com，字体文件域未预连接
+         修改后：两个域均预连接，减少字体加载延迟 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- [新增] GitHub Raw CDN dns-prefetch + preconnect，加速图标加载 -->
+    <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+    <!-- [修改] 字体改为异步加载，消除渲染阻塞
+         修改前：<link rel="stylesheet"> 同步加载，阻塞首屏渲染
+         修改后：media="print" onload 技巧异步加载，noscript保底 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     
     <link rel="stylesheet" href="style.css">
     
@@ -448,7 +459,10 @@
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <!-- [修改] 加 defer，消除script阻塞HTML解析
+         修改前：同步加载，浏览器解析到此处暂停解析HTML
+         修改后：defer后台下载，HTML解析完成后才执行 -->
+    <script src="script.js" defer></script>
     <script>
         /* ── 严格保留原有脚本逻辑 ── */
         const allNavTrigger = document.getElementById('allNavTrigger');
@@ -539,16 +553,9 @@
             }
         });
 
-        function initIcons() {
-            document.querySelectorAll('.card-icon img').forEach(img => {
-                const domain = img.getAttribute('data-domain');
-                if (domain && !img.src) {
-                    img.src = `https://favicon.splitbee.io/?url=${domain}`;
-                    img.onerror = () => { img.style.display='none'; }; 
-                }
-            });
-        }
-        window.addEventListener('DOMContentLoaded', initIcons);
+        // [修改] 移除 initIcons（favicon.splitbee.io）
+        // 修改前：与script.js的initializeIconLoading并存，对同一img元素双重加载图标
+        // 修改后：统一由script.js的initializeIconLoading处理，消除重复请求
     </script>
 </body>
 </html>
