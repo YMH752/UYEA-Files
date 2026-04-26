@@ -8,8 +8,15 @@
     <meta name="description" content="悠野社区 - 分享想法、互帮互助、共同成长的技术社区平台。">
     <meta name="theme-color" content="#000000">
     
+    <!-- [修改] 补全 fonts.gstatic.com preconnect，新增 GitHub CDN dns-prefetch
+         同时统一字重：补充 wght@800，与其他两页保持一致 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+    <!-- [修改] 字体改为异步加载，消除渲染阻塞；补充 wght@800 统一三页字重 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     
     <link rel="stylesheet" href="style.css">
     
@@ -337,7 +344,8 @@
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <!-- [修改] 加 defer，消除script阻塞HTML解析 -->
+    <script src="script.js" defer></script>
     <script>
         // --- 保持完整功能的社区搜索逻辑 ---
         const forumSearchInput = document.getElementById('forumSearchInput');
