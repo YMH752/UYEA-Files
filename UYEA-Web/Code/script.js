@@ -171,6 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // ✅ 设置3秒超时（[修改] 5000ms → 3000ms，减少用户等待时间）
         const timeoutId = setTimeout(() => {
             if (!img.complete || img.naturalHeight === 0) {
+                // [新增] 超时也移除骨架屏class
+                img.closest('.card-icon')?.classList.remove('skeleton');
                 handleIconLoadFailure(img, siteName, domain);
             }
         }, 3000);
@@ -179,6 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
         img.onload = () => {
             clearTimeout(timeoutId);
             // [修改] 移除 console.log 调试输出，生产环境无需打印每个图标加载状态
+            // [新增] 加载成功移除骨架屏class，触发图标显示
+            img.closest('.card-icon')?.classList.remove('skeleton');
             img.style.opacity = '1';
         };
 
@@ -186,6 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
         img.onerror = () => {
             clearTimeout(timeoutId);
             // [修改] 移除 console.warn 调试输出
+            // [新增] 加载失败也移除骨架屏class
+            img.closest('.card-icon')?.classList.remove('skeleton');
             handleIconLoadFailure(img, siteName, domain);
         };
 
@@ -240,28 +246,57 @@ document.addEventListener('DOMContentLoaded', () => {
         'v0.dev': 'v0dev.ico'
     };
 
-    /* ✅ 初始化所有卡片的图标加载 */
+    /* ✅ 初始化所有卡片的图标加载（懒加载版本）
+       [修改] 原：页面加载后立即并发请求全部图标
+       现：IntersectionObserver监听，图标进入视口时才发起请求
+       未进入视口的图标保持skeleton骨架屏占位，不占用网络带宽 */
     function initializeIconLoading() {
+        // [新增] 检测IntersectionObserver支持，不支持则降级为立即加载
+        const useObserver = 'IntersectionObserver' in window;
+
+        const observer = useObserver ? new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const img = entry.target;
+                const domain = img.getAttribute('data-domain');
+                const siteName = img.getAttribute('data-site-name');
+                const iconFileName = ICON_FILE_MAPPING[domain];
+                if (iconFileName) {
+                    loadLocalIcon(img, iconFileName, siteName, domain);
+                } else {
+                    img.closest('.card-icon')?.classList.remove('skeleton');
+                    handleIconLoadFailure(img, siteName, domain);
+                }
+                obs.unobserve(img);
+            });
+        }, {
+            rootMargin: '100px' // 提前100px开始加载，避免进入视口时才开始出现骨架
+        }) : null;
+
         document.querySelectorAll('.card-icon img').forEach(img => {
             const domain = img.getAttribute('data-domain');
             const siteName = img.getAttribute('data-site-name');
-            
+
             if (!domain || !siteName) {
-                // [修改] 移除 console.warn 调试输出
                 return;
             }
 
-            // ✅ 从映射表获取图标文件名
-            const iconFileName = ICON_FILE_MAPPING[domain];
-            
-            if (!iconFileName) {
-                // [修改] 移除 console.warn 调试输出
-                handleIconLoadFailure(img, siteName, domain);
-                return;
-            }
+            // [新增] 添加骨架屏占位class
+            img.closest('.card-icon')?.classList.add('skeleton');
 
-            // ✅ 加载本地GitHub图标
-            loadLocalIcon(img, iconFileName, siteName, domain);
+            if (useObserver) {
+                // 懒加载：交给IntersectionObserver在进入视口时处理
+                observer.observe(img);
+            } else {
+                // 降级：立即加载
+                const iconFileName = ICON_FILE_MAPPING[domain];
+                if (!iconFileName) {
+                    img.closest('.card-icon')?.classList.remove('skeleton');
+                    handleIconLoadFailure(img, siteName, domain);
+                    return;
+                }
+                loadLocalIcon(img, iconFileName, siteName, domain);
+            }
         });
     }
 
