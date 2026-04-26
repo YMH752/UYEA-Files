@@ -168,25 +168,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // ✅ 构建GitHub图标URL
         const iconUrl = buildGitHubIconUrl(iconFileName);
         
-        // ✅ 设置5秒超时
+        // ✅ 设置3秒超时（[修改] 5000ms → 3000ms，减少用户等待时间）
         const timeoutId = setTimeout(() => {
             if (!img.complete || img.naturalHeight === 0) {
-                console.warn(`Icon load timeout for ${siteName}`);
                 handleIconLoadFailure(img, siteName, domain);
             }
-        }, 5000);
+        }, 3000);
 
         // ✅ 图标加载成功
         img.onload = () => {
             clearTimeout(timeoutId);
+            // [修改] 移除 console.log 调试输出，生产环境无需打印每个图标加载状态
             img.style.opacity = '1';
-            console.log(`✅ Icon loaded successfully for ${siteName} from GitHub`);
         };
 
         // ✅ 图标加载失败
         img.onerror = () => {
             clearTimeout(timeoutId);
-            console.warn(`Failed to load icon for ${siteName} from GitHub`);
+            // [修改] 移除 console.warn 调试输出
             handleIconLoadFailure(img, siteName, domain);
         };
 
@@ -211,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // ✅ 将emoji元素插入到父容器中
         img.parentElement.appendChild(emojiElement);
-        console.log(`😊 Using emoji for ${siteName}: ${emoji}`);
+        // [修改] 移除 console.log emoji调试输出
     }
 
     /* ✅ 图标文件名映射表 */
@@ -248,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const siteName = img.getAttribute('data-site-name');
             
             if (!domain || !siteName) {
-                console.warn('Missing domain or site-name attribute');
+                // [修改] 移除 console.warn 调试输出
                 return;
             }
 
@@ -256,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const iconFileName = ICON_FILE_MAPPING[domain];
             
             if (!iconFileName) {
-                console.warn(`No icon file mapping found for ${domain}`);
+                // [修改] 移除 console.warn 调试输出
                 handleIconLoadFailure(img, siteName, domain);
                 return;
             }
@@ -273,10 +272,12 @@ document.addEventListener('DOMContentLoaded', () => {
        11. 可选：定期清理过期的localStorage缓存
        ──────────────────────────────────────────── */
     function cleanupLocalStorage() {
-        const keys = Object.keys(localStorage);
+        // [修改] 加前缀过滤，只遍历 icon_cache_ 开头的key
+        // 修改前：Object.keys(localStorage) 遍历所有key，包含无关数据
+        // 修改后：先过滤出目标前缀key，避免无意义遍历
+        const keys = Object.keys(localStorage).filter(k => k.startsWith('icon_cache_') && !k.endsWith('_time'));
         keys.forEach(key => {
-            if (key.startsWith('icon_cache_') && Date.now() - parseInt(localStorage.getItem(key + '_time')) > 7 * 24 * 60 * 60 * 1000) {
-                // ✅ 清理7天以前的缓存
+            if (Date.now() - parseInt(localStorage.getItem(key + '_time')) > 7 * 24 * 60 * 60 * 1000) {
                 localStorage.removeItem(key);
                 localStorage.removeItem(key + '_time');
             }
