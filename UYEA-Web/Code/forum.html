@@ -7,6 +7,8 @@
     
     <meta name="description" content="悠野社区 - 分享想法、互帮互助、共同成长的技术社区平台。">
     <meta name="theme-color" content="#000000">
+    <!-- [新增] 声明支持跨页@view-transition -->
+    <meta name="view-transition" content="same-origin">
     
     <!-- [修改] 补全 fonts.gstatic.com preconnect，新增 GitHub CDN dns-prefetch
          同时统一字重：补充 wght@800，与其他两页保持一致 -->
@@ -238,7 +240,7 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar" style="view-transition-name: sidebar;">
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
@@ -277,7 +279,7 @@
         </div>
     </aside>
 
-    <main class="main-content">
+    <main class="main-content" style="view-transition-name: main;">
         <header class="top-bar">
             <button class="menu-toggle" id="hamburgerBtn">
                 <span></span><span></span><span></span>
