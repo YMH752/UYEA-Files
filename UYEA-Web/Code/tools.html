@@ -7,6 +7,8 @@
     <!-- [新增] 补充 description meta，原来缺失 -->
     <meta name="description" content="悠野工作室(UYEA)实用工具箱，汇聚开发、设计、办公、多媒体等各类在线工具。">
     <meta name="theme-color" content="#000000">
+    <!-- [新增] 声明支持跨页@view-transition -->
+    <meta name="view-transition" content="same-origin">
 
     <!-- [修改] 补全 fonts.gstatic.com preconnect，新增 GitHub CDN dns-prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -245,7 +247,7 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar" style="view-transition-name: sidebar;">
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
@@ -292,7 +294,7 @@
         </div>
     </aside>
 
-    <main class="main-content">
+    <main class="main-content" style="view-transition-name: main;">
         <header class="top-bar">
             <button class="menu-toggle" id="hamburgerBtn">
                 <span></span><span></span><span></span>
