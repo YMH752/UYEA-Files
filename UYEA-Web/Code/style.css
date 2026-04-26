@@ -207,3 +207,99 @@ body {
 .card-icon.skeleton img {
     opacity: 0;
 }
+
+/* ── [新增] 暗色模式变量覆盖 ──
+   当 html 标签带有 data-theme="dark" 时，覆盖 :root 中的亮色变量
+   实现全局配色自动切换，无需逐元素修改 */
+html[data-theme="dark"] {
+    --primary:        #C45C4A;    /* 铁锈红提亮，暗底上更醒目 */
+    --primary-dark:   #A63A26;
+    --primary-light:  #2A1F1D;    /* 深褐红，用于悬浮背景 */
+    --secondary:      #FFFFFF;    /* 暗色下反转为白 */
+    --bg:             #1A1816;    /* 深褐黑底 */
+    --surface:        #242220;    /* 深灰褐表面 */
+    --border:         #3A3632;    /* 暗色边框 */
+    --text-primary:   #F0EDE8;    /* 米白主文字 */
+    --text-secondary: #B5B0A8;    /* 灰褐次文字 */
+    --text-muted:     #6E6A64;    /* 暗灰提示文字 */
+}
+
+/* ── [新增] 主题切换按钮 ──
+   圆角矩形轨道，内含 ☀️/🌙 双 emoji，黑色/白色滑块作为高亮选中背景
+   点击时滑块通过 transform: translateX(100%) 丝滑滑动，配合 opacity/filter 切换 emoji 状态 */
+.theme-toggle-wrapper {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.theme-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 42px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 3px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+}
+
+.theme-slider {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    height: calc(100% - 6px);
+    background: #000000;
+    border-radius: calc(var(--radius-md) - 3px);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+    z-index: 1;
+}
+
+/* [修改] 暗色模式下滑块右移并反色
+   修改前：无此逻辑
+   修改后：html[data-theme="dark"] 时滑块 translateX(100%) 并变白底
+   修改目的：实现 ☀️→🌙 的丝滑滑动高亮切换效果 */
+html[data-theme="dark"] .theme-slider {
+    transform: translateX(100%);
+    background: #FFFFFF;
+}
+
+.theme-option {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 18px;
+    transition: opacity 0.3s, filter 0.3s;
+}
+
+/* 亮色模式默认：☀️ 彩色高亮，🌙 灰显 */
+.theme-option.light {
+    opacity: 1;
+    filter: grayscale(0);
+}
+
+.theme-option.dark {
+    opacity: 0.35;
+    filter: grayscale(1);
+}
+
+/* 暗色模式：☀️ 灰显，🌙 彩色高亮 */
+html[data-theme="dark"] .theme-option.light {
+    opacity: 0.35;
+    filter: grayscale(1);
+}
+
+html[data-theme="dark"] .theme-option.dark {
+    opacity: 1;
+    filter: grayscale(0);
+}
