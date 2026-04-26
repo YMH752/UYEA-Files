@@ -323,140 +323,15 @@ document.addEventListener('DOMContentLoaded', () => {
     cleanupLocalStorage();
 
     /* ────────────────────────────────────────────
-       [新增] 15. 深色模式
-       优先级：localStorage手动记录 > 系统prefers-color-scheme > 默认浅色
+       [新增] 14. 页面切换过渡（方案C）
+       原生：检测到View Transitions API → startViewTransition跳转
+       降级：无API → body.leaving淡出 → 延迟跳转 → 新页body.loaded淡入
+       仅拦截站内同域链接，外链/hash链接不处理
        ──────────────────────────────────────────── */
-    function applyTheme(mode) {
-        // mode: 'dark' | 'light' | 'system'
-        const html = document.documentElement;
-        html.classList.remove('dark-mode', 'light-mode');
-        if (mode === 'dark')  html.classList.add('dark-mode');
-        if (mode === 'light') html.classList.add('light-mode');
-        // system: 不加class，由@media prefers-color-scheme自动处理
-        updateThemeBtn(mode);
-    }
-
-    function updateThemeBtn(mode) {
-        const btn = document.getElementById('themeToggleBtn');
-        const icon = document.getElementById('themeToggleIcon');
-        const label = document.getElementById('themeToggleLabel');
-        if (!btn || !icon || !label) return;
-        const isDark = mode === 'dark' ||
-            (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        icon.textContent  = isDark ? '☀️' : '🌙';
-        label.textContent = isDark ? '切换浅色' : '切换深色';
-    }
-
-    // 初始化：读取保存的偏好
-    const savedTheme = localStorage.getItem('uyea_theme') || 'system';
-    applyTheme(savedTheme);
-
-    // 切换按钮点击
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            const current = localStorage.getItem('uyea_theme') || 'system';
-            const isDark = current === 'dark' ||
-                (current === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            const next = isDark ? 'light' : 'dark';
-            localStorage.setItem('uyea_theme', next);
-            applyTheme(next);
-        });
-    }
-
-    // 监听系统主题变化（仅在system模式下生效）
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        if ((localStorage.getItem('uyea_theme') || 'system') === 'system') {
-            updateThemeBtn('system');
-        }
-    });
-
-    /* ────────────────────────────────────────────
-       [修改] 14. 页面切换过渡
-       方案：fetch新页 → 解析main内容 → startViewTransition回调内替换
-       侧边栏真正原地不动，主内容区横向滑入滑出
-       无缓存问题，无CSP风险，100%可靠
-       降级（不支持startViewTransition）：body淡出后跳转
-       ──────────────────────────────────────────── */
-
-    document.body.classList.add('loaded');
-
-    // 正在过渡中，防止重复点击
-    let isTransitioning = false;
-
-    async function navigateTo(url) {
-        if (isTransitioning) return;
-
-        if ('startViewTransition' in document) {
-            isTransitioning = true;
-            try {
-                // fetch 新页 HTML
-                const res = await fetch(url);
-                if (!res.ok) throw new Error('fetch failed');
-                const html = await res.text();
-
-                // 解析新页，提取 <main> 内容和 <title>
-                const parser = new DOMParser();
-                const newDoc = parser.parseFromString(html, 'text/html');
-                const newMain = newDoc.querySelector('.main-content');
-                const newTitle = newDoc.title;
-
-                if (!newMain) throw new Error('no main found');
-
-                // startViewTransition 回调内同步替换 main 内容
-                const transition = document.startViewTransition(() => {
-                    document.querySelector('.main-content').replaceWith(newMain);
-                    document.title = newTitle;
-                    window.history.pushState({}, newTitle, url);
-                });
-
-                // 过渡完成后重新初始化新页脚本（图标加载、事件绑定等）
-                await transition.finished;
-                initializeIconLoading();
-                initPageScripts();
-
-            } catch {
-                // fetch 或解析失败：直接跳转
-                window.location.href = url;
-            } finally {
-                isTransitioning = false;
-            }
-        } else {
-            // 降级：淡出后跳转
-            document.body.classList.add('leaving');
-            setTimeout(() => { window.location.href = url; }, 210);
-        }
-    }
-
-    // 新页内容替换后重新初始化页面级脚本
-    function initPageScripts() {
-        // 重新绑定内嵌脚本中的事件（工具页分类Tab、论坛搜索等）
-        const scripts = document.querySelector('.main-content')?.querySelectorAll('script');
-        scripts?.forEach(oldScript => {
-            const newScript = document.createElement('script');
-            if (oldScript.src) {
-                newScript.src = oldScript.src;
-            } else {
-                newScript.textContent = oldScript.textContent;
-            }
-            document.head.appendChild(newScript);
-            document.head.removeChild(newScript);
-        });
-    }
-
-    // 浏览器前进/后退支持
-    window.addEventListener('popstate', () => {
-        navigateTo(window.location.href);
-    });
-
-    document.addEventListener('click', (e) => {
-        const link = e.target.closest('a[href]');
-        if (!link) return;
-        const href = link.getAttribute('href');
-        if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('javascript')) return;
-        e.preventDefault();
-        navigateTo(href);
-    });
+    /* [修改] 删除此注释下方的页面切换过渡逻辑（loaded类、navigateTo函数、链接点击拦截）
+       修改前：页面加载时添加loaded类淡入，拦截站内链接用navigateTo执行淡出/View Transition后跳转
+       修改后：彻底移除，恢复默认浏览器跳转行为
+       修改目的：按需求彻底去掉三个页面的切换动画 */
 
 });
 
