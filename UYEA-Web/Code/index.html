@@ -7,6 +7,8 @@
     
     <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
     <meta name="theme-color" content="#000000">
+    <!-- [新增] 声明支持跨页@view-transition，Chrome/Edge 126+自动启用横向滑动过渡 -->
+    <meta name="view-transition" content="same-origin">
     
     <!-- [修改] 补全 fonts.gstatic.com preconnect（字体文件实际所在域）
          修改前：只预连接了 fonts.googleapis.com，字体文件域未预连接
@@ -299,7 +301,7 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar" style="view-transition-name: sidebar;">
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
@@ -343,7 +345,7 @@
         </div>
     </aside>
 
-    <main class="main-content">
+    <main class="main-content" style="view-transition-name: main;">
         <header class="top-bar">
             <a href="#" class="header-logo">UYEA</a>
             
