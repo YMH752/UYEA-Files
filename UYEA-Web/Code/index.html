@@ -70,23 +70,8 @@
             white-space: nowrap;
         }
 
-        /* [新增] 引擎按钮箭头旋转动画
-           修改前：无旋转
-           修改后：展开时旋转180°，苹果系弹性缓动 */
-        .engine-trigger-arrow {
-            display: inline-block;
-            font-size: 10px;
-            opacity: 0.8;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .engine-dropdown-wrapper.open .engine-trigger-arrow {
-            transform: rotate(180deg);
-        }
-
         .engine-dropdown-list {
-            /* [修改] display:none/block → opacity+transform+visibility 三联过渡
-               修改前：硬切换，无动画
-               修改后：丝滑下拉，苹果系缓动 */
+            display: none;
             position: absolute;
             top: calc(100% + 6px);
             left: 0;
@@ -99,23 +84,9 @@
             z-index: 200;
             padding: 0;
             overflow: hidden;
-            opacity: 0;
-            transform: translateY(-8px) scale(0.97);
-            visibility: hidden;
-            transition:
-                opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                visibility 0.25s;
         }
         
-        .engine-dropdown-wrapper.open .engine-dropdown-list {
-            /* [修改] 展开态：opacity+transform+visibility 替代 display:block
-               修改前：display:block 硬显示
-               修改后：淡入+上移归位，带轻弹缓动 */
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            visibility: visible;
-        }
+        .engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
         .engine-option-item {
             padding: 10px 12px;
             font-size: 13px;
@@ -211,10 +182,7 @@
         .arrow-icon {
             font-size: 10px;
             margin-left: auto;
-            /* [修改] 箭头旋转缓动升级
-               修改前：0.3s cubic-bezier(0.4,0,0.2,1) 标准缓出，速度过快
-               修改后：0.4s cubic-bezier(0.34,1.56,0.64,1) 苹果弹性缓动，丝滑有弹性 */
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0.6;
         }
         .nav-item.menu-open .arrow-icon { 
@@ -222,25 +190,15 @@
             opacity: 1;
         }
 
-        /* ── 子菜单：丝滑展开过渡 ── */
         .sub-menu {
-            /* [修改] display:none/block → max-height+opacity 过渡
-               修改前：display硬切换 + 0.2s fadeInSub，生硬有闪烁
-               修改后：max-height从0展开+opacity淡入，完全丝滑
-               目的：与苹果系动效一致，消除生硬感 */
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-            padding-bottom: 0;
-            transition:
-                max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                padding-bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .sub-menu.open {
-            max-height: 200px;
-            opacity: 1;
+            display: none; 
             padding-bottom: 10px;
+            /* 增加一个极其微小的淡入 */
+            animation: fadeInSub 0.2s ease-out;
+        }
+        @keyframes fadeInSub {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .sub-nav-item {
@@ -299,13 +257,19 @@
 
         @media (max-width: 1024px) {
             .menu-toggle { display: flex; }
-            .top-bar { justify-content: flex-start; padding-left: 50px; }
+            /* [修改] padding-left: 50px → 56px
+               修改前：50px与汉堡按钮宽度未对齐，搜索栏左侧空间不足
+               修改后：56px与汉堡按钮实际占位对齐，搜索栏不被遮挡 */
+            .top-bar { justify-content: flex-start; padding-left: 56px; }
             .search-container { max-width: none; }
         }
         
         @media (max-width: 768px) {
             .top-bar { padding: 0 12px; justify-content: space-between; }
-            .search-container { margin-right: 40px; }
+            /* [修改] margin-right: 40px → 52px
+               修改前：40px预留量在小屏下不足，搜索栏与汉堡菜单按钮重叠
+               修改后：52px确保任意屏幕宽度下搜索栏右侧与汉堡按钮不重叠 */
+            .search-container { margin-right: 52px; }
         }
 
         .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -495,11 +459,7 @@
             if (isHomePage) {
                 const isOpening = !this.classList.contains('menu-open');
                 this.classList.toggle('menu-open', isOpening);
-                /* [修改] display切换 → .open class切换
-                   修改前：subNavMenu.style.display = isOpening ? 'block' : 'none'（硬切换）
-                   修改后：classList.toggle('open')，配合CSS max-height+opacity过渡
-                   目的：消除列表展开的生硬感 */
-                subNavMenu.classList.toggle('open', isOpening);
+                subNavMenu.style.display = isOpening ? 'block' : 'none';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 window.location.href = 'index.html';
