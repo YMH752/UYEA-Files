@@ -372,38 +372,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ────────────────────────────────────────────
-       [新增] 14. 页面切换过渡（方案C）
-       原生：fetch预取新页HTML → startViewTransition内替换document内容
-       降级：无API → body.leaving淡出 → 延迟跳转 → 新页body.loaded淡入
-       修复：原直接赋值location.href，startViewTransition无法捕获新页渲染
-       现：fetch预取完整HTML后在回调内替换，过渡动画新旧页均完整呈现
-       仅拦截站内相对链接，外链/hash/javascript:不处理
+       [修改] 14. 页面切换过渡
+       原生（Chrome/Edge 126+）：@view-transition by CSS，浏览器自动截图过渡，JS无需介入
+       降级（其他浏览器）：body.leaving淡出(0.2s) → 跳转 → 新页body.loaded淡入(0.28s)
+       修改前：fetch预取+document.write，复杂且有CSP风险
+       修改后：JS只处理降级淡出，过渡动画完全交给CSS @view-transition
        ──────────────────────────────────────────── */
 
-    // 页面进入时触发淡入
+    // 页面进入时触发淡入（降级用，@view-transition浏览器此行无副作用）
     document.body.classList.add('loaded');
 
-    async function navigateTo(url) {
-        if ('startViewTransition' in document) {
-            try {
-                // fetch预取目标页HTML
-                const res = await fetch(url);
-                const html = await res.text();
-                document.startViewTransition(() => {
-                    // 在过渡回调内替换整页内容，保证新旧页都参与动画
-                    document.open();
-                    document.write(html);
-                    document.close();
-                    window.history.pushState({}, '', url);
-                });
-            } catch {
-                // fetch失败降级为直接跳转
-                window.location.href = url;
-            }
+    function navigateTo(url) {
+        // 检测是否支持跨页@view-transition（Chrome/Edge 126+）
+        // 支持时：直接跳转，CSS @view-transition自动处理动画
+        // 不支持时：body先淡出，再跳转到新页
+        const supportsNavViewTransition = 'CSSViewTransitionRule' in window ||
+            document.startViewTransition !== undefined;
+
+        if (supportsNavViewTransition) {
+            window.location.href = url;
         } else {
-            // 降级：淡出后跳转
             document.body.classList.add('leaving');
-            setTimeout(() => { window.location.href = url; }, 260);
+            setTimeout(() => { window.location.href = url; }, 210);
         }
     }
 
@@ -411,7 +401,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const link = e.target.closest('a[href]');
         if (!link) return;
         const href = link.getAttribute('href');
-        // 仅处理站内相对链接（排除外链、hash、javascript:）
         if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('javascript')) return;
         e.preventDefault();
         navigateTo(href);
