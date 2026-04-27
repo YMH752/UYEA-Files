@@ -100,7 +100,12 @@ body {
     font-weight: 500;
 }
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
-.nav-item.active { background: var(--primary); color: #FFFFFF; }
+
+/* [修改] 激活态按钮背景色改为 #440003
+   修改前：background: var(--primary) #ED5501
+   修改后：background: #440003（图一按钮颜色）
+   修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
+.nav-item.active { background: #440003; color: #FFFFFF; }
 
 /* ── 主内容区 ── */
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
@@ -124,10 +129,13 @@ body {
     padding: 0 16px; height: 42px;
 }
 
-/* ✅ 按钮样式：应用黑色背景 */
+/* [修改] 登录/注册按钮背景色改为 #440003
+   修改前：.login-btn 白底黑字，.register-btn 黑底白字
+   修改后：统一 #440003 深褐红底白字
+   修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
 .login-btn {
     padding: 8px 20px;
-    background: var(--secondary); /* 已在:root中定义为黑色 */
+    background: #440003;
     color: #FFFFFF;
     border-radius: var(--radius-sm);
     text-decoration: none;
@@ -268,13 +276,17 @@ html[data-theme="dark"] {
     overflow: hidden;
 }
 
+/* [修改] 主题切换滑块背景色改为 #440003
+   修改前：background: #000000
+   修改后：background: #440003（图一按钮颜色）
+   修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
 .theme-slider {
     position: absolute;
     top: 3px;
     left: 3px;
     width: calc(50% - 3px);
     height: calc(100% - 6px);
-    background: #000000;
+    background: #440003;
     border-radius: calc(var(--radius-md) - 3px);
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     z-index: 1;
