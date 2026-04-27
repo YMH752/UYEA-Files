@@ -5,24 +5,24 @@
    ============================================================ */
 
 :root {
-    /* [修改] 亮色模式配色全面替换为图一（绿系）
-       修改前：复古铁锈红 #A63A26 + 米色底 #EEEAE3
-       修改后：清新绿 #4db648 + 米灰底 #dee3d5
+    /* [修改] 亮色模式配色全面替换为图一（暖橙系）
+       修改前：清新绿 #4db648 + 米灰底 #dee3d5
+       修改后：亮橙 #ED5501 + 暖黄底 #FFF2B2
        修改目的：按用户提供的图一配色方案执行亮色模式重构 */
-    --primary:        #4db648;    /* 图一绿色 - 核心强调色 */
-    --primary-dark:   #3a9e36;    /* 绿色加深 - 用于悬浮点击 */
-    --primary-light:  #e8f5e6;    /* 极浅绿 - 用于卡片悬浮背景 */
+    --primary:        #ED5501;    /* 图一字体颜色 - 核心强调色 */
+    --primary-dark:   #c94400;    /* 橙色加深 - 用于悬浮点击 */
+    --primary-light:  #ffe8d6;    /* 极浅橙 - 用于卡片悬浮背景 */
     
-    /* [修改] 次要强调色保持黑色（按钮主要色） */
-    --secondary:      #000000;    /* 纯黑色 - 用于按钮、标题、关键装饰 */
+    /* [修改] 次要强调色（按钮主要色） */
+    --secondary:      #440003;    /* 图一按钮颜色 - 深褐红 */
     
-    --bg:             #dee3d5;    /* 图一米灰底 */
-    --surface:        #f5f7f2;    /* 米灰提亮 - 卡片色 */
-    --border:         #c8d0c0;    /* 灰绿边框 */
+    --bg:             #FFF2B2;    /* 图一背景颜色 - 暖黄 */
+    --surface:        #FFF8D6;    /* 暖黄提亮 - 卡片色 */
+    --border:         #E8D99A;    /* 暗黄边框 */
     
-    --text-primary:   #000012;    /* 图一近黑 - 主要文字色 */
-    --text-secondary: #5a6350;
-    --text-muted:     #8a9680;
+    --text-primary:   #440003;    /* 图一按钮颜色 - 主要文字色 */
+    --text-secondary: #6A3A30;    /* 按钮色降饱和 */
+    --text-muted:     #A08070;    /* 中性灰褐 */
     
     /* [新增] 全局语义色
        修改前：无错误/警告色变量
@@ -77,25 +77,22 @@ body {
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
 
 /* [修改] 美式复古立体字效果
-   修改前：双层错位叠加，::before 伪元素 + transform: translate(3px, 3px)
-   修改后：纯 text-shadow 多层叠加，4层厚度 + 底部投影，实现真正立体字
-   层级：顶层 #F7672F 橙色 → #DAAF79 高光过渡 → #1E450F 深绿厚度 → #14300A 底部阴影
-   字体：系统自带 Impact 系列，无额外网络请求
-   letter-spacing 加大到 2px，增强复古印刷感
-   修改目的：按用户要求将叠加效果升级为立体字 */
+   修改前：主色 #F7672F，高光 #DAAF79，厚度 #1E450F，阴影 #14300A
+   修改后：主色 #ED5501（图一字体色），高光 #FFA070（橙系提亮），厚度 #440003（按钮色），阴影 #2A0005（按钮色加深）
+   修改目的：按图一新配色统一标题立体字色系 */
 .logo-text { 
     position: relative;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
     font-weight: 400; 
     font-size: 26px; 
-    color: #F7672F;
+    color: #ED5501;
     letter-spacing: 2px;
     text-shadow: 
-        1px 1px 0 #DAAF79,
-        2px 2px 0 #1E450F,
-        3px 3px 0 #14300A,
-        4px 4px 0 #14300A,
-        5px 5px 8px rgba(0, 0, 0, 0.25);
+        1px 1px 0 #FFA070,
+        2px 2px 0 #440003,
+        3px 3px 0 #2A0005,
+        4px 4px 0 #2A0005,
+        5px 5px 8px rgba(68, 0, 3, 0.25);
 }
 
 .logo-sub { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
