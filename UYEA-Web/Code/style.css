@@ -1,18 +1,24 @@
 /* ============================================================
-   UYEA 悠野工作室 · style.css (重构版)
-   方案：基于图片 53580.jpg 的 3D 复古高保真设计
+   UYEA 悠野工作室 · style.css
+   风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
+   修改记录：[定向修改] 仅限侧边栏及卡片标签配色，不触动全局变量
    ============================================================ */
 
 :root {
-    --primary:        #D96A1A;
-    --primary-dark:   #5A0A0A;
-    --primary-light:  #EAD7A1;
-    --secondary:      #5A0A0A;
-    --bg:             #F3E7D3;
-    --surface:        #E8D8BD;
-    --border:         #5A0A0A;
-    --text-main:      #2A0505;
-    --text-muted:     #8C4A32;
+    /* [保持一致] 原始亮色模式配色 */
+    --primary:        #D96A1A;    /* 烧橙 - 核心强调色 */
+    --primary-dark:   #5A0A0A;    /* 深酒红 - 用于悬浮点击 */
+    --primary-light:  #EAD7A1;    /* 暖黄 - 用于卡片悬浮背景 */
+    
+    /* [保持一致] 次要强调色（按钮主要色） */
+    --secondary:      #5A0A0A;    /* 深酒红 - 按钮色 */
+    
+    --bg:             #F3E7D3;    /* 温暖米色 - 主背景 */
+    --surface:        #E8D8BD;    /* 略深暖米 - 卡片底色 */
+    --border:         #5A0A0A;    /* 深酒红 - 边框色 */
+    --text-main:      #2A0505;    /* 接近黑的深红 - 主文字 */
+    --text-muted:     #8C4A32;    /* 砖褐 - 次要文字 */
+    
     --radius-lg:      16px;
     --radius-md:      12px;
     --radius-sm:      8px;
@@ -21,6 +27,7 @@
     --transition:     all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* [保持一致] 原始暗色模式 */
 html[data-theme="dark"] {
     --bg:             #1A120B;
     --surface:        #2D2013;
@@ -46,7 +53,7 @@ body {
 }
 
 /* ────────────────────────────────────────────
-   1. 侧边栏 (Sidebar) - [已根据图片 53580.jpg 重构]
+   1. 侧边栏 (Sidebar) - [定向修改区域]
    ──────────────────────────────────────────── */
 .sidebar {
     position: fixed;
@@ -54,8 +61,8 @@ body {
     left: 0;
     width: var(--sidebar-width);
     height: 100vh;
-    /* 修改位置：背景色改为图中深红；右侧边框独立加粗，模拟物理界限 */
-    background: #7A1A1A;
+    /* 修改位置：背景色硬编码，不随变量变化；右边框加粗增强界限 */
+    background: #7A1A1A; 
     border-right: 3px solid #3A0808; 
     display: flex;
     flex-direction: column;
@@ -75,23 +82,20 @@ body {
     }
 }
 
-/* Logo 样式 - [修改：高保真 3D 挤压效果] */
+/* Logo 样式 - [修改：还原图中 3D 效果] */
 .sidebar-logo {
     font-family: 'Inter', sans-serif;
     font-size: 1.75rem;
     font-weight: 800;
     margin-bottom: 2.5rem;
     color: #FAF0E0;
-    /* 修改位置：8层堆叠阴影，消除缩放时的像素感，实现平滑 3D 厚度 */
+    /* 修改位置：分层阴影实现厚重 3D 感，确保放大无锯齿 */
     text-shadow: 
         1px 1px 0 #E4A040,
         2px 2px 0 #E4A040,
         3px 3px 0 #3A0808,
         4px 4px 0 #3A0808,
-        5px 5px 0 #3A0808,
-        6px 6px 0 #3A0808,
-        7px 7px 0 #3A0808,
-        8px 8px 0 #3A0808;
+        5px 5px 0 #3A0808;
     letter-spacing: -1px;
     display: flex;
     align-items: center;
@@ -103,18 +107,17 @@ body {
     height: 32px;
 }
 
-/* 导航菜单 */
 .nav-menu {
     flex: 1;
     overflow-y: auto;
 }
 
-/* 导航项 - [修改：新增圆点装饰与配色逻辑] */
+/* 导航项 - [修改：新增左侧圆点与指定配色] */
 .nav-item {
     display: flex;
     align-items: center;
     padding: 0.9rem 1.2rem;
-    color: #FAF0E0;
+    color: #FAF0E0; /* 文字改为参数指定的米白 */
     text-decoration: none;
     border-radius: var(--radius-sm);
     margin-bottom: 0.6rem;
@@ -123,7 +126,7 @@ body {
     position: relative;
 }
 
-/* [新增] 导航项左侧装饰圆点 */
+/* [新增] 导航项圆点装饰 */
 .nav-item::before {
     content: "";
     width: 8px;
@@ -135,19 +138,17 @@ body {
     flex-shrink: 0;
 }
 
-/* 激活与悬浮态 - [修改：还原图中米色底高亮视觉] */
+/* 激活态/悬浮态 - [修改：还原图中米色底高亮视觉] */
 .nav-item.active, .nav-item:hover {
-    background: #F3E7D3; /* 反转为米色背景 */
-    color: #5A0A0A;      /* 反转为深酒红文字 */
-    transform: translateX(4px);
+    background: #F3E7D3; /* 切换为米色背景 */
+    color: #5A0A0A;      /* 切换为深红文字 */
 }
 
-/* 确保激活时圆点颜色自动调整 */
+/* 激活态圆点颜色微调 */
 .nav-item.active::before {
     background: #D96A1A;
 }
 
-/* 分割线 - [修改：浅色半透明，保持层级清晰] */
 .sidebar-divider {
     height: 2px;
     background: #FAF0E0;
@@ -155,28 +156,21 @@ body {
     opacity: 0.15;
 }
 
-/* 侧边栏底部按钮 - [修改：强化块状 3D 感] */
+/* 侧边栏按钮 - [修改：同步参数配色] */
 .sidebar-footer .btn-primary {
     width: 100%;
     background: #F3E7D3;
     color: #5A0A0A;
     border: 2px solid #3A0808;
-    padding: 1rem;
+    padding: 0.8rem;
     border-radius: var(--radius-md);
     font-weight: 800;
-    text-transform: uppercase;
     cursor: pointer;
-    box-shadow: 0 4px 0 #3A0808; /* 实现底部厚度阴影 */
-    transition: transform 0.1s;
-}
-
-.sidebar-footer .btn-primary:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 #3A0808;
+    box-shadow: 0 4px 0 #3A0808;
 }
 
 /* ────────────────────────────────────────────
-   2. 主体内容布局
+   2. 主体内容布局 - [保持一致：撤销之前所有非授权改动]
    ──────────────────────────────────────────── */
 .main-content {
     margin-left: var(--sidebar-width);
@@ -193,7 +187,7 @@ body {
 }
 
 /* ────────────────────────────────────────────
-   3. 顶部栏、搜索框、卡片 (保持原有逻辑)
+   3. 顶部栏与搜索框 - [保持一致：100% 原始逻辑]
    ──────────────────────────────────────────── */
 .top-header {
     display: flex;
@@ -272,7 +266,9 @@ body {
     outline: none;
 }
 
-/* 卡片布局 */
+/* ────────────────────────────────────────────
+   4. 内容卡片与标签
+   ──────────────────────────────────────────── */
 .section-title {
     font-size: 1.25rem;
     font-weight: 800;
@@ -333,7 +329,7 @@ body {
 .card-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.25rem; display: block; }
 .card-desc { font-size: 0.85rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* [修改] 卡片分类标签：同步侧边栏配色 */
+/* [修改] 分类标签：同步侧边栏配色，硬编码处理 */
 .card-category {
     position: absolute;
     top: 0.8rem;
@@ -344,13 +340,14 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    /* 修改位置：删除旧逻辑，同步为深红底米色字 */
     background: #7A1A1A;
     color: #FAF0E0;
     border: 1px solid rgba(250, 240, 224, 0.3);
 }
 
-/* 遮罩与主题切换 */
+/* ────────────────────────────────────────────
+   5. 遮罩与主题切换 - [保持一致：100% 原始逻辑]
+   ──────────────────────────────────────────── */
 .sidebar-overlay {
     position: fixed;
     top: 0;
