@@ -28,7 +28,11 @@
             justify-content: flex-end;
             padding: 0 24px;
             height: var(--header-h);
-            background: var(--surface);
+            /* [修改] 顶栏背景改为主背景色
+               修改前：var(--surface) #E8D8BD（浅驼）
+               修改后：var(--bg) #F3E7D3（暖米）
+               修改目的：匹配图二设计，顶栏与主背景同色，融为一体 */
+            background: var(--bg);
             border-bottom: 1.5px solid var(--border);
             position: sticky;
             top: 0;
