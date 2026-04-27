@@ -5,43 +5,42 @@
    ============================================================ */
 
 :root {
-    /* [修改] 亮色模式配色全面替换为文艺复古方案（图一）
-       修改前：亮黄底 #FFF2B2 + 亮橙 #ED5501 + 深褐红 #440003
-       修改后：暖米底 #F3E7D3 + 深橙 #D96A1A + 深红 #5A0A0A
-       修改目的：按用户提供的文艺复古配色图重构亮色模式，整体观感与图片一致 */
-    --primary:        #D96A1A;    /* 图中强调色（橙）- 核心强调色 */
-    --primary-dark:   #B85A15;    /* 橙色加深 - 用于悬浮点击 */
-    --primary-light:  #F5E6D0;    /* 暖米提亮 - 用于卡片悬浮背景 */
-    
-    /* [修改] 次要强调色（按钮主要色） */
-    --secondary:      #5A0A0A;    /* 图中主色（深红） */
-    
-    --bg:             #F3E7D3;    /* 图中主背景 - 暖米 */
-    --surface:        #E8D8BD;    /* 图中卡片背景 - 浅驼 */
-    --border:         #D4C4A8;    /* 推导：基于暖米系的暗色边框 */
-    
-    --text-primary:   #3A2A22;    /* 图中文字深色 - 主要文字色 */
-    --text-secondary: #6E5A4A;    /* 图中文字浅色 - 次要文字 */
-    --text-muted:     #8C6A58;    /* 图中辅助棕 - 弱化文字 */
-    
+    /* [修改] :root变量全面替换为图一图二配色
+       修改前：暖橙系 #ED5501/#FFF2B2/#440003
+       修改后：按图一主背景#F3E7D3、强调色#D96A1A、主色#5A0A0A，图二卡片#EAD7A1等
+       修改目的：配合文艺复古配色方案重新定义全局色彩 */
+    --primary:        #D96A1A;    /* 图一强调色 */
+    --primary-dark:   #b85516;    /* 同比例加深 */
+    --primary-light:  #fce4d0;    /* 对应浅色 */
+
+    --secondary:      #5A0A0A;    /* 图一主色深红 */
+
+    --bg:             #F3E7D3;    /* 图一主背景 */
+    --surface:        #E8D8BD;    /* 图一卡片背景 */
+    --border:         transparent;/* 图二要求无边框，变量透明 */
+
+    --text-primary:   #3A2A22;    /* 图一文字深色 */
+    --text-secondary: #6E5A4A;    /* 图一文字浅色 */
+    --text-muted:     #9A8A7A;    /* 同色系调整 */
+
     /* [新增] 全局语义色
        修改前：无错误/警告色变量
        修改后：补充错误红与警告黄，完善交互反馈体系
        修改目的：按用户要求增加额外颜色角色 */
     --error:          #e11d48;    /* 错误/危险 */
     --warning:        #fbbf24;    /* 警告/待处理 */
-    
+
     /* 布局变量 */
     --header-h:       64px;
     --sidebar-w:      240px;
-    
+
     /* 全局圆角 */
-    --radius-sm:      10px;       
-    --radius-md:      16px;       
-    --radius-lg:      20px;       
-    
+    --radius-sm:      10px;
+    --radius-md:      16px;
+    --radius-lg:      20px;
+
     --duration:       0.3s;
-    
+
     /* 阴影 */
     --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.08);
     --shadow-md:      0 6px 16px rgba(0, 0, 0, 0.12);
@@ -62,16 +61,11 @@ body {
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
-    /* [修改] 侧边栏背景改为深红 #5A0A0A
-       修改前：var(--surface) #E8D8BD（浅驼）
-       修改后：#5A0A0A（图中深红）
-       修改目的：匹配图二下半部分侧边栏实际颜色 */
+    /* [修改] 侧边栏背景与边框
+       修改前：background: var(--surface); border-right: 2px solid var(--border);
+       修改后：background: #5A0A0A; 去掉右边框
+       修改目的：图二深层背景衬托浅色文字，并去除所有边框 */
     background: #5A0A0A;
-    /* [修改] 移除侧边栏边框
-       修改前：2px solid rgba(243, 231, 211, 0.1)
-       修改后：none
-       修改目的：按用户要求"整个网页不添加任何边框" */
-    border-right: none;
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
@@ -79,62 +73,49 @@ body {
 
 .sidebar-header {
     padding: 24px;
-    /* [修改] 移除侧边栏头部边框
-       修改前：1px solid rgba(243, 231, 211, 0.15)
-       修改后：none
-       修改目的：按用户要求"整个网页不添加任何边框" */
-    border-bottom: none;
+    /* [修改] 去除导航头底部边框
+       修改前：border-bottom: 1px solid var(--border);
+       修改后：移除
+       修改目的：图二要求整个网页不添加任何边框 */
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
 
-/* [修改] 移除立体字效果，仅保留单层颜色
-   修改前：text-shadow 多层叠加实现立体字
-   修改后：仅保留 color: #ED5501，无额外层
-   修改目的：按用户要求"立体字先不管"，且严格只使用图一提供的三个颜色 */
-.logo-text { 
+/* [修改] 标题颜色
+   修改前：color: #ED5501;
+   修改后：color: #D4AF37;
+   修改目的：图二要求左上角UYEA/悠野标题颜色为 #D4AF37 */
+.logo-text {
     position: relative;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
-    font-weight: 400; 
-    font-size: 26px; 
-    /* [修改] logo文字颜色改为 #D4AF37
-       修改前：#D96A1A（深橙）
-       修改后：#D4AF37（用户指定金色）
-       修改目的：按用户提供的文字要求修改 */
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 400;
+    font-size: 26px;
     color: #D4AF37;
     letter-spacing: 2px;
 }
 
-/* [修改] logo副标题颜色改为暖米
-   修改前：var(--text-secondary) #6E5A4A
-   修改后：#F3E7D3（暖米）
-   修改目的：深红底上需浅色文字保证对比度 */
-.logo-sub { font-size: 14px; color: #F3E7D3; font-weight: 500; }
+.logo-sub { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
 
 .nav-menu { padding: 16px 12px; }
 .nav-item {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 16px; border-radius: var(--radius-sm);
-    /* [修改] 未激活菜单项文字改为暖米
-       修改前：var(--text-secondary) #6E5A4A
-       修改后：#F3E7D3（暖米）
-       修改目的：深红底上需浅色文字保证对比度 */
+    /* [修改] 未选中菜单字体颜色
+       修改前：color: var(--text-secondary);
+       修改后：color: #F3E7D3;
+       修改目的：图二要求侧边菜单栏未选中的字体颜色为 #F3E7D3 */
     color: #F3E7D3;
     text-decoration: none;
     margin-bottom: 6px; transition: all var(--duration);
     font-weight: 500;
 }
-/* [修改] 悬浮状态改为暖米底深红字
-   修改前：background: var(--primary-light) + color: var(--primary)
-   修改后：background: #F3E7D3 + color: #5A0A0A
-   修改目的：匹配图二悬浮/激活态反色逻辑 */
-.nav-item:hover { background: #F3E7D3; color: #5A0A0A; }
+.nav-item:hover { background: var(--primary-light); color: var(--primary); }
 
-/* [修改] 激活态改为暖米底深红字（反色）
-   修改前：background: #5A0A0A + color: #FFFFFF
-   修改后：background: #F3E7D3 + color: #5A0A0A
-   修改目的：匹配图二"全部导航"激活态实际样式 */
-.nav-item.active { background: #F3E7D3; color: #5A0A0A; }
+/* [修改] 激活态按钮背景色
+   修改前：background: #440003; color: #FFFFFF;
+   修改后：background: #D96A1A; color: #FFFFFF;
+   修改目的：统一使用图一强调橙色作为高亮，与深色侧边栏形成对比 */
+.nav-item.active { background: #D96A1A; color: #FFFFFF; }
 
 /* ── 主内容区 ── */
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
@@ -144,16 +125,11 @@ body {
 .top-bar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 24px; height: var(--header-h);
-    /* [修改] 顶栏背景改为主背景色
-       修改前：var(--surface) #E8D8BD（浅驼）
-       修改后：var(--bg) #F3E7D3（暖米）
-       修改目的：匹配图二设计，顶栏与主背景同色，融为一体 */
-    background: var(--bg);
-    /* [修改] 移除顶栏底部边框
-       修改前：2px solid var(--border)
-       修改后：none
-       修改目的：按用户要求"整个网页不添加任何边框" */
-    border-bottom: none;
+    background: var(--surface);
+    /* [修改] 去除顶栏底部边框
+       修改前：border-bottom: 2px solid var(--border);
+       修改后：移除
+       修改目的：图二整个网页不添加任何边框 */
     position: sticky; top: 0; z-index: 100;
 }
 
@@ -161,41 +137,19 @@ body {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
     background: var(--bg);
-    /* [修改] 移除搜索框边框
-       修改前：1.5px solid var(--border)
-       修改后：none
-       修改目的：按用户要求"整个网页不添加任何边框" */
-    border: none;
+    border: 1.5px solid var(--border);
     border-radius: var(--radius-lg);
     padding: 0 16px; height: 42px;
 }
 
-/* [修改] 登录按钮改为暖米底辅助棕字
-   修改前：background: #5A0A0A + color: #FFFFFF
-   修改后：background: #F3E7D3 + color: #6E5A4A
-   修改目的：按用户提供的文字要求修改 */
+/* [修改] 登录/注册按钮背景色
+   修改前：.login-btn 白底黑字，.register-btn 黑底白字
+   修改后：统一 #440003 深褐红底白字
+   修改目的：按用户要求所有按钮统一使用图一提供的 #440003
+   注意：此通用样式可能被页面内嵌样式覆盖，实际以页面内嵌为准 */
 .login-btn {
     padding: 8px 20px;
-    background: #F3E7D3;
-    color: #6E5A4A;
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    transition: opacity var(--duration);
-}
-
-.login-btn:hover {
-    opacity: 0.8;
-}
-
-/* [修改] 注册按钮改为橙色底白字
-   修改前：background: #5A0A0A + color: #FFFFFF
-   修改后：background: #D96A1A + color: #FFFFFF
-   修改目的：按用户提供的文字要求修改 */
-.register-btn {
-    padding: 8px 20px;
-    background: #D96A1A;
+    background: #440003;
     color: #FFFFFF;
     border-radius: var(--radius-sm);
     text-decoration: none;
@@ -204,7 +158,7 @@ body {
     transition: opacity var(--duration);
 }
 
-.register-btn:hover {
+.login-btn:hover {
     opacity: 0.8;
 }
 
@@ -227,15 +181,11 @@ body {
 }
 
 .card-item {
-    /* [修改] 链接卡片背景改为点缀色暖黄
-       修改前：var(--surface) #E8D8BD（浅驼）
-       修改后：#EAD7A1（用户指定点缀色）
-       修改目的：按用户提供的文字要求修改 */
+    /* [修改] 卡片背景、文字色、边框
+       修改前：background: var(--surface); border: 1.5px solid var(--border);
+       修改后：background: #EAD7A1; border: none;
+       修改目的：图二要求链接卡片背景 #EAD7A1，且整个网页无边框 */
     background: #EAD7A1;
-    /* [修改] 移除卡片边框
-       修改前：1.5px solid var(--border)
-       修改后：none
-       修改目的：按用户要求"整个网页不添加任何边框" */
     border: none;
     border-radius: var(--radius-md);
     padding: 18px;
@@ -247,30 +197,26 @@ body {
 
 .card-item:hover {
     transform: translateY(-4px);
-    /* [修改] 悬浮时边框改为阴影
-       修改前：border-color: var(--secondary)
-       修改后：无（已移除border）
-       修改目的：按用户要求"整个网页不添加任何边框" */
+    /* [修改] 悬浮边框颜色移除
+       修改前：border-color: var(--secondary);
+       修改后：移除（因无边框）
+       修改目的：配合去除边框，保持无边框设计 */
     box-shadow: var(--shadow-md);
 }
 
-/* [修改] 链接卡片字体颜色改为文字深色
-   修改前：var(--text-primary) #3A2A22
-   修改后：#3A2A22（用户指定，硬编码确保）
-   修改目的：按用户提供的文字要求修改 */
 .card-title {
     font-size: 15px; font-weight: 600;
+    /* [修改] 卡片标题文字色
+       修改前：color: var(--text-primary);
+       修改后：color: #3A2A22;
+       修改目的：图二要求链接卡片字体颜色 #3A2A22 */
     color: #3A2A22;
 }
 
 .card-icon {
     width: 36px; height: 36px;
     border-radius: 8px;
-    /* [修改] 移除图标背景色
-       修改前：#f0f0f0
-       修改后：transparent
-       修改目的：按用户要求"整个网页不添加任何边框"，且图标应融入卡片 */
-    background: transparent;
+    background: #f0f0f0;
     overflow: hidden;
 }
 
@@ -346,15 +292,11 @@ html[data-theme="dark"] {
     justify-content: space-between;
     width: 100%;
     height: 42px;
-    /* [修改] 主题切换轨道背景改为暖米
-       修改前：var(--bg) #F3E7D3
-       修改后：#F3E7D3（暖米，保持与侧边栏文字同色）
-       修改目的：深红底上的轨道需浅色背景 */
-    background: #F3E7D3;
-    /* [修改] 移除主题切换轨道边框
-       修改前：1.5px solid rgba(243, 231, 211, 0.3)
-       修改后：none
-       修改目的：按用户要求"整个网页不添加任何边框" */
+    background: var(--bg);
+    /* [修改] 主题切换按钮去边框
+       修改前：border: 1.5px solid var(--border);
+       修改后：border: none;
+       修改目的：图二要求整个网页不添加任何边框 */
     border: none;
     border-radius: var(--radius-md);
     padding: 3px;
@@ -364,17 +306,17 @@ html[data-theme="dark"] {
     overflow: hidden;
 }
 
-/* [修改] 主题切换滑块背景色改为 #5A0A0A
-   修改前：background: #440003（深褐红）
-   修改后：background: #5A0A0A（图中深红）
-   修改目的：按用户要求统一使用文艺复古配色方案 */
+/* [修改] 主题切换滑块背景色改为 #440003
+   修改前：background: #000000
+   修改后：background: #440003（图一按钮颜色）
+   修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
 .theme-slider {
     position: absolute;
     top: 3px;
     left: 3px;
     width: calc(50% - 3px);
     height: calc(100% - 6px);
-    background: #5A0A0A;
+    background: #440003;
     border-radius: calc(var(--radius-md) - 3px);
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     z-index: 1;
