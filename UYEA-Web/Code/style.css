@@ -75,13 +75,32 @@ body {
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
+
+/* [修改] 美式复古叠加立体字效果
+   修改前：普通单层文字，font-family: 'Inter', sans-serif; color: var(--primary);
+   修改后：双层错位叠加，主文字 #F7672F 橙色在上，伪元素 #1E450F 深绿向右下偏移 3px 在下
+   字体改为系统自带 Impact 系列，无额外网络请求
+   修改目的：按用户要求实现美式复古印刷套色偏差效果 */
 .logo-text { 
-    font-family: 'Inter', sans-serif; 
-    font-weight: 800; 
+    position: relative;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
+    font-weight: 400; 
     font-size: 26px; 
-    color: var(--primary);
-    letter-spacing: -1px;
+    color: #F7672F;
+    letter-spacing: 1px;
+    z-index: 1;
 }
+
+.logo-text::before {
+    content: 'UYEA';
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #1E450F;
+    transform: translate(3px, 3px);
+    z-index: -1;
+}
+
 .logo-sub { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
 
 .nav-menu { padding: 16px 12px; }
