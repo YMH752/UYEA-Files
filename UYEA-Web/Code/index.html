@@ -65,13 +65,18 @@
 
         /* ── 下拉引擎样式 (保持原样) ── */
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
+        
+        /* [修改] 搜索引擎下拉按钮背景色改为 #440003
+           修改前：background: var(--secondary) #000000
+           修改后：background: #440003（图一按钮颜色）
+           修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
         .engine-trigger-btn {
             display: flex;
             align-items: center;
             gap: 6px;
             padding: 0 12px;
             height: 42px;
-            background: var(--secondary);
+            background: #440003;
             color: #FFFFFF;
             border: none;
             border-radius: var(--radius-md) 0 0 var(--radius-md);
@@ -262,15 +267,19 @@
             transition: all 0.2s ease;
         }
 
+        /* [修改] 登录/注册按钮背景色改为 #440003
+           修改前：.login-btn 白底黑字，.register-btn 黑底白字
+           修改后：统一 #440003 深褐红底白字
+           修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
         .login-btn {
-            background: #FFFFFF;
-            border: 1.5px solid #000000;
-            color: #000000;
+            background: #440003;
+            border: 1.5px solid #440003;
+            color: #FFFFFF;
         }
 
         .register-btn {
-            background: #000000;
-            border: 1.5px solid #000000;
+            background: #440003;
+            border: 1.5px solid #440003;
             color: #FFFFFF;
         }
 
