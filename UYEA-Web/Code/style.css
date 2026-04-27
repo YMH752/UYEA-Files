@@ -76,10 +76,10 @@ body {
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
 
-/* [修改] 美式复古立体字效果
-   修改前：主色 #F7672F，高光 #DAAF79，厚度 #1E450F，阴影 #14300A
-   修改后：主色 #ED5501（图一字体色），高光 #FFA070（橙系提亮），厚度 #440003（按钮色），阴影 #2A0005（按钮色加深）
-   修改目的：按图一新配色统一标题立体字色系 */
+/* [修改] 移除立体字效果，仅保留单层颜色
+   修改前：text-shadow 多层叠加实现立体字
+   修改后：仅保留 color: #ED5501，无额外层
+   修改目的：按用户要求"立体字先不管"，且严格只使用图一提供的三个颜色 */
 .logo-text { 
     position: relative;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
@@ -87,12 +87,6 @@ body {
     font-size: 26px; 
     color: #ED5501;
     letter-spacing: 2px;
-    text-shadow: 
-        1px 1px 0 #FFA070,
-        2px 2px 0 #440003,
-        3px 3px 0 #2A0005,
-        4px 4px 0 #2A0005,
-        5px 5px 8px rgba(68, 0, 3, 0.25);
 }
 
 .logo-sub { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
