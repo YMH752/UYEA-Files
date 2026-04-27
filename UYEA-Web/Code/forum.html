@@ -29,10 +29,7 @@
             padding: 0 24px;
             height: var(--header-h);
             background: var(--surface);
-            /* [修改] 去除顶栏底部边框
-               修改前：border-bottom: 1.5px solid var(--border);
-               修改后：移除
-               修改目的：图二要求整个网页不添加任何边框 */
+            border-bottom: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
             position: sticky;
             top: 0;
             z-index: 100;
@@ -118,7 +115,7 @@
         /* 底部按钮：完全对齐导航页 */
         .sidebar-footer {
             padding: 24px 16px;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
             margin-top: auto;
             /* ✅ 微调：补偿下半部分的累计误差 */
             transform: translateY(12.5px);
@@ -139,22 +136,14 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        /* [修改] 登录按钮配色
-           修改前：background: #440003; border: 1.5px solid #440003; color: #FFFFFF;
-           修改后：background: #F3E7D3; border: none; color: #6E5A4A;
-           修改目的：图二要求登录卡片背景#F3E7D3、字体#6E5A4A，且无边框 */
         .login-btn {
-            background: #F3E7D3;
-            border: none;
-            color: #6E5A4A;
+            background: #440003;
+            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] #440003 → rgba(0,0,0,0.08)，极淡灰边框 */
+            color: #FFFFFF;
         }
-        /* [修改] 注册按钮配色
-           修改前：background: #440003; border: 1.5px solid #440003; color: #FFFFFF;
-           修改后：background: #D96A1A; border: none; color: #FFFFFF;
-           修改目的：图二要求注册卡片背景#D96A1A、字体#FFF，且无边框 */
         .register-btn {
-            background: #D96A1A;
-            border: none;
+            background: #440003;
+            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] #440003 → rgba(0,0,0,0.08)，极淡灰边框 */
             color: #FFFFFF;
         }
 
@@ -189,17 +178,13 @@
             width: 100%;
             padding: 10px 16px 10px 40px;
             background: var(--surface);
-            /* [修改] 搜索框去边框
-               修改前：border: 1.5px solid var(--border);
-               修改后：border: none;
-               修改目的：图二要求整个网页不添加任何边框 */
-            border: none;
+            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
             border-radius: var(--radius-md);
             outline: none;
             font-size: 14px;
             transition: border-color 0.2s;
         }
-        .forum-search input:focus { border-color: var(--secondary); }
+        .forum-search input:focus { border-color: rgba(0,0,0,0.18); } /* [修改] var(--secondary) → rgba(0,0,0,0.18)，极淡灰略加深 */
         .forum-search span {
             position: absolute;
             left: 14px;
@@ -216,11 +201,7 @@
         }
         .post-item {
             background: var(--surface);
-            /* [修改] 帖子卡片去边框
-               修改前：border: 1.5px solid var(--border);
-               修改后：border: none;
-               修改目的：图二要求整个网页不添加任何边框 */
-            border: none;
+            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
             border-radius: var(--radius-md);
             padding: 24px;
             text-decoration: none;
