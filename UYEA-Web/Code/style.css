@@ -85,8 +85,29 @@ body {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
     font-weight: 400; 
     font-size: 26px; 
-    color: #ED5501;
+    /* [修改] color: #ED5501 → #FFF2B2，配合多层text-shadow实现复古美式立体字
+       修改前：单色橙字无立体感
+       修改后：暖黄字色 + 橙色描边层 + 深褐红硬阴影投影层 */
+    color: #FFF2B2;
     letter-spacing: 2px;
+    text-shadow:
+        1px 1px 0 #ED5501,
+        2px 2px 0 #ED5501,
+        3px 3px 0 #440003,
+        4px 4px 0 #440003,
+        5px 5px 0 #440003;
+}
+
+/* [新增] 暗色模式下 .logo-text 立体字配色
+   修改目的：暗色模式使用白字+霓虹绿描边+黑色投影，与暗色主题一致 */
+html[data-theme="dark"] .logo-text {
+    color: #FFFFFF;
+    text-shadow:
+        1px 1px 0 #39FF14,
+        2px 2px 0 #39FF14,
+        3px 3px 0 #0D0D0D,
+        4px 4px 0 #0D0D0D,
+        5px 5px 0 #0D0D0D;
 }
 
 .logo-sub { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
