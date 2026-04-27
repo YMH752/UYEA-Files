@@ -67,11 +67,11 @@ body {
        修改后：#5A0A0A（图中深红）
        修改目的：匹配图二下半部分侧边栏实际颜色 */
     background: #5A0A0A;
-    /* [修改] 侧边栏边框改为深红半透明
-       修改前：2px solid var(--border)
-       修改后：2px solid rgba(243, 231, 211, 0.1)
-       修改目的：深红底上边框需弱化，避免生硬分割线 */
-    border-right: 2px solid rgba(243, 231, 211, 0.1);
+    /* [修改] 移除侧边栏边框
+       修改前：2px solid rgba(243, 231, 211, 0.1)
+       修改后：none
+       修改目的：按用户要求"整个网页不添加任何边框" */
+    border-right: none;
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
@@ -79,11 +79,11 @@ body {
 
 .sidebar-header {
     padding: 24px;
-    /* [修改] 侧边栏头部边框改为暖米半透明
-       修改前：1px solid var(--border)
-       修改后：1px solid rgba(243, 231, 211, 0.15)
-       修改目的：深红底上分割线需弱化 */
-    border-bottom: 1px solid rgba(243, 231, 211, 0.15);
+    /* [修改] 移除侧边栏头部边框
+       修改前：1px solid rgba(243, 231, 211, 0.15)
+       修改后：none
+       修改目的：按用户要求"整个网页不添加任何边框" */
+    border-bottom: none;
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
@@ -97,11 +97,11 @@ body {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
     font-weight: 400; 
     font-size: 26px; 
-    /* [修改] logo文字颜色改为图中深橙 #D96A1A
-       修改前：#ED5501（亮橙）
-       修改后：#D96A1A（深橙）
-       修改目的：统一使用文艺复古配色方案 */
-    color: #D96A1A;
+    /* [修改] logo文字颜色改为 #D4AF37
+       修改前：#D96A1A（深橙）
+       修改后：#D4AF37（用户指定金色）
+       修改目的：按用户提供的文字要求修改 */
+    color: #D4AF37;
     letter-spacing: 2px;
 }
 
@@ -147,9 +147,13 @@ body {
     /* [修改] 顶栏背景改为主背景色
        修改前：var(--surface) #E8D8BD（浅驼）
        修改后：var(--bg) #F3E7D3（暖米）
-       修改目的：匹配图二顶栏与主背景同色的实际效果 */
+       修改目的：匹配图二设计，顶栏与主背景同色，融为一体 */
     background: var(--bg);
-    border-bottom: 2px solid var(--border);
+    /* [修改] 移除顶栏底部边框
+       修改前：2px solid var(--border)
+       修改后：none
+       修改目的：按用户要求"整个网页不添加任何边框" */
+    border-bottom: none;
     position: sticky; top: 0; z-index: 100;
 }
 
@@ -157,19 +161,23 @@ body {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
     background: var(--bg);
-    border: 1.5px solid var(--border);
+    /* [修改] 移除搜索框边框
+       修改前：1.5px solid var(--border)
+       修改后：none
+       修改目的：按用户要求"整个网页不添加任何边框" */
+    border: none;
     border-radius: var(--radius-lg);
     padding: 0 16px; height: 42px;
 }
 
-/* [修改] 登录/注册按钮背景色改为 #5A0A0A
-   修改前：background: #440003（深褐红）
-   修改后：background: #5A0A0A（图中深红）
-   修改目的：按用户要求统一使用文艺复古配色方案 */
+/* [修改] 登录按钮改为暖米底辅助棕字
+   修改前：background: #5A0A0A + color: #FFFFFF
+   修改后：background: #F3E7D3 + color: #6E5A4A
+   修改目的：按用户提供的文字要求修改 */
 .login-btn {
     padding: 8px 20px;
-    background: #5A0A0A;
-    color: #FFFFFF;
+    background: #F3E7D3;
+    color: #6E5A4A;
     border-radius: var(--radius-sm);
     text-decoration: none;
     font-size: 14px;
@@ -178,6 +186,25 @@ body {
 }
 
 .login-btn:hover {
+    opacity: 0.8;
+}
+
+/* [修改] 注册按钮改为橙色底白字
+   修改前：background: #5A0A0A + color: #FFFFFF
+   修改后：background: #D96A1A + color: #FFFFFF
+   修改目的：按用户提供的文字要求修改 */
+.register-btn {
+    padding: 8px 20px;
+    background: #D96A1A;
+    color: #FFFFFF;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity var(--duration);
+}
+
+.register-btn:hover {
     opacity: 0.8;
 }
 
@@ -200,8 +227,16 @@ body {
 }
 
 .card-item {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
+    /* [修改] 链接卡片背景改为点缀色暖黄
+       修改前：var(--surface) #E8D8BD（浅驼）
+       修改后：#EAD7A1（用户指定点缀色）
+       修改目的：按用户提供的文字要求修改 */
+    background: #EAD7A1;
+    /* [修改] 移除卡片边框
+       修改前：1.5px solid var(--border)
+       修改后：none
+       修改目的：按用户要求"整个网页不添加任何边框" */
+    border: none;
     border-radius: var(--radius-md);
     padding: 18px;
     display: flex; align-items: center; gap: 14px;
@@ -212,18 +247,30 @@ body {
 
 .card-item:hover {
     transform: translateY(-4px);
-    border-color: var(--secondary); /* 悬浮时边框变黑 */
+    /* [修改] 悬浮时边框改为阴影
+       修改前：border-color: var(--secondary)
+       修改后：无（已移除border）
+       修改目的：按用户要求"整个网页不添加任何边框" */
     box-shadow: var(--shadow-md);
 }
 
+/* [修改] 链接卡片字体颜色改为文字深色
+   修改前：var(--text-primary) #3A2A22
+   修改后：#3A2A22（用户指定，硬编码确保）
+   修改目的：按用户提供的文字要求修改 */
 .card-title {
-    font-size: 15px; font-weight: 600; color: var(--text-primary);
+    font-size: 15px; font-weight: 600;
+    color: #3A2A22;
 }
 
 .card-icon {
     width: 36px; height: 36px;
     border-radius: 8px;
-    background: #f0f0f0;
+    /* [修改] 移除图标背景色
+       修改前：#f0f0f0
+       修改后：transparent
+       修改目的：按用户要求"整个网页不添加任何边框"，且图标应融入卡片 */
+    background: transparent;
     overflow: hidden;
 }
 
@@ -304,11 +351,11 @@ html[data-theme="dark"] {
        修改后：#F3E7D3（暖米，保持与侧边栏文字同色）
        修改目的：深红底上的轨道需浅色背景 */
     background: #F3E7D3;
-    /* [修改] 主题切换轨道边框改为暖米半透明
-       修改前：1.5px solid var(--border)
-       修改后：1.5px solid rgba(243, 231, 211, 0.3)
-       修改目的：深红底上边框弱化 */
-    border: 1.5px solid rgba(243, 231, 211, 0.3);
+    /* [修改] 移除主题切换轨道边框
+       修改前：1.5px solid rgba(243, 231, 211, 0.3)
+       修改后：none
+       修改目的：按用户要求"整个网页不添加任何边框" */
+    border: none;
     border-radius: var(--radius-md);
     padding: 3px;
     cursor: pointer;
