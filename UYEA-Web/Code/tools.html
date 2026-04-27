@@ -27,7 +27,11 @@
             justify-content: flex-end;
             padding: 0 24px;
             height: var(--header-h);
-            background: var(--surface);
+            /* [修改] 顶栏背景改为主背景色
+               修改前：var(--surface) #E8D8BD（浅驼）
+               修改后：var(--bg) #F3E7D3（暖米）
+               修改目的：匹配图二设计，顶栏与主背景同色，融为一体 */
+            background: var(--bg);
             border-bottom: 1.5px solid var(--border);
             position: sticky;
             top: 0;
@@ -178,13 +182,13 @@
             transition: all 0.2s ease;
         }
         .login-btn {
-            background: #440003; /* [修改] #FFFFFF → #440003，按需求统一按钮色 */
-            border: 1.5px solid #440003; /* [修改] #000000 → #440003 */
-            color: #FFFFFF; /* [修改] #000000 → #FFFFFF */
+            background: #FFFFFF;
+            border: 1.5px solid #000000;
+            color: #000000;
         }
         .register-btn {
-            background: #440003; /* [修改] #000000 → #440003，按需求统一按钮色 */
-            border: 1.5px solid #440003; /* [修改] #000000 → #440003 */
+            background: #000000;
+            border: 1.5px solid #000000;
             color: #FFFFFF;
         }
 
