@@ -32,11 +32,7 @@
             justify-content: center;
             padding: 0 20px;
             height: var(--header-h);
-            /* [修改] 顶栏背景改为主背景色
-               修改前：var(--surface) #E8D8BD（浅驼）
-               修改后：var(--bg) #F3E7D3（暖米）
-               修改目的：匹配图二设计，顶栏与主背景同色，融为一体 */
-            background: var(--bg);
+            background: var(--surface);
             border-bottom: 1.5px solid var(--border);
             position: sticky;
             top: 0;
@@ -271,19 +267,23 @@
             transition: all 0.2s ease;
         }
 
-        /* [修改] 登录/注册按钮背景色改为 #440003
-           修改前：.login-btn 白底黑字，.register-btn 黑底白字
-           修改后：统一 #440003 深褐红底白字
-           修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
+        /* [修改] 登录按钮配色
+           修改前：background: #440003; border: 1.5px solid #440003; color: #FFFFFF;
+           修改后：background: #F3E7D3; border: none; color: #6E5A4A;
+           修改目的：图二要求登录卡片背景#F3E7D3、字体#6E5A4A，且无边框 */
         .login-btn {
-            background: #440003;
-            border: 1.5px solid #440003;
-            color: #FFFFFF;
+            background: #F3E7D3;
+            border: none;
+            color: #6E5A4A;
         }
 
+        /* [修改] 注册按钮配色
+           修改前：background: #440003; border: 1.5px solid #440003; color: #FFFFFF;
+           修改后：background: #D96A1A; border: none; color: #FFFFFF;
+           修改目的：图二要求注册卡片背景#D96A1A、字体#FFF，且无边框 */
         .register-btn {
-            background: #440003;
-            border: 1.5px solid #440003;
+            background: #D96A1A;
+            border: none;
             color: #FFFFFF;
         }
 
