@@ -33,7 +33,7 @@
             padding: 0 20px;
             height: var(--header-h);
             background: var(--surface);
-            border-bottom: 1.5px solid var(--border);
+            border-bottom: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
             position: sticky;
             top: 0;
             z-index: 100;
@@ -53,7 +53,7 @@
             display: flex;
             align-items: center;
             background: var(--bg);
-            border: 1.5px solid var(--border);
+            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
             border-radius: var(--radius-md);
             padding: 0 4px 0 0;
             height: 42px; 
@@ -61,7 +61,7 @@
             overflow: visible;
         }
 
-        .header-search-wrapper:focus-within { border-color: var(--secondary); }
+        .header-search-wrapper:focus-within { border-color: rgba(0,0,0,0.18); } /* [修改] var(--secondary) → rgba(0,0,0,0.18)，极淡灰略加深 */
 
         /* ── 下拉引擎样式 (保持原样) ── */
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
@@ -94,7 +94,7 @@
             min-width: 80px; 
             width: 100%; 
             background: var(--surface);
-            border: 1.5px solid var(--border);
+            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-md);
             z-index: 200;
@@ -108,7 +108,7 @@
             font-size: 13px;
             cursor: pointer;
             text-align: center;
-            border-bottom: 1px solid var(--border); 
+            border-bottom: 1px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
             transition: background 0.2s;
         }
         .engine-option-item:last-child { border-bottom: none; }
@@ -244,7 +244,7 @@
         /* 底部按钮：完全对齐工具页 */
         .sidebar-footer {
             padding: 24px 16px;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
             margin-top: auto;
             /* ✅ 微调：补偿下半部分的累计误差 */
             transform: translateY(5px);
@@ -267,23 +267,19 @@
             transition: all 0.2s ease;
         }
 
-        /* [修改] 登录按钮配色
-           修改前：background: #440003; border: 1.5px solid #440003; color: #FFFFFF;
-           修改后：background: #F3E7D3; border: none; color: #6E5A4A;
-           修改目的：图二要求登录卡片背景#F3E7D3、字体#6E5A4A，且无边框 */
+        /* [修改] 登录/注册按钮背景色改为 #440003
+           修改前：.login-btn 白底黑字，.register-btn 黑底白字
+           修改后：统一 #440003 深褐红底白字
+           修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
         .login-btn {
-            background: #F3E7D3;
-            border: none;
-            color: #6E5A4A;
+            background: #440003;
+            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] #440003 → rgba(0,0,0,0.08)，极淡灰边框 */
+            color: #FFFFFF;
         }
 
-        /* [修改] 注册按钮配色
-           修改前：background: #440003; border: 1.5px solid #440003; color: #FFFFFF;
-           修改后：background: #D96A1A; border: none; color: #FFFFFF;
-           修改目的：图二要求注册卡片背景#D96A1A、字体#FFF，且无边框 */
         .register-btn {
-            background: #D96A1A;
-            border: none;
+            background: #440003;
+            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] #440003 → rgba(0,0,0,0.08)，极淡灰边框 */
             color: #FFFFFF;
         }
 
@@ -381,7 +377,7 @@
                             <div class="engine-option-item" data-value="baidu">百度</div>
                         </div>
                     </div>
-                    <div style="width:1.5px; height:20px; background:var(--border); margin:0 4px;"></div>
+                    <div style="width:1.5px; height:20px; background:rgba(0,0,0,0.08); margin:0 4px;"></div> <!-- [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰分隔线 -->
                     <input type="text" id="searchInput" placeholder="搜索关键词...">
                 </div>
             </div>
