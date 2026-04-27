@@ -63,7 +63,7 @@ body {
     width: var(--sidebar-w);
     height: 100vh;
     background: var(--surface);
-    box-shadow: 2px 0 8px rgba(0,0,0,0.1); /* [修改] border-right: 2px solid var(--border) → box-shadow，去除边框改用阴影区分 */
+    border-right: 2px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
@@ -71,7 +71,7 @@ body {
 
 .sidebar-header {
     padding: 24px;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.08); /* [修改] border-bottom: 1px solid var(--border) → box-shadow，去除边框改用阴影区分 */
+    border-bottom: 1px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
@@ -137,7 +137,7 @@ html[data-theme="dark"] .logo-text {
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 24px; height: var(--header-h);
     background: var(--surface);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* [修改] border-bottom: 2px solid var(--border) → box-shadow，去除边框改用阴影区分 */
+    border-bottom: 2px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
     position: sticky; top: 0; z-index: 100;
 }
 
@@ -145,7 +145,7 @@ html[data-theme="dark"] .logo-text {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
     background: var(--bg);
-    box-shadow: 0 0 0 1.5px rgba(0,0,0,0.12); /* [修改] border: 1.5px solid var(--border) → box-shadow，去除边框改用阴影区分 */
+    border: 1.5px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
     border-radius: var(--radius-lg);
 }
 
@@ -188,7 +188,7 @@ html[data-theme="dark"] .logo-text {
 
 .card-item {
     background: var(--surface);
-    box-shadow: var(--shadow-sm); /* [修改] border: 1.5px solid var(--border) 已移除，保留原有box-shadow */
+    border: 1.5px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
     border-radius: var(--radius-md);
     padding: 18px;
     display: flex; align-items: center; gap: 14px;
@@ -198,6 +198,7 @@ html[data-theme="dark"] .logo-text {
 
 .card-item:hover {
     transform: translateY(-4px);
+    border-color: rgba(0,0,0,0.15); /* [修改] 恢复悬浮边框，极淡灰略加深 */
     box-shadow: var(--shadow-md); /* [修改] border-color: var(--secondary) 已移除，悬浮改用加深阴影区分 */
 }
 
@@ -285,7 +286,7 @@ html[data-theme="dark"] {
     width: 100%;
     height: 42px;
     background: var(--bg);
-    box-shadow: 0 0 0 1.5px rgba(0,0,0,0.1); /* [修改] border: 1.5px solid var(--border) → box-shadow，去除边框改用阴影区分 */
+    border: 1.5px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
     border-radius: var(--radius-md);
     padding: 3px;
     user-select: none;
