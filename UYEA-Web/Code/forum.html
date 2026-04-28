@@ -8,20 +8,16 @@
     <meta name="description" content="悠野社区 - 分享想法、互帮互助、共同成长的技术社区平台。">
     <meta name="theme-color" content="#000000">
     
-    <!-- [修改] 补全 fonts.gstatic.com preconnect，新增 GitHub CDN dns-prefetch
-         同时统一字重：补充 wght@800，与其他两页保持一致 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
-    <!-- [修改] 字体改为异步加载，消除渲染阻塞；补充 wght@800 统一三页字重 -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏：仅保留右侧汉堡菜单 ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -29,17 +25,13 @@
             padding: 0 24px;
             height: var(--header-h);
             background: var(--surface);
-            border-bottom: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
+            border-bottom: 1.5px solid rgba(0,0,0,0.08);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .menu-toggle {
-            /* [修改] display:flex → display:none 默认隐藏
-               修改前：display:flex始终显示，桌面端出现异常黑色按钮
-               修改后：默认隐藏，≤1024px媒体查询中再显示
-               目的：正确控制汉堡按钮仅在移动端出现 */
             display: none;
             background: none;
             border: none;
@@ -57,37 +49,20 @@
         }
 
         @media (max-width: 1024px) {
-            /* [新增] ≤1024px时才显示汉堡菜单，与index.html逻辑一致 */
             .menu-toggle { display: flex; }
-            /* [修改] 删除 .top-bar 的 justify-content:flex-start 与 padding-left:56px
-               修改前：强制顶栏内容左对齐，按钮被推到左上角
-               修改后：恢复默认 flex-end，按钮保持在右上角
-               修改目的：按需求将汉堡菜单统一放在右上角 */
         }
 
         @media (max-width: 768px) {
-            /* [新增] 小屏padding对齐index.html */
-            /* [修改] 删除 justify-content: space-between
-               修改前：space-between 会把唯一子元素（按钮）推到左侧
-               修改后：仅保留 padding 调整，按钮靠默认 flex-end 保持在右侧
-               修改目的：按需求将汉堡菜单统一放在右上角 */
             .top-bar { padding: 0 12px; }
         }
 
-        /* ── 侧边栏：同步黑白配色与直接跳转模式 ── */
         .nav-item {
             display: flex;
             align-items: center;
-            /* ✅ 对齐导航页：高度与内边距 */
             padding: 14px 18px;
-            /* ✅ 对齐导航页：完全一致的间距 */
             margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
-            /* [修改] color: var(--text-primary) → #FFFFFF
-               修改前：使用全局主文字色
-               修改后：纯白，配合侧边栏字体全部白色指令
-               修改目的：统一侧边栏所有文字为白色 */
             color: #FFFFFF;
             font-weight: 600;
             transition: all 0.2s ease;
@@ -95,7 +70,6 @@
             border: none;
         }
 
-        /* ✅ 微调：补偿社区页缺少nav-group的累计误差 */
         .nav-menu > a:nth-of-type(2) {
             transform: translateY(12.5px);
         }
@@ -104,40 +78,28 @@
             transform: translateY(12.5px);
         }
 
-        /* 基础高亮：黑底白字 */
         .nav-item.active {
-            /* [修改] background: #FFD700 → #FFF400
-               修改前：明亮金
-               修改后：鲜黄色，更亮眼的高亮色
-               修改目的：按用户要求更换高亮焦点色 */
-            background: #FFF400 !important;
+            /* [修改] background: #FFF400 → #FFDD50
+               修改前：鲜黄色
+               修改后：偏冷暗黄，降低红绿、增加蓝，更低调稳重
+               修改目的：按用户要求将黄色调冷、调暗 */
+            background: #FFDD50 !important;
             /* [修改] color: #005BBB → #FFFFFF
-               修改前：蓝色文字，与背景呼应
-               修改后：纯白文字，确保在鲜黄背景上的高对比度
+               修改前：蓝色文字
+               修改后：纯白文字，确保在黄背景上的高对比度
                修改目的：统一全部侧边栏文字为白色 */
             color: #FFFFFF !important;
-            /* [修改] box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1) !important → inset 2px 2px 5px rgba(0,0,0,0.15) !important
-               修改前：10%黑色内阴影
-               修改后：轻微加深至15%，增强立体感
-               修改目的：配合更亮的黄色背景，增加层次 */
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
         }
 
-        /* ✅ 社区页隐藏箭头 */
         .arrow-icon {
             display: none;
         }
 
-        /* 底部按钮：完全对齐导航页 */
         .sidebar-footer {
             padding: 24px 16px;
-            /* [修改] border-top: 1px solid rgba(255,255,255,0.10) → 1px solid rgba(255,255,255,0.12)
-               修改前：10%白色分割线
-               修改后：12%白色分割线，略微增强分隔感
-               修改目的：适应亮蓝背景，确保边界清晰 */
             border-top: 1px solid rgba(255,255,255,0.12);
             margin-top: auto;
-            /* ✅ 微调：补偿下半部分的累计误差 */
             transform: translateY(12.5px);
         }
         .auth-buttons {
@@ -156,43 +118,25 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        /* [修改] 底部按钮配色匹配新黄色且统一白字 */
         .login-btn {
-            /* [修改] background: #FFD700 → #FFF400
-               修改前：明亮金
-               修改后：鲜黄色，与激活项背景统一
+            /* [修改] background: #FFF400 → #FFDD50
+               修改前：鲜黄色
+               修改后：偏冷暗黄，与激活项背景统一
                修改目的：按用户要求更换按钮色 */
-            background: #FFF400;
-            /* [修改] border: 1.5px solid rgba(255,255,255,0.12) → 1.5px solid rgba(255,255,255,0.15)
-               修改前：12%白色边框
-               修改后：15%白色边框，配合鲜黄背景增加清晰边界
-               修改目的：增强按钮边界感 */
+            background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
-            /* [修改] color: #005BBB → #FFFFFF
-               修改前：蓝色文字
-               修改后：纯白文字，确保所有侧边栏文字为白色
-               修改目的：统一文字颜色 */
             color: #FFFFFF;
         }
         .register-btn {
-            /* [修改] background: #FFD700 → #FFF400
-               修改前：明亮金
-               修改后：鲜黄色，与激活项背景统一
+            /* [修改] background: #FFF400 → #FFDD50
+               修改前：鲜黄色
+               修改后：偏冷暗黄，与激活项背景统一
                修改目的：按用户要求更换按钮色 */
-            background: #FFF400;
-            /* [修改] border: 1.5px solid rgba(255,255,255,0.12) → 1.5px solid rgba(255,255,255,0.15)
-               修改前：12%白色边框
-               修改后：15%白色边框，配合鲜黄背景增加清晰边界
-               修改目的：增强按钮边界感 */
+            background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
-            /* [修改] color: #005BBB → #FFFFFF
-               修改前：蓝色文字
-               修改后：纯白文字，确保所有侧边栏文字为白色
-               修改目的：统一文字颜色 */
             color: #FFFFFF;
         }
 
-        /* ── 社区页专属原始完整样式 ── */
         .forum-toolbar {
             display: flex;
             gap: 12px;
@@ -223,13 +167,13 @@
             width: 100%;
             padding: 10px 16px 10px 40px;
             background: var(--surface);
-            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
+            border: 1.5px solid rgba(0,0,0,0.08);
             border-radius: var(--radius-md);
             outline: none;
             font-size: 14px;
             transition: border-color 0.2s;
         }
-        .forum-search input:focus { border-color: rgba(0,0,0,0.18); } /* [修改] var(--secondary) → rgba(0,0,0,0.18)，极淡灰略加深 */
+        .forum-search input:focus { border-color: rgba(0,0,0,0.18); }
         .forum-search span {
             position: absolute;
             left: 14px;
@@ -246,7 +190,7 @@
         }
         .post-item {
             background: var(--surface);
-            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
+            border: 1.5px solid rgba(0,0,0,0.08);
             border-radius: var(--radius-md);
             padding: 24px;
             text-decoration: none;
@@ -317,9 +261,6 @@
         </nav>
 
         <div class="sidebar-footer">
-            <!-- [新增] 暗色模式切换按钮，位于登录注册上方
-                 结构：☀️/🌙 双 emoji 圆角轨道 + 高亮滑块
-                 目的：按需求重新构建暗色模式切换按钮，三页统一 -->
             <div class="theme-toggle-wrapper">
                 <div class="theme-toggle" role="button" tabindex="0" aria-label="切换主题">
                     <div class="theme-slider"></div>
@@ -406,10 +347,8 @@
         </div>
     </main>
 
-    <!-- [修改] 加 defer，消除script阻塞HTML解析 -->
     <script src="script.js" defer></script>
     <script>
-        // --- 保持完整功能的社区搜索逻辑 ---
         const forumSearchInput = document.getElementById('forumSearchInput');
         const postItems = document.querySelectorAll('.post-item');
 
