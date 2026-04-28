@@ -109,11 +109,11 @@ body {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
     font-weight: 400; 
     font-size: 26px; 
-    /* [修改] color: #F0F0E8 → #FFFFFF
-       修改前：羊皮纸白
-       修改后：纯白，配合侧边栏字体全部白色指令
-       修改目的：统一侧边栏所有文字为白色 */
-    color: #FFFFFF;
+    /* [修改] color: #FFFFFF → #0000C0
+       修改前：纯白色文字
+       修改后：深蓝色文字
+       修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
+    color: #0000C0;
     letter-spacing: 2px;
     text-shadow:
         1px 1px 0 #ED5501,
@@ -135,40 +135,40 @@ html[data-theme="dark"] .logo-text {
         5px 5px 0 #0D0D0D;
 }
 
-/* [修改] .logo-sub color: #D8D8E8 → #FFFFFF
-   修改前：淡灰蓝
-   修改后：纯白，配合侧边栏字体全部白色指令
-   修改目的：统一侧边栏所有文字为白色 */
-.logo-sub { font-size: 14px; color: #FFFFFF; font-weight: 500; }
+/* [修改] .logo-sub color: #FFFFFF → #0000C0
+   修改前：纯白色文字
+   修改后：深蓝色文字
+   修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
+.logo-sub { font-size: 14px; color: #0000C0; font-weight: 500; }
 
 .nav-menu { padding: 16px 12px; }
 
 .nav-item {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 16px; border-radius: var(--radius-sm);
-    /* [修改] color: #D8D8E8 → #FFFFFF
-       修改前：淡灰蓝
-       修改后：纯白，配合侧边栏字体全部白色指令
-       修改目的：统一侧边栏所有文字为白色 */
-    color: #FFFFFF;
+    /* [修改] color: #FFFFFF → #0000C0
+       修改前：纯白色文字
+       修改后：深蓝色文字
+       修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
+    color: #0000C0;
     text-decoration: none;
     margin-bottom: 6px; transition: all var(--duration);
     font-weight: 500;
 }
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
 
-/* [修改] 激活态配色调整，匹配 #005BBB 侧边栏，同时文字统一白色 */
+/* [修改] 激活态配色调整，文字统一为深蓝色 */
 .nav-item.active {
     /* [修改] background: #FFF400 → #FFDD50
        修改前：鲜黄色
        修改后：偏冷暗黄，降低红绿、增加蓝，更低调稳重
        修改目的：按用户要求将黄色调冷、调暗 */
     background: #FFDD50;
-    /* [修改] color: #005BBB → #FFFFFF
-       修改前：蓝色文字，与背景呼应
-       修改后：纯白文字，确保在黄背景上的高对比度
-       修改目的：统一全部侧边栏文字为白色 */
-    color: #FFFFFF;
+    /* [修改] color: #FFFFFF → #0000C0
+       修改前：白色文字
+       修改后：深蓝色文字，确保在黄背景上的高对比度
+       修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
+    color: #0000C0;
 }
 
 /* ── 主内容区 ── */
