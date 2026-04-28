@@ -75,11 +75,11 @@ body {
        修改后：亮蓝色，一眼即知的蓝色侧边栏
        修改目的：按用户指定色值替换，提升蓝色辨识度 */
     background: #005BBB;
-    /* [修改] border-right: 2px solid rgba(216,216,232,0.15) → 2px solid rgba(255,255,255,0.10)
-       修改前：淡灰蓝分割线
-       修改后：更低调的白色半透明，弱化边界
-       修改目的：配合蓝色背景，分割线不抢眼 */
-    border-right: 2px solid rgba(255,255,255,0.10);
+    /* [修改] border-right: 2px solid rgba(255,255,255,0.10) → 2px solid rgba(255,255,255,0.12)
+       修改前：10%白色分割线
+       修改后：12%白色分割线，略微增强分隔感
+       修改目的：适应亮蓝背景，确保边界清晰 */
+    border-right: 2px solid rgba(255,255,255,0.12);
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
@@ -87,11 +87,11 @@ body {
 
 .sidebar-header {
     padding: 24px;
-    /* [修改] border-bottom: 1px solid rgba(216,216,232,0.15) → 1px solid rgba(255,255,255,0.10)
-       修改前：淡灰蓝分割线
-       修改后：更低调的白色半透明，弱化边界
-       修改目的：配合蓝色背景，分割线不抢眼 */
-    border-bottom: 1px solid rgba(255,255,255,0.10);
+    /* [修改] border-bottom: 1px solid rgba(255,255,255,0.10) → 1px solid rgba(255,255,255,0.12)
+       修改前：10%白色分割线
+       修改后：12%白色分割线，略微增强分隔感
+       修改目的：适应亮蓝背景，确保边界清晰 */
+    border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
@@ -153,21 +153,18 @@ html[data-theme="dark"] .logo-text {
 }
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
 
-/* [修改] 激活态按钮背景色改为 #440003 → #F0D040 → #C9A15E
-   修改前：姜黄色高亮
-   修改后：柔和暗金，降低饱和度，与蓝色侧边栏和谐共存
-   修改目的：按新配色方案调整高亮色，避免刺眼 */
+/* [修改] 激活态配色调整，匹配 #005BBB 侧边栏 */
 .nav-item.active {
-    /* [修改] background: #F0D040 → #C9A15E
-       修改前：姜黄色高亮焦点
-       修改后：柔和暗金，降饱和、压亮度
-       修改目的：配合亮蓝色背景，保持暖色点缀但不突兀 */
-    background: #C9A15E;
-    /* [修改] color: #FFFFFF → #37474F
-       修改前：白色文字
-       修改后：深钢蓝色，与激活背景形成清晰对比
-       修改目的：确保激活项文字可读性，同时与侧边栏底色呼应 */
-    color: #37474F;
+    /* [修改] background: #C9A15E → #FFD700
+       修改前：柔和暗金
+       修改后：明亮金，在亮蓝背景上更鲜艳、对比强烈
+       修改目的：蓝金经典搭配，提升视觉焦点 */
+    background: #FFD700;
+    /* [修改] color: #37474F → #005BBB
+       修改前：深钢蓝色
+       修改后：与侧边栏背景一致的蓝色，形成反色效果
+       修改目的：统一色调，增强和谐感 */
+    color: #005BBB;
 }
 
 /* ── 主内容区 ── */
