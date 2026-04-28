@@ -169,7 +169,11 @@
             margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
-            color: var(--text-primary);
+            /* [修改] color: var(--text-primary) → #FFFFFF
+               修改前：使用全局主文字色
+               修改后：纯白，配合侧边栏字体全部白色指令
+               修改目的：统一侧边栏所有文字为白色 */
+            color: #FFFFFF;
             font-weight: 600;
             transition: all 0.2s ease;
             cursor: pointer;
@@ -188,11 +192,11 @@
                修改后：姜黄色高亮焦点
                修改目的：按配色表将侧边栏激活项背景改为姜黄色 */
             background: #F0D040 !important;
-            /* [修改] color: #FFFFFF !important → #1A2050 !important
-               修改前：白色文字
-               修改后：深色文字，确保在姜黄底色上的高对比度
-               修改目的：按配色表将激活项文字改为深色 */
-            color: #1A2050 !important;
+            /* [修改] color: #1A2050 !important → #FFFFFF !important
+               修改前：深色文字
+               修改后：纯白，配合侧边栏字体全部白色指令
+               修改目的：统一侧边栏所有文字为白色 */
+            color: #FFFFFF !important;
             /* [修改] box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important → inset 2px 2px 5px rgba(26,32,80,0.15) !important
                修改前：白色半透明内阴影
                修改后：深色半透明内阴影，配合姜黄底色
@@ -244,7 +248,11 @@
             font-size: 14px;
             /* ✅ 对齐工具页：800 极粗体 */
             font-weight: 800; 
-            color: var(--text-secondary);
+            /* [修改] color: var(--text-secondary) → #FFFFFF
+               修改前：使用全局次要文字色
+               修改后：纯白，配合侧边栏字体全部白色指令
+               修改目的：统一侧边栏所有文字为白色 */
+            color: #FFFFFF;
             text-decoration: none;
             transition: all 0.2s ease;
         }
@@ -298,11 +306,11 @@
                修改后：淡灰蓝分割线，15%透明度
                修改目的：按配色表替换分割线颜色 */
             border: 1.5px solid rgba(216,216,232,0.15);
-            /* [修改] color: #FFFFFF → #1A2050
-               修改前：白色文字
-               修改后：深色文字，在姜黄底色上保持清晰对比度
-               修改目的：确保CTA按钮文字可读性 */
-            color: #1A2050;
+            /* [修改] color: #1A2050 → #FFFFFF
+               修改前：深色文字
+               修改后：纯白，配合侧边栏字体全部白色指令
+               修改目的：统一侧边栏所有文字为白色 */
+            color: #FFFFFF;
         }
 
         .register-btn {
@@ -316,11 +324,11 @@
                修改后：淡灰蓝分割线，15%透明度
                修改目的：按配色表替换分割线颜色 */
             border: 1.5px solid rgba(216,216,232,0.15);
-            /* [修改] color: #FFFFFF → #1A2050
-               修改前：白色文字
-               修改后：深色文字，在姜黄底色上保持清晰对比度
-               修改目的：确保CTA按钮文字可读性 */
-            color: #1A2050;
+            /* [修改] color: #1A2050 → #FFFFFF
+               修改前：深色文字
+               修改后：纯白，配合侧边栏字体全部白色指令
+               修改目的：统一侧边栏所有文字为白色 */
+            color: #FFFFFF;
         }
 
         @media (max-width: 1024px) {
