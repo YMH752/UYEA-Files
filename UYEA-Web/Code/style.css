@@ -139,18 +139,21 @@ body {
 }
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
 
-/* [修改] 激活态配色调整，文字改为白色 */
+/* [修改] 激活态配色调整，文字改为 #11a0ff
+   修改前：color: #FFFFFF
+   修改后：color: #11a0ff
+   修改目的：用户要求当前页面选中高亮文字颜色为 #11a0ff */
 .nav-item.active {
     /* [修改] background: #FFF400 → #FFDD50
        修改前：鲜黄色
        修改后：偏冷暗黄，降低红绿、增加蓝，更低调稳重
        修改目的：按用户要求将黄色调冷、调暗 */
     background: #FFDD50;
-    /* [修改] color: #0000C0 → #FFFFFF
-       修改前：深蓝色文字
-       修改后：纯白色文字
-       修改目的：按用户要求将激活项文字也改为白色 */
-    color: #FFFFFF;
+    /* [修改] color: #FFFFFF → #11a0ff
+       修改前：白色文字
+       修改后：#11a0ff 亮蓝色
+       修改目的：激活项文字颜色改为 #11a0ff */
+    color: #11a0ff;
 }
 
 /* ── 主内容区 ── */
