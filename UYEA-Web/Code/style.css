@@ -174,18 +174,20 @@ body {
     border-radius: var(--radius-lg);
 }
 
-/* [修改] 登录/注册按钮背景色改为 #440003
-   修改前：.login-btn 白底黑字，.register-btn 黑底白字
-   修改后：统一 #440003 深褐红底白字
-   修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
+/* [修改] 登录/注册按钮字体改为 Lilita One，字间距拉宽
+   修改前：未指定字体，使用系统默认
+   修改后：Lilita One，字间距 1.5px，营造拉伸感
+   修改目的：按用户要求统一字体样式，增强视觉冲击力 */
 .login-btn {
     padding: 8px 20px;
     background: #440003;
     color: #FFFFFF;
     border-radius: var(--radius-sm);
     text-decoration: none;
+    font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 400;
     font-size: 14px;
-    font-weight: 600;
+    letter-spacing: 1.5px;
     transition: opacity var(--duration);
 }
 
