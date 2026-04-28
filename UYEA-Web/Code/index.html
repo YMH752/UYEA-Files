@@ -548,10 +548,10 @@
                 this.classList.toggle('menu-open', isOpening);
                 /* [修改] display切换 → .open class切换，配合CSS max-height+opacity过渡 */
                 subNavMenu.classList.toggle('open', isOpening);
-                /* [新增] 同步维护active高亮状态
-                   修改前：active写死在HTML，点击后高亮状态丢失
-                   修改后：展开时保持active，收起时移除active */
-                this.classList.toggle('active', isOpening);
+                /* [修改] this.classList.toggle('active', isOpening) → this.classList.add('active')
+                   修改前：点击切换 active 类，可能导致高亮无故消失
+                   修改后：始终保留 active 类，确保当前页导航项保持高亮 */
+                this.classList.add('active');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 window.location.href = 'index.html';
