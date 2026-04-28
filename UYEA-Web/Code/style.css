@@ -1,27 +1,22 @@
 /* ============================================================
-   UYEA 悠野工作室 · style.css (UH 风格版)
+   UYEA 悠野工作室 · style.css (UH 风格定制版)
    风格方案：美日复古风 + UH海报蓝侧边栏
-   修改记录：将侧边栏配色由米红方案改为 UH.html 中的海报蓝方案
+   修改说明：仅针对侧边栏配色进行 UH 风格替换，不改动其他逻辑
    ============================================================ */
 
 :root {
-    /* 亮色模式配色 - 文艺复古方案 */
-    --primary:        #D96A1A;    /* 烧橙 */
-    --primary-dark:   #5A0A0A;    /* 深酒红 */
-    --primary-light:  #EAD7A1;    /* 暖黄 */
+    /* [未修改] 保持原始变量 */
+    --primary:        #D96A1A;    
+    --primary-dark:   #5A0A0A;    
+    --primary-light:  #EAD7A1;    
     
-    --secondary:      #5A0A0A;    /* 按钮色 */
+    --secondary:      #5A0A0A;    
     
-    --bg:             #F3E7D3;    /* 温暖米色 - 主背景 */
-    --surface:        #E8D8BD;    /* 略深暖米 - 卡片底色 */
-    --border:         #5A0A0A;    /* 深酒红 - 边框色 */
-    --text-main:      #2A2A2A;    /* 深灰黑 - 主文字 */
-    --text-muted:     #6D6D6D;    /* 柔和灰 - 次要文字 */
-
-    /* [修改处] UH 风格专用变量 - 仅供侧边栏内部使用 */
-    --uh-bg:          #3040A0;    /* 海报蓝 */
-    --uh-text:        #FFFFFF;    /* 纯白文字 */
-    --uh-active-bg:   rgba(255, 255, 255, 0.15); /* 激活项背景 */
+    --bg:             #F3E7D3;    
+    --surface:        #E8D8BD;    
+    --border:         #5A0A0A;    
+    --text-main:      #2A2A2A;    
+    --text-muted:     #6D6D6D;    
 
     --sidebar-width:  260px;
     --header-height:  70px;
@@ -32,7 +27,7 @@
     --transition:     all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 暗色模式变量覆盖 */
+/* [未修改] 暗色模式变量 */
 html[data-theme="dark"] {
     --bg:             #121212;
     --surface:        #1E1E1E;
@@ -40,10 +35,9 @@ html[data-theme="dark"] {
     --text-main:      #E0E0E0;
     --text-muted:     #A0A0A0;
     --primary-light:  #2C2C2C;
-    /* 注：侧边栏在 UH 风格下保持深蓝，不随暗色模式大幅改变 */
 }
 
-/* 1. 基础重置 */
+/* 1. 基础重置 [未修改] */
 * {
     margin: 0;
     padding: 0;
@@ -61,7 +55,7 @@ body {
     transition: background 0.3s;
 }
 
-/* 2. 滚动条美化 */
+/* 2. 滚动条美化 [未修改] */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { 
@@ -70,7 +64,7 @@ body {
     border: 2px solid var(--bg);
 }
 
-/* 3. 响应式布局容器 */
+/* 3. 响应式布局容器 [未修改] */
 .main-content {
     flex: 1;
     margin-left: var(--sidebar-width);
@@ -79,7 +73,7 @@ body {
     transition: margin 0.4s;
 }
 
-/* 4. 移动端汉堡菜单按钮 */
+/* 4. 移动端汉堡菜单按钮 [未修改] */
 .hamburger-btn {
     display: none;
     position: fixed;
@@ -98,14 +92,14 @@ body {
 }
 
 /* 5. 侧边栏 (Sidebar) */
-/* [修改处] 修改背景为 UH 海报蓝，移除原边框 */
+/* [修改位置：background 改为 UH蓝, border-right 移除] */
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     width: var(--sidebar-width);
     height: 100vh;
-    background: var(--uh-bg);
+    background: #3040A0; 
     display: flex;
     flex-direction: column;
     z-index: 1000;
@@ -113,12 +107,12 @@ body {
     border-right: none;
 }
 
-/* [修改处] Logo 区域改为白色文字，微调边框透明度 */
+/* [修改位置：color 改为全白, border-bottom 透明度调整] */
 .logo-area {
     padding: 32px 24px;
     font-size: 24px;
     font-weight: 800;
-    color: var(--uh-text);
+    color: #FFFFFF;
     letter-spacing: 2px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
@@ -129,7 +123,7 @@ body {
     overflow-y: auto;
 }
 
-/* [修改处] 导航项颜色与 UH 风格对齐 */
+/* [修改位置：color 改为浅色半透明] */
 .nav-item {
     margin: 8px 12px;
     padding: 14px 16px;
@@ -147,12 +141,13 @@ body {
     pointer-events: none;
 }
 
+/* [修改位置：hover/active 背景改为 UH 风格透明白] */
 .nav-item:hover, .nav-item.active {
-    background: var(--uh-active-bg);
-    color: var(--uh-text);
+    background: rgba(255, 255, 255, 0.15);
+    color: #FFFFFF;
 }
 
-/* [修改处] 侧边栏底部适配 UH 风格 */
+/* [修改位置：border-top 透明度调整] */
 .sidebar-bottom {
     margin-top: auto;
     padding: 24px;
@@ -166,8 +161,9 @@ body {
     justify-content: center;
 }
 
+/* [修改位置：color 改为全白] */
 .social-links a {
-    color: var(--uh-text);
+    color: #FFFFFF;
     opacity: 0.7;
     font-size: 20px;
     transition: opacity 0.3s;
@@ -177,7 +173,7 @@ body {
     opacity: 1;
 }
 
-/* [修改处] 主题切换容器适配深色背景 */
+/* [修改位置：background 改为深色透明，以适配蓝底] */
 .theme-switch-container {
     position: relative;
     display: flex;
@@ -190,7 +186,7 @@ body {
     overflow: hidden;
 }
 
-/* 保持滑块逻辑，颜色使用原指定按钮色 */
+/* [未修改] 滑块逻辑与原始颜色保持一致 */
 .theme-slider {
     position: absolute;
     top: 3px;
@@ -208,6 +204,7 @@ html[data-theme="dark"] .theme-slider {
     background: #FFFFFF;
 }
 
+/* [修改位置：color 设为白色，以适配蓝底] */
 .theme-btn {
     flex: 1;
     border: none;
@@ -220,7 +217,7 @@ html[data-theme="dark"] .theme-slider {
     justify-content: center;
     gap: 6px;
     font-weight: 600;
-    color: var(--uh-text);
+    color: #FFFFFF;
     opacity: 0.6;
     transition: opacity 0.3s;
 }
@@ -233,7 +230,7 @@ html[data-theme="dark"] .theme-btn.active {
     color: #000;
 }
 
-/* 6. 移动端遮罩 */
+/* 6. 移动端遮罩 [未修改] */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -246,7 +243,7 @@ html[data-theme="dark"] .theme-btn.active {
     z-index: 999;
 }
 
-/* 7. 搜索区域 (Search Section) */
+/* 7. 搜索区域 (Search Section) [未修改] */
 .search-section {
     margin-bottom: 48px;
     max-width: 800px;
@@ -289,7 +286,7 @@ html[data-theme="dark"] .theme-btn.active {
     outline: none;
 }
 
-/* 8. 卡片网格 (Card Grid) */
+/* 8. 卡片网格 (Card Grid) [未修改] */
 .section-title {
     font-size: 20px;
     font-weight: 800;
@@ -353,7 +350,7 @@ html[data-theme="dark"] .theme-btn.active {
     color: var(--text-muted);
 }
 
-/* 9. 响应式适配 */
+/* 9. 响应式适配 [未修改] */
 @media (max-width: 1024px) {
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
