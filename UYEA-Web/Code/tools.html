@@ -154,15 +154,11 @@
             transition: all 0.2s ease;
         }
 
-        .login-btn {
-            background: #FFDD50;
-            border: 1.5px solid rgba(255,255,255,0.15);
-            color: #0088FF;
-            font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-        }
-
+        /* [修改] 统一登录注册按钮样式
+           修改前：.login-btn 和 .register-btn 分别定义，样式完全相同，导致按钮可能尺寸不一致
+           修改后：使用单一选择器 .login-btn, .register-btn 合并定义，确保完全等宽等高
+           修改目的：PC端与手机端两按钮显示尺寸一致 */
+        .login-btn,
         .register-btn {
             background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
