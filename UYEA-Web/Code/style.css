@@ -97,11 +97,11 @@ body {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
     font-weight: 400; 
     font-size: 26px; 
-    /* [修改] color: #FFF2B2 → #F0F0E8
-       修改前：暖黄色字色
-       修改后：羊皮纸白
-       修改目的：按配色表将Logo主色改为羊皮纸白 */
-    color: #F0F0E8;
+    /* [修改] color: #F0F0E8 → #FFFFFF
+       修改前：羊皮纸白
+       修改后：纯白，配合侧边栏字体全部白色指令
+       修改目的：统一侧边栏所有文字为白色 */
+    color: #FFFFFF;
     letter-spacing: 2px;
     text-shadow:
         1px 1px 0 #ED5501,
@@ -123,22 +123,22 @@ html[data-theme="dark"] .logo-text {
         5px 5px 0 #0D0D0D;
 }
 
-/* [修改] .logo-sub color: var(--text-secondary) → #D8D8E8
-   修改前：跟随亮色模式次要文字色（中棕色）
-   修改后：淡灰蓝，在深蓝底色上保持可读性
-   修改目的：按配色表将常规导航文字改为淡灰蓝 */
-.logo-sub { font-size: 14px; color: #D8D8E8; font-weight: 500; }
+/* [修改] .logo-sub color: #D8D8E8 → #FFFFFF
+   修改前：淡灰蓝
+   修改后：纯白，配合侧边栏字体全部白色指令
+   修改目的：统一侧边栏所有文字为白色 */
+.logo-sub { font-size: 14px; color: #FFFFFF; font-weight: 500; }
 
 .nav-menu { padding: 16px 12px; }
 
 .nav-item {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 16px; border-radius: var(--radius-sm);
-    /* [修改] color: var(--text-secondary) → #D8D8E8
-       修改前：跟随亮色模式次要文字色（中棕色）
-       修改后：淡灰蓝，在深蓝底色上清晰可见
-       修改目的：按配色表将常规导航文字改为淡灰蓝 */
-    color: #D8D8E8;
+    /* [修改] color: #D8D8E8 → #FFFFFF
+       修改前：淡灰蓝
+       修改后：纯白，配合侧边栏字体全部白色指令
+       修改目的：统一侧边栏所有文字为白色 */
+    color: #FFFFFF;
     text-decoration: none;
     margin-bottom: 6px; transition: all var(--duration);
     font-weight: 500;
@@ -155,11 +155,11 @@ html[data-theme="dark"] .logo-text {
        修改后：姜黄色高亮焦点
        修改目的：按配色表替换激活项背景 */
     background: #F0D040;
-    /* [修改] color: #FFFFFF → #1A2050
-       修改前：白色文字
-       修改后：深色文字，确保在姜黄底色上的高对比度
-       修改目的：按配色表将激活项文字改为深色 */
-    color: #1A2050;
+    /* [修改] color: #1A2050 → #FFFFFF
+       修改前：深色文字
+       修改后：纯白，配合侧边栏字体全部白色指令
+       修改目的：统一侧边栏所有文字为白色 */
+    color: #FFFFFF;
 }
 
 /* ── 主内容区 ── */
