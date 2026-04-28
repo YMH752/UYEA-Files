@@ -79,7 +79,10 @@
 
         .nav-item.active {
             background: #FFDD50 !important;
-            color: #FFFFFF !important;
+            /* [修改] color: #FFFFFF → #11a0ff
+               修改前：白色文字
+               修改后：亮蓝色，当前页面激活项文字颜色 */
+            color: #11a0ff !important;
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
         }
 
@@ -169,7 +172,6 @@
             letter-spacing: 1.5px;
         }
 
-        /* [新增] 按钮文字横向拉伸 */
         .login-btn span, .register-btn span {
             display: inline-block;
             transform: scaleX(1.15);
@@ -242,13 +244,15 @@
         <nav class="nav-menu">
             <a href="index.html" class="nav-item">
                 <span class="nav-icon">●</span>
-                <span class="nav-text">全部导航</span>
+                <!-- [修改] “全部导航” → “网站导航” -->
+                <span class="nav-text">网站导航</span>
             </a>
 
             <div class="nav-group">
                 <div class="nav-item active nav-dropdown-trigger" id="toolsNavTrigger">
                     <span class="nav-icon">●</span>
-                    <span class="nav-text">实用工具</span>
+                    <!-- [修改] “实用工具” → “线上工具” -->
+                    <span class="nav-text">线上工具</span>
                     <span class="arrow-icon">▼</span>
                 </div>
                 <div class="sub-menu" id="toolsSubMenu">
@@ -274,7 +278,6 @@
                 </div>
             </div>
             <div class="auth-buttons">
-                <!-- [修改] 文字包裹 span 以实现拉伸 -->
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')"><span>登录</span></div>
                 <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')"><span>注册</span></div>
             </div>
