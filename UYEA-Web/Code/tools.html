@@ -11,7 +11,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
-    <!-- [修改] 字体加载补充 Lilita One，用于标题 -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
 
@@ -71,7 +70,11 @@
             margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
-            color: #0000C0;
+            /* [修改] color: #0000C0 → #FFFFFF
+               修改前：深蓝色文字
+               修改后：纯白色文字
+               修改目的：按用户要求将侧边栏全部文字改为白色 */
+            color: #FFFFFF;
             font-weight: 600;
             transition: all 0.2s ease;
             cursor: pointer;
@@ -80,7 +83,11 @@
 
         .nav-item.active {
             background: #FFDD50 !important;
-            color: #0000C0 !important;
+            /* [修改] color: #0000C0 → #FFFFFF
+               修改前：深蓝色文字
+               修改后：纯白色文字
+               修改目的：按用户要求将激活项文字也改为白色 */
+            color: #FFFFFF !important;
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
         }
 
@@ -101,8 +108,9 @@
             opacity: 1;
         }
 
+        /* [修改] 导航圆点颜色改为白色 */
         .nav-icon {
-            color: #440003;
+            color: #FFFFFF;
             font-size: 14px;
         }
 
@@ -121,7 +129,11 @@
             padding: 10px 16px 10px 56px;
             font-size: 14px;
             font-weight: 800; 
-            color: #0000C0;
+            /* [修改] color: #0000C0 → #FFFFFF
+               修改前：深蓝色文字
+               修改后：纯白色文字
+               修改目的：按用户要求将子菜单项文字改为白色 */
+            color: #FFFFFF;
             text-decoration: none;
             transition: all 0.2s ease;
         }
@@ -151,15 +163,16 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+        /* [修改] 底部按钮文字改为白色 */
         .login-btn {
             background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
-            color: #0000C0;
+            color: #FFFFFF;
         }
         .register-btn {
             background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
-            color: #0000C0;
+            color: #FFFFFF;
         }
 
         .tool-search-bar {
