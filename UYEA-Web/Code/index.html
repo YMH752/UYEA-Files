@@ -245,7 +245,6 @@
             transition: all 0.2s ease;
         }
 
-        /* [修改] 登录/注册按钮文字颜色改为 #0088FF，加粗，等宽 */
         .login-btn {
             background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
@@ -262,6 +261,15 @@
             font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
             font-weight: 700;
             letter-spacing: 1.5px;
+        }
+
+        /* [新增] 按钮文字横向拉伸
+           修改前：无拉伸
+           修改后：用 transform: scaleX(1.15) 包裹 span，实现拉伸字体效果
+           修改目的：按用户要求让按钮文字具有水平拉伸感 */
+        .login-btn span, .register-btn span {
+            display: inline-block;
+            transform: scaleX(1.15);
         }
 
         @media (max-width: 1024px) {
@@ -323,8 +331,9 @@
                 </div>
             </div>
             <div class="auth-buttons">
-                <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')">登录</div>
-                <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')">注册</div>
+                <!-- [修改] 文字包裹 span 以实现拉伸 -->
+                <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')"><span>登录</span></div>
+                <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')"><span>注册</span></div>
             </div>
         </div>
     </aside>
