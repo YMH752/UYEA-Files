@@ -100,9 +100,21 @@
 
         /* 基础高亮：黑底白字 */
         .nav-item.active {
-            background: #EFE4AF !important;
-            color: #9B1315 !important;
-            box-shadow: inset 2px 2px 5px rgba(155,19,21,0.1) !important;
+            /* [修改] background: #000000 !important → #F0D040 !important
+               修改前：纯黑底色
+               修改后：姜黄色高亮焦点
+               修改目的：按配色表将侧边栏激活项背景改为姜黄色 */
+            background: #F0D040 !important;
+            /* [修改] color: #FFFFFF !important → #1A2050 !important
+               修改前：白色文字
+               修改后：深色文字，确保在姜黄底色上的高对比度
+               修改目的：按配色表将激活项文字改为深色 */
+            color: #1A2050 !important;
+            /* [修改] box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important → inset 2px 2px 5px rgba(26,32,80,0.15) !important
+               修改前：白色半透明内阴影
+               修改后：深色半透明内阴影，配合姜黄底色
+               修改目的：适配新激活项配色，保持视觉层次感 */
+            box-shadow: inset 2px 2px 5px rgba(26,32,80,0.15) !important;
         }
 
         /* 展开态：铁锈红 */
@@ -158,7 +170,11 @@
         /* 底部按钮：完全对齐首页 */
         .sidebar-footer {
             padding: 24px 16px;
-            border-top: 1px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
+            /* [修改] border-top: 1px solid rgba(0,0,0,0.08) → 1px solid rgba(216,216,232,0.15)
+               修改前：极淡灰分割线
+               修改后：淡灰蓝分割线，15%透明度
+               修改目的：按配色表替换分割线颜色 */
+            border-top: 1px solid rgba(216,216,232,0.15);
             margin-top: auto; 
         }
         .auth-buttons {
@@ -178,14 +194,38 @@
             transition: all 0.2s ease;
         }
         .login-btn {
-            background: #EFE4AF;
-            border: 1.5px solid rgba(240,224,192,0.2); /* [修改] UB配色：米黄底砖红字 */
-            color: #9B1315;
+            /* [修改] background: #5A0A0A → #F0D040
+               修改前：深酒红底色
+               修改后：姜黄色CTA触发
+               修改目的：按配色表将底部按钮背景改为姜黄色 */
+            background: #F0D040;
+            /* [修改] border: 1.5px solid rgba(0,0,0,0.08) → 1.5px solid rgba(216,216,232,0.15)
+               修改前：极淡灰边框
+               修改后：淡灰蓝分割线，15%透明度
+               修改目的：按配色表替换分割线颜色 */
+            border: 1.5px solid rgba(216,216,232,0.15);
+            /* [修改] color: #FFFFFF → #1A2050
+               修改前：白色文字
+               修改后：深色文字，在姜黄底色上保持清晰对比度
+               修改目的：确保CTA按钮文字可读性 */
+            color: #1A2050;
         }
         .register-btn {
-            background: #EFE4AF;
-            border: 1.5px solid rgba(240,224,192,0.2); /* [修改] UB配色：米黄底砖红字 */
-            color: #9B1315;
+            /* [修改] background: #5A0A0A → #F0D040
+               修改前：深酒红底色
+               修改后：姜黄色CTA触发
+               修改目的：按配色表将底部按钮背景改为姜黄色 */
+            background: #F0D040;
+            /* [修改] border: 1.5px solid rgba(0,0,0,0.08) → 1.5px solid rgba(216,216,232,0.15)
+               修改前：极淡灰边框
+               修改后：淡灰蓝分割线，15%透明度
+               修改目的：按配色表替换分割线颜色 */
+            border: 1.5px solid rgba(216,216,232,0.15);
+            /* [修改] color: #FFFFFF → #1A2050
+               修改前：白色文字
+               修改后：深色文字，在姜黄底色上保持清晰对比度
+               修改目的：确保CTA按钮文字可读性 */
+            color: #1A2050;
         }
 
         /* ── 工具页内容区 ── */
