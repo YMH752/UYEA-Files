@@ -150,7 +150,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        /* [修改] 登录/注册按钮文字颜色改为 #0088FF，加粗 */
+        /* [修改] 登录/注册按钮文字颜色改为 #0088FF，加粗，等宽 */
         .login-btn {
             background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
@@ -303,88 +303,4 @@
                     <div class="tool-group-title"><span>💻</span> 开发者工具</div>
                     <div class="grid-container">
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">JSON 格式化</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">Base64 编解码</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">正则表达式测试</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">时间戳转换</div></div></a>
-                    </div>
-                </div>
-
-                <div class="tool-group" data-category="design" id="design-tools" style="margin-top: 40px;">
-                    <div class="tool-group-title"><span>🎨</span> 设计美化</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">在线调色板</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">SVG 图标库</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">渐变颜色生成</div></div></a>
-                    </div>
-                </div>
-
-                <div class="tool-group" data-category="office" id="office-tools" style="margin-top: 40px;">
-                    <div class="tool-group-title"><span>📂</span> 办公效率</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">PDF 转 Word</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">流程图绘制</div></div></a>
-                    </div>
-                </div>
-
-                <div class="tool-group" data-category="media" id="media-tools" style="margin-top: 40px;">
-                    <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">图片压缩</div></div></a>
-                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">视频转 GIF</div></div></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script src="script.js" defer></script>
-    <script>
-        const toolsNavTrigger = document.getElementById('toolsNavTrigger');
-        const toolsSubMenu = document.getElementById('toolsSubMenu');
-
-        toolsNavTrigger.addEventListener('click', function() {
-            const isOpening = this.classList.toggle('menu-open');
-            toolsSubMenu.style.display = isOpening ? 'block' : 'none';
-        });
-
-        document.querySelectorAll('.sub-nav-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                const targetId = this.getAttribute('href').substring(1);
-                const targetEl = document.getElementById(targetId);
-                if (targetEl) {
-                    e.preventDefault();
-                    targetEl.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-
-        const toolSearchInput = document.getElementById('toolSearchInput');
-        const toolCards = document.querySelectorAll('.card-item');
-        const toolGroups = document.querySelectorAll('.tool-group');
-
-        toolSearchInput.addEventListener('input', function() {
-            const keyword = this.value.toLowerCase().trim();
-            toolCards.forEach(card => {
-                const title = card.querySelector('.card-title').textContent.toLowerCase();
-                card.style.display = title.includes(keyword) ? 'flex' : 'none';
-            });
-            toolGroups.forEach(group => {
-                const hasVisible = Array.from(group.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                group.style.display = hasVisible ? 'block' : 'none';
-            });
-        });
-
-        const tabItems = document.querySelectorAll('.tab-item');
-        tabItems.forEach(tab => {
-            tab.addEventListener('click', function() {
-                tabItems.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                const cat = this.dataset.category;
-                toolGroups.forEach(g => {
-                    g.style.display = (cat === 'all' || g.dataset.category === cat) ? 'block' : 'none';
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+                        <a href="#" class="card-item"><div class="card-info
