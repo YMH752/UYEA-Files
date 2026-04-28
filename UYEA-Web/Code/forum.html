@@ -106,21 +106,21 @@
 
         /* 基础高亮：黑底白字 */
         .nav-item.active {
-            /* [修改] background: #C9A15E → #FFD700
-               修改前：柔和暗金
-               修改后：明亮金，在亮蓝背景上更鲜艳、对比强烈
-               修改目的：蓝金经典搭配，提升视觉焦点 */
-            background: #FFD700 !important;
-            /* [修改] color: #37474F → #005BBB
-               修改前：深钢蓝色
-               修改后：与侧边栏背景一致的蓝色，形成反色效果
-               修改目的：统一色调，增强和谐感 */
-            color: #005BBB !important;
-            /* [修改] box-shadow: inset 2px 2px 5px rgba(26,32,80,0.15) !important → inset 2px 2px 5px rgba(0,0,0,0.1) !important
-               修改前：深色半透明内阴影
-               修改后：更通透的黑色阴影，适配明亮金背景
-               修改目的：增强立体感和清晰度 */
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1) !important;
+            /* [修改] background: #FFD700 → #FFF400
+               修改前：明亮金
+               修改后：鲜黄色，更亮眼的高亮色
+               修改目的：按用户要求更换高亮焦点色 */
+            background: #FFF400 !important;
+            /* [修改] color: #005BBB → #FFFFFF
+               修改前：蓝色文字，与背景呼应
+               修改后：纯白文字，确保在鲜黄背景上的高对比度
+               修改目的：统一全部侧边栏文字为白色 */
+            color: #FFFFFF !important;
+            /* [修改] box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1) !important → inset 2px 2px 5px rgba(0,0,0,0.15) !important
+               修改前：10%黑色内阴影
+               修改后：轻微加深至15%，增强立体感
+               修改目的：配合更亮的黄色背景，增加层次 */
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
         }
 
         /* ✅ 社区页隐藏箭头 */
@@ -156,40 +156,40 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        /* [修改] 底部按钮配色匹配 #005BBB 侧边栏 */
+        /* [修改] 底部按钮配色匹配新黄色且统一白字 */
         .login-btn {
-            /* [修改] background: #C9A15E → #FFD700
-               修改前：柔和暗金
-               修改后：明亮金，与激活项背景统一
-               修改目的：蓝金经典搭配，保持视觉一致性 */
-            background: #FFD700;
-            /* [修改] border: 1.5px solid rgba(255,255,255,0.10) → 1.5px solid rgba(255,255,255,0.12)
-               修改前：10%白色边框
-               修改后：12%白色边框，与分割线统一
-               修改目的：增强按钮边界感，适应亮蓝背景 */
-            border: 1.5px solid rgba(255,255,255,0.12);
-            /* [修改] color: #37474F → #005BBB
-               修改前：深钢蓝色
-               修改后：与侧边栏一致的蓝色，反色文字
-               修改目的：确保文字清晰，色调统一 */
-            color: #005BBB;
+            /* [修改] background: #FFD700 → #FFF400
+               修改前：明亮金
+               修改后：鲜黄色，与激活项背景统一
+               修改目的：按用户要求更换按钮色 */
+            background: #FFF400;
+            /* [修改] border: 1.5px solid rgba(255,255,255,0.12) → 1.5px solid rgba(255,255,255,0.15)
+               修改前：12%白色边框
+               修改后：15%白色边框，配合鲜黄背景增加清晰边界
+               修改目的：增强按钮边界感 */
+            border: 1.5px solid rgba(255,255,255,0.15);
+            /* [修改] color: #005BBB → #FFFFFF
+               修改前：蓝色文字
+               修改后：纯白文字，确保所有侧边栏文字为白色
+               修改目的：统一文字颜色 */
+            color: #FFFFFF;
         }
         .register-btn {
-            /* [修改] background: #C9A15E → #FFD700
-               修改前：柔和暗金
-               修改后：明亮金，与激活项背景统一
-               修改目的：蓝金经典搭配，保持视觉一致性 */
-            background: #FFD700;
-            /* [修改] border: 1.5px solid rgba(255,255,255,0.10) → 1.5px solid rgba(255,255,255,0.12)
-               修改前：10%白色边框
-               修改后：12%白色边框，与分割线统一
-               修改目的：增强按钮边界感，适应亮蓝背景 */
-            border: 1.5px solid rgba(255,255,255,0.12);
-            /* [修改] color: #37474F → #005BBB
-               修改前：深钢蓝色
-               修改后：与侧边栏一致的蓝色，反色文字
-               修改目的：确保文字清晰，色调统一 */
-            color: #005BBB;
+            /* [修改] background: #FFD700 → #FFF400
+               修改前：明亮金
+               修改后：鲜黄色，与激活项背景统一
+               修改目的：按用户要求更换按钮色 */
+            background: #FFF400;
+            /* [修改] border: 1.5px solid rgba(255,255,255,0.12) → 1.5px solid rgba(255,255,255,0.15)
+               修改前：12%白色边框
+               修改后：15%白色边框，配合鲜黄背景增加清晰边界
+               修改目的：增强按钮边界感 */
+            border: 1.5px solid rgba(255,255,255,0.15);
+            /* [修改] color: #005BBB → #FFFFFF
+               修改前：蓝色文字
+               修改后：纯白文字，确保所有侧边栏文字为白色
+               修改目的：统一文字颜色 */
+            color: #FFFFFF;
         }
 
         /* ── 社区页专属原始完整样式 ── */
