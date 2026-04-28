@@ -8,24 +8,16 @@
     <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
     <meta name="theme-color" content="#000000">
     
-    <!-- [修改] 补全 fonts.gstatic.com preconnect（字体文件实际所在域）
-         修改前：只预连接了 fonts.googleapis.com，字体文件域未预连接
-         修改后：两个域均预连接，减少字体加载延迟 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- [新增] GitHub Raw CDN dns-prefetch + preconnect，加速图标加载 -->
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
-    <!-- [修改] 字体改为异步加载，消除渲染阻塞
-         修改前：<link rel="stylesheet"> 同步加载，阻塞首屏渲染
-         修改后：media="print" onload 技巧异步加载，noscript保底 -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* ── 顶栏布局 (保持原样) ── */
         .top-bar {
             display: flex;
             align-items: center;
@@ -33,7 +25,7 @@
             padding: 0 20px;
             height: var(--header-h);
             background: var(--surface);
-            border-bottom: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
+            border-bottom: 1.5px solid rgba(0,0,0,0.08);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -53,7 +45,7 @@
             display: flex;
             align-items: center;
             background: var(--bg);
-            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
+            border: 1.5px solid rgba(0,0,0,0.08);
             border-radius: var(--radius-md);
             padding: 0 4px 0 0;
             height: 42px; 
@@ -61,15 +53,10 @@
             overflow: visible;
         }
 
-        .header-search-wrapper:focus-within { border-color: rgba(0,0,0,0.18); } /* [修改] var(--secondary) → rgba(0,0,0,0.18)，极淡灰略加深 */
+        .header-search-wrapper:focus-within { border-color: rgba(0,0,0,0.18); }
 
-        /* ── 下拉引擎样式 (保持原样) ── */
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
         
-        /* [修改] 搜索引擎下拉按钮背景色改为 #440003
-           修改前：background: var(--secondary) #000000
-           修改后：background: #440003（图一按钮颜色）
-           修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
         .engine-trigger-btn {
             display: flex;
             align-items: center;
@@ -94,7 +81,7 @@
             min-width: 80px; 
             width: 100%; 
             background: var(--surface);
-            border: 1.5px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
+            border: 1.5px solid rgba(0,0,0,0.08);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-md);
             z-index: 200;
@@ -108,7 +95,7 @@
             font-size: 13px;
             cursor: pointer;
             text-align: center;
-            border-bottom: 1px solid rgba(0,0,0,0.08); /* [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰边框 */
+            border-bottom: 1px solid rgba(0,0,0,0.08);
             transition: background 0.2s;
         }
         .engine-option-item:last-child { border-bottom: none; }
@@ -149,8 +136,6 @@
             border-radius: 2px;
         }
 
-        /* ── 优化后的侧边栏菜单样式 ── */
-        /* ── 侧边栏菜单：像素级对齐工具页 ── */
         .nav-menu {
             padding: 16px 12px;
         }
@@ -163,16 +148,10 @@
         .nav-item {
             display: flex;
             align-items: center;
-            /* ✅ 对齐工具页：高度与内边距 */
             padding: 14px 18px;
-            /* ✅ 对齐工具页：完全一致的间距 */
             margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
-            /* [修改] color: var(--text-primary) → #FFFFFF
-               修改前：使用全局主文字色
-               修改后：纯白，配合侧边栏字体全部白色指令
-               修改目的：统一侧边栏所有文字为白色 */
             color: #FFFFFF;
             font-weight: 600;
             transition: all 0.2s ease;
@@ -180,31 +159,24 @@
             border: none;
         }
 
-        /* ✅ 微调：补偿下半部分的累计误差 */
         .nav-menu > a:nth-of-type(2) {
             transform: translateY(5px);
         }
 
-        /* 基础高亮：黑底白字 */
         .nav-item.active {
-            /* [修改] background: #FFD700 → #FFF400
-               修改前：明亮金
-               修改后：鲜黄色，更亮眼的高亮色
-               修改目的：按用户要求更换高亮焦点色 */
-            background: #FFF400 !important;
+            /* [修改] background: #FFF400 → #FFDD50
+               修改前：鲜黄色
+               修改后：偏冷暗黄，降低红绿、增加蓝，更低调稳重
+               修改目的：按用户要求将黄色调冷、调暗 */
+            background: #FFDD50 !important;
             /* [修改] color: #005BBB → #FFFFFF
-               修改前：蓝色文字，与背景呼应
-               修改后：纯白文字，确保在鲜黄背景上的高对比度
+               修改前：蓝色文字
+               修改后：纯白文字，确保在黄背景上的高对比度
                修改目的：统一全部侧边栏文字为白色 */
             color: #FFFFFF !important;
-            /* [修改] box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1) !important → inset 2px 2px 5px rgba(0,0,0,0.15) !important
-               修改前：10%黑色内阴影
-               修改后：轻微加深至15%，增强立体感
-               修改目的：配合更亮的黄色背景，增加层次 */
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
         }
 
-        /* 展开态：铁锈红 */
         .nav-item.menu-open {
             background: var(--primary) !important;
             color: #FFFFFF !important;
@@ -223,9 +195,6 @@
         }
 
         .sub-menu {
-            /* [修改] display:none/block → max-height+opacity 过渡
-               修改前：display:none 优先级高于.open的max-height规则，列表永远不显示
-               修改后：默认max-height:0+opacity:0，.open时展开，彻底消除display冲突 */
             overflow: hidden;
             max-height: 0;
             opacity: 0;
@@ -243,15 +212,9 @@
 
         .sub-nav-item {
             display: block;
-            /* ✅ 对齐工具页：子项缩进与间距 */
             padding: 10px 16px 10px 56px;
             font-size: 14px;
-            /* ✅ 对齐工具页：800 极粗体 */
             font-weight: 800; 
-            /* [修改] color: var(--text-secondary) → #FFFFFF
-               修改前：使用全局次要文字色
-               修改后：纯白，配合侧边栏字体全部白色指令
-               修改目的：统一侧边栏所有文字为白色 */
             color: #FFFFFF;
             text-decoration: none;
             transition: all 0.2s ease;
@@ -261,16 +224,10 @@
             background: rgba(0,0,0,0.03);
         }
 
-        /* 底部按钮：完全对齐工具页 */
         .sidebar-footer {
             padding: 24px 16px;
-            /* [修改] border-top: 1px solid rgba(255,255,255,0.10) → 1px solid rgba(255,255,255,0.12)
-               修改前：10%白色分割线
-               修改后：12%白色分割线，略微增强分隔感
-               修改目的：适应亮蓝背景，确保边界清晰 */
             border-top: 1px solid rgba(255,255,255,0.12);
             margin-top: auto;
-            /* ✅ 微调：补偿下半部分的累计误差 */
             transform: translateY(5px);
         }
         .auth-buttons {
@@ -291,57 +248,34 @@
             transition: all 0.2s ease;
         }
 
-        /* [修改] 底部按钮配色匹配新黄色且统一白字 */
         .login-btn {
-            /* [修改] background: #FFD700 → #FFF400
-               修改前：明亮金
-               修改后：鲜黄色，与激活项背景统一
+            /* [修改] background: #FFF400 → #FFDD50
+               修改前：鲜黄色
+               修改后：偏冷暗黄，与激活项背景统一
                修改目的：按用户要求更换按钮色 */
-            background: #FFF400;
-            /* [修改] border: 1.5px solid rgba(255,255,255,0.12) → 1.5px solid rgba(255,255,255,0.15)
-               修改前：12%白色边框
-               修改后：15%白色边框，配合鲜黄背景增加清晰边界
-               修改目的：增强按钮边界感 */
+            background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
-            /* [修改] color: #005BBB → #FFFFFF
-               修改前：蓝色文字
-               修改后：纯白文字，确保所有侧边栏文字为白色
-               修改目的：统一文字颜色 */
             color: #FFFFFF;
         }
 
         .register-btn {
-            /* [修改] background: #FFD700 → #FFF400
-               修改前：明亮金
-               修改后：鲜黄色，与激活项背景统一
+            /* [修改] background: #FFF400 → #FFDD50
+               修改前：鲜黄色
+               修改后：偏冷暗黄，与激活项背景统一
                修改目的：按用户要求更换按钮色 */
-            background: #FFF400;
-            /* [修改] border: 1.5px solid rgba(255,255,255,0.12) → 1.5px solid rgba(255,255,255,0.15)
-               修改前：12%白色边框
-               修改后：15%白色边框，配合鲜黄背景增加清晰边界
-               修改目的：增强按钮边界感 */
+            background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
-            /* [修改] color: #005BBB → #FFFFFF
-               修改前：蓝色文字
-               修改后：纯白文字，确保所有侧边栏文字为白色
-               修改目的：统一文字颜色 */
             color: #FFFFFF;
         }
 
         @media (max-width: 1024px) {
             .menu-toggle { display: flex; }
-            /* [修改] padding-left: 50px → 56px
-               修改前：50px与汉堡按钮宽度未对齐，搜索栏左侧空间不足
-               修改后：56px与汉堡按钮实际占位对齐，搜索栏不被遮挡 */
             .top-bar { justify-content: flex-start; padding-left: 56px; }
             .search-container { max-width: none; }
         }
         
         @media (max-width: 768px) {
             .top-bar { padding: 0 12px; justify-content: space-between; }
-            /* [修改] margin-right: 40px → 52px
-               修改前：40px预留量在小屏下不足，搜索栏与汉堡菜单按钮重叠
-               修改后：52px确保任意屏幕宽度下搜索栏右侧与汉堡按钮不重叠 */
             .search-container { margin-right: 52px; }
         }
 
@@ -385,10 +319,6 @@
         </nav>
 
         <div class="sidebar-footer">
-            <!-- [修改] 替换旧主题按钮为圆角矩形滑动切换按钮
-                 修改前：文字+单emoji按钮（theme-toggle-btn）
-                 修改后：☀️/🌙双emoji圆角轨道+高亮滑块，丝滑滑动动画
-                 修改目的：按需求重新构建暗色模式切换按钮，三页统一 -->
             <div class="theme-toggle-wrapper">
                 <div class="theme-toggle" role="button" tabindex="0" aria-label="切换主题">
                     <div class="theme-slider"></div>
@@ -422,7 +352,7 @@
                             <div class="engine-option-item" data-value="baidu">百度</div>
                         </div>
                     </div>
-                    <div style="width:1.5px; height:20px; background:rgba(0,0,0,0.08); margin:0 4px;"></div> <!-- [修改] var(--border) → rgba(0,0,0,0.08)，极淡灰分隔线 -->
+                    <div style="width:1.5px; height:20px; background:rgba(0,0,0,0.08); margin:0 4px;"></div>
                     <input type="text" id="searchInput" placeholder="搜索关键词...">
                 </div>
             </div>
@@ -532,12 +462,8 @@
         </div>
     </main>
 
-    <!-- [修改] 加 defer，消除script阻塞HTML解析
-         修改前：同步加载，浏览器解析到此处暂停解析HTML
-         修改后：defer后台下载，HTML解析完成后才执行 -->
     <script src="script.js" defer></script>
     <script>
-        /* ── 严格保留原有脚本逻辑 ── */
         const allNavTrigger = document.getElementById('allNavTrigger');
         const subNavMenu    = document.getElementById('subNavMenu');
 
@@ -546,11 +472,7 @@
             if (isHomePage) {
                 const isOpening = !this.classList.contains('menu-open');
                 this.classList.toggle('menu-open', isOpening);
-                /* [修改] display切换 → .open class切换，配合CSS max-height+opacity过渡 */
                 subNavMenu.classList.toggle('open', isOpening);
-                /* [修改] this.classList.toggle('active', isOpening) → this.classList.add('active')
-                   修改前：点击切换 active 类，可能导致高亮无故消失
-                   修改后：始终保留 active 类，确保当前页导航项保持高亮 */
                 this.classList.add('active');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
@@ -630,10 +552,6 @@
                 }
             }
         });
-
-        // [修改] 移除 initIcons（favicon.splitbee.io）
-        // 修改前：与script.js的initializeIconLoading并存，对同一img元素双重加载图标
-        // 修改后：统一由script.js的initializeIconLoading处理，消除重复请求
     </script>
 </body>
 </html>
