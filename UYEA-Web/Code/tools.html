@@ -11,8 +11,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
+    <!-- [修改] 字体加载补充 Lilita One，用于标题 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
 
     <link rel="stylesheet" href="style.css">
     
@@ -100,10 +101,6 @@
             opacity: 1;
         }
 
-        /* [新增] 侧边栏导航圆点样式
-           修改前：使用 emoji 图标
-           修改后：统一使用暗红色圆点，色值 #440003
-           修改目的：按用户要求将菜单项图标全部替换为暗红色圆点 */
         .nav-icon {
             color: #440003;
             font-size: 14px;
@@ -231,20 +228,12 @@
         
         <nav class="nav-menu">
             <a href="index.html" class="nav-item">
-                <!-- [修改] 🏠 → ● 暗红色圆点
-                   修改前：🏠 emoji 图标
-                   修改后：暗红色圆点，色值 #440003
-                   修改目的：按用户要求将菜单项图标全部替换为暗红色圆点 -->
                 <span class="nav-icon">●</span>
                 <span class="nav-text">全部导航</span>
             </a>
 
             <div class="nav-group">
                 <div class="nav-item active nav-dropdown-trigger" id="toolsNavTrigger">
-                    <!-- [修改] 🛠️ → ● 暗红色圆点
-                       修改前：🛠️ emoji 图标
-                       修改后：暗红色圆点，色值 #440003
-                       修改目的：按用户要求将菜单项图标全部替换为暗红色圆点 -->
                     <span class="nav-icon">●</span>
                     <span class="nav-text">实用工具</span>
                     <span class="arrow-icon">▼</span>
@@ -258,10 +247,6 @@
             </div>
             
             <a href="forum.html" class="nav-item">
-                <!-- [修改] 💬 → ● 暗红色圆点
-                   修改前：💬 emoji 图标
-                   修改后：暗红色圆点，色值 #440003
-                   修改目的：按用户要求将菜单项图标全部替换为暗红色圆点 -->
                 <span class="nav-icon">●</span>
                 <span class="nav-text">悠野社区</span>
             </a>
