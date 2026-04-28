@@ -70,10 +70,6 @@
             margin: 6px 12px;
             border-radius: var(--radius-md);
             text-decoration: none;
-            /* [修改] color: #FFFFFF → #0000C0
-               修改前：纯白色文字
-               修改后：深蓝色文字
-               修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
             color: #0000C0;
             font-weight: 600;
             transition: all 0.2s ease;
@@ -82,15 +78,7 @@
         }
 
         .nav-item.active {
-            /* [修改] background: #FFF400 → #FFDD50
-               修改前：鲜黄色
-               修改后：偏冷暗黄
-               修改目的：按用户要求将黄色调冷、调暗 */
             background: #FFDD50 !important;
-            /* [修改] color: #FFFFFF → #0000C0
-               修改前：白色文字
-               修改后：深蓝色文字，确保在黄背景上的高对比度
-               修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
             color: #0000C0 !important;
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
         }
@@ -112,6 +100,15 @@
             opacity: 1;
         }
 
+        /* [新增] 侧边栏导航圆点样式
+           修改前：使用 emoji 图标
+           修改后：统一使用暗红色圆点，色值 #440003
+           修改目的：按用户要求将菜单项图标全部替换为暗红色圆点 */
+        .nav-icon {
+            color: #440003;
+            font-size: 14px;
+        }
+
         .sub-menu {
             display: none; 
             padding-bottom: 10px;
@@ -127,10 +124,6 @@
             padding: 10px 16px 10px 56px;
             font-size: 14px;
             font-weight: 800; 
-            /* [修改] color: #FFFFFF → #0000C0
-               修改前：纯白色文字
-               修改后：深蓝色文字
-               修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
             color: #0000C0;
             text-decoration: none;
             transition: all 0.2s ease;
@@ -162,29 +155,13 @@
             transition: all 0.2s ease;
         }
         .login-btn {
-            /* [修改] background: #FFF400 → #FFDD50
-               修改前：鲜黄色
-               修改后：偏冷暗黄
-               修改目的：按用户要求更换按钮色 */
             background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
-            /* [修改] color: #FFFFFF → #0000C0
-               修改前：白色文字
-               修改后：深蓝色文字
-               修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
             color: #0000C0;
         }
         .register-btn {
-            /* [修改] background: #FFF400 → #FFDD50
-               修改前：鲜黄色
-               修改后：偏冷暗黄
-               修改目的：按用户要求更换按钮色 */
             background: #FFDD50;
             border: 1.5px solid rgba(255,255,255,0.15);
-            /* [修改] color: #FFFFFF → #0000C0
-               修改前：白色文字
-               修改后：深蓝色文字
-               修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
             color: #0000C0;
         }
 
@@ -254,13 +231,21 @@
         
         <nav class="nav-menu">
             <a href="index.html" class="nav-item">
-                <span class="nav-icon">🏠</span>
+                <!-- [修改] 🏠 → ● 暗红色圆点
+                   修改前：🏠 emoji 图标
+                   修改后：暗红色圆点，色值 #440003
+                   修改目的：按用户要求将菜单项图标全部替换为暗红色圆点 -->
+                <span class="nav-icon">●</span>
                 <span class="nav-text">全部导航</span>
             </a>
 
             <div class="nav-group">
                 <div class="nav-item active nav-dropdown-trigger" id="toolsNavTrigger">
-                    <span class="nav-icon">🛠️</span>
+                    <!-- [修改] 🛠️ → ● 暗红色圆点
+                       修改前：🛠️ emoji 图标
+                       修改后：暗红色圆点，色值 #440003
+                       修改目的：按用户要求将菜单项图标全部替换为暗红色圆点 -->
+                    <span class="nav-icon">●</span>
                     <span class="nav-text">实用工具</span>
                     <span class="arrow-icon">▼</span>
                 </div>
@@ -273,7 +258,11 @@
             </div>
             
             <a href="forum.html" class="nav-item">
-                <span class="nav-icon">💬</span>
+                <!-- [修改] 💬 → ● 暗红色圆点
+                   修改前：💬 emoji 图标
+                   修改后：暗红色圆点，色值 #440003
+                   修改目的：按用户要求将菜单项图标全部替换为暗红色圆点 -->
+                <span class="nav-icon">●</span>
                 <span class="nav-text">悠野社区</span>
             </a>
         </nav>
