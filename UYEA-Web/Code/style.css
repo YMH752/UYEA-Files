@@ -1,292 +1,188 @@
 /* ============================================================
-   UYEA 悠野工作室 · style.css
-   风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
-   修改记录：根据要求将按钮及核心强调色改为黑色，增加对比度
+   UYEA 悠野工作室 · style.css (UH 风格版)
+   风格方案：美日复古风 + UH海报蓝侧边栏
+   修改记录：将侧边栏配色由米红方案改为 UH.html 中的海报蓝方案
    ============================================================ */
 
 :root {
-    /* [修改] 亮色模式配色替换为文艺复古方案（Literary Retro Palette）
-       修改前：暖黄底 #FFF2B2 + 橙 #ED5501 + 深褐红 #440003
-       修改后：温暖米色底 #F3E7D3 + 烧橙 #D96A1A + 深酒红 #5A0A0A
-       修改目的：按用户提供的文艺复古配色图执行亮色模式替换 */
-    --primary:        #D96A1A;    /* 烧橙 - 核心强调色 */
-    --primary-dark:   #5A0A0A;    /* 深酒红 - 用于悬浮点击 */
-    --primary-light:  #EAD7A1;    /* 暖黄 - 用于卡片悬浮背景 */
+    /* 亮色模式配色 - 文艺复古方案 */
+    --primary:        #D96A1A;    /* 烧橙 */
+    --primary-dark:   #5A0A0A;    /* 深酒红 */
+    --primary-light:  #EAD7A1;    /* 暖黄 */
     
-    /* [修改] 次要强调色（按钮主要色） */
-    --secondary:      #5A0A0A;    /* 深酒红 - 按钮色 */
+    --secondary:      #5A0A0A;    /* 按钮色 */
     
     --bg:             #F3E7D3;    /* 温暖米色 - 主背景 */
     --surface:        #E8D8BD;    /* 略深暖米 - 卡片底色 */
     --border:         #5A0A0A;    /* 深酒红 - 边框色 */
-    
-    --text-primary:   #3A2A22;    /* 近黑深棕 - 主文字 */
-    --text-secondary: #6E5A4A;    /* 中棕 - 次要文字 */
-    --text-muted:     #8C6A58;    /* 辅助棕 - 辅助文字 */
-    
-    /* [新增] 全局语义色
-       修改前：无错误/警告色变量
-       修改后：补充错误红与警告黄，完善交互反馈体系
-       修改目的：按用户要求增加额外颜色角色 */
-    --error:          #e11d48;    /* 错误/危险 */
-    --warning:        #fbbf24;    /* 警告/待处理 */
-    
-    /* 布局变量 */
-    --header-h:       64px;
-    --sidebar-w:      240px;
-    
-    /* 全局圆角 */
-    --radius-sm:      10px;       
-    --radius-md:      16px;       
-    --radius-lg:      20px;       
-    
-    --duration:       0.3s;
-    
-    /* 阴影 */
-    --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-md:      0 6px 16px rgba(0, 0, 0, 0.12);
+    --text-main:      #2A2A2A;    /* 深灰黑 - 主文字 */
+    --text-muted:     #6D6D6D;    /* 柔和灰 - 次要文字 */
+
+    /* [修改处] UH 风格专用变量 - 仅供侧边栏内部使用 */
+    --uh-bg:          #3040A0;    /* 海报蓝 */
+    --uh-text:        #FFFFFF;    /* 纯白文字 */
+    --uh-active-bg:   rgba(255, 255, 255, 0.15); /* 激活项背景 */
+
+    --sidebar-width:  260px;
+    --header-height:  70px;
+    --radius-lg:      24px;
+    --radius-md:      16px;
+    --radius-sm:      12px;
+    --shadow:         0 12px 40px rgba(0,0,0,0.08);
+    --transition:     all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 基础重置 */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* 暗色模式变量覆盖 */
+html[data-theme="dark"] {
+    --bg:             #121212;
+    --surface:        #1E1E1E;
+    --border:         #333333;
+    --text-main:      #E0E0E0;
+    --text-muted:     #A0A0A0;
+    --primary-light:  #2C2C2C;
+    /* 注：侧边栏在 UH 风格下保持深蓝，不随暗色模式大幅改变 */
+}
+
+/* 1. 基础重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
 
 body {
-    font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
-    background-color: var(--bg);
-    color: var(--text-primary);
-    overflow-x: hidden;
-    line-height: 1.6;
-}
-
-/* ── 侧边栏样式 ── */
-.sidebar {
-    width: var(--sidebar-w);
-    height: 100vh;
-    background: var(--surface);
-    border-right: 2px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
-    position: fixed;
-    top: 0; left: 0; z-index: 1000;
-    transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sidebar-header {
-    padding: 24px;
-    border-bottom: 1px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
-}
-
-.logo-group { display: flex; align-items: baseline; gap: 8px; }
-
-/* [修改] 移除立体字效果，仅保留单层颜色
-   修改前：text-shadow 多层叠加实现立体字
-   修改后：仅保留 color: #ED5501，无额外层
-   修改目的：按用户要求"立体字先不管"，且严格只使用图一提供的三个颜色 */
-.logo-text { 
-    position: relative;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
-    font-weight: 400; 
-    font-size: 26px; 
-    /* [修改] color: #ED5501 → #FFF2B2，配合多层text-shadow实现复古美式立体字
-       修改前：单色橙字无立体感
-       修改后：暖黄字色 + 橙色描边层 + 深褐红硬阴影投影层 */
-    color: #FFF2B2;
-    letter-spacing: 2px;
-    text-shadow:
-        1px 1px 0 #ED5501,
-        2px 2px 0 #ED5501,
-        3px 3px 0 #440003,
-        4px 4px 0 #440003,
-        5px 5px 0 #440003;
-}
-
-/* [新增] 暗色模式下 .logo-text 立体字配色
-   修改目的：暗色模式使用白字+霓虹绿描边+黑色投影，与暗色主题一致 */
-html[data-theme="dark"] .logo-text {
-    color: #FFFFFF;
-    text-shadow:
-        1px 1px 0 #39FF14,
-        2px 2px 0 #39FF14,
-        3px 3px 0 #0D0D0D,
-        4px 4px 0 #0D0D0D,
-        5px 5px 0 #0D0D0D;
-}
-
-.logo-sub { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
-
-.nav-menu { padding: 16px 12px; }
-.nav-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px; border-radius: var(--radius-sm);
-    color: var(--text-secondary); text-decoration: none;
-    margin-bottom: 6px; transition: all var(--duration);
-    font-weight: 500;
-}
-.nav-item:hover { background: var(--primary-light); color: var(--primary); }
-
-/* [修改] 激活态按钮背景色改为 #440003
-   修改前：background: var(--primary) #ED5501
-   修改后：background: #440003（图一按钮颜色）
-   修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
-.nav-item.active { background: #440003; color: #FFFFFF; }
-
-/* ── 主内容区 ── */
-.main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
-.content-wrapper { padding: 40px 32px; max-width: 1200px; margin: 0 auto; }
-
-/* ── 顶栏通用样式 ── */
-.top-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 24px; height: var(--header-h);
-    background: var(--surface);
-    border-bottom: 2px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
-    position: sticky; top: 0; z-index: 100;
-}
-
-.header-search-wrapper {
-    width: 100%; max-width: 600px;
-    display: flex; align-items: center;
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
     background: var(--bg);
-    border: 1.5px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
-    border-radius: var(--radius-lg);
+    color: var(--text-main);
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.3s;
 }
 
-/* [修改] 登录/注册按钮背景色改为 #440003
-   修改前：.login-btn 白底黑字，.register-btn 黑底白字
-   修改后：统一 #440003 深褐红底白字
-   修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
-.login-btn {
-    padding: 8px 20px;
+/* 2. 滚动条美化 */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { 
+    background: #CCC; 
+    border-radius: 10px;
+    border: 2px solid var(--bg);
+}
+
+/* 3. 响应式布局容器 */
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    padding: 40px;
+    max-width: 1400px;
+    transition: margin 0.4s;
+}
+
+/* 4. 移动端汉堡菜单按钮 */
+.hamburger-btn {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1100;
+    width: 50px;
+    height: 50px;
     background: #440003;
-    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(68,0,3,0.3);
+}
+
+/* 5. 侧边栏 (Sidebar) */
+/* [修改处] 修改背景为 UH 海报蓝，移除原边框 */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--uh-bg);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-right: none;
+}
+
+/* [修改处] Logo 区域改为白色文字，微调边框透明度 */
+.logo-area {
+    padding: 32px 24px;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--uh-text);
+    letter-spacing: 2px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-menu {
+    flex: 1;
+    padding: 24px 0;
+    overflow-y: auto;
+}
+
+/* [修改处] 导航项颜色与 UH 风格对齐 */
+.nav-item {
+    margin: 8px 12px;
+    padding: 14px 16px;
     border-radius: var(--radius-sm);
     text-decoration: none;
-    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
     font-weight: 600;
-    transition: opacity var(--duration);
-}
-
-.login-btn:hover {
-    opacity: 0.8;
-}
-
-/* ── 栏目与标题 ── */
-.section-header { margin-bottom: 24px; }
-.section-title {
-    font-size: 22px; font-weight: 700; color: var(--secondary);
-    position: relative; padding-left: 18px;
-}
-.section-title::before {
-    content: ""; position: absolute; left: 0; top: 15%; bottom: 15%;
-    width: 6px; background: var(--primary); border-radius: 3px;
-}
-
-/* ── 链接方块 ── */
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-}
-
-.card-item {
-    background: var(--surface);
-    border: 1.5px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
-    border-radius: var(--radius-md);
-    padding: 18px;
-    display: flex; align-items: center; gap: 14px;
-    text-decoration: none;
-    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.card-item:hover {
-    transform: translateY(-4px);
-    border-color: rgba(0,0,0,0.15); /* [修改] 恢复悬浮边框，极淡灰略加深 */
-    box-shadow: var(--shadow-md); /* [修改] border-color: var(--secondary) 已移除，悬浮改用加深阴影区分 */
-}
-
-.card-title {
-    font-size: 15px; font-weight: 600; color: var(--text-primary);
-}
-
-.card-icon {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    background: #f0f0f0;
-    overflow: hidden;
-}
-
-/* 响应式调整 */
-@media (max-width: 1024px) {
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); }
-    .main-content { margin-left: 0; }
-}
-
-/* ── [新增] 页面切换过渡（方案C：View Transitions API + 降级淡入淡出）──
-   降级方案：body默认透明，DOMContentLoaded后加.loaded淡入；离开时加.leaving淡出
-   原生方案：支持View Transitions API的浏览器使用::view-transition伪元素动画
-   动效：B方案，8px轻浮上入，cubic-bezier(0.4,0,0.2,1) 标准缓出，无弹性无震动 */
-/* [修改] 删除此注释下方的页面切换动画代码（body opacity过渡、loaded/leaving类、keyframes、view-transition伪元素）
-   修改前：包含body初始隐藏+loaded淡入+leaving淡出、uyea-slide-in/out关键帧、::view-transition-old/new动画
-   修改后：彻底移除所有页面切换动画CSS，恢复默认浏览器渲染
-   修改目的：按需求彻底去掉三个页面的切换动画 */
-/* ── [新增] 骨架屏占位（配合懒加载使用）──
-   图标未加载时显示灰色闪烁占位块，加载完成后由JS移除skeleton class
-   shimmer：从左到右扫光效果，视觉上表示"正在加载" */
-@keyframes shimmer {
-    0%   { background-position: -200% 0; }
-    100% { background-position:  200% 0; }
-}
-
-.card-icon.skeleton {
-    background: linear-gradient(
-        90deg,
-        var(--border) 25%,
-        var(--bg)     50%,
-        var(--border) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.4s ease-in-out infinite;
-    border-radius: 8px;
-}
-
-.card-icon.skeleton img {
-    opacity: 0;
-}
-
-/* ── [新增] 暗色模式变量覆盖 ──
-   [修改] 暗色模式配色全面替换为图二（暖系）
-   修改前：暗红提亮 #C45C4A + 深褐黑底 #1A1816
-   修改后：亮橙 #ed5501 + 深绿底 #1a4503
-   修改目的：按用户提供的图二配色方案执行暗色模式重构 */
-html[data-theme="dark"] {
-    --primary:        #39FF14;    /* [修改] #E8561A → #39FF14，霓虹绿 - 核心强调色 */
-    --primary-dark:   #28CC0A;    /* [修改] #C44510 → #28CC0A，绿色加深 - 用于悬浮点击 */
-    --primary-light:  #1A1A1A;    /* [修改] #163F9E → #1A1A1A，深黑 - 用于悬浮背景 */
-    --secondary:      #F5FF00;    /* [修改] #E8561A → #F5FF00，亮黄 - 按钮色 */
-    --bg:             #0D0D0D;    /* [修改] #1B4AB8 → #0D0D0D，近纯黑 - 页面背景 */
-    --surface:        #1A1A1A;    /* [修改] #163F9E → #1A1A1A，略浅黑 - 卡片色 */
-    --border:         #39FF14;    /* [修改] #163F9E → #39FF14，霓虹绿 - 边框色 */
-    --text-primary:   #FFFFFF;    /* [修改] #F5E2C0 → #FFFFFF，纯白 - 主要文字 */
-    --text-secondary: #CCCCCC;    /* [修改] #F5E2C0 → #CCCCCC，浅灰白 - 次要文字 */
-    --text-muted:     #888888;    /* [修改] #C8A878 → #888888，中灰 - 辅助文字 */
-}
-
-/* ── [新增] 主题切换按钮 ──
-   圆角矩形轨道，内含 ☀️/🌙 双 emoji，黑色/白色圆角滑块作为高亮选中背景
-   点击时滑块通过 transform: translateX(100%) 丝滑滑动，配合 opacity/filter 切换 emoji 状态 */
-.theme-toggle-wrapper {
-    width: 100%;
-    margin-bottom: 16px;
-}
-
-.theme-toggle {
-    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 42px;
-    background: var(--bg);
-    border: 1.5px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
+    gap: 12px;
+    transition: all 0.25s;
+}
+
+.nav-item i, .nav-item span {
+    pointer-events: none;
+}
+
+.nav-item:hover, .nav-item.active {
+    background: var(--uh-active-bg);
+    color: var(--uh-text);
+}
+
+/* [修改处] 侧边栏底部适配 UH 风格 */
+.sidebar-bottom {
+    margin-top: auto;
+    padding: 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.social-links {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.social-links a {
+    color: var(--uh-text);
+    opacity: 0.7;
+    font-size: 20px;
+    transition: opacity 0.3s;
+}
+
+.social-links a:hover {
+    opacity: 1;
+}
+
+/* [修改处] 主题切换容器适配深色背景 */
+.theme-switch-container {
+    position: relative;
+    display: flex;
+    background: rgba(0,0,0,0.15);
+    border: 1.5px solid rgba(255,255,255,0.2);
     border-radius: var(--radius-md);
     padding: 3px;
     user-select: none;
@@ -294,10 +190,7 @@ html[data-theme="dark"] {
     overflow: hidden;
 }
 
-/* [修改] 主题切换滑块背景色改为 #440003
-   修改前：background: #000000
-   修改后：background: #440003（图一按钮颜色）
-   修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
+/* 保持滑块逻辑，颜色使用原指定按钮色 */
 .theme-slider {
     position: absolute;
     top: 3px;
@@ -310,68 +203,167 @@ html[data-theme="dark"] {
     z-index: 1;
 }
 
-/* [修改] 暗色模式下滑块右移并反色
-   修改前：无此逻辑
-   修改后：html[data-theme="dark"] 时滑块 translateX(100%) 并变白底
-   修改目的：实现 ☀️→🌙 的丝滑滑动高亮切换效果 */
 html[data-theme="dark"] .theme-slider {
     transform: translateX(100%);
     background: #FFFFFF;
 }
 
-.theme-option {
-    position: relative;
-    z-index: 2;
+.theme-btn {
     flex: 1;
+    border: none;
+    background: none;
+    padding: 8px 0;
+    cursor: pointer;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    font-size: 18px;
-    transition: opacity 0.3s, filter 0.3s;
+    gap: 6px;
+    font-weight: 600;
+    color: var(--uh-text);
+    opacity: 0.6;
+    transition: opacity 0.3s;
 }
 
-/* 亮色模式默认：☀️ 彩色高亮，🌙 灰显 */
-.theme-option.light {
+.theme-btn.active {
     opacity: 1;
-    filter: grayscale(0);
 }
 
-.theme-option.dark {
-    opacity: 0.35;
-    filter: grayscale(1);
+html[data-theme="dark"] .theme-btn.active {
+    color: #000;
 }
 
-/* 暗色模式：☀️ 灰显，🌙 彩色高亮 */
-html[data-theme="dark"] .theme-option.light {
-    opacity: 0.35;
-    filter: grayscale(1);
+/* 6. 移动端遮罩 */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 999;
 }
 
-html[data-theme="dark"] .theme-option.dark {
-    opacity: 1;
-    filter: grayscale(0);
+/* 7. 搜索区域 (Search Section) */
+.search-section {
+    margin-bottom: 48px;
+    max-width: 800px;
 }
 
-/* [新增] UB配色方案：图1砖红侧边栏
-   修改位置：style.css末尾
-   修改前：无此段
-   修改后：.sidebar及其子元素使用UB配色变量
-   修改目的：将侧边栏底色改为#9B1315砖红，文字改为暖米，激活态米黄反转 */
-.sidebar {
-    --surface: #9B1315;
-    --text-primary: #F0E0C0;
-    --text-secondary: #F0E0C0;
-    --text-muted: #D8C8A0;
-    --primary: #E4A518;
-    --secondary: #EFE4AF;
-    --border: rgba(240, 224, 192, 0.15);
+.search-box {
+    display: flex;
     background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 8px;
+    box-shadow: 6px 6px 0 var(--border);
+    transition: transform 0.2s;
 }
-.sidebar .nav-item { color: var(--text-secondary); }
-.sidebar .nav-item:hover { background: rgba(228, 165, 24, 0.15); color: #EFE4AF; }
-.sidebar .nav-item.active { background: #EFE4AF !important; color: #9B1315 !important; box-shadow: inset 2px 2px 5px rgba(155, 19, 21, 0.1) !important; }
-.sidebar .login-btn, .sidebar .register-btn { background: #EFE4AF !important; color: #9B1315 !important; border-color: rgba(240, 224, 192, 0.2) !important; }
-.sidebar .sidebar-footer { border-top-color: rgba(240, 224, 192, 0.15); }
-.sidebar .theme-toggle { border-color: rgba(240, 224, 192, 0.2); }
-.sidebar .theme-slider { background: #EFE4AF; }
+
+.search-box:focus-within {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--border);
+}
+
+.engine-selector {
+    padding: 0 20px;
+    border: none;
+    background: none;
+    font-weight: 700;
+    color: var(--primary-dark);
+    cursor: pointer;
+    border-right: 2px solid rgba(90,10,10,0.1);
+    font-family: inherit;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    background: none;
+    padding: 16px 24px;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-main);
+    outline: none;
+}
+
+/* 8. 卡片网格 (Card Grid) */
+.section-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.card-item {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.card-item:hover {
+    transform: translateY(-5px);
+    background: var(--primary-light);
+    box-shadow: 0 10px 30px rgba(90,10,10,0.1);
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: white;
+    padding: 8px;
+    object-fit: contain;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.card-info {
+    flex: 1;
+}
+
+.card-title {
+    display: block;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+.card-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* 9. 响应式适配 */
+@media (max-width: 1024px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-left: 0; padding: 80px 24px 40px; }
+    .hamburger-btn { display: flex; align-items: center; justify-content: center; }
+    .sidebar-overlay.active { display: block; }
+}
+
+@media (max-width: 480px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .search-box { flex-direction: column; border-radius: var(--radius-md); }
+    .engine-selector { border-right: none; border-bottom: 2px solid rgba(90,10,10,0.1); padding: 12px; }
+}
