@@ -117,46 +117,40 @@ body {
         4px 4px 0 rgba(0,0,0,0.15);
 }
 
-/* [删除] 暗色模式下的 .logo-text 覆盖，确保亮色/暗色一致使用以上样式
-   修改前：暗色模式单独定义白色和霓虹绿投影
-   修改后：完全删除，让亮色规则同时应用于暗色模式
-   修改目的：保持标题在任何主题下都是醒目的金黄色红描边效果 */
-/* --- 原暗色模式 .logo-text 规则已移除 --- */
-
-/* [修改] .logo-sub color: #FFFFFF → #0000C0
-   修改前：纯白色文字
-   修改后：深蓝色文字
-   修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
-.logo-sub { font-size: 14px; color: #0000C0; font-weight: 500; }
+/* [修改] .logo-sub color: #0000C0 → #FFFFFF
+   修改前：深蓝色文字
+   修改后：纯白色文字
+   修改目的：按用户要求将侧边栏全部文字改为白色 */
+.logo-sub { font-size: 14px; color: #FFFFFF; font-weight: 500; }
 
 .nav-menu { padding: 16px 12px; }
 
 .nav-item {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 16px; border-radius: var(--radius-sm);
-    /* [修改] color: #FFFFFF → #0000C0
-       修改前：纯白色文字
-       修改后：深蓝色文字
-       修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
-    color: #0000C0;
+    /* [修改] color: #0000C0 → #FFFFFF
+       修改前：深蓝色文字
+       修改后：纯白色文字
+       修改目的：按用户要求将侧边栏全部文字改为白色 */
+    color: #FFFFFF;
     text-decoration: none;
     margin-bottom: 6px; transition: all var(--duration);
     font-weight: 500;
 }
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
 
-/* [修改] 激活态配色调整，文字统一为深蓝色 */
+/* [修改] 激活态配色调整，文字改为白色 */
 .nav-item.active {
     /* [修改] background: #FFF400 → #FFDD50
        修改前：鲜黄色
        修改后：偏冷暗黄，降低红绿、增加蓝，更低调稳重
        修改目的：按用户要求将黄色调冷、调暗 */
     background: #FFDD50;
-    /* [修改] color: #FFFFFF → #0000C0
-       修改前：白色文字
-       修改后：深蓝色文字，确保在黄背景上的高对比度
-       修改目的：按用户要求将侧边栏全部文字改为深蓝色 */
-    color: #0000C0;
+    /* [修改] color: #0000C0 → #FFFFFF
+       修改前：深蓝色文字
+       修改后：纯白色文字
+       修改目的：按用户要求将激活项文字也改为白色 */
+    color: #FFFFFF;
 }
 
 /* ── 主内容区 ── */
