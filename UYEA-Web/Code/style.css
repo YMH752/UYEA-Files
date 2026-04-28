@@ -70,16 +70,16 @@ body {
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
-    /* [修改] background: var(--surface) → #3040A0
-       修改前：跟随亮色模式表面色（暖米色）
-       修改后：固定深海报蓝作为侧边栏底色
-       修改目的：按配色表将侧边栏背景改为深海报蓝 */
-    background: #3040A0;
-    /* [修改] border-right: 2px solid rgba(0,0,0,0.08) → 2px solid rgba(216,216,232,0.15)
-       修改前：极淡灰边框
-       修改后：淡灰蓝分割线，15%透明度
-       修改目的：按配色表替换分割线颜色 */
-    border-right: 2px solid rgba(216,216,232,0.15);
+    /* [修改] background: #3040A0 → #37474F
+       修改前：深海报蓝
+       修改后：钢蓝，低饱和偏灰，与米灰背景协调不突兀
+       修改目的：降低侧边栏视觉跳跃感，整体配色更沉稳 */
+    background: #37474F;
+    /* [修改] border-right: 2px solid rgba(216,216,232,0.15) → 2px solid rgba(255,255,255,0.10)
+       修改前：淡灰蓝分割线
+       修改后：更低调的白色半透明，弱化边界
+       修改目的：配合钢蓝背景，分割线不抢眼 */
+    border-right: 2px solid rgba(255,255,255,0.10);
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
@@ -87,11 +87,11 @@ body {
 
 .sidebar-header {
     padding: 24px;
-    /* [修改] border-bottom: 1px solid rgba(0,0,0,0.08) → 1px solid rgba(216,216,232,0.15)
-       修改前：极淡灰分割线
-       修改后：淡灰蓝分割线，15%透明度
-       修改目的：按配色表替换分割线颜色 */
-    border-bottom: 1px solid rgba(216,216,232,0.15);
+    /* [修改] border-bottom: 1px solid rgba(216,216,232,0.15) → 1px solid rgba(255,255,255,0.10)
+       修改前：淡灰蓝分割线
+       修改后：更低调的白色半透明，弱化边界
+       修改目的：配合钢蓝背景，分割线不抢眼 */
+    border-bottom: 1px solid rgba(255,255,255,0.10);
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; }
@@ -153,21 +153,21 @@ html[data-theme="dark"] .logo-text {
 }
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
 
-/* [修改] 激活态按钮背景色改为 #440003 → #F0D040
-   修改前：background: #440003（图一按钮颜色）
-   修改后：background: #F0D040（姜黄色高亮焦点）
-   修改目的：按配色表将激活项背景改为姜黄色 */
+/* [修改] 激活态按钮背景色改为 #440003 → #F0D040 → #C9A15E
+   修改前：姜黄色高亮
+   修改后：柔和暗金，降低饱和度，与钢蓝侧边栏和谐共存
+   修改目的：按新配色方案调整高亮色，避免刺眼 */
 .nav-item.active {
-    /* [修改] background: #440003 → #F0D040
-       修改前：深褐红底色
-       修改后：姜黄色高亮焦点
-       修改目的：按配色表替换激活项背景 */
-    background: #F0D040;
-    /* [修改] color: #1A2050 → #FFFFFF
-       修改前：深色文字
-       修改后：纯白，配合侧边栏字体全部白色指令
-       修改目的：统一侧边栏所有文字为白色 */
-    color: #FFFFFF;
+    /* [修改] background: #F0D040 → #C9A15E
+       修改前：姜黄色高亮焦点
+       修改后：柔和暗金，降饱和、压亮度
+       修改目的：配合钢蓝背景，保持暖色点缀但不突兀 */
+    background: #C9A15E;
+    /* [修改] color: #FFFFFF → #37474F
+       修改前：白色文字
+       修改后：深钢蓝色，与激活背景形成清晰对比
+       修改目的：确保激活项文字可读性，同时与侧边栏底色呼应 */
+    color: #37474F;
 }
 
 /* ── 主内容区 ── */
