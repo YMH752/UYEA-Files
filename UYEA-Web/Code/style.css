@@ -181,6 +181,10 @@ body {
    修改前：未指定字体，使用系统默认
    修改后：Lilita One，字间距 1.5px，营造拉伸感
    修改目的：按用户要求统一字体样式，增强视觉冲击力 */
+/* [修改] 增加 .register-btn 全局样式定义
+   修改前：style.css 仅定义 .login-btn，未定义 .register-btn
+   修改后：补充 .register-btn 样式，与 .login-btn 完全一致
+   修改目的：确保全局样式层面两按钮等宽等高 */
 .login-btn {
     padding: 8px 20px;
     background: #440003;
@@ -194,7 +198,21 @@ body {
     transition: opacity var(--duration);
 }
 
-.login-btn:hover {
+.register-btn {
+    padding: 8px 20px;
+    background: #440003;
+    color: #FFFFFF;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    transition: opacity var(--duration);
+}
+
+.login-btn:hover,
+.register-btn:hover {
     opacity: 0.8;
 }
 
