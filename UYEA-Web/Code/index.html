@@ -187,21 +187,21 @@
 
         /* 基础高亮：黑底白字 */
         .nav-item.active {
-            /* [修改] background: #000000 !important → #F0D040 !important
-               修改前：纯黑底色
-               修改后：姜黄色高亮焦点
-               修改目的：按配色表将侧边栏激活项背景改为姜黄色 */
-            background: #F0D040 !important;
-            /* [修改] color: #1A2050 !important → #FFFFFF !important
-               修改前：深色文字
-               修改后：纯白，配合侧边栏字体全部白色指令
-               修改目的：统一侧边栏所有文字为白色 */
-            color: #FFFFFF !important;
-            /* [修改] box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1) !important → inset 2px 2px 5px rgba(26,32,80,0.15) !important
-               修改前：白色半透明内阴影
-               修改后：深色半透明内阴影，配合姜黄底色
-               修改目的：适配新激活项配色，保持视觉层次感 */
-            box-shadow: inset 2px 2px 5px rgba(26,32,80,0.15) !important;
+            /* [修改] background: #C9A15E → #FFD700
+               修改前：柔和暗金
+               修改后：明亮金，在亮蓝背景上更鲜艳、对比强烈
+               修改目的：蓝金经典搭配，提升视觉焦点 */
+            background: #FFD700 !important;
+            /* [修改] color: #37474F → #005BBB
+               修改前：深钢蓝色
+               修改后：与侧边栏背景一致的蓝色，形成反色效果
+               修改目的：统一色调，增强和谐感 */
+            color: #005BBB !important;
+            /* [修改] box-shadow: inset 2px 2px 5px rgba(26,32,80,0.15) !important → inset 2px 2px 5px rgba(0,0,0,0.1) !important
+               修改前：深色半透明内阴影
+               修改后：更通透的黑色阴影，适配明亮金背景
+               修改目的：增强立体感和清晰度 */
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1) !important;
         }
 
         /* 展开态：铁锈红 */
@@ -264,11 +264,11 @@
         /* 底部按钮：完全对齐工具页 */
         .sidebar-footer {
             padding: 24px 16px;
-            /* [修改] border-top: 1px solid rgba(0,0,0,0.08) → 1px solid rgba(216,216,232,0.15)
-               修改前：极淡灰分割线
-               修改后：淡灰蓝分割线，15%透明度
-               修改目的：按配色表替换分割线颜色 */
-            border-top: 1px solid rgba(216,216,232,0.15);
+            /* [修改] border-top: 1px solid rgba(255,255,255,0.10) → 1px solid rgba(255,255,255,0.12)
+               修改前：10%白色分割线
+               修改后：12%白色分割线，略微增强分隔感
+               修改目的：适应亮蓝背景，确保边界清晰 */
+            border-top: 1px solid rgba(255,255,255,0.12);
             margin-top: auto;
             /* ✅ 微调：补偿下半部分的累计误差 */
             transform: translateY(5px);
@@ -291,44 +291,41 @@
             transition: all 0.2s ease;
         }
 
-        /* [修改] 登录/注册按钮背景色改为 #440003
-           修改前：.login-btn 白底黑字，.register-btn 黑底白字
-           修改后：统一 #440003 深褐红底白字
-           修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
+        /* [修改] 底部按钮配色匹配 #005BBB 侧边栏 */
         .login-btn {
-            /* [修改] background: #440003 → #F0D040
-               修改前：深褐红底色
-               修改后：姜黄色CTA触发
-               修改目的：按配色表将底部按钮背景改为姜黄色 */
-            background: #F0D040;
-            /* [修改] border: 1.5px solid rgba(0,0,0,0.08) → 1.5px solid rgba(216,216,232,0.15)
-               修改前：极淡灰边框
-               修改后：淡灰蓝分割线，15%透明度
-               修改目的：按配色表替换分割线颜色 */
-            border: 1.5px solid rgba(216,216,232,0.15);
-            /* [修改] color: #1A2050 → #FFFFFF
-               修改前：深色文字
-               修改后：纯白，配合侧边栏字体全部白色指令
-               修改目的：统一侧边栏所有文字为白色 */
-            color: #FFFFFF;
+            /* [修改] background: #C9A15E → #FFD700
+               修改前：柔和暗金
+               修改后：明亮金，与激活项背景统一
+               修改目的：蓝金经典搭配，保持视觉一致性 */
+            background: #FFD700;
+            /* [修改] border: 1.5px solid rgba(255,255,255,0.10) → 1.5px solid rgba(255,255,255,0.12)
+               修改前：10%白色边框
+               修改后：12%白色边框，与分割线统一
+               修改目的：增强按钮边界感，适应亮蓝背景 */
+            border: 1.5px solid rgba(255,255,255,0.12);
+            /* [修改] color: #37474F → #005BBB
+               修改前：深钢蓝色
+               修改后：与侧边栏一致的蓝色，反色文字
+               修改目的：确保文字清晰，色调统一 */
+            color: #005BBB;
         }
 
         .register-btn {
-            /* [修改] background: #440003 → #F0D040
-               修改前：深褐红底色
-               修改后：姜黄色CTA触发
-               修改目的：按配色表将底部按钮背景改为姜黄色 */
-            background: #F0D040;
-            /* [修改] border: 1.5px solid rgba(0,0,0,0.08) → 1.5px solid rgba(216,216,232,0.15)
-               修改前：极淡灰边框
-               修改后：淡灰蓝分割线，15%透明度
-               修改目的：按配色表替换分割线颜色 */
-            border: 1.5px solid rgba(216,216,232,0.15);
-            /* [修改] color: #1A2050 → #FFFFFF
-               修改前：深色文字
-               修改后：纯白，配合侧边栏字体全部白色指令
-               修改目的：统一侧边栏所有文字为白色 */
-            color: #FFFFFF;
+            /* [修改] background: #C9A15E → #FFD700
+               修改前：柔和暗金
+               修改后：明亮金，与激活项背景统一
+               修改目的：蓝金经典搭配，保持视觉一致性 */
+            background: #FFD700;
+            /* [修改] border: 1.5px solid rgba(255,255,255,0.10) → 1.5px solid rgba(255,255,255,0.12)
+               修改前：10%白色边框
+               修改后：12%白色边框，与分割线统一
+               修改目的：增强按钮边界感，适应亮蓝背景 */
+            border: 1.5px solid rgba(255,255,255,0.12);
+            /* [修改] color: #37474F → #005BBB
+               修改前：深钢蓝色
+               修改后：与侧边栏一致的蓝色，反色文字
+               修改目的：确保文字清晰，色调统一 */
+            color: #005BBB;
         }
 
         @media (max-width: 1024px) {
