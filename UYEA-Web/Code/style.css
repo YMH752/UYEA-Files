@@ -1,65 +1,31 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
    风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
-   修改记录：根据要求将按钮及核心强调色改为黑色，增加对比度
    ============================================================ */
 
 :root {
-    /* [修改] 亮色模式配色替换为文艺复古方案（Literary Retro Palette）
-       修改前：暖黄底 #FFF2B2 + 橙 #ED5501 + 深褐红 #440003
-       修改后：温暖米色底 #F3E7D3 + 烧橙 #D96A1A + 深酒红 #5A0A0A
-       修改目的：按用户提供的文艺复古配色图执行亮色模式替换 */
-    --primary:        #D96A1A;    /* 烧橙 - 核心强调色 */
-    --primary-dark:   #5A0A0A;    /* 深酒红 - 用于悬浮点击 */
-    --primary-light:  #EAD7A1;    /* 暖黄 - 用于卡片悬浮背景 */
-    
-    /* [修改] 次要强调色（按钮主要色） */
-    --secondary:      #5A0A0A;    /* 深酒红 - 按钮色 */
-    
-    /* [修改] --bg: #F3E7D3 → #EFEBE4
-       修改前：温暖米色底
-       修改后：轻复古米灰，与侧边栏深蓝形成冷调配色
-       修改目的：主内容区背景统一为新配色 */
-    --bg:             #EFEBE4;    /* 轻复古米灰 - 主背景 */
-    /* [修改] --surface: #E8D8BD → #F5F3EF
-       修改前：略深暖米色
-       修改后：冷调浅灰，比背景 #EFEBE4 略亮
-       修改目的：卡片在米灰背景上形成微弱但清晰的前景层次 */
-    --surface:        #F5F3EF;    /* 冷调浅灰 - 卡片底色 */
-    --border:         #5A0A0A;    /* 深酒红 - 边框色 */
-    
-    --text-primary:   #3A2A22;    /* 近黑深棕 - 主文字 */
-    --text-secondary: #6E5A4A;    /* 中棕 - 次要文字 */
-    --text-muted:     #8C6A58;    /* 辅助棕 - 辅助文字 */
-    
-    /* [新增] 全局语义色
-       修改前：无错误/警告色变量
-       修改后：补充错误红与警告黄，完善交互反馈体系
-       修改目的：按用户要求增加额外颜色角色 */
-    --error:          #e11d48;    /* 错误/危险 */
-    --warning:        #fbbf24;    /* 警告/待处理 */
-    
-    /* 布局变量 */
+    --primary:        #D96A1A;
+    --primary-dark:   #5A0A0A;
+    --primary-light:  #EAD7A1;
+    --secondary:      #5A0A0A;
+    --bg:             #EFEBE4;
+    --surface:        #F5F3EF;
+    --border:         #5A0A0A;
+    --text-primary:   #3A2A22;
+    --text-secondary: #6E5A4A;
+    --text-muted:     #8C6A58;
+    --error:          #e11d48;
+    --warning:        #fbbf24;
     --header-h:       64px;
-    /* [修改] --sidebar-w: 200px → 210px
-       修改前：200px，部分环境可能触发文字换行
-       修改后：210px，确保菜单名始终单行完整显示
-       修改目的：按用户要求消除换行，同时尽量保持侧边栏较窄 */
     --sidebar-w:      210px;
-    
-    /* 全局圆角 */
-    --radius-sm:      10px;       
-    --radius-md:      16px;       
-    --radius-lg:      20px;       
-   
+    --radius-sm:      10px;
+    --radius-md:      16px;
+    --radius-lg:      20px;
     --duration:       0.3s;
-    
-    /* 阴影 */
     --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.08);
     --shadow-md:      0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* 基础重置 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -70,7 +36,7 @@ body {
     line-height: 1.6;
 }
 
-/* ── 侧边栏样式 ── */
+/* ── 侧边栏 ── */
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
@@ -79,7 +45,7 @@ body {
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
-    /* [修改] 启用 flex 列布局，让 margin-top: auto 生效，固定 footer 于底部 */
+    /* [新增] flex 列布局，底栏自动置底 */
     display: flex;
     flex-direction: column;
 }
@@ -87,7 +53,7 @@ body {
 .sidebar-header {
     padding: 24px;
     border-bottom: 1px solid rgba(255,255,255,0.12);
-    text-align: center; /* [修改] 使UYEA居中 */
+    text-align: center;
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; justify-content: center; }
@@ -114,7 +80,8 @@ body {
     padding: 12px 16px; border-radius: var(--radius-sm);
     color: #FFFFFF;
     text-decoration: none;
-    margin-bottom: 6px; transition: all var(--duration);
+    margin-bottom: 6px;
+    transition: all var(--duration);
     font-weight: 500;
 }
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
@@ -124,11 +91,11 @@ body {
     color: #11a0ff;
 }
 
-/* ── 侧边栏底部（绝对无额外偏移，由 flex 自动推到底部） */
+/* 侧边栏底部（由 flex 自动推到底） */
 .sidebar-footer {
     padding: 24px 16px;
     border-top: 1px solid rgba(255,255,255,0.12);
-    margin-top: auto;  /* 关键：flex 子项自动推至底部 */
+    margin-top: auto;
 }
 
 /* ── 主内容区 ── */
