@@ -265,16 +265,16 @@
         .login-btn span, .register-btn span {
             display: inline-block;
             transform: scaleX(1.15);
-            font-size: 16px;
-            /* [修改] 按钮文字效果改为蓝色标题风格
-               修改前：烧橙红 + 深红描边 + 多层深棕阴影
-               修改后：亮蓝(#11a0ff) + 深蓝描边(#003D7A) + 双层黑色立体阴影
-               修改目的：以标题效果为模板，替换为蓝色系，保持#11a0ff文字本体 */
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            /* [修改] 按钮文字效果改为蓝色标题风格并解决粘连
+               修改前：烧橙红 + 深红描边 + 多层深棕阴影，16px
+               修改后：18px，亮蓝(#11a0ff) + 1.5px深蓝描边 + 单层阴影，拉开字距
+               修改目的：在按钮内清晰显示立体文字，不超出范围 */
             color: #11a0ff;
-            -webkit-text-stroke: 2px #003D7A;
+            -webkit-text-stroke: 1.5px #003D7A;
             text-shadow:
-                2px 2px 0 rgba(0,0,0,0.3),
-                4px 4px 0 rgba(0,0,0,0.15);
+                2px 2px 0 rgba(0,0,0,0.25);
         }
 
         @media (max-width: 1024px) {
