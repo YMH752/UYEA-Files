@@ -265,15 +265,15 @@
             letter-spacing: 1.5px;
         }
 
-        /* [修改] 按钮文字使用 Luckiest Guy 字体
-           修改前：Bungee
-           修改后：Luckiest Guy，16px，#11a0ff，无描边阴影
-           修改目的：美式复古手绘风格，简洁清晰 */
+        /* [修改] 按钮文字改为 Impact 系统字体
+           修改前：Luckiest Guy（依赖 Google Fonts 在线加载）
+           修改后：Impact 本地字体，粗壮美式风格
+           修改目的：不依赖外部字体，稳定显示 */
         .login-btn span, .register-btn span {
             display: inline-block;
             font-size: 16px;
             color: #11a0ff;
-            font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         }
 
         @media (max-width: 1024px) {
