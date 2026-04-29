@@ -74,45 +74,26 @@ body {
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
-    /* [修改] background: #33495A → #005BBB
-       修改前：深石板蓝
-       修改后：亮蓝色，一眼即知的蓝色侧边栏
-       修改目的：按用户指定色值替换，提升蓝色辨识度 */
     background: #005BBB;
-    /* [修改] border-right: 2px solid rgba(255,255,255,0.10) → 2px solid rgba(255,255,255,0.12)
-       修改前：10%白色分割线
-       修改后：12%白色分割线，略微增强分隔感
-       修改目的：适应亮蓝背景，确保边界清晰 */
     border-right: 2px solid rgba(255,255,255,0.12);
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
+    /* [修改] 添加 flex 布局，确保 sidebar-footer 始终在底部
+       修改前：依赖 margin-top:auto 但非 flex 容器不生效，导致页面切换时 footer 位置偏移
+       修改后：flex 列布局，footer 自动吸附到底部，消除像素级跳动 */
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-header {
     padding: 24px;
-    /* [修改] border-bottom: 1px solid rgba(255,255,255,0.10) → 1px solid rgba(255,255,255,0.12)
-       修改前：10%白色分割线
-       修改后：12%白色分割线，略微增强分隔感
-       修改目的：适应亮蓝背景，确保边界清晰 */
     border-bottom: 1px solid rgba(255,255,255,0.12);
-    /* [修改] 使UYEA居中
-       修改前：无text-align，依赖flex布局
-       修改后：添加text-align: center，配合flex居中
-       修改目的：UYEA在侧边栏顶部居中显示 */
-    text-align: center;
+    text-align: center; /* [修改] 使UYEA居中 */
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; justify-content: center; }
 
-/* [修改] 标题改为 Lilita One 字体，金黄色文字，红色描边，立体阴影
-   修改前：白色文字加简单浮雕阴影
-   修改后：粗壮圆润的 Lilita One 字体，金黄色(#FFD700)，红色外描边(#D32F2F)，多层阴影增强立体感
-   修改目的：让标题更具冲击力，颜色明显与侧边栏区分，适配手机和电脑 */
-/* [修改] 放大UYEA字号并居中
-   修改前：26px
-   修改后：36px，紧贴居中显示
-   修改目的：突出UYEA标题，占满侧边栏宽度 */
 .logo-text { 
     position: relative;
     font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
@@ -126,10 +107,6 @@ body {
         4px 4px 0 rgba(0,0,0,0.15);
 }
 
-/* [修改] .logo-sub 隐藏（去掉悠野）
-   修改前：color: #FFFFFF，正常显示
-   修改后：display: none
-   修改目的：去掉侧边栏顶部的"悠野"文字 */
 .logo-sub { display: none; }
 
 .nav-menu { padding: 16px 12px; }
@@ -137,10 +114,6 @@ body {
 .nav-item {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 16px; border-radius: var(--radius-sm);
-    /* [修改] color: #0000C0 → #FFFFFF
-       修改前：深蓝色文字
-       修改后：纯白色文字
-       修改目的：按用户要求将侧边栏全部文字改为白色 */
     color: #FFFFFF;
     text-decoration: none;
     margin-bottom: 6px; transition: all var(--duration);
@@ -148,20 +121,8 @@ body {
 }
 .nav-item:hover { background: var(--primary-light); color: var(--primary); }
 
-/* [修改] 激活态配色调整，文字改为 #11a0ff
-   修改前：color: #FFFFFF
-   修改后：color: #11a0ff
-   修改目的：用户要求当前页面选中高亮文字颜色为 #11a0ff */
 .nav-item.active {
-    /* [修改] background: #FFF400 → #FFDD50
-       修改前：鲜黄色
-       修改后：偏冷暗黄，降低红绿、增加蓝，更低调稳重
-       修改目的：按用户要求将黄色调冷、调暗 */
     background: #FFDD50;
-    /* [修改] color: #FFFFFF → #11a0ff
-       修改前：白色文字
-       修改后：#11a0ff 亮蓝色
-       修改目的：激活项文字颜色改为 #11a0ff */
     color: #11a0ff;
 }
 
@@ -174,7 +135,7 @@ body {
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 24px; height: var(--header-h);
     background: var(--surface);
-    border-bottom: 2px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
+    border-bottom: 2px solid rgba(0,0,0,0.08);
     position: sticky; top: 0; z-index: 100;
 }
 
@@ -182,18 +143,10 @@ body {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
     background: var(--bg);
-    border: 1.5px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
+    border: 1.5px solid rgba(0,0,0,0.08);
     border-radius: var(--radius-lg);
 }
 
-/* [修改] 登录/注册按钮字体改为 Lilita One，字间距拉宽
-   修改前：未指定字体，使用系统默认
-   修改后：Lilita One，字间距 1.5px，营造拉伸感
-   修改目的：按用户要求统一字体样式，增强视觉冲击力 */
-/* [修改] 增加 .register-btn 全局样式定义
-   修改前：style.css 仅定义 .login-btn，未定义 .register-btn
-   修改后：补充 .register-btn 样式，与 .login-btn 完全一致
-   修改目的：确保全局样式层面两按钮等宽等高 */
 .login-btn {
     padding: 8px 20px;
     background: #440003;
@@ -245,7 +198,7 @@ body {
 
 .card-item {
     background: var(--surface);
-    border: 1.5px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
+    border: 1.5px solid rgba(0,0,0,0.08);
     border-radius: var(--radius-md);
     padding: 18px;
     display: flex; align-items: center; gap: 14px;
@@ -255,8 +208,8 @@ body {
 
 .card-item:hover {
     transform: translateY(-4px);
-    border-color: rgba(0,0,0,0.15); /* [修改] 恢复悬浮边框，极淡灰略加深 */
-    box-shadow: var(--shadow-md); /* [修改] border-color: var(--secondary) 已移除，悬浮改用加深阴影区分 */
+    border-color: rgba(0,0,0,0.15);
+    box-shadow: var(--shadow-md);
 }
 
 .card-title {
@@ -277,17 +230,6 @@ body {
     .main-content { margin-left: 0; }
 }
 
-/* ── [新增] 页面切换过渡（方案C：View Transitions API + 降级淡入淡出）──
-   降级方案：body默认透明，DOMContentLoaded后加.loaded淡入；离开时加.leaving淡出
-   原生方案：支持View Transitions API的浏览器使用::view-transition伪元素动画
-   动效：B方案，8px轻浮上入，cubic-bezier(0.4,0,0.2,1) 标准缓出，无弹性无震动 */
-/* [修改] 删除此注释下方的页面切换动画代码（body opacity过渡、loaded/leaving类、keyframes、view-transition伪元素）
-   修改前：包含body初始隐藏+loaded淡入+leaving淡出、uyea-slide-in/out关键帧、::view-transition-old/new动画
-   修改后：彻底移除所有页面切换动画CSS，恢复默认浏览器渲染
-   修改目的：按需求彻底去掉三个页面的切换动画 */
-/* ── [新增] 骨架屏占位（配合懒加载使用）──
-   图标未加载时显示灰色闪烁占位块，加载完成后由JS移除skeleton class
-   shimmer：从左到右扫光效果，视觉上表示"正在加载" */
 @keyframes shimmer {
     0%   { background-position: -200% 0; }
     100% { background-position:  200% 0; }
@@ -309,27 +251,19 @@ body {
     opacity: 0;
 }
 
-/* ── [新增] 暗色模式变量覆盖 ──
-   [修改] 暗色模式配色全面替换为图二（暖系）
-   修改前：暗红提亮 #C45C4A + 深褐黑底 #1A1816
-   修改后：亮橙 #ed5501 + 深绿底 #1a4503
-   修改目的：按用户提供的图二配色方案执行暗色模式重构 */
 html[data-theme="dark"] {
-    --primary:        #39FF14;    /* [修改] #E8561A → #39FF14，霓虹绿 - 核心强调色 */
-    --primary-dark:   #28CC0A;    /* [修改] #C44510 → #28CC0A，绿色加深 - 用于悬浮点击 */
-    --primary-light:  #1A1A1A;    /* [修改] #163F9E → #1A1A1A，深黑 - 用于悬浮背景 */
-    --secondary:      #F5FF00;    /* [修改] #E8561A → #F5FF00，亮黄 - 按钮色 */
-    --bg:             #0D0D0D;    /* [修改] #1B4AB8 → #0D0D0D，近纯黑 - 页面背景 */
-    --surface:        #1A1A1A;    /* [修改] #163F9E → #1A1A1A，略浅黑 - 卡片色 */
-    --border:         #39FF14;    /* [修改] #163F9E → #39FF14，霓虹绿 - 边框色 */
-    --text-primary:   #FFFFFF;    /* [修改] #F5E2C0 → #FFFFFF，纯白 - 主要文字 */
-    --text-secondary: #CCCCCC;    /* [修改] #F5E2C0 → #CCCCCC，浅灰白 - 次要文字 */
-    --text-muted:     #888888;    /* [修改] #C8A878 → #888888，中灰 - 辅助文字 */
+    --primary:        #39FF14;
+    --primary-dark:   #28CC0A;
+    --primary-light:  #1A1A1A;
+    --secondary:      #F5FF00;
+    --bg:             #0D0D0D;
+    --surface:        #1A1A1A;
+    --border:         #39FF14;
+    --text-primary:   #FFFFFF;
+    --text-secondary: #CCCCCC;
+    --text-muted:     #888888;
 }
 
-/* ── [新增] 主题切换按钮 ──
-   圆角矩形轨道，内含 ☀️/🌙 双 emoji，黑色/白色圆角滑块作为高亮选中背景
-   点击时滑块通过 transform: translateX(100%) 丝滑滑动，配合 opacity/filter 切换 emoji 状态 */
 .theme-toggle-wrapper {
     width: 100%;
     margin-bottom: 16px;
@@ -343,7 +277,7 @@ html[data-theme="dark"] {
     width: 100%;
     height: 42px;
     background: var(--bg);
-    border: 1.5px solid rgba(0,0,0,0.08); /* [修改] box-shadow → border，恢复边框改为极淡灰 */
+    border: 1.5px solid rgba(0,0,0,0.08);
     border-radius: var(--radius-md);
     padding: 3px;
     user-select: none;
@@ -351,10 +285,6 @@ html[data-theme="dark"] {
     overflow: hidden;
 }
 
-/* [修改] 主题切换滑块背景色改为 #440003
-   修改前：background: #000000
-   修改后：background: #440003（图一按钮颜色）
-   修改目的：按用户要求所有按钮统一使用图一提供的 #440003 */
 .theme-slider {
     position: absolute;
     top: 3px;
@@ -367,10 +297,6 @@ html[data-theme="dark"] {
     z-index: 1;
 }
 
-/* [修改] 暗色模式下滑块右移并反色
-   修改前：无此逻辑
-   修改后：html[data-theme="dark"] 时滑块 translateX(100%) 并变白底
-   修改目的：实现 ☀️→🌙 的丝滑滑动高亮切换效果 */
 html[data-theme="dark"] .theme-slider {
     transform: translateX(100%);
     background: #FFFFFF;
@@ -388,7 +314,6 @@ html[data-theme="dark"] .theme-slider {
     transition: opacity 0.3s, filter 0.3s;
 }
 
-/* 亮色模式默认：☀️ 彩色高亮，🌙 灰显 */
 .theme-option.light {
     opacity: 1;
     filter: grayscale(0);
@@ -399,7 +324,6 @@ html[data-theme="dark"] .theme-slider {
     filter: grayscale(1);
 }
 
-/* 暗色模式：☀️ 灰显，🌙 彩色高亮 */
 html[data-theme="dark"] .theme-option.light {
     opacity: 0.35;
     filter: grayscale(1);
