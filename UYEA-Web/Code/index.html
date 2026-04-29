@@ -12,12 +12,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
-    <!-- [修改] 添加 Bungee 字体
-       修改前：仅加载 Inter + Lilita One + Noto Sans SC
-       修改后：增加 Bungee 字体链接
-       修改目的：按钮使用有趣的 Bungee 字体 -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
+    <!-- [修改] 按钮字体改为 Luckiest Guy
+       修改前：Bungee
+       修改后：Luckiest Guy，美式手绘海报风格 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     
     <link rel="stylesheet" href="style.css">
     
@@ -266,10 +265,10 @@
             letter-spacing: 1.5px;
         }
 
-        /* [修改] 按钮文字换 Bungee 字体，去掉所有效果，统一字号16px
-           修改前：烧橙红 + 深红描边 + 多层深棕阴影，16px
-           修改后：Bungee 字体，仅保留 #11a0ff 颜色和 scaleX(1.15) 拉伸，16px 不换行
-           修改目的：简洁有趣的按钮文字，清晰可读 */
+        /* [修改] 按钮文字使用 Luckiest Guy 字体
+           修改前：Bungee
+           修改后：Luckiest Guy，16px，#11a0ff，无描边阴影
+           修改目的：美式复古手绘风格，简洁清晰 */
         .login-btn span, .register-btn span {
             display: inline-block;
             font-size: 16px;
