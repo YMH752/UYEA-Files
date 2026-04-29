@@ -174,6 +174,14 @@ body {
     transform: translateY(5px) !important;
 }
 
+/* [修改] 统一侧边栏底部区域（主题切换+登录按钮）间距
+   修改前：forum.html .sidebar-footer translateY(12.5px)，与菜单项 5px 不一致导致跳动
+   修改后：覆盖为 5px，与菜单项对齐
+   修改目的：消除页面切换时底部登录区域上下跳动 */
+.sidebar-footer {
+    transform: translateY(5px) !important;
+}
+
 /* ── 主内容区 ── */
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
 .content-wrapper { padding: 40px 32px; max-width: 1200px; margin: 0 auto; }
