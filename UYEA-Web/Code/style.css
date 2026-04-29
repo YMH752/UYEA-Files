@@ -165,23 +165,6 @@ body {
     color: #11a0ff;
 }
 
-/* [修改] 统一侧边栏底部间距
-   修改前：forum.html translateY(12.5px)，index.html translateY(5px)，tools.html 无偏移
-   修改后：全部统一为 5px，保持底部间距一致
-   修改目的：在保留各页面原有样式的前提下，消除页面切换时按钮间距跳变 */
-.nav-menu > a:nth-of-type(2),
-.nav-menu > a:nth-of-type(3) {
-    transform: translateY(5px) !important;
-}
-
-/* [修改] 统一侧边栏底部区域（主题切换+登录按钮）间距
-   修改前：forum.html .sidebar-footer translateY(12.5px)，与菜单项 5px 不一致导致跳动
-   修改后：覆盖为 5px，与菜单项对齐
-   修改目的：消除页面切换时底部登录区域上下跳动 */
-.sidebar-footer {
-    transform: translateY(5px) !important;
-}
-
 /* ── 主内容区 ── */
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
 .content-wrapper { padding: 40px 32px; max-width: 1200px; margin: 0 auto; }
