@@ -12,12 +12,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
-    <!-- [修改] 添加 Bungee 字体
-       修改前：仅加载 Inter + Lilita One + Noto Sans SC
-       修改后：增加 Bungee 字体链接
-       修改目的：按钮使用有趣的 Bungee 字体 -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     
     <link rel="stylesheet" href="style.css">
     
@@ -74,14 +70,6 @@
             border: none;
         }
 
-        .nav-menu > a:nth-of-type(2) {
-            transform: translateY(12.5px);
-        }
-        
-        .nav-menu > a:nth-of-type(3) {
-            transform: translateY(12.5px);
-        }
-
         .nav-item.active {
             background: #FFDD50 !important;
             /* [修改] color: #FFFFFF → #11a0ff
@@ -104,7 +92,6 @@
             padding: 24px 16px;
             border-top: 1px solid rgba(255,255,255,0.12);
             margin-top: auto;
-            transform: translateY(12.5px);
         }
         .auth-buttons {
             display: flex;
@@ -137,15 +124,15 @@
             letter-spacing: 1.5px;
         }
 
-        /* [修改] 按钮文字换 Bungee 字体，去掉所有效果，统一字号16px
-           修改前：Lilita One，蓝色描边加阴影，各页面字号不一致
-           修改后：Bungee 字体，仅保留 #11a0ff 颜色和 scaleX(1.15) 拉伸，16px 不换行
-           修改目的：简洁有趣的按钮文字，清晰可读 */
+        /* [修改] 按钮文字使用 Luckiest Guy 字体
+           修改前：Bungee
+           修改后：Luckiest Guy，16px，#11a0ff，无描边阴影
+           修改目的：美式复古手绘风格，简洁清晰 */
         .login-btn span, .register-btn span {
             display: inline-block;
             font-size: 16px;
             color: #11a0ff;
-            font-family: 'Bungee', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         }
 
         .forum-toolbar {
@@ -256,14 +243,14 @@
         <nav class="nav-menu">
             <a href="index.html" class="nav-item">
                 <span class="nav-icon">●</span>
-                <!-- [修改] “全部导航” → “网站导航” -->
+                <!-- [修改] "全部导航" → "网站导航" -->
                 <span class="nav-text">网站导航</span>
                 <span class="arrow-icon">▼</span>
             </a>
 
             <a href="tools.html" class="nav-item">
                 <span class="nav-icon">●</span>
-                <!-- [修改] “实用工具” → “线上工具” -->
+                <!-- [修改] "实用工具" → "线上工具" -->
                 <span class="nav-text">线上工具</span>
             </a>
             
