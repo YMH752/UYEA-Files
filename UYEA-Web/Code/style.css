@@ -129,7 +129,7 @@ body {
 /* [修改] .logo-sub 隐藏（去掉悠野）
    修改前：color: #FFFFFF，正常显示
    修改后：display: none
-   修改目的：去掉侧边栏顶部的“悠野”文字 */
+   修改目的：去掉侧边栏顶部的"悠野"文字 */
 .logo-sub { display: none; }
 
 .nav-menu { padding: 16px 12px; }
@@ -163,6 +163,15 @@ body {
        修改后：#11a0ff 亮蓝色
        修改目的：激活项文字颜色改为 #11a0ff */
     color: #11a0ff;
+}
+
+/* [修改] 统一侧边栏底部间距
+   修改前：forum.html translateY(12.5px)，index.html translateY(5px)，tools.html 无偏移
+   修改后：全部统一为 5px，保持底部间距一致
+   修改目的：在保留各页面原有样式的前提下，消除页面切换时按钮间距跳变 */
+.nav-menu > a:nth-of-type(2),
+.nav-menu > a:nth-of-type(3) {
+    transform: translateY(5px) !important;
 }
 
 /* ── 主内容区 ── */
