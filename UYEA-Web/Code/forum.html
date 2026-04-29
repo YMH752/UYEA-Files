@@ -12,8 +12,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
+    <!-- [修改] 添加 Bungee 字体
+       修改前：仅加载 Inter + Lilita One + Noto Sans SC
+       修改后：增加 Bungee 字体链接
+       修改目的：按钮使用有趣的 Bungee 字体 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     
     <link rel="stylesheet" href="style.css">
     
@@ -133,19 +137,16 @@
             letter-spacing: 1.5px;
         }
 
+        /* [修改] 按钮文字换 Bungee 字体，去掉所有效果，统一字号16px
+           修改前：Lilita One，蓝色描边加阴影，各页面字号不一致
+           修改后：Bungee 字体，仅保留 #11a0ff 颜色和 scaleX(1.15) 拉伸，16px 不换行
+           修改目的：简洁有趣的按钮文字，清晰可读 */
         .login-btn span, .register-btn span {
             display: inline-block;
             transform: scaleX(1.15);
-            font-size: 18px;
-            letter-spacing: 0.5px;
-            /* [修改] 按钮文字效果改为蓝色标题风格并解决粘连
-               修改前：蓝色多层阴影扩散光晕，13px继承字体
-               修改后：18px，亮蓝(#11a0ff) + 1.5px深蓝描边 + 单层阴影，拉开字距
-               修改目的：在按钮内清晰显示立体文字，不超出范围 */
+            font-size: 16px;
             color: #11a0ff;
-            -webkit-text-stroke: 1.5px #003D7A;
-            text-shadow:
-                2px 2px 0 rgba(0,0,0,0.25);
+            font-family: 'Bungee', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         }
 
         .forum-toolbar {
