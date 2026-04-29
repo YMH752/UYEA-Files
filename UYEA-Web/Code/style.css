@@ -96,19 +96,28 @@ body {
        修改后：12%白色分割线，略微增强分隔感
        修改目的：适应亮蓝背景，确保边界清晰 */
     border-bottom: 1px solid rgba(255,255,255,0.12);
+    /* [修改] 使UYEA居中
+       修改前：无text-align，依赖flex布局
+       修改后：添加text-align: center，配合flex居中
+       修改目的：UYEA在侧边栏顶部居中显示 */
+    text-align: center;
 }
 
-.logo-group { display: flex; align-items: baseline; gap: 8px; }
+.logo-group { display: flex; align-items: baseline; gap: 8px; justify-content: center; }
 
 /* [修改] 标题改为 Lilita One 字体，金黄色文字，红色描边，立体阴影
    修改前：白色文字加简单浮雕阴影
    修改后：粗壮圆润的 Lilita One 字体，金黄色(#FFD700)，红色外描边(#D32F2F)，多层阴影增强立体感
    修改目的：让标题更具冲击力，颜色明显与侧边栏区分，适配手机和电脑 */
+/* [修改] 放大UYEA字号并居中
+   修改前：26px
+   修改后：36px，紧贴居中显示
+   修改目的：突出UYEA标题，占满侧边栏宽度 */
 .logo-text { 
     position: relative;
     font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
     font-weight: 400; 
-    font-size: 26px; 
+    font-size: 36px; 
     color: #FFD700;
     letter-spacing: 2px;
     -webkit-text-stroke: 2px #D32F2F;
@@ -117,11 +126,11 @@ body {
         4px 4px 0 rgba(0,0,0,0.15);
 }
 
-/* [修改] .logo-sub color: #0000C0 → #FFFFFF
-   修改前：深蓝色文字
-   修改后：纯白色文字
-   修改目的：按用户要求将侧边栏全部文字改为白色 */
-.logo-sub { font-size: 14px; color: #FFFFFF; font-weight: 500; }
+/* [修改] .logo-sub 隐藏（去掉悠野）
+   修改前：color: #FFFFFF，正常显示
+   修改后：display: none
+   修改目的：去掉侧边栏顶部的“悠野”文字 */
+.logo-sub { display: none; }
 
 .nav-menu { padding: 16px 12px; }
 
