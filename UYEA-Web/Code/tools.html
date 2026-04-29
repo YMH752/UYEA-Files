@@ -171,26 +171,15 @@
         .login-btn span, .register-btn span {
             display: inline-block;
             transform: scaleX(1.15);
-            /* [修改] 添加蓝色多层阴影拉伸效果
-               修改前：仅有 transform: scaleX(1.15) 拉伸
-               修改后：增加 text-shadow 多层蓝色阴影向四周扩散，形成描边光晕
-               修改目的：实现蓝色描边扩散效果，在#FFDD50黄色背景上清晰显示 */
+            /* [修改] 按钮文字效果改为蓝色标题风格
+               修改前：蓝色多层阴影扩散光晕
+               修改后：亮蓝(#11a0ff) + 深蓝描边(#003D7A) + 双层黑色立体阴影
+               修改目的：以标题效果为模板，替换为蓝色系，保持#11a0ff文字本体 */
+            color: #11a0ff;
+            -webkit-text-stroke: 2px #003D7A;
             text-shadow:
-                /* 第1层：紧贴文字描边 */
-                -1px -1px 0 rgba(0, 136, 255, 0.9),
-                1px -1px 0 rgba(0, 136, 255, 0.9),
-                -1px 1px 0 rgba(0, 136, 255, 0.9),
-                1px 1px 0 rgba(0, 136, 255, 0.9),
-                /* 第2层：中层扩散 */
-                -2px -2px 2px rgba(0, 136, 255, 0.7),
-                2px -2px 2px rgba(0, 136, 255, 0.7),
-                -2px 2px 2px rgba(0, 136, 255, 0.7),
-                2px 2px 2px rgba(0, 136, 255, 0.7),
-                /* 第3层：外层光晕 */
-                -3px 0 4px rgba(0, 136, 255, 0.5),
-                3px 0 4px rgba(0, 136, 255, 0.5),
-                0 -3px 4px rgba(0, 136, 255, 0.5),
-                0 3px 4px rgba(0, 136, 255, 0.5);
+                2px 2px 0 rgba(0,0,0,0.3),
+                4px 4px 0 rgba(0,0,0,0.15);
         }
 
         .tool-search-bar {
