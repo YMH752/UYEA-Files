@@ -25,15 +25,15 @@
         .search-container { width: 100%; max-width: 600px; display: flex; justify-content: center; }
         .header-search-wrapper {
             width: 100%; display: flex; align-items: center;
-            background: #f1f5f9; border: 1px solid #e2e8f0;   /* [修改] 背景/边框 */
+            background: #faf8f3; border: 1px solid #e5ded3;   /* [修改] 暖色 */
             border-radius: var(--radius-md); padding: 0 4px 0 0; height: 42px;
             transition: border-color 0.2s; overflow: visible;
         }
-        .header-search-wrapper:focus-within { border-color: #1e5fae; background: #ffffff; } /* [修改] focus */
+        .header-search-wrapper:focus-within { border-color: #2f4f6f; background: #ffffff; }
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
         .engine-trigger-btn {
             display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 42px;
-            background: #1e5fae; color: #FFFFFF; border: none;     /* [修改] 主色 */
+            background: #2f4f6f; color: #FFFFFF; border: none;     /* [修改] 深蓝触发按钮 */
             border-radius: var(--radius-md) 0 0 var(--radius-md);
             font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
         }
@@ -71,14 +71,14 @@
             text-decoration: none; color: #FFFFFF; font-weight: 600;
             transition: all 0.2s ease; cursor: pointer; border: none;
         }
-        /* [修改] active/menu-open 渐变 */
+        /* [修改] active/menu-open 半透 + 金边 */
         .nav-item.active {
-            background: linear-gradient(135deg, #3b82f6, #1e5fae) !important;
-            color: #FFFFFF !important;
+            background: rgba(255,255,255,0.12) !important; color: #FFFFFF !important;
+            border-left: 3px solid #e8b84a !important;
         }
         .nav-item.menu-open {
-            background: linear-gradient(135deg, #3b82f6, #1e5fae) !important;
-            color: #FFFFFF !important;
+            background: rgba(255,255,255,0.12) !important; color: #FFFFFF !important;
+            border-left: 3px solid #e8b84a !important;
         }
         .arrow-icon {
             font-size: 10px; margin-left: auto;
@@ -96,14 +96,14 @@
             height: 42px; border-radius: var(--radius-md); font-size: 13px;
             font-weight: 600; cursor: pointer; transition: all 0.2s ease;
         }
-        /* [修改] 登录/注册按钮主色 */
+        /* [修改] 复古红登录/注册按钮 */
         .login-btn, .register-btn {
-            background: #1e5fae; border: none;
+            background: #d0573b; border: none;
             color: #FFFFFF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
             font-weight: 700; letter-spacing: 1.5px;
         }
         .login-btn span, .register-btn span {
-            display: inline-block; font-size: 16px; color: #FFFFFF; /* [修改] 白色文字 */
+            display: inline-block; font-size: 16px; color: #FFFFFF;
             font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         }
         @media (max-width: 1024px) {
@@ -120,48 +120,35 @@
     </style>
 </head>
 <body>
-    <!-- ✅ 侧边栏 - 完全重写，彻底稳定 -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
-        <!-- ✅ SIDEBAR 头部：LOGO区域 -->
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
                 <span class="logo-sub">悠野</span>
             </div>
         </div>
-
-        <!-- ✅ SIDEBAR 导航菜单 -->
         <nav class="nav-menu">
-            <!-- ✅ 导航项1：网站导航（可展开） -->
             <a class="nav-item active nav-dropdown-trigger" id="allNavTrigger">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">网站导航</span>
                 <span class="arrow-icon">▼</span>
             </a>
-            <!-- ✅ 展开菜单：三个子项 -->
             <div class="sub-menu" id="subNavMenu">
                 <a href="#ai-section" class="sub-nav-item">Ai</a>
                 <a href="#life-section" class="sub-nav-item">生活</a>
                 <a href="#tool-section" class="sub-nav-item">工具</a>
             </div>
-
-            <!-- ✅ 导航项2：线上工具 -->
             <a href="tools.html" class="nav-item">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">线上工具</span>
             </a>
-
-            <!-- ✅ 导航项3：悠野社区 -->
             <a href="forum.html" class="nav-item">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">悠野社区</span>
             </a>
         </nav>
-
-        <!-- ✅ SIDEBAR 底部：主题切换 + 登录注册 -->
         <div class="sidebar-footer">
-            <!-- ✅ 主题切换按钮 -->
             <div class="theme-toggle-wrapper">
                 <div class="theme-toggle" role="button" tabindex="0" aria-label="切换主题">
                     <div class="theme-slider"></div>
@@ -169,7 +156,6 @@
                     <span class="theme-option dark">🌙</span>
                 </div>
             </div>
-            <!-- ✅ 登录 / 注册按钮 -->
             <div class="auth-buttons">
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')"><span>登录</span></div>
                 <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')"><span>注册</span></div>
