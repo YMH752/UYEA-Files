@@ -31,73 +31,60 @@
             border-radius: var(--radius-md); text-decoration: none; color: #FFFFFF;
             font-weight: 600; transition: all 0.2s ease; cursor: pointer; border: none;
         }
-        /* [修改] active/menu-open 渐变 */
+        /* [修改] active/menu-open 半透 + 金边 */
         .nav-item.active {
-            background: linear-gradient(135deg, #3b82f6, #1e5fae) !important;
-            color: #FFFFFF !important;
+            background: rgba(255,255,255,0.12) !important; color: #FFFFFF !important;
+            border-left: 3px solid #e8b84a !important;
         }
-        .nav-item.menu-open { background: linear-gradient(135deg, #3b82f6, #1e5fae) !important; color: #FFFFFF !important; }
+        .nav-item.menu-open { background: rgba(255,255,255,0.12) !important; color: #FFFFFF !important; border-left: 3px solid #e8b84a !important; }
         .arrow-icon { font-size: 10px; margin-left: auto; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6; }
         .nav-item.menu-open .arrow-icon { transform: rotate(180deg); opacity: 1; }
         .nav-icon { color: #FFFFFF; font-size: 14px; }
         .sidebar-footer { padding: 24px 16px; border-top: 1px solid rgba(255,255,255,0.12); }
         .auth-buttons { display: flex; gap: 12px; }
         .auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; height: 42px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-        /* [修改] 登录/注册按钮主色 */
-        .login-btn, .register-btn { background: #1e5fae; border: none; color: #FFFFFF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-weight: 700; letter-spacing: 1.5px; }
-        .login-btn span, .register-btn span { display: inline-block; font-size: 16px; color: #FFFFFF; /* [修改] 白色文字 */ font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; }
-        .tool-search-bar { display: flex; align-items: center; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: var(--radius-md); height: 48px; gap: 12px; margin-bottom: 24px; } /* [修改] 背景边框 */
+        /* [修改] 复古红登录/注册按钮 */
+        .login-btn, .register-btn { background: #d0573b; border: none; color: #FFFFFF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-weight: 700; letter-spacing: 1.5px; }
+        .login-btn span, .register-btn span { display: inline-block; font-size: 16px; color: #FFFFFF; font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; }
+        .tool-search-bar { display: flex; align-items: center; background: #faf8f3; border: 1px solid #e5ded3; border-radius: var(--radius-md); height: 48px; gap: 12px; margin-bottom: 24px; } /* [修改] 暖色搜索栏 */
         .tool-search-input { border: none; background: transparent; outline: none; width: 100%; font-size: 15px; color: var(--text-primary); }
         .category-tabs { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; }
         .tab-item { padding: 8px 20px; background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08); border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-        .tab-item.active { background: #1e5fae; color: #FFFFFF; border-color: transparent; } /* [修改] 标签激活色 */
+        .tab-item.active { background: #2f4f6f; color: #FFFFFF; border-color: transparent; } /* [修改] 深蓝激活标签 */
         .tool-group-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; margin-bottom: 20px; padding-left: 4px; }
     </style>
 </head>
 <body>
-    <!-- ✅ 侧边栏 - 完全重写，彻底稳定 -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
-        <!-- ✅ SIDEBAR 头部：LOGO区域 -->
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
                 <span class="logo-sub">悠野</span>
             </div>
         </div>
-
-        <!-- ✅ SIDEBAR 导航菜单 -->
         <nav class="nav-menu">
-            <!-- ✅ 导航项1：网站导航 -->
             <a href="index.html" class="nav-item">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">网站导航</span>
             </a>
-
-            <!-- ✅ 导航项2：线上工具（可展开） -->
             <a class="nav-item active nav-dropdown-trigger" id="toolsNavTrigger">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">线上工具</span>
                 <span class="arrow-icon">▼</span>
             </a>
-            <!-- ✅ 展开菜单：四个子项 -->
             <div class="sub-menu" id="toolsSubMenu">
                 <a href="#dev-tools" class="sub-nav-item">开发者工具</a>
                 <a href="#design-tools" class="sub-nav-item">设计美化</a>
                 <a href="#office-tools" class="sub-nav-item">办公效率</a>
                 <a href="#media-tools" class="sub-nav-item">多媒体处理</a>
             </div>
-
-            <!-- ✅ 导航项3：悠野社区 -->
             <a href="forum.html" class="nav-item">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">悠野社区</span>
             </a>
         </nav>
-
-        <!-- ✅ SIDEBAR 底部：主题切换 + 登录注册 -->
         <div class="sidebar-footer">
-            <!-- ✅ 主题切换按钮 -->
             <div class="theme-toggle-wrapper">
                 <div class="theme-toggle" role="button" tabindex="0" aria-label="切换主题">
                     <div class="theme-slider"></div>
@@ -105,7 +92,6 @@
                     <span class="theme-option dark">🌙</span>
                 </div>
             </div>
-            <!-- ✅ 登录 / 注册按钮 -->
             <div class="auth-buttons">
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')"><span>登录</span></div>
                 <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')"><span>注册</span></div>
