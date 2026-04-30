@@ -93,7 +93,14 @@ body {
 
 .logo-sub { display: none; }
 
-.nav-menu { padding: 16px 12px; }
+.nav-menu { 
+    padding: 16px 12px;
+    /* ✅ 固定导航菜单区域的最小高度 */
+    /* 目的：使三个页面（index/tools/forum）的nav-menu高度完全一致 */
+    /* 这样sidebar-footer（登录/主题按钮）就不会跳动了 */
+    min-height: 220px;
+    overflow: hidden;
+}
 
 .nav-item {
     display: flex; align-items: center; gap: 12px;
