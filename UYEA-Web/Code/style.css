@@ -3,26 +3,26 @@
    最终版：子菜单折叠高度强制归零，侧边栏跳动彻底消除
    ============================================================ */
 :root {
-    --primary:        #1F4E79;      /* [修改] #D96A1A → #1F4E79 (表格 Primary) */
-    --primary-dark:   #163A5F;      /* [修改] #5A0A0A → #163A5F (表格 Primary active) */
-    --primary-light:  #F4A261;      /* [修改] #EAD7A1 → #F4A261 (表格 Accent) */
-    --secondary:      #163A5F;      /* [修改] #5A0A0A → #163A5F (统一暗蓝) */
-    --bg:             #F7F7F9;      /* [修改] #EFEBE4 → #F7F7F9 (表格 Background) */
-    --surface:        #FFFFFF;      /* [修改] #F5F3EF → #FFFFFF (表格 Surface) */
-    --border:         #E5E7EB;      /* [修改] #5A0A0A → #E5E7EB (表格 Border) */
-    --text-primary:   #111827;      /* [修改] #3A2A22 → #111827 (表格 Text Primary) */
-    --text-secondary: #6B7280;      /* [修改] #6E5A4A → #6B7280 (表格 Text Secondary) */
-    --text-muted:     #9CA3AF;      /* [修改] #8C6A58 → #9CA3AF (表格 Text Muted) */
+    --primary:        #1e5fae;      /* [修改] 新主色 */
+    --primary-dark:   #174a8a;      /* [修改] 主色深色 */
+    --primary-light:  #F4A261;      /* 保留原值，未使用 */
+    --secondary:      #0f172a;      /* [修改] 标题用色 */
+    --bg:             #f8fafc;      /* [修改] 页面背景 */
+    --surface:        #ffffff;      /* [修改] 卡片/区块背景 */
+    --border:         #e2e8f0;      /* [修改] 边框色 */
+    --text-primary:   #0f172a;      /* [修改] 主文字 */
+    --text-secondary: #475569;      /* [修改] 次要文字 */
+    --text-muted:     #94a3b8;      /* [修改] 辅助文字 */
     --error:          #e11d48;
     --warning:        #fbbf24;
     --header-h:       64px;
     --sidebar-w:      210px;
     --radius-sm:      10px;
-    --radius-md:      12px;         /* [修改] 16px → 12px (表格 Radius Global) */
-    --radius-lg:      12px;         /* [修改] 20px → 12px (表格 Radius Global) */
+    --radius-md:      12px;
+    --radius-lg:      12px;
     --duration:       0.3s;
-    --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-md:      0 8px 20px rgba(0,0,0,0.06); /* [修改] 原 0 6px 16px rgba(0,0,0,0.12) → 表格 Shadow Card */
+    --shadow-sm:      0 1px 2px rgba(0,0,0,0.04);  /* [修改] 微弱阴影 */
+    --shadow-md:      0 4px 12px rgba(0,0,0,0.06); /* [修改] 卡片阴影 */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,7 +38,7 @@ body {
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
-    background: linear-gradient(180deg, #1F4E79 0%, #163A5F 100%); /* [修改] 纯色 #005BBB → 表格渐变 */
+    background: #1e5fae;              /* [修改] 纯色背景 */
     border-right: 2px solid rgba(255,255,255,0.12);
     position: fixed;
     top: 0; left: 0; z-index: 1000;
@@ -80,12 +80,12 @@ body {
     transition: all var(--duration);
     font-weight: 500;
 }
-/* [修改] hover 背景色 */
-.nav-item:hover { background: #2A6FA1; color: #FFFFFF; }
+/* [修改] 侧边栏 hover 半透明 */
+.nav-item:hover { background: rgba(255,255,255,0.08); color: #FFFFFF; }
 
-/* [修改] active 背景色、文字色，去除 box-shadow */
+/* [修改] active 渐变 */
 .nav-item.active {
-    background: #163A5F;
+    background: linear-gradient(135deg, #3b82f6, #1e5fae);
     color: #FFFFFF;
 }
 
@@ -143,17 +143,22 @@ body {
 .header-search-wrapper {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
-    background: var(--bg);
-    border: 1.5px solid rgba(0,0,0,0.08);
+    background: #f1f5f9;                  /* [修改] 浅灰背景 */
+    border: 1px solid #e2e8f0;            /* [修改] 边框 */
     border-radius: var(--radius-lg);
 }
+/* [新增] focus 状态 */
+.header-search-wrapper:focus-within {
+    background: #ffffff;
+    border-color: #1e5fae;
+}
 
-/* [修改] 登录/注册按钮主色：白底蓝字 */
+/* [修改] 登录/注册按钮主色样式 */
 .login-btn {
     padding: 8px 20px;
-    background: #FFFFFF;
-    color: #1F4E79;
-    border-radius: var(--radius-sm);
+    background: #1e5fae;
+    color: #FFFFFF;
+    border-radius: 8px;
     text-decoration: none;
     font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-weight: 400;
@@ -163,9 +168,9 @@ body {
 }
 .register-btn {
     padding: 8px 20px;
-    background: #FFFFFF;
-    color: #1F4E79;
-    border-radius: var(--radius-sm);
+    background: #1e5fae;
+    color: #FFFFFF;
+    border-radius: 8px;
     text-decoration: none;
     font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-weight: 400;
@@ -173,19 +178,18 @@ body {
     letter-spacing: 1.5px;
     transition: opacity var(--duration);
 }
-/* [修改] hover 背景 */
 .login-btn:hover,
-.register-btn:hover { background: #F2F2F2; }
+.register-btn:hover { background: #174a8a; }   /* [修改] hover 深色 */
 
 .section-header { margin-bottom: 24px; }
 .section-title {
     font-size: 22px; font-weight: 700; color: var(--secondary);
     position: relative; padding-left: 18px;
 }
-/* [修改] 左侧装饰条颜色改为 Accent */
+/* [修改] 装饰条改为主色 */
 .section-title::before {
     content: ""; position: absolute; left: 0; top: 15%; bottom: 15%;
-    width: 6px; background: #F4A261; border-radius: 3px;
+    width: 6px; background: #1e5fae; border-radius: 3px;
 }
 
 .grid-container {
@@ -195,9 +199,9 @@ body {
 }
 .card-item {
     background: var(--surface);
-    border: 1.5px solid rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;          /* [修改] 边框 */
     border-radius: var(--radius-md);
-    padding: 18px;
+    padding: 16px;                       /* [修改] 内边距 */
     display: flex; align-items: center; gap: 14px;
     text-decoration: none;
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -233,15 +237,14 @@ body {
 }
 .card-icon.skeleton img { opacity: 0; }
 
-/* [修改] 暗色模式变量同步更新 */
 html[data-theme="dark"] {
-    --primary:        #2A6FA1;      /* Primary hover 作暗色主色 */
+    --primary:        #2A6FA1;
     --primary-dark:   #1F4E79;
-    --primary-light:  #163A5F;      /* 暗色下 accent 区域 */
-    --secondary:      #F4A261;      /* Accent */
+    --primary-light:  #163A5F;
+    --secondary:      #F4A261;
     --bg:             #0D0D0D;
     --surface:        #1A1A1A;
-    --border:         #2A6FA1;      /* 暗色边框用主色 */
+    --border:         #2A6FA1;
     --text-primary:   #FFFFFF;
     --text-secondary: #CCCCCC;
     --text-muted:     #888888;
@@ -260,13 +263,12 @@ html[data-theme="dark"] {
     -webkit-tap-highlight-color: transparent;
     overflow: hidden;
 }
-/* [修改] 滑块主色 */
 .theme-slider {
     position: absolute;
     top: 3px; left: 3px;
     width: calc(50% - 3px);
     height: calc(100% - 6px);
-    background: #1F4E79;
+    background: #1e5fae;                /* [修改] 滑块主色 */
     border-radius: calc(var(--radius-md) - 3px);
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     z-index: 1;
