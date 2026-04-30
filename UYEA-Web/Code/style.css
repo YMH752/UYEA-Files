@@ -1,28 +1,28 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   最终版：复古调色板设计规范
+   美式海报风格：高饱和、强对比、活力奔放
    ============================================================ */
 :root {
-    --primary:        #2f4f6f;      /* [修改] 深蓝（侧边栏主色） */
-    --primary-dark:   #1e3a52;      /* [修改] 深蓝加深 */
-    --primary-light:  #f4f1ea;      /* [修改] 米白 */
-    --secondary:      #1f1f1f;      /* [修改] 炭黑 */
-    --bg:             #f4f1ea;      /* [修改] 米白页面背景 */
-    --surface:        #ffffff;      /* [修改] 卡片白 */
-    --border:         #e5ded3;      /* [修改] 暖灰边框 */
-    --text-primary:   #1f1f1f;      /* [修改] 炭黑主文字 */
-    --text-secondary: #8a7f72;      /* [修改] 灰褐辅助文字 */
-    --text-muted:     #a09888;      /* [修改] 更淡灰褐 */
-    --error:          #d0573b;      /* [修改] 复古红（错误/主按钮） */
-    --warning:        #e8b84a;      /* [修改] 复古黄（次按钮） */
+    --primary:        #e63946;      /* 高饱和猩红（主强调） */
+    --primary-dark:   #c1121f;      /* 深猩红 */
+    --primary-light:  #f4a261;      /* 亮金（点缀） */
+    --secondary:      #1d3557;      /* 海军蓝 */
+    --bg:             #fefae0;      /* 暖奶油背景 */
+    --surface:        #ffffff;      /* 卡片白 */
+    --border:         #d4a373;      /* 焦糖边框 */
+    --text-primary:   #1d3557;      /* 海军蓝主文字 */
+    --text-secondary: #6d6875;      /* 灰紫辅助文字 */
+    --text-muted:     #b5838d;      /* 柔和提示文字 */
+    --error:          #e63946;      /* 猩红（错误/主按钮） */
+    --warning:        #f4a261;      /* 亮金（次按钮） */
     --header-h:       64px;
     --sidebar-w:      210px;
-    --radius-sm:      6px;          /* [修改] 小圆角 */
-    --radius-md:      10px;         /* [修改] 中圆角（卡片） */
-    --radius-lg:      10px;         /* [修改] 大圆角 */
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      10px;
     --duration:       0.3s;
-    --shadow-sm:      0 1px 2px rgba(0,0,0,0.03);   /* [修改] 极轻阴影 */
-    --shadow-md:      0 2px 6px rgba(0,0,0,0.04);   /* [修改] 卡片阴影 */
+    --shadow-sm:      0 2px 4px rgba(0,0,0,0.08);
+    --shadow-md:      0 6px 16px rgba(0,0,0,0.12);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,8 +38,8 @@ body {
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
-    background: #2f4f6f;              /* [修改] 复古深蓝，无渐变 */
-    border-right: 2px solid rgba(255,255,255,0.12);
+    background: #1d3557;              /* 高饱和海军蓝 */
+    border-right: 3px solid #e63946;  /* 猩红右边线 */
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
@@ -48,23 +48,24 @@ body {
 
 .sidebar-header {
     padding: 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
+    border-bottom: 2px solid #e63946;
     text-align: center;
+    background: #1d3557;
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; justify-content: center; }
 
 .logo-text { 
     position: relative;
-    font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
-    font-weight: 400; 
-    font-size: 36px; 
-    color: #e8b84a;                  /* [修改] 复古金 logo */
-    letter-spacing: 2px;
-    -webkit-text-stroke: 2px #D32F2F;
+    font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
+    font-weight: 700; 
+    font-size: 40px; 
+    color: #f4a261;
+    letter-spacing: 3px;
+    -webkit-text-stroke: 2.5px #e63946;
     text-shadow:
-        2px 2px 0 rgba(0,0,0,0.3),
-        4px 4px 0 rgba(0,0,0,0.15);
+        3px 3px 0 rgba(0,0,0,0.4),
+        6px 6px 0 rgba(0,0,0,0.2);
 }
 
 .logo-sub { display: none; }
@@ -73,21 +74,29 @@ body {
 
 .nav-item {
     display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px; border-radius: var(--radius-sm);
+    padding: 14px 16px; border-radius: var(--radius-sm);
     color: #FFFFFF;
     text-decoration: none;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     transition: all var(--duration);
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
-/* [修改] hover 半透白 */
-.nav-item:hover { background: rgba(255,255,255,0.08); color: #FFFFFF; }
-
-/* [修改] active 半透更亮 */
-.nav-item.active {
-    background: rgba(255,255,255,0.12);
+/* hover 猩红背景 + 缩放 */
+.nav-item:hover { 
+    background: #e63946; 
     color: #FFFFFF;
-    border-left: 3px solid #e8b84a;   /* [新增] 左侧金色强调边 */
+    transform: translateX(4px);
+}
+
+/* active 亮金背景 + 海军蓝文字 */
+.nav-item.active {
+    background: #f4a261;
+    color: #1d3557;
+    font-weight: 800;
+    border-left: 4px solid #e63946;
 }
 
 /* 折叠态子菜单 */
@@ -114,21 +123,21 @@ body {
 
 .sub-nav-item {
     display: block;
-    padding: 10px 16px 10px 56px;
+    padding: 12px 16px 12px 56px;
     font-size: 14px;
-    font-weight: 800; 
+    font-weight: 700; 
     color: #FFFFFF;
     text-decoration: none;
     transition: all 0.2s ease;
 }
 .sub-nav-item:hover {
-    color: var(--primary);
-    background: rgba(0,0,0,0.03);
+    color: #f4a261;
+    background: rgba(230,57,70,0.2);
 }
 
 .sidebar-footer {
     padding: 24px 16px;
-    border-top: 1px solid rgba(255,255,255,0.12);
+    border-top: 2px solid #e63946;
 }
 
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
@@ -138,87 +147,102 @@ body {
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 24px; height: var(--header-h);
     background: var(--surface);
-    border-bottom: 2px solid rgba(0,0,0,0.08);
+    border-bottom: 3px solid #e63946;
     position: sticky; top: 0; z-index: 100;
 }
 .header-search-wrapper {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
-    background: #faf8f3;              /* [修改] 暖白背景 */
-    border: 1px solid #e5ded3;        /* [修改] 暖灰边框 */
+    background: #ffffff;
+    border: 2px solid #1d3557;
     border-radius: var(--radius-lg);
 }
-/* [新增] focus 样式 */
 .header-search-wrapper:focus-within {
-    background: #ffffff;
-    border-color: #2f4f6f;
+    border-color: #e63946;
+    box-shadow: 0 0 0 3px rgba(230,57,70,0.2);
 }
 
-/* [修改] 登录/注册按钮 → 复古红主按钮 */
+/* 登录/注册按钮 → 猩红主按钮 */
 .login-btn {
-    padding: 8px 20px;
-    background: #d0573b;
+    padding: 10px 24px;
+    background: #e63946;
     color: #FFFFFF;
     border-radius: 8px;
     text-decoration: none;
-    font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    letter-spacing: 1.5px;
-    transition: opacity var(--duration);
+    font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    border: 2px solid #c1121f;
 }
 .register-btn {
-    padding: 8px 20px;
-    background: #d0573b;
+    padding: 10px 24px;
+    background: #e63946;
     color: #FFFFFF;
     border-radius: 8px;
     text-decoration: none;
-    font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    letter-spacing: 1.5px;
-    transition: opacity var(--duration);
+    font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    border: 2px solid #c1121f;
 }
 .login-btn:hover,
-.register-btn:hover { background: #b8442e; }   /* [修改] hover 加深 */
-
-.section-header { margin-bottom: 24px; }
-.section-title {
-    font-size: 22px; font-weight: 700; color: var(--secondary);
-    position: relative; padding-left: 18px;
+.register-btn:hover { 
+    background: #c1121f; 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(230,57,70,0.4);
 }
-/* [修改] 左侧装饰条改为复古红 */
+
+.section-header { margin-bottom: 28px; }
+.section-title {
+    font-size: 26px; font-weight: 800; color: var(--secondary);
+    position: relative; padding-left: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+/* 左侧装饰条改为猩红粗条 */
 .section-title::before {
-    content: ""; position: absolute; left: 0; top: 15%; bottom: 15%;
-    width: 6px; background: #d0573b; border-radius: 3px;
+    content: ""; position: absolute; left: 0; top: 10%; bottom: 10%;
+    width: 8px; background: #e63946; border-radius: 4px;
 }
 
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 24px;                        /* [修改] 间距加大 */
+    gap: 24px;
 }
 .card-item {
     background: var(--surface);
-    border: 1px solid #e5ded3;        /* [修改] 暖灰边框 */
-    border-radius: 10px;              /* [修改] 圆角 */
-    padding: 16px;                    /* [修改] 内边距 */
+    border: 2px solid #1d3557;
+    border-radius: 10px;
+    padding: 18px;
     display: flex; align-items: center; gap: 14px;
     text-decoration: none;
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03); /* [新增] 微阴影 */
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
 }
 .card-item:hover {
-    transform: translateY(-4px);
-    border-color: #d0573b;            /* [修改] hover 红边 */
-    box-shadow: var(--shadow-md);
+    transform: translateY(-6px);
+    border-color: #e63946;
+    box-shadow: 0 8px 20px rgba(230,57,70,0.2);
+    background: #fff5f5;
 }
-.card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.card-title { 
+    font-size: 15px; 
+    font-weight: 700; 
+    color: var(--text-primary);
+}
 .card-icon {
-    width: 36px; height: 36px;
+    width: 40px; height: 40px;
     border-radius: 8px;
-    background: #f0f0f0;
+    background: #f1faee;
     overflow: hidden;
+    border: 2px solid #1d3557;
 }
 
 @media (max-width: 1024px) {
@@ -232,25 +256,25 @@ body {
     100% { background-position:  200% 0; }
 }
 .card-icon.skeleton {
-    background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+    background: linear-gradient(90deg, #1d3557 25%, #e63946 50%, #1d3557 75%);
     background-size: 200% 100%;
     animation: shimmer 1.4s ease-in-out infinite;
     border-radius: 8px;
 }
 .card-icon.skeleton img { opacity: 0; }
 
-/* [修改] 暗色模式复古调色 */
+/* 暗色模式 */
 html[data-theme="dark"] {
-    --primary:        #3a6b8f;
-    --primary-dark:   #2f4f6f;
-    --primary-light:  #2a2a2a;
-    --secondary:      #e8b84a;
-    --bg:             #1a1a1a;
-    --surface:        #242424;
-    --border:         #3a3a3a;
-    --text-primary:   #f4f1ea;
-    --text-secondary: #a09888;
-    --text-muted:     #6a6a6a;
+    --primary:        #e63946;
+    --primary-dark:   #c1121f;
+    --primary-light:  #f4a261;
+    --secondary:      #f4a261;
+    --bg:             #1a1a2e;
+    --surface:        #16213e;
+    --border:         #e63946;
+    --text-primary:   #ffffff;
+    --text-secondary: #a8dadc;
+    --text-muted:     #6d6875;
 }
 
 .theme-toggle-wrapper { width: 100%; margin-bottom: 16px; }
@@ -259,27 +283,26 @@ html[data-theme="dark"] {
     display: flex; align-items: center; justify-content: space-between;
     width: 100%; height: 42px;
     background: var(--bg);
-    border: 1.5px solid rgba(0,0,0,0.08);
+    border: 2px solid #1d3557;
     border-radius: var(--radius-md);
     padding: 3px;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     overflow: hidden;
 }
-/* [修改] 滑块主色 */
 .theme-slider {
     position: absolute;
     top: 3px; left: 3px;
     width: calc(50% - 3px);
     height: calc(100% - 6px);
-    background: #2f4f6f;
+    background: #e63946;
     border-radius: calc(var(--radius-md) - 3px);
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     z-index: 1;
 }
 html[data-theme="dark"] .theme-slider {
     transform: translateX(100%);
-    background: #e8b84a;
+    background: #f4a261;
 }
 .theme-option {
     position: relative; z-index: 2;
