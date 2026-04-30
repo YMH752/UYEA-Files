@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>UYEA | 悠野导航</title>
     <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#1d3557">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
@@ -18,42 +18,44 @@
             display: flex; align-items: center; justify-content: center;
             padding: 0 20px; height: var(--header-h);
             background: var(--surface);
-            border-bottom: 1.5px solid rgba(0,0,0,0.08);
+            border-bottom: 3px solid #e63946;
             position: sticky; top: 0; z-index: 100;
         }
         .header-logo { display: none; }
         .search-container { width: 100%; max-width: 600px; display: flex; justify-content: center; }
         .header-search-wrapper {
             width: 100%; display: flex; align-items: center;
-            background: #faf8f3; border: 1px solid #e5ded3;   /* [修改] 暖色 */
-            border-radius: var(--radius-md); padding: 0 4px 0 0; height: 42px;
-            transition: border-color 0.2s; overflow: visible;
+            background: #ffffff; border: 2px solid #1d3557;
+            border-radius: var(--radius-md); padding: 0 4px 0 0; height: 44px;
+            transition: border-color 0.2s, box-shadow 0.2s; overflow: visible;
         }
-        .header-search-wrapper:focus-within { border-color: #2f4f6f; background: #ffffff; }
+        .header-search-wrapper:focus-within { border-color: #e63946; box-shadow: 0 0 0 3px rgba(230,57,70,0.15); }
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
         .engine-trigger-btn {
-            display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 42px;
-            background: #2f4f6f; color: #FFFFFF; border: none;     /* [修改] 深蓝触发按钮 */
+            display: flex; align-items: center; gap: 6px; padding: 0 14px; height: 44px;
+            background: #e63946; color: #FFFFFF; border: 2px solid #c1121f;
             border-radius: var(--radius-md) 0 0 var(--radius-md);
-            font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+            font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;
+            text-transform: uppercase; letter-spacing: 1px;
         }
+        .engine-trigger-btn:hover { background: #c1121f; }
         .engine-dropdown-list {
-            display: none; position: absolute; top: calc(100% + 6px); left: 0;
+            display: none; position: absolute; top: calc(100% + 8px); left: 0;
             min-width: 80px; width: 100%; background: var(--surface);
-            border: 1.5px solid rgba(0,0,0,0.08); border-radius: var(--radius-md);
+            border: 2px solid #1d3557; border-radius: var(--radius-md);
             box-shadow: var(--shadow-md); z-index: 200; padding: 0; overflow: hidden;
         }
         .engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
         .engine-option-item {
-            padding: 10px 12px; font-size: 13px; cursor: pointer; text-align: center;
-            border-bottom: 1px solid rgba(0,0,0,0.08); transition: background 0.2s;
+            padding: 12px 14px; font-size: 14px; cursor: pointer; text-align: center; font-weight: 600;
+            border-bottom: 1px solid #1d3557; transition: background 0.2s;
         }
         .engine-option-item:last-child { border-bottom: none; }
-        .engine-option-item:hover { background: var(--bg); }
-        .engine-option-item.selected { color: var(--primary); font-weight: 700; }
+        .engine-option-item:hover { background: #ffe5e5; color: #e63946; }
+        .engine-option-item.selected { background: #e63946; color: #FFFFFF; font-weight: 800; }
         #searchInput {
             border: none; background: transparent; outline: none;
-            width: 100%; padding: 0 12px; font-size: 15px; color: var(--text-primary);
+            width: 100%; padding: 0 14px; font-size: 15px; color: var(--text-primary);
         }
         .header-actions { position: absolute; right: 20px; display: flex; align-items: center; }
         .menu-toggle {
@@ -61,8 +63,8 @@
             padding: 8px; flex-direction: column; gap: 5px;
         }
         .menu-toggle span {
-            display: block; width: 24px; height: 3px;
-            background: var(--text-primary); border-radius: 2px;
+            display: block; width: 26px; height: 4px;
+            background: #1d3557; border-radius: 2px;
         }
         .nav-menu { padding: 16px 12px; }
         .nav-item {
@@ -70,38 +72,41 @@
             margin: 6px 12px; border-radius: var(--radius-md);
             text-decoration: none; color: #FFFFFF; font-weight: 600;
             transition: all 0.2s ease; cursor: pointer; border: none;
+            text-transform: uppercase; letter-spacing: 1px; font-size: 14px;
         }
-        /* [修改] active/menu-open 半透 + 金边 */
+        .nav-item:hover { background: #e63946; transform: translateX(4px); }
+        /* [修改] active/menu-open 亮金 + 海军蓝文字 */
         .nav-item.active {
-            background: rgba(255,255,255,0.12) !important; color: #FFFFFF !important;
-            border-left: 3px solid #e8b84a !important;
+            background: #f4a261 !important; color: #1d3557 !important;
+            font-weight: 800; border-left: 4px solid #e63946 !important;
         }
         .nav-item.menu-open {
-            background: rgba(255,255,255,0.12) !important; color: #FFFFFF !important;
-            border-left: 3px solid #e8b84a !important;
+            background: #f4a261 !important; color: #1d3557 !important;
+            font-weight: 800; border-left: 4px solid #e63946 !important;
         }
         .arrow-icon {
-            font-size: 10px; margin-left: auto;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6;
+            font-size: 12px; margin-left: auto;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.8;
         }
         .nav-item.menu-open .arrow-icon { transform: rotate(180deg); opacity: 1; }
         .nav-icon { color: #FFFFFF; font-size: 14px; }
         .sidebar-footer {
             padding: 24px 16px;
-            border-top: 1px solid rgba(255,255,255,0.12);
+            border-top: 2px solid #e63946;
         }
         .auth-buttons { display: flex; gap: 12px; }
         .auth-btn {
             flex: 1; display: flex; align-items: center; justify-content: center;
-            height: 42px; border-radius: var(--radius-md); font-size: 13px;
-            font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+            height: 44px; border-radius: var(--radius-md); font-size: 14px;
+            font-weight: 700; cursor: pointer; transition: all 0.2s ease;
         }
-        /* [修改] 复古红登录/注册按钮 */
+        /* [修改] 猩红登录/注册按钮 */
         .login-btn, .register-btn {
-            background: #d0573b; border: none;
-            color: #FFFFFF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-            font-weight: 700; letter-spacing: 1.5px;
+            background: #e63946; border: 2px solid #c1121f;
+            color: #FFFFFF; font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
         }
+        .login-btn:hover, .register-btn:hover { background: #c1121f; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(230,57,70,0.5); }
         .login-btn span, .register-btn span {
             display: inline-block; font-size: 16px; color: #FFFFFF;
             font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
@@ -115,7 +120,7 @@
             .top-bar { padding: 0 12px; justify-content: space-between; }
             .search-container { margin-right: 52px; }
         }
-        .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .card-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid #1d3557; border-radius: 8px; }
         .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
     </style>
 </head>
@@ -180,7 +185,7 @@
                             <div class="engine-option-item" data-value="baidu">百度</div>
                         </div>
                     </div>
-                    <div style="width:1.5px; height:20px; background:rgba(0,0,0,0.08); margin:0 4px;"></div>
+                    <div style="width:2px; height:22px; background:#1d3557; margin:0 6px;"></div>
                     <input type="text" id="searchInput" placeholder="搜索关键词...">
                 </div>
             </div>
@@ -193,7 +198,7 @@
         <div class="content-wrapper">
             <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
-                <div class="text-status-card" style="background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); grid-column: 1 / -1;">☕ 尽请期待</div>
+                <div class="text-status-card" style="background: var(--surface); border: 2px dashed #e63946; border-radius: var(--radius-md); padding: 40px; text-align: center; color: #1d3557; font-weight: 700; font-size: 18px; grid-column: 1 / -1;">☕ 尽请期待</div>
             </div>
             <div class="section-group" id="ai-section">
                 <div class="section-header"><h2 class="section-title">Ai</h2></div>
