@@ -6,9 +6,93 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ────────────────────────────────────────────
-       1. 元素引用
-       ──────────────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════════
+       ✅ 0. SIDEBAR 终极锁定方案 - 用 JavaScript 强制固定位置
+       目的：消灭页面切换时的所有跳动
+       原理：监听窗口事件，实时重新计算和锁定sidebar位置
+       ════════════════════════════════════════════════════════════ */
+    
+    function initSidebarLock() {
+        const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return;
+
+        // ✅ 定义sidebar的"标准"尺寸（这些值永远不变）
+        const SIDEBAR_WIDTH = 210; // px
+        const SIDEBAR_HEIGHT = window.innerHeight; // 100vh
+        
+        /**
+         * ✅ 核心锁定函数：强制sidebar保持在正确位置
+         * - 即使滚动条出现/消失，sidebar也不会跳动
+         * - 即使页面高度变化，sidebar也不会跳动
+         * - 即使窗口大小改变，sidebar也立即重新锁定
+         */
+        function lockSidebarPosition() {
+            // ✅ 获取当前html元素的实际宽度（包含滚动条）
+            const htmlWidth = document.documentElement.clientWidth;
+            
+            // ✅ 强制设置sidebar的精确位置
+            sidebar.style.position = 'fixed';
+            sidebar.style.left = '0px';
+            sidebar.style.top = '0px';
+            sidebar.style.width = SIDEBAR_WIDTH + 'px';
+            sidebar.style.height = '100vh';
+            sidebar.style.zIndex = '1000';
+            
+            // ✅ 防止任何transform或其他属性影响位置
+            if (!sidebar.classList.contains('open')) {
+                sidebar.style.transform = 'translateX(0)';
+            }
+        }
+
+        // ✅ 方案1：页面加载完成后立即锁定
+        lockSidebarPosition();
+
+        // ✅ 方案2：监听窗口大小变化（包括滚动条出现/消失）
+        window.addEventListener('resize', () => {
+            lockSidebarPosition();
+        });
+
+        // ✅ 方案3：监听滚动事件（防止滚动时位置改变）
+        window.addEventListener('scroll', () => {
+            // sidebar的top始终是0，不会因滚动而改变
+            if (sidebar.style.top !== '0px') {
+                sidebar.style.top = '0px';
+            }
+        });
+
+        // ✅ 方案4：监听DOM变化（内容加载导致滚动条变化时）
+        const observer = new MutationObserver(() => {
+            // 当DOM改变时（比如内容动态加载），重新锁定一次
+            setTimeout(() => {
+                lockSidebarPosition();
+            }, 50);
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: false
+        });
+
+        // ✅ 方案5：监听页面加载完成（所有资源加载后）
+        window.addEventListener('load', () => {
+            lockSidebarPosition();
+        });
+
+        // ✅ 方案6：定期检查（保险起见，每100ms检查一次）
+        setInterval(() => {
+            if (sidebar.style.position !== 'fixed' || 
+                sidebar.style.left !== '0px' || 
+                sidebar.style.top !== '0px') {
+                lockSidebarPosition();
+            }
+        }, 100);
+    }
+
+    // ✅ 页面加载时立即初始化sidebar锁定
+    initSidebarLock();
+
+
     // [修改] 移除 searchEngine/searchInput（与index.html内嵌脚本ID不匹配，造成冲突）
     // [修改] 移除 sidebarItems/bottomItems（三页均无data-section属性，静默失效）
     const hamburgerBtn = document.getElementById('hamburgerBtn');
