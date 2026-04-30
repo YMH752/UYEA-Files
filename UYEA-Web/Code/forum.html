@@ -4,234 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>悠野社区 | UYEA | 悠野导航</title>
-    
     <meta name="description" content="悠野社区 - 分享想法、互帮互助、共同成长的技术社区平台。">
     <meta name="theme-color" content="#000000">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
-    
     <link rel="stylesheet" href="style.css">
-    
     <style>
         .top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 0 24px;
-            height: var(--header-h);
+            display: flex; align-items: center; justify-content: flex-end;
+            padding: 0 24px; height: var(--header-h);
             background: var(--surface);
             border-bottom: 1.5px solid rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
         }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .menu-toggle span {
-            display: block;
-            width: 24px;
-            height: 3px;
-            background: var(--text-primary);
-            border-radius: 2px;
-        }
-
-        @media (max-width: 1024px) {
-            .menu-toggle { display: flex; }
-        }
-
-        @media (max-width: 768px) {
-            .top-bar { padding: 0 12px; }
-        }
-
+        .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; gap: 5px; }
+        .menu-toggle span { display: block; width: 24px; height: 3px; background: var(--text-primary); border-radius: 2px; }
+        @media (max-width: 1024px) { .menu-toggle { display: flex; } }
+        @media (max-width: 768px) { .top-bar { padding: 0 12px; } }
         .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 14px 18px;
-            margin: 6px 12px;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            color: #FFFFFF;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: none;
+            display: flex; align-items: center; padding: 14px 18px;
+            margin: 6px 12px; border-radius: var(--radius-md);
+            text-decoration: none; color: #FFFFFF; font-weight: 600;
+            transition: all 0.2s ease; cursor: pointer; border: none;
         }
-
         .nav-item.active {
-            background: #FFDD50 !important;
-            /* [修改] color: #FFFFFF → #11a0ff
-               修改前：白色文字
-               修改后：亮蓝色，当前页面激活项文字颜色 */
-            color: #11a0ff !important;
+            background: #FFDD50 !important; color: #11a0ff !important;
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
         }
-
-        .arrow-icon {
-            display: none;
-        }
-
-        .nav-icon {
-            color: #FFFFFF;
-            font-size: 14px;
-        }
-
+        .arrow-icon { display: none; }
+        .nav-icon { color: #FFFFFF; font-size: 14px; }
         .sidebar-footer {
             padding: 24px 16px;
             border-top: 1px solid rgba(255,255,255,0.12);
-            margin-top: auto;
         }
-        .auth-buttons {
-            display: flex;
-            gap: 12px;
-        }
+        .auth-buttons { display: flex; gap: 12px; }
         .auth-btn {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 42px;
-            border-radius: var(--radius-md);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            height: 42px; border-radius: var(--radius-md);
+            font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
         }
-
-        /* [修改] 统一登录注册按钮样式
-           修改前：.login-btn 和 .register-btn 分别定义，样式完全相同，导致按钮可能尺寸不一致
-           修改后：使用单一选择器 .login-btn, .register-btn 合并定义，确保完全等宽等高
-           修改目的：PC端与手机端两按钮显示尺寸一致 */
-        .login-btn,
-        .register-btn {
-            background: #FFDD50;
-            border: 1.5px solid rgba(255,255,255,0.15);
+        .login-btn, .register-btn {
+            background: #FFDD50; border: 1.5px solid rgba(255,255,255,0.15);
             color: #0088FF;
             font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-            font-weight: 700;
-            letter-spacing: 1.5px;
+            font-weight: 700; letter-spacing: 1.5px;
         }
-
-        /* [修改] 按钮文字使用 Luckiest Guy 字体
-           修改前：Bungee
-           修改后：Luckiest Guy，16px，#11a0ff，无描边阴影
-           修改目的：美式复古手绘风格，简洁清晰 */
         .login-btn span, .register-btn span {
-            display: inline-block;
-            font-size: 16px;
-            color: #11a0ff;
+            display: inline-block; font-size: 16px; color: #11a0ff;
             font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         }
-
-        .forum-toolbar {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            align-items: center;
-        }
+        .forum-toolbar { display: flex; gap: 12px; margin-bottom: 24px; align-items: center; }
         .post-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 24px;
-            background: #440003;
-            color: #FFFFFF;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            transition: background 0.2s;
-            white-space: nowrap;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 24px; background: #440003; color: #FFFFFF;
+            border-radius: var(--radius-md); text-decoration: none;
+            font-weight: 600; font-size: 14px; transition: background 0.2s; white-space: nowrap;
         }
         .post-btn:hover { background: #333333; }
-        
-        .forum-search {
-            flex: 1;
-            position: relative;
-        }
+        .forum-search { flex: 1; position: relative; }
         .forum-search input {
-            width: 100%;
-            padding: 10px 16px 10px 40px;
-            background: var(--surface);
-            border: 1.5px solid rgba(0,0,0,0.08);
-            border-radius: var(--radius-md);
-            outline: none;
-            font-size: 14px;
-            transition: border-color 0.2s;
+            width: 100%; padding: 10px 16px 10px 40px;
+            background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08);
+            border-radius: var(--radius-md); outline: none; font-size: 14px; transition: border-color 0.2s;
         }
         .forum-search input:focus { border-color: rgba(0,0,0,0.18); }
-        .forum-search span {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            pointer-events: none;
-        }
-
-        .post-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        .forum-search span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+        .post-list { display: flex; flex-direction: column; gap: 16px; }
         .post-item {
-            background: var(--surface);
-            border: 1.5px solid rgba(0,0,0,0.08);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: block;
+            background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08);
+            border-radius: var(--radius-md); padding: 24px; text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s; display: block;
         }
-        .post-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        .post-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        .post-tag {
-            padding: 2px 8px;
-            background: var(--bg);
-            border-radius: 4px;
-            color: var(--primary);
-            font-weight: 600;
-        }
-        .post-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            line-height: 1.4;
-        }
-        .post-excerpt {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
+        .post-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 12px; color: var(--text-secondary); }
+        .post-tag { padding: 2px 8px; background: var(--bg); border-radius: 4px; color: var(--primary); font-weight: 600; }
+        .post-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; }
+        .post-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
     </style>
 </head>
 <body>
-
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
@@ -239,27 +95,21 @@
                 <span class="logo-sub">悠野</span>
             </div>
         </div>
-        
         <nav class="nav-menu">
             <a href="index.html" class="nav-item">
                 <span class="nav-icon">●</span>
-                <!-- [修改] "全部导航" → "网站导航" -->
                 <span class="nav-text">网站导航</span>
                 <span class="arrow-icon">▼</span>
             </a>
-
             <a href="tools.html" class="nav-item">
                 <span class="nav-icon">●</span>
-                <!-- [修改] "实用工具" → "线上工具" -->
                 <span class="nav-text">线上工具</span>
             </a>
-            
             <a href="forum.html" class="nav-item active">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">悠野社区</span>
             </a>
         </nav>
-
         <div class="sidebar-footer">
             <div class="theme-toggle-wrapper">
                 <div class="theme-toggle" role="button" tabindex="0" aria-label="切换主题">
@@ -274,19 +124,16 @@
             </div>
         </div>
     </aside>
-
     <main class="main-content">
         <header class="top-bar">
             <button class="menu-toggle" id="hamburgerBtn">
                 <span></span><span></span><span></span>
             </button>
         </header>
-
         <div class="content-wrapper">
             <div class="section-header">
                 <h2 class="section-title">悠野社区</h2>
             </div>
-
             <div class="forum-toolbar">
                 <a href="#" class="post-btn" onclick="alert('发帖功能开发中...')">＋ 发布新帖子</a>
                 <div class="forum-search">
@@ -294,7 +141,6 @@
                     <input type="text" id="forumSearchInput" placeholder="搜索帖子、话题或用户...">
                 </div>
             </div>
-
             <div class="post-list" id="postList">
                 <a href="#" class="post-item">
                     <div class="post-meta">
@@ -303,11 +149,8 @@
                         <span>• 1小时前</span>
                     </div>
                     <div class="post-title">欢迎来到悠野工作室(UYEA) 2.0 版本社区！</div>
-                    <div class="post-excerpt">
-                        我们致力于打造一个纯粹的技术与生活分享平台。在这里，你可以分享 AI 使用心得、展示你的工具作品，或者仅仅是记录生活点滴。
-                    </div>
+                    <div class="post-excerpt">我们致力于打造一个纯粹的技术与生活分享平台。在这里，你可以分享 AI 使用心得、展示你的工具作品，或者仅仅是记录生活点滴。</div>
                 </a>
-
                 <a href="#" class="post-item">
                     <div class="post-meta">
                         <span class="post-tag">AI 探讨</span>
@@ -315,11 +158,8 @@
                         <span>• 3小时前</span>
                     </div>
                     <div class="post-title">关于 DeepSeek-V3 在本地部署中的显存占用问题探讨</div>
-                    <div class="post-excerpt">
-                        最近尝试在 4090 环境下进行量化部署，发现了一些有趣的内存分配逻辑，想跟大家交流一下...
-                    </div>
+                    <div class="post-excerpt">最近尝试在 4090 环境下进行量化部署，发现了一些有趣的内存分配逻辑，想跟大家交流一下...</div>
                 </a>
-
                 <a href="#" class="post-item">
                     <div class="post-meta">
                         <span class="post-tag">生活</span>
@@ -327,11 +167,8 @@
                         <span>• 昨天</span>
                     </div>
                     <div class="post-title">推荐几个超好用的极简桌面壁纸资源站</div>
-                    <div class="post-excerpt">
-                        厌倦了花哨的桌面？这几个网站提供的 4K 极简壁纸绝对能治愈你的审美疲劳。
-                    </div>
+                    <div class="post-excerpt">厌倦了花哨的桌面？这几个网站提供的 4K 极简壁纸绝对能治愈你的审美疲劳。</div>
                 </a>
-
                 <a href="#" class="post-item">
                     <div class="post-meta">
                         <span class="post-tag">反馈</span>
@@ -339,19 +176,15 @@
                         <span>• 2026-04-18</span>
                     </div>
                     <div class="post-title">建议导航页增加一个"常用收藏"的自定义功能</div>
-                    <div class="post-excerpt">
-                        如果能让用户自己把最常用的几个工具顶在最前面，体验会更好，希望采纳！
-                    </div>
+                    <div class="post-excerpt">如果能让用户自己把最常用的几个工具顶在最前面，体验会更好，希望采纳！</div>
                 </a>
             </div>
         </div>
     </main>
-
     <script src="script.js" defer></script>
     <script>
         const forumSearchInput = document.getElementById('forumSearchInput');
         const postItems = document.querySelectorAll('.post-item');
-
         if (forumSearchInput) {
             forumSearchInput.addEventListener('input', function() {
                 const keyword = this.value.toLowerCase().trim();
