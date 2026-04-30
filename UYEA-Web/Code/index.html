@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>UYEA | 悠野导航</title>
     <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
-    <meta name="theme-color" content="#1d3557">
+    <meta name="theme-color" content="#000000">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
@@ -18,44 +18,46 @@
             display: flex; align-items: center; justify-content: center;
             padding: 0 20px; height: var(--header-h);
             background: var(--surface);
-            border-bottom: 3px solid #e63946;
+            border-bottom: 1px solid var(--border); /* [修改] 轻边框 */
             position: sticky; top: 0; z-index: 100;
         }
         .header-logo { display: none; }
         .search-container { width: 100%; max-width: 600px; display: flex; justify-content: center; }
         .header-search-wrapper {
             width: 100%; display: flex; align-items: center;
-            background: #ffffff; border: 2px solid #1d3557;
-            border-radius: var(--radius-md); padding: 0 4px 0 0; height: 44px;
-            transition: border-color 0.2s, box-shadow 0.2s; overflow: visible;
+            background: #FAFAFA;                  /* [修改] 输入框背景 */
+            border: 1px solid #E5E7EB;            /* [修改] 轻边框 */
+            border-radius: var(--radius-md); padding: 0 4px 0 0; height: 42px;
+            transition: border-color 0.2s; overflow: visible;
         }
-        .header-search-wrapper:focus-within { border-color: #e63946; box-shadow: 0 0 0 3px rgba(230,57,70,0.15); }
+        /* [修改] focus时边框改为#005BBB，与侧边栏呼应 */
+        .header-search-wrapper:focus-within { border-color: #005BBB; }
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
         .engine-trigger-btn {
-            display: flex; align-items: center; gap: 6px; padding: 0 14px; height: 44px;
-            background: #e63946; color: #FFFFFF; border: 2px solid #c1121f;
+            display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 42px;
+            background: #440003; color: #FFFFFF; border: none;
             border-radius: var(--radius-md) 0 0 var(--radius-md);
-            font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;
-            text-transform: uppercase; letter-spacing: 1px;
+            font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
         }
-        .engine-trigger-btn:hover { background: #c1121f; }
         .engine-dropdown-list {
-            display: none; position: absolute; top: calc(100% + 8px); left: 0;
+            display: none; position: absolute; top: calc(100% + 6px); left: 0;
             min-width: 80px; width: 100%; background: var(--surface);
-            border: 2px solid #1d3557; border-radius: var(--radius-md);
+            border: 1px solid var(--border); /* [修改] 轻边框 */
+            border-radius: var(--radius-md);
             box-shadow: var(--shadow-md); z-index: 200; padding: 0; overflow: hidden;
         }
         .engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
         .engine-option-item {
-            padding: 12px 14px; font-size: 14px; cursor: pointer; text-align: center; font-weight: 600;
-            border-bottom: 1px solid #1d3557; transition: background 0.2s;
+            padding: 10px 12px; font-size: 13px; cursor: pointer; text-align: center;
+            border-bottom: 1px solid var(--border); /* [修改] 轻边框 */
+            transition: background 0.2s;
         }
         .engine-option-item:last-child { border-bottom: none; }
-        .engine-option-item:hover { background: #ffe5e5; color: #e63946; }
-        .engine-option-item.selected { background: #e63946; color: #FFFFFF; font-weight: 800; }
+        .engine-option-item:hover { background: var(--bg); }
+        .engine-option-item.selected { color: var(--primary); font-weight: 700; }
         #searchInput {
             border: none; background: transparent; outline: none;
-            width: 100%; padding: 0 14px; font-size: 15px; color: var(--text-primary);
+            width: 100%; padding: 0 12px; font-size: 15px; color: var(--text-primary);
         }
         .header-actions { position: absolute; right: 20px; display: flex; align-items: center; }
         .menu-toggle {
@@ -63,50 +65,47 @@
             padding: 8px; flex-direction: column; gap: 5px;
         }
         .menu-toggle span {
-            display: block; width: 26px; height: 4px;
-            background: #1d3557; border-radius: 2px;
+            display: block; width: 24px; height: 3px;
+            background: var(--text-primary); border-radius: 2px;
         }
         .nav-menu { padding: 16px 12px; }
         .nav-item {
             display: flex; align-items: center; padding: 14px 18px;
-            margin: 6px 12px; border-radius: var(--radius-md);
+            margin: 6px 12px; border-radius: 8px;      /* [修改] 8px圆角 */
             text-decoration: none; color: #FFFFFF; font-weight: 600;
             transition: all 0.2s ease; cursor: pointer; border: none;
-            text-transform: uppercase; letter-spacing: 1px; font-size: 14px;
         }
-        .nav-item:hover { background: #e63946; transform: translateX(4px); }
-        /* [修改] active/menu-open 亮金 + 海军蓝文字 */
+        /* [修改] active状态为红底白字 */
         .nav-item.active {
-            background: #f4a261 !important; color: #1d3557 !important;
-            font-weight: 800; border-left: 4px solid #e63946 !important;
+            background: #E63946 !important; color: #FFFFFF !important;
         }
         .nav-item.menu-open {
-            background: #f4a261 !important; color: #1d3557 !important;
-            font-weight: 800; border-left: 4px solid #e63946 !important;
+            background: var(--primary) !important; color: #FFFFFF !important;
+            box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
         }
         .arrow-icon {
-            font-size: 12px; margin-left: auto;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.8;
+            font-size: 10px; margin-left: auto;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6;
         }
         .nav-item.menu-open .arrow-icon { transform: rotate(180deg); opacity: 1; }
         .nav-icon { color: #FFFFFF; font-size: 14px; }
         .sidebar-footer {
             padding: 24px 16px;
-            border-top: 2px solid #e63946;
+            border-top: 1px solid rgba(255,255,255,0.12);
         }
         .auth-buttons { display: flex; gap: 12px; }
         .auth-btn {
             flex: 1; display: flex; align-items: center; justify-content: center;
-            height: 44px; border-radius: var(--radius-md); font-size: 14px;
-            font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+            height: 42px; border-radius: 8px; /* [修改] 8px圆角 */
+            font-size: 13px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s ease;
         }
-        /* [修改] 猩红登录/注册按钮 */
+        /* [修改] 登录/注册按钮改为红底白字 */
         .login-btn, .register-btn {
-            background: #e63946; border: 2px solid #c1121f;
-            color: #FFFFFF; font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-            font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            background: #E63946; border: none; color: #FFFFFF;
+            font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-weight: 700; letter-spacing: 1.5px;
         }
-        .login-btn:hover, .register-btn:hover { background: #c1121f; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(230,57,70,0.5); }
         .login-btn span, .register-btn span {
             display: inline-block; font-size: 16px; color: #FFFFFF;
             font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
@@ -120,40 +119,53 @@
             .top-bar { padding: 0 12px; justify-content: space-between; }
             .search-container { margin-right: 52px; }
         }
-        .card-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid #1d3557; border-radius: 8px; }
+        .card-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
     </style>
 </head>
 <body>
+    <!-- ✅ 侧边栏 - 完全重写，彻底稳定 -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
+        <!-- ✅ SIDEBAR 头部：LOGO区域 -->
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
                 <span class="logo-sub">悠野</span>
             </div>
         </div>
+
+        <!-- ✅ SIDEBAR 导航菜单 -->
         <nav class="nav-menu">
+            <!-- ✅ 导航项1：网站导航（可展开） -->
             <a class="nav-item active nav-dropdown-trigger" id="allNavTrigger">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">网站导航</span>
                 <span class="arrow-icon">▼</span>
             </a>
+            <!-- ✅ 展开菜单：三个子项 -->
             <div class="sub-menu" id="subNavMenu">
                 <a href="#ai-section" class="sub-nav-item">Ai</a>
                 <a href="#life-section" class="sub-nav-item">生活</a>
                 <a href="#tool-section" class="sub-nav-item">工具</a>
             </div>
+
+            <!-- ✅ 导航项2：线上工具 -->
             <a href="tools.html" class="nav-item">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">线上工具</span>
             </a>
+
+            <!-- ✅ 导航项3：悠野社区 -->
             <a href="forum.html" class="nav-item">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">悠野社区</span>
             </a>
         </nav>
+
+        <!-- ✅ SIDEBAR 底部：主题切换 + 登录注册 -->
         <div class="sidebar-footer">
+            <!-- ✅ 主题切换按钮 -->
             <div class="theme-toggle-wrapper">
                 <div class="theme-toggle" role="button" tabindex="0" aria-label="切换主题">
                     <div class="theme-slider"></div>
@@ -161,6 +173,7 @@
                     <span class="theme-option dark">🌙</span>
                 </div>
             </div>
+            <!-- ✅ 登录 / 注册按钮 -->
             <div class="auth-buttons">
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')"><span>登录</span></div>
                 <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')"><span>注册</span></div>
@@ -185,7 +198,7 @@
                             <div class="engine-option-item" data-value="baidu">百度</div>
                         </div>
                     </div>
-                    <div style="width:2px; height:22px; background:#1d3557; margin:0 6px;"></div>
+                    <div style="width:1.5px; height:20px; background:rgba(0,0,0,0.08); margin:0 4px;"></div>
                     <input type="text" id="searchInput" placeholder="搜索关键词...">
                 </div>
             </div>
@@ -198,7 +211,7 @@
         <div class="content-wrapper">
             <div class="section-header"><h2 class="section-title">每日推荐</h2></div>
             <div class="grid-container" style="margin-bottom: 40px;">
-                <div class="text-status-card" style="background: var(--surface); border: 2px dashed #e63946; border-radius: var(--radius-md); padding: 40px; text-align: center; color: #1d3557; font-weight: 700; font-size: 18px; grid-column: 1 / -1;">☕ 尽请期待</div>
+                <div class="text-status-card" style="background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted); grid-column: 1 / -1;">☕ 尽请期待</div>
             </div>
             <div class="section-group" id="ai-section">
                 <div class="section-header"><h2 class="section-title">Ai</h2></div>
