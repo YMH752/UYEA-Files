@@ -1,28 +1,28 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   最终版：子菜单折叠高度强制归零，侧边栏跳动彻底消除
+   最终版：复古调色板设计规范
    ============================================================ */
 :root {
-    --primary:        #1e5fae;      /* [修改] 新主色 */
-    --primary-dark:   #174a8a;      /* [修改] 主色深色 */
-    --primary-light:  #F4A261;      /* 保留原值，未使用 */
-    --secondary:      #0f172a;      /* [修改] 标题用色 */
-    --bg:             #f8fafc;      /* [修改] 页面背景 */
-    --surface:        #ffffff;      /* [修改] 卡片/区块背景 */
-    --border:         #e2e8f0;      /* [修改] 边框色 */
-    --text-primary:   #0f172a;      /* [修改] 主文字 */
-    --text-secondary: #475569;      /* [修改] 次要文字 */
-    --text-muted:     #94a3b8;      /* [修改] 辅助文字 */
-    --error:          #e11d48;
-    --warning:        #fbbf24;
+    --primary:        #2f4f6f;      /* [修改] 深蓝（侧边栏主色） */
+    --primary-dark:   #1e3a52;      /* [修改] 深蓝加深 */
+    --primary-light:  #f4f1ea;      /* [修改] 米白 */
+    --secondary:      #1f1f1f;      /* [修改] 炭黑 */
+    --bg:             #f4f1ea;      /* [修改] 米白页面背景 */
+    --surface:        #ffffff;      /* [修改] 卡片白 */
+    --border:         #e5ded3;      /* [修改] 暖灰边框 */
+    --text-primary:   #1f1f1f;      /* [修改] 炭黑主文字 */
+    --text-secondary: #8a7f72;      /* [修改] 灰褐辅助文字 */
+    --text-muted:     #a09888;      /* [修改] 更淡灰褐 */
+    --error:          #d0573b;      /* [修改] 复古红（错误/主按钮） */
+    --warning:        #e8b84a;      /* [修改] 复古黄（次按钮） */
     --header-h:       64px;
     --sidebar-w:      210px;
-    --radius-sm:      10px;
-    --radius-md:      12px;
-    --radius-lg:      12px;
+    --radius-sm:      6px;          /* [修改] 小圆角 */
+    --radius-md:      10px;         /* [修改] 中圆角（卡片） */
+    --radius-lg:      10px;         /* [修改] 大圆角 */
     --duration:       0.3s;
-    --shadow-sm:      0 1px 2px rgba(0,0,0,0.04);  /* [修改] 微弱阴影 */
-    --shadow-md:      0 4px 12px rgba(0,0,0,0.06); /* [修改] 卡片阴影 */
+    --shadow-sm:      0 1px 2px rgba(0,0,0,0.03);   /* [修改] 极轻阴影 */
+    --shadow-md:      0 2px 6px rgba(0,0,0,0.04);   /* [修改] 卡片阴影 */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,7 +38,7 @@ body {
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
-    background: #1e5fae;              /* [修改] 纯色背景 */
+    background: #2f4f6f;              /* [修改] 复古深蓝，无渐变 */
     border-right: 2px solid rgba(255,255,255,0.12);
     position: fixed;
     top: 0; left: 0; z-index: 1000;
@@ -59,7 +59,7 @@ body {
     font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
     font-weight: 400; 
     font-size: 36px; 
-    color: #FFD700;
+    color: #e8b84a;                  /* [修改] 复古金 logo */
     letter-spacing: 2px;
     -webkit-text-stroke: 2px #D32F2F;
     text-shadow:
@@ -80,16 +80,17 @@ body {
     transition: all var(--duration);
     font-weight: 500;
 }
-/* [修改] 侧边栏 hover 半透明 */
+/* [修改] hover 半透白 */
 .nav-item:hover { background: rgba(255,255,255,0.08); color: #FFFFFF; }
 
-/* [修改] active 渐变 */
+/* [修改] active 半透更亮 */
 .nav-item.active {
-    background: linear-gradient(135deg, #3b82f6, #1e5fae);
+    background: rgba(255,255,255,0.12);
     color: #FFFFFF;
+    border-left: 3px solid #e8b84a;   /* [新增] 左侧金色强调边 */
 }
 
-/* 折叠态子菜单：高度绝对为0，无跳动 */
+/* 折叠态子菜单 */
 .sub-menu {
     display: block;
     overflow: hidden;
@@ -143,20 +144,20 @@ body {
 .header-search-wrapper {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
-    background: #f1f5f9;                  /* [修改] 浅灰背景 */
-    border: 1px solid #e2e8f0;            /* [修改] 边框 */
+    background: #faf8f3;              /* [修改] 暖白背景 */
+    border: 1px solid #e5ded3;        /* [修改] 暖灰边框 */
     border-radius: var(--radius-lg);
 }
-/* [新增] focus 状态 */
+/* [新增] focus 样式 */
 .header-search-wrapper:focus-within {
     background: #ffffff;
-    border-color: #1e5fae;
+    border-color: #2f4f6f;
 }
 
-/* [修改] 登录/注册按钮主色样式 */
+/* [修改] 登录/注册按钮 → 复古红主按钮 */
 .login-btn {
     padding: 8px 20px;
-    background: #1e5fae;
+    background: #d0573b;
     color: #FFFFFF;
     border-radius: 8px;
     text-decoration: none;
@@ -168,7 +169,7 @@ body {
 }
 .register-btn {
     padding: 8px 20px;
-    background: #1e5fae;
+    background: #d0573b;
     color: #FFFFFF;
     border-radius: 8px;
     text-decoration: none;
@@ -179,36 +180,37 @@ body {
     transition: opacity var(--duration);
 }
 .login-btn:hover,
-.register-btn:hover { background: #174a8a; }   /* [修改] hover 深色 */
+.register-btn:hover { background: #b8442e; }   /* [修改] hover 加深 */
 
 .section-header { margin-bottom: 24px; }
 .section-title {
     font-size: 22px; font-weight: 700; color: var(--secondary);
     position: relative; padding-left: 18px;
 }
-/* [修改] 装饰条改为主色 */
+/* [修改] 左侧装饰条改为复古红 */
 .section-title::before {
     content: ""; position: absolute; left: 0; top: 15%; bottom: 15%;
-    width: 6px; background: #1e5fae; border-radius: 3px;
+    width: 6px; background: #d0573b; border-radius: 3px;
 }
 
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
+    gap: 24px;                        /* [修改] 间距加大 */
 }
 .card-item {
     background: var(--surface);
-    border: 1px solid #e2e8f0;          /* [修改] 边框 */
-    border-radius: var(--radius-md);
-    padding: 16px;                       /* [修改] 内边距 */
+    border: 1px solid #e5ded3;        /* [修改] 暖灰边框 */
+    border-radius: 10px;              /* [修改] 圆角 */
+    padding: 16px;                    /* [修改] 内边距 */
     display: flex; align-items: center; gap: 14px;
     text-decoration: none;
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03); /* [新增] 微阴影 */
 }
 .card-item:hover {
     transform: translateY(-4px);
-    border-color: rgba(0,0,0,0.15);
+    border-color: #d0573b;            /* [修改] hover 红边 */
     box-shadow: var(--shadow-md);
 }
 .card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
@@ -237,17 +239,18 @@ body {
 }
 .card-icon.skeleton img { opacity: 0; }
 
+/* [修改] 暗色模式复古调色 */
 html[data-theme="dark"] {
-    --primary:        #2A6FA1;
-    --primary-dark:   #1F4E79;
-    --primary-light:  #163A5F;
-    --secondary:      #F4A261;
-    --bg:             #0D0D0D;
-    --surface:        #1A1A1A;
-    --border:         #2A6FA1;
-    --text-primary:   #FFFFFF;
-    --text-secondary: #CCCCCC;
-    --text-muted:     #888888;
+    --primary:        #3a6b8f;
+    --primary-dark:   #2f4f6f;
+    --primary-light:  #2a2a2a;
+    --secondary:      #e8b84a;
+    --bg:             #1a1a1a;
+    --surface:        #242424;
+    --border:         #3a3a3a;
+    --text-primary:   #f4f1ea;
+    --text-secondary: #a09888;
+    --text-muted:     #6a6a6a;
 }
 
 .theme-toggle-wrapper { width: 100%; margin-bottom: 16px; }
@@ -263,19 +266,20 @@ html[data-theme="dark"] {
     -webkit-tap-highlight-color: transparent;
     overflow: hidden;
 }
+/* [修改] 滑块主色 */
 .theme-slider {
     position: absolute;
     top: 3px; left: 3px;
     width: calc(50% - 3px);
     height: calc(100% - 6px);
-    background: #1e5fae;                /* [修改] 滑块主色 */
+    background: #2f4f6f;
     border-radius: calc(var(--radius-md) - 3px);
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     z-index: 1;
 }
 html[data-theme="dark"] .theme-slider {
     transform: translateX(100%);
-    background: #FFFFFF;
+    background: #e8b84a;
 }
 .theme-option {
     position: relative; z-index: 2;
