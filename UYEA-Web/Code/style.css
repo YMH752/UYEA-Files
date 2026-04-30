@@ -52,13 +52,13 @@ body {
 }
 
 .sidebar {
-    /* ✅ 位置锁定：fixed 定位彻底固定在左侧，绝不动摇 */
+    /* ✅ 绝对定位：彻底固定在左侧 */
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
     
-    /* ✅ 尺寸锁定：宽度、高度必须绝对固定 */
+    /* ✅ 尺寸：精确锁定 */
     width: var(--sidebar-w); /* 210px */
     height: 100vh;
     
@@ -66,26 +66,41 @@ body {
     background: #005BBB;
     border-right: 2px solid rgba(255,255,255,0.12);
     
-    /* ✅ 滚动处理：内容超出时在sidebar内滚动，不影响外部页面 */
-    overflow-y: auto;
-    overflow-x: hidden;
+    /* ✅ Flexbox 布局：sidebar 分为上中下三部分 */
+    display: flex;
+    flex-direction: column;
     
-    /* ✅ 过渡动画（仅用于移动端展开/收起） */
-    transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* ✅ 重置所有默认边距和填充，确保精确定位 */
+    /* ✅ 重置边距 */
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    
+    /* ✅ 防止内容溢出 */
+    overflow: hidden;
+    
+    /* ✅ 过渡动画（仅用于移动端） */
+    transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-header {
+    /* ✅ 固定高度，不能变 */
+    height: 72px;
+    
     padding: 24px;
     border-bottom: 1px solid rgba(255,255,255,0.12);
     text-align: center;
+    
+    /* ✅ 不能缩放 */
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
-.logo-group { display: flex; align-items: baseline; gap: 8px; justify-content: center; }
+.logo-group { 
+    display: flex; 
+    align-items: baseline; 
+    gap: 8px; 
+    justify-content: center;
+    height: 100%;
+}
 
 .logo-text { 
     position: relative;
@@ -98,29 +113,48 @@ body {
     text-shadow:
         2px 2px 0 rgba(0,0,0,0.3),
         4px 4px 0 rgba(0,0,0,0.15);
+    white-space: nowrap;
 }
 
 .logo-sub { display: none; }
 
 .nav-menu { 
+    /* ✅ 占用所有剩余空间 */
+    flex: 1;
+    
+    /* ✅ 内部滚动（如果内容超过高度） */
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    /* ✅ 边距和填充 */
     padding: 16px 12px;
-    /* ✅ 固定导航菜单区域的最小高度 */
-    /* 目的：使三个页面（index/tools/forum）的nav-menu高度完全一致 */
-    /* 这样sidebar-footer（登录/主题按钮）就不会跳动了 */
-    min-height: 220px;
-    overflow: hidden;
+    margin: 0;
+    
+    /* ✅ 确保min-height不生效，用flex占据空间 */
+    min-height: auto;
 }
 
 .nav-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px; border-radius: var(--radius-sm);
+    display: flex; 
+    align-items: center; 
+    gap: 12px;
+    padding: 12px 16px; 
+    border-radius: var(--radius-sm);
     color: #FFFFFF;
     text-decoration: none;
     margin-bottom: 6px;
     transition: all var(--duration);
     font-weight: 500;
+    
+    /* ✅ 防止伸缩 */
+    flex-shrink: 0;
+    height: 44px;
 }
-.nav-item:hover { background: var(--primary-light); color: var(--primary); }
+
+.nav-item:hover { 
+    background: var(--primary-light); 
+    color: var(--primary); 
+}
 
 .nav-item.active {
     background: #FFDD50;
@@ -158,14 +192,31 @@ body {
     text-decoration: none;
     transition: all 0.2s ease;
 }
+
 .sub-nav-item:hover {
     color: var(--primary);
     background: rgba(0,0,0,0.03);
 }
 
 .sidebar-footer {
+    /* ✅ 固定高度，永不变化 */
+    height: 150px;
+    
     padding: 24px 16px;
     border-top: 1px solid rgba(255,255,255,0.12);
+    
+    /* ✅ 不能伸缩 */
+    flex-shrink: 0;
+    flex-grow: 0;
+    
+    /* ✅ Flexbox 布局 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    
+    /* ✅ 防止溢出 */
+    overflow: hidden;
 }
 
 /* ✅ 主内容区域 - 简单直接，不搞复杂布局 */
@@ -310,11 +361,17 @@ html[data-theme="dark"] {
     --text-muted:     #888888;
 }
 
-.theme-toggle-wrapper { width: 100%; margin-bottom: 16px; }
+.theme-toggle-wrapper { 
+    width: 100%;
+}
+
 .theme-toggle {
     position: relative;
-    display: flex; align-items: center; justify-content: space-between;
-    width: 100%; height: 42px;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    width: 100%; 
+    height: 42px;
     background: var(--bg);
     border: 1.5px solid rgba(0,0,0,0.08);
     border-radius: var(--radius-md);
@@ -323,9 +380,11 @@ html[data-theme="dark"] {
     -webkit-tap-highlight-color: transparent;
     overflow: hidden;
 }
+
 .theme-slider {
     position: absolute;
-    top: 3px; left: 3px;
+    top: 3px; 
+    left: 3px;
     width: calc(50% - 3px);
     height: calc(100% - 6px);
     background: #440003;
@@ -333,22 +392,64 @@ html[data-theme="dark"] {
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     z-index: 1;
 }
+
 html[data-theme="dark"] .theme-slider {
     transform: translateX(100%);
     background: #FFFFFF;
 }
+
 .theme-option {
-    position: relative; z-index: 2;
+    position: relative; 
+    z-index: 2;
     flex: 1;
-    display: flex; align-items: center; justify-content: center;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
     height: 100%;
     font-size: 18px;
     transition: opacity 0.3s, filter 0.3s;
 }
+
 .theme-option.light { opacity: 1; filter: grayscale(0); }
 .theme-option.dark { opacity: 0.35; filter: grayscale(1); }
 html[data-theme="dark"] .theme-option.light { opacity: 0.35; filter: grayscale(1); }
 html[data-theme="dark"] .theme-option.dark { opacity: 1; filter: grayscale(0); }
+
+.auth-buttons { 
+    display: flex; 
+    gap: 12px;
+    width: 100%;
+}
+
+.auth-btn { 
+    flex: 1; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    height: 42px; 
+    border-radius: var(--radius-md); 
+    font-size: 13px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.login-btn, .register-btn {
+    background: #FFDD50; 
+    border: 1.5px solid rgba(255,255,255,0.15);
+    color: #0088FF;
+    font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 700; 
+    letter-spacing: 1.5px;
+}
+
+.login-btn span, .register-btn span {
+    display: inline-block; 
+    font-size: 16px; 
+    color: #11a0ff;
+    font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
 
 /* ════════════════════════════════════════════════════════════
    ✅ 终极滚动条锁定规则 - 彻底解决sidebar左右摇晃问题
