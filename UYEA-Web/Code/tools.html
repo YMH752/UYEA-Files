@@ -31,11 +31,12 @@
             border-radius: var(--radius-md); text-decoration: none; color: #FFFFFF;
             font-weight: 600; transition: all 0.2s ease; cursor: pointer; border: none;
         }
+        /* [修改] active 背景色、文字色 */
         .nav-item.active {
-            background: #FFDD50 !important; color: #11a0ff !important;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
+            background: #163A5F !important; color: #FFFFFF !important;
         }
-        .nav-item.menu-open { background: var(--primary) !important; color: #FFFFFF !important; box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2); }
+        /* [修改] menu-open 背景色 */
+        .nav-item.menu-open { background: #163A5F !important; color: #FFFFFF !important; }
         .arrow-icon { font-size: 10px; margin-left: auto; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6; }
         .nav-item.menu-open .arrow-icon { transform: rotate(180deg); opacity: 1; }
         .nav-icon { color: #FFFFFF; font-size: 14px; }
@@ -48,7 +49,8 @@
         .tool-search-input { border: none; background: transparent; outline: none; width: 100%; font-size: 15px; color: var(--text-primary); }
         .category-tabs { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; }
         .tab-item { padding: 8px 20px; background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08); border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-        .tab-item.active { background: #000000; color: #FFFFFF; border-color: transparent; }
+        /* [修改] 激活标签背景色 */
+        .tab-item.active { background: #1F4E79; color: #FFFFFF; border-color: transparent; }
         .tool-group-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; margin-bottom: 20px; padding-left: 4px; }
     </style>
 </head>
