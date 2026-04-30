@@ -1,9 +1,7 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
-   最终修改：修复侧边栏跳动，底栏回归自然位置，子菜单折叠高度强制归零
+   最终版：子菜单折叠高度强制归零，侧边栏跳动彻底消除
    ============================================================ */
-
 :root {
     --primary:        #D96A1A;
     --primary-dark:   #5A0A0A;
@@ -37,7 +35,6 @@ body {
     line-height: 1.6;
 }
 
-/* ── 侧边栏 ── */
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
@@ -90,14 +87,14 @@ body {
     color: #11a0ff;
 }
 
-/* 子菜单默认折叠，强制高度为0，消除跳动 */
+/* 折叠态子菜单：高度绝对为0，无跳动 */
 .sub-menu {
     display: block;
     overflow: hidden;
     max-height: 0;
     opacity: 0;
     padding-bottom: 0;
-    font-size: 0;        /* 彻底消除文字行高所占空间 */
+    font-size: 0;
     line-height: 0;
     transition: max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -126,17 +123,14 @@ body {
     background: rgba(0,0,0,0.03);
 }
 
-/* 侧边栏底部区域：自然跟随内容流，不固定 */
 .sidebar-footer {
     padding: 24px 16px;
     border-top: 1px solid rgba(255,255,255,0.12);
 }
 
-/* ── 主内容区 ── */
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
 .content-wrapper { padding: 40px 32px; max-width: 1200px; margin: 0 auto; }
 
-/* ── 顶栏通用样式 ── */
 .top-bar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 24px; height: var(--header-h);
@@ -144,7 +138,6 @@ body {
     border-bottom: 2px solid rgba(0,0,0,0.08);
     position: sticky; top: 0; z-index: 100;
 }
-
 .header-search-wrapper {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
@@ -165,7 +158,6 @@ body {
     letter-spacing: 1.5px;
     transition: opacity var(--duration);
 }
-
 .register-btn {
     padding: 8px 20px;
     background: #440003;
@@ -178,13 +170,9 @@ body {
     letter-spacing: 1.5px;
     transition: opacity var(--duration);
 }
-
 .login-btn:hover,
-.register-btn:hover {
-    opacity: 0.8;
-}
+.register-btn:hover { opacity: 0.8; }
 
-/* ── 栏目与标题 ── */
 .section-header { margin-bottom: 24px; }
 .section-title {
     font-size: 22px; font-weight: 700; color: var(--secondary);
@@ -195,13 +183,11 @@ body {
     width: 6px; background: var(--primary); border-radius: 3px;
 }
 
-/* ── 链接方块 ── */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
 }
-
 .card-item {
     background: var(--surface);
     border: 1.5px solid rgba(0,0,0,0.08);
@@ -211,17 +197,12 @@ body {
     text-decoration: none;
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
 .card-item:hover {
     transform: translateY(-4px);
     border-color: rgba(0,0,0,0.15);
     box-shadow: var(--shadow-md);
 }
-
-.card-title {
-    font-size: 15px; font-weight: 600; color: var(--text-primary);
-}
-
+.card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
 .card-icon {
     width: 36px; height: 36px;
     border-radius: 8px;
@@ -229,7 +210,6 @@ body {
     overflow: hidden;
 }
 
-/* 响应式调整 */
 @media (max-width: 1024px) {
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
@@ -240,22 +220,13 @@ body {
     0%   { background-position: -200% 0; }
     100% { background-position:  200% 0; }
 }
-
 .card-icon.skeleton {
-    background: linear-gradient(
-        90deg,
-        var(--border) 25%,
-        var(--bg)     50%,
-        var(--border) 75%
-    );
+    background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
     background-size: 200% 100%;
     animation: shimmer 1.4s ease-in-out infinite;
     border-radius: 8px;
 }
-
-.card-icon.skeleton img {
-    opacity: 0;
-}
+.card-icon.skeleton img { opacity: 0; }
 
 html[data-theme="dark"] {
     --primary:        #39FF14;
@@ -270,18 +241,11 @@ html[data-theme="dark"] {
     --text-muted:     #888888;
 }
 
-.theme-toggle-wrapper {
-    width: 100%;
-    margin-bottom: 16px;
-}
-
+.theme-toggle-wrapper { width: 100%; margin-bottom: 16px; }
 .theme-toggle {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 42px;
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; height: 42px;
     background: var(--bg);
     border: 1.5px solid rgba(0,0,0,0.08);
     border-radius: var(--radius-md);
@@ -290,11 +254,9 @@ html[data-theme="dark"] {
     -webkit-tap-highlight-color: transparent;
     overflow: hidden;
 }
-
 .theme-slider {
     position: absolute;
-    top: 3px;
-    left: 3px;
+    top: 3px; left: 3px;
     width: calc(50% - 3px);
     height: calc(100% - 6px);
     background: #440003;
@@ -302,40 +264,19 @@ html[data-theme="dark"] {
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     z-index: 1;
 }
-
 html[data-theme="dark"] .theme-slider {
     transform: translateX(100%);
     background: #FFFFFF;
 }
-
 .theme-option {
-    position: relative;
-    z-index: 2;
+    position: relative; z-index: 2;
     flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     height: 100%;
     font-size: 18px;
     transition: opacity 0.3s, filter 0.3s;
 }
-
-.theme-option.light {
-    opacity: 1;
-    filter: grayscale(0);
-}
-
-.theme-option.dark {
-    opacity: 0.35;
-    filter: grayscale(1);
-}
-
-html[data-theme="dark"] .theme-option.light {
-    opacity: 0.35;
-    filter: grayscale(1);
-}
-
-html[data-theme="dark"] .theme-option.dark {
-    opacity: 1;
-    filter: grayscale(0);
-}
+.theme-option.light { opacity: 1; filter: grayscale(0); }
+.theme-option.dark { opacity: 0.35; filter: grayscale(1); }
+html[data-theme="dark"] .theme-option.light { opacity: 0.35; filter: grayscale(1); }
+html[data-theme="dark"] .theme-option.dark { opacity: 1; filter: grayscale(0); }
