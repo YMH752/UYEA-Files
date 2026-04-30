@@ -31,9 +31,10 @@
             text-decoration: none; color: #FFFFFF; font-weight: 600;
             transition: all 0.2s ease; cursor: pointer; border: none;
         }
-        /* [修改] active 背景色、文字色 */
+        /* [修改] active 渐变样式 */
         .nav-item.active {
-            background: #163A5F !important; color: #FFFFFF !important;
+            background: linear-gradient(135deg, #3b82f6, #1e5fae) !important;
+            color: #FFFFFF !important;
         }
         .arrow-icon { display: none; }
         .nav-icon { color: #FFFFFF; font-size: 14px; }
@@ -47,42 +48,44 @@
             height: 42px; border-radius: var(--radius-md);
             font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
         }
+        /* [修改] 登录/注册按钮主色 */
         .login-btn, .register-btn {
-            background: #FFDD50; border: 1.5px solid rgba(255,255,255,0.15);
-            color: #0088FF;
+            background: #1e5fae; border: none;
+            color: #FFFFFF;
             font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
             font-weight: 700; letter-spacing: 1.5px;
         }
         .login-btn span, .register-btn span {
-            display: inline-block; font-size: 16px; color: #11a0ff;
+            display: inline-block; font-size: 16px; color: #FFFFFF; /* [修改] 白色文字 */
             font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         }
         .forum-toolbar { display: flex; gap: 12px; margin-bottom: 24px; align-items: center; }
+        /* [修改] 发布按钮主色 */
         .post-btn {
             display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 24px; background: #440003; color: #FFFFFF;
-            border-radius: var(--radius-md); text-decoration: none;
+            padding: 10px 24px; background: #1e5fae; color: #FFFFFF;
+            border-radius: 8px; text-decoration: none;
             font-weight: 600; font-size: 14px; transition: background 0.2s; white-space: nowrap;
         }
-        .post-btn:hover { background: #333333; }
+        .post-btn:hover { background: #174a8a; }
         .forum-search { flex: 1; position: relative; }
         .forum-search input {
             width: 100%; padding: 10px 16px 10px 40px;
-            background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08);
+            background: #f1f5f9; border: 1px solid #e2e8f0;     /* [修改] 边框背景 */
             border-radius: var(--radius-md); outline: none; font-size: 14px; transition: border-color 0.2s;
         }
-        .forum-search input:focus { border-color: rgba(0,0,0,0.18); }
+        .forum-search input:focus { border-color: #1e5fae; background: #ffffff; } /* [修改] focus样式 */
         .forum-search span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
         .post-list { display: flex; flex-direction: column; gap: 16px; }
         .post-item {
-            background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08);
-            border-radius: var(--radius-md); padding: 24px; text-decoration: none;
+            background: var(--surface); border: 1px solid #e2e8f0;   /* [修改] 边框 */
+            border-radius: var(--radius-md); padding: 16px;          /* [修改] 内边距 */
+            text-decoration: none;
             transition: transform 0.2s, box-shadow 0.2s; display: block;
         }
         .post-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 12px; color: var(--text-secondary); }
-        /* [修改] 标签背景色、文字色 */
-        .post-tag { padding: 2px 8px; background: #F1F5F9; border-radius: 4px; color: #475569; font-weight: 600; }
+        .post-tag { padding: 2px 8px; background: #f1f5f9; border-radius: 999px; color: #475569; font-weight: 600; } /* [修改] 圆角 pill */
         .post-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; }
         .post-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
     </style>
