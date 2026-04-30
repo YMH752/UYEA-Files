@@ -25,16 +25,15 @@
         .search-container { width: 100%; max-width: 600px; display: flex; justify-content: center; }
         .header-search-wrapper {
             width: 100%; display: flex; align-items: center;
-            background: var(--bg); border: 1.5px solid rgba(0,0,0,0.08);
+            background: #f1f5f9; border: 1px solid #e2e8f0;   /* [修改] 背景/边框 */
             border-radius: var(--radius-md); padding: 0 4px 0 0; height: 42px;
             transition: border-color 0.2s; overflow: visible;
         }
-        .header-search-wrapper:focus-within { border-color: rgba(0,0,0,0.18); }
+        .header-search-wrapper:focus-within { border-color: #1e5fae; background: #ffffff; } /* [修改] focus */
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
-        /* [修改] 引擎按钮背景色 */
         .engine-trigger-btn {
             display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 42px;
-            background: #1F4E79; color: #FFFFFF; border: none;
+            background: #1e5fae; color: #FFFFFF; border: none;     /* [修改] 主色 */
             border-radius: var(--radius-md) 0 0 var(--radius-md);
             font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
         }
@@ -72,13 +71,14 @@
             text-decoration: none; color: #FFFFFF; font-weight: 600;
             transition: all 0.2s ease; cursor: pointer; border: none;
         }
-        /* [修改] active 背景色、文字色，去除 box-shadow */
+        /* [修改] active/menu-open 渐变 */
         .nav-item.active {
-            background: #163A5F !important; color: #FFFFFF !important;
+            background: linear-gradient(135deg, #3b82f6, #1e5fae) !important;
+            color: #FFFFFF !important;
         }
-        /* [修改] menu-open 背景色 */
         .nav-item.menu-open {
-            background: #163A5F !important; color: #FFFFFF !important;
+            background: linear-gradient(135deg, #3b82f6, #1e5fae) !important;
+            color: #FFFFFF !important;
         }
         .arrow-icon {
             font-size: 10px; margin-left: auto;
@@ -96,13 +96,14 @@
             height: 42px; border-radius: var(--radius-md); font-size: 13px;
             font-weight: 600; cursor: pointer; transition: all 0.2s ease;
         }
+        /* [修改] 登录/注册按钮主色 */
         .login-btn, .register-btn {
-            background: #FFDD50; border: 1.5px solid rgba(255,255,255,0.15);
-            color: #0088FF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            background: #1e5fae; border: none;
+            color: #FFFFFF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
             font-weight: 700; letter-spacing: 1.5px;
         }
         .login-btn span, .register-btn span {
-            display: inline-block; font-size: 16px; color: #11a0ff;
+            display: inline-block; font-size: 16px; color: #FFFFFF; /* [修改] 白色文字 */
             font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         }
         @media (max-width: 1024px) {
