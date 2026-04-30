@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>悠野社区 | UYEA | 悠野导航</title>
     <meta name="description" content="悠野社区 - 分享想法、互帮互助、共同成长的技术社区平台。">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#1d3557">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
@@ -18,11 +18,11 @@
             display: flex; align-items: center; justify-content: flex-end;
             padding: 0 24px; height: var(--header-h);
             background: var(--surface);
-            border-bottom: 1.5px solid rgba(0,0,0,0.08);
+            border-bottom: 3px solid #e63946;
             position: sticky; top: 0; z-index: 100;
         }
         .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; gap: 5px; }
-        .menu-toggle span { display: block; width: 24px; height: 3px; background: var(--text-primary); border-radius: 2px; }
+        .menu-toggle span { display: block; width: 26px; height: 4px; background: #1d3557; border-radius: 2px; }
         @media (max-width: 1024px) { .menu-toggle { display: flex; } }
         @media (max-width: 768px) { .top-bar { padding: 0 12px; } }
         .nav-item {
@@ -30,69 +30,74 @@
             margin: 6px 12px; border-radius: var(--radius-md);
             text-decoration: none; color: #FFFFFF; font-weight: 600;
             transition: all 0.2s ease; cursor: pointer; border: none;
+            text-transform: uppercase; letter-spacing: 1px; font-size: 14px;
         }
-        /* [修改] active 半透 + 左侧金边 */
+        .nav-item:hover { background: #e63946; transform: translateX(4px); }
+        /* [修改] active 亮金背景 + 海军蓝文字 */
         .nav-item.active {
-            background: rgba(255,255,255,0.12) !important; color: #FFFFFF !important;
-            border-left: 3px solid #e8b84a !important;
+            background: #f4a261 !important; color: #1d3557 !important;
+            font-weight: 800; border-left: 4px solid #e63946 !important;
         }
         .arrow-icon { display: none; }
         .nav-icon { color: #FFFFFF; font-size: 14px; }
         .sidebar-footer {
             padding: 24px 16px;
-            border-top: 1px solid rgba(255,255,255,0.12);
+            border-top: 2px solid #e63946;
         }
         .auth-buttons { display: flex; gap: 12px; }
         .auth-btn {
             flex: 1; display: flex; align-items: center; justify-content: center;
-            height: 42px; border-radius: var(--radius-md);
-            font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+            height: 44px; border-radius: var(--radius-md);
+            font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
         }
-        /* [修改] 复古红主按钮 */
+        /* [修改] 猩红主按钮 */
         .login-btn, .register-btn {
-            background: #d0573b; border: none;
+            background: #e63946; border: 2px solid #c1121f;
             color: #FFFFFF;
-            font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-            font-weight: 700; letter-spacing: 1.5px;
+            font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
         }
+        .login-btn:hover, .register-btn:hover { background: #c1121f; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(230,57,70,0.5); }
         .login-btn span, .register-btn span {
             display: inline-block; font-size: 16px; color: #FFFFFF;
             font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         }
-        .forum-toolbar { display: flex; gap: 12px; margin-bottom: 24px; align-items: center; }
-        /* [修改] 复古红发布按钮 */
+        .forum-toolbar { display: flex; gap: 14px; margin-bottom: 28px; align-items: center; }
+        /* [修改] 猩红发布按钮 */
         .post-btn {
             display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 24px; background: #d0573b; color: #FFFFFF;
-            border-radius: 8px; text-decoration: none;
-            font-weight: 600; font-size: 14px; transition: background 0.2s; white-space: nowrap;
+            padding: 12px 28px; background: #e63946; color: #FFFFFF;
+            border-radius: 8px; text-decoration: none; border: 2px solid #c1121f;
+            font-weight: 700; font-size: 15px; transition: all 0.2s; white-space: nowrap;
+            text-transform: uppercase; letter-spacing: 1px;
         }
-        .post-btn:hover { background: #b8442e; }
+        .post-btn:hover { background: #c1121f; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(230,57,70,0.4); }
         .forum-search { flex: 1; position: relative; }
         .forum-search input {
-            width: 100%; padding: 10px 16px 10px 40px;
-            background: #faf8f3; border: 1px solid #e5ded3;     /* [修改] 暖色输入框 */
-            border-radius: var(--radius-md); outline: none; font-size: 14px; transition: border-color 0.2s;
+            width: 100%; padding: 12px 16px 12px 42px;
+            background: #ffffff; border: 2px solid #1d3557;
+            border-radius: var(--radius-md); outline: none; font-size: 14px; 
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .forum-search input:focus { border-color: #2f4f6f; background: #ffffff; }
+        .forum-search input:focus { border-color: #e63946; box-shadow: 0 0 0 3px rgba(230,57,70,0.15); }
         .forum-search span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
-        .post-list { display: flex; flex-direction: column; gap: 16px; }
+        .post-list { display: flex; flex-direction: column; gap: 18px; }
         .post-item {
-            background: var(--surface); border: 1px solid #e5ded3;   /* [修改] 暖灰边框 */
-            border-radius: var(--radius-md); padding: 16px;
+            background: var(--surface); border: 2px solid #1d3557;
+            border-radius: var(--radius-md); padding: 20px;
             text-decoration: none;
             transition: transform 0.2s, box-shadow 0.2s; display: block;
         }
-        .post-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 12px; color: var(--text-secondary); }
-        /* [修改] 复古标签系统：浅背景+深文字 */
-        .post-tag { padding: 2px 8px; background: #f3d6cf; border-radius: 999px; color: #a63e2a; font-weight: 600; }
-        .post-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; }
-        .post-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+        .post-item:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(230,57,70,0.15); border-color: #e63946; }
+        .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; font-size: 13px; color: var(--text-secondary); }
+        /* [修改] 标签：浅底+深色文字高饱和 */
+        .post-tag { padding: 3px 12px; border-radius: 999px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .post-tag:nth-child(1) { background: #ffcdb2; color: #c1121f; }
+        .post-title { font-size: 20px; font-weight: 800; color: var(--text-primary); margin-bottom: 10px; line-height: 1.4; }
+        .post-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
     </style>
 </head>
 <body>
-    <!-- ✅ 侧边栏 -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
