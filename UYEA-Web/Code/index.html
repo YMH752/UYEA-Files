@@ -31,9 +31,10 @@
         }
         .header-search-wrapper:focus-within { border-color: rgba(0,0,0,0.18); }
         .engine-dropdown-wrapper { position: relative; flex-shrink: 0; }
+        /* [修改] 引擎按钮背景色 */
         .engine-trigger-btn {
             display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 42px;
-            background: #440003; color: #FFFFFF; border: none;
+            background: #1F4E79; color: #FFFFFF; border: none;
             border-radius: var(--radius-md) 0 0 var(--radius-md);
             font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
         }
@@ -71,13 +72,13 @@
             text-decoration: none; color: #FFFFFF; font-weight: 600;
             transition: all 0.2s ease; cursor: pointer; border: none;
         }
+        /* [修改] active 背景色、文字色，去除 box-shadow */
         .nav-item.active {
-            background: #FFDD50 !important; color: #11a0ff !important;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
+            background: #163A5F !important; color: #FFFFFF !important;
         }
+        /* [修改] menu-open 背景色 */
         .nav-item.menu-open {
-            background: var(--primary) !important; color: #FFFFFF !important;
-            box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
+            background: #163A5F !important; color: #FFFFFF !important;
         }
         .arrow-icon {
             font-size: 10px; margin-left: auto;
