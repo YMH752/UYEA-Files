@@ -27,80 +27,32 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ✅ 最终方案：彻底锁死滚动条，确保页面宽度固定不变 */
-html {
-    /* ✅ 始终显示滚动条轨道，即使没有内容溢出也显示 */
-    overflow-y: scroll;
-    /* ✅ 防止水平滚动 */
-    overflow-x: hidden;
-    /* ✅ 固定高度和宽度 */
-    height: 100%;
-    width: 100%;
-}
-
 body {
     font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
     background-color: var(--bg);
     color: var(--text-primary);
     overflow-x: hidden;
     line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    /* ✅ 强制body与html同高，防止高度变化导致滚动条出现/消失 */
-    min-height: 100vh;
-    height: auto;
 }
 
 .sidebar {
-    /* ✅ 绝对定位：彻底固定在左侧 */
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    
-    /* ✅ 尺寸：精确锁定 */
-    width: var(--sidebar-w); /* 210px */
+    width: var(--sidebar-w);
     height: 100vh;
-    
-    /* ✅ 样式 */
     background: #005BBB;
     border-right: 2px solid rgba(255,255,255,0.12);
-    
-    /* ✅ Flexbox 布局：sidebar 分为上中下三部分 */
-    display: flex;
-    flex-direction: column;
-    
-    /* ✅ 重置边距 */
-    margin: 0;
-    padding: 0;
-    
-    /* ✅ 防止内容溢出 */
-    overflow: hidden;
-    
-    /* ✅ 过渡动画（仅用于移动端） */
+    position: fixed;
+    top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
 }
 
 .sidebar-header {
-    /* ✅ 固定高度，不能变 */
-    height: 72px;
-    
     padding: 24px;
     border-bottom: 1px solid rgba(255,255,255,0.12);
     text-align: center;
-    
-    /* ✅ 不能缩放 */
-    flex-shrink: 0;
-    flex-grow: 0;
 }
 
-.logo-group { 
-    display: flex; 
-    align-items: baseline; 
-    gap: 8px; 
-    justify-content: center;
-    height: 100%;
-}
+.logo-group { display: flex; align-items: baseline; gap: 8px; justify-content: center; }
 
 .logo-text { 
     position: relative;
@@ -113,48 +65,22 @@ body {
     text-shadow:
         2px 2px 0 rgba(0,0,0,0.3),
         4px 4px 0 rgba(0,0,0,0.15);
-    white-space: nowrap;
 }
 
 .logo-sub { display: none; }
 
-.nav-menu { 
-    /* ✅ 占用所有剩余空间 */
-    flex: 1;
-    
-    /* ✅ 内部滚动（如果内容超过高度） */
-    overflow-y: auto;
-    overflow-x: hidden;
-    
-    /* ✅ 边距和填充 */
-    padding: 16px 12px;
-    margin: 0;
-    
-    /* ✅ 确保min-height不生效，用flex占据空间 */
-    min-height: auto;
-}
+.nav-menu { padding: 16px 12px; }
 
 .nav-item {
-    display: flex; 
-    align-items: center; 
-    gap: 12px;
-    padding: 12px 16px; 
-    border-radius: var(--radius-sm);
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: var(--radius-sm);
     color: #FFFFFF;
     text-decoration: none;
     margin-bottom: 6px;
     transition: all var(--duration);
     font-weight: 500;
-    
-    /* ✅ 防止伸缩 */
-    flex-shrink: 0;
-    height: 44px;
 }
-
-.nav-item:hover { 
-    background: var(--primary-light); 
-    color: var(--primary); 
-}
+.nav-item:hover { background: var(--primary-light); color: var(--primary); }
 
 .nav-item.active {
     background: #FFDD50;
@@ -192,59 +118,25 @@ body {
     text-decoration: none;
     transition: all 0.2s ease;
 }
-
 .sub-nav-item:hover {
     color: var(--primary);
     background: rgba(0,0,0,0.03);
 }
 
 .sidebar-footer {
-    /* ✅ 固定高度，永不变化 */
-    height: 150px;
-    
     padding: 24px 16px;
     border-top: 1px solid rgba(255,255,255,0.12);
-    
-    /* ✅ 不能伸缩 */
-    flex-shrink: 0;
-    flex-grow: 0;
-    
-    /* ✅ Flexbox 布局 */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 12px;
-    
-    /* ✅ 防止溢出 */
-    overflow: hidden;
 }
 
-/* ✅ 主内容区域 - 简单直接，不搞复杂布局 */
-.main-content { 
-    /* ✅ 左侧给sidebar让位（210px） */
-    margin-left: var(--sidebar-w);
-    
-    /* ✅ 最小高度确保内容区足够大 */
-    min-height: 100vh;
-}
-.content-wrapper { 
-    padding: 40px 32px; 
-    max-width: 1200px; 
-    margin: 0 auto;
-}
+.main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
+.content-wrapper { padding: 40px 32px; max-width: 1200px; margin: 0 auto; }
 
-/* ✅ 顶部导航栏 - 简单sticky定位 */
 .top-bar {
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between;
-    padding: 0 24px; 
-    height: var(--header-h);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: var(--header-h);
     background: var(--surface);
     border-bottom: 2px solid rgba(0,0,0,0.08);
-    position: sticky; 
-    top: 0; 
-    z-index: 100;
+    position: sticky; top: 0; z-index: 100;
 }
 .header-search-wrapper {
     width: 100%; max-width: 600px;
@@ -318,22 +210,10 @@ body {
     overflow: hidden;
 }
 
-/* ✅ 响应式设计 - 1024px 以下隐藏sidebar */
 @media (max-width: 1024px) {
-    /* ✅ 移动端：sidebar 向左滑出屏幕 */
-    .sidebar { 
-        transform: translateX(-100%); 
-    }
-    
-    /* ✅ sidebar.open 时向右滑入 */
-    .sidebar.open { 
-        transform: translateX(0); 
-    }
-    
-    /* ✅ 移动端：main-content 占满整个宽度 */
-    .main-content { 
-        margin-left: 0; 
-    }
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-left: 0; }
 }
 
 @keyframes shimmer {
@@ -361,17 +241,11 @@ html[data-theme="dark"] {
     --text-muted:     #888888;
 }
 
-.theme-toggle-wrapper { 
-    width: 100%;
-}
-
+.theme-toggle-wrapper { width: 100%; margin-bottom: 16px; }
 .theme-toggle {
     position: relative;
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between;
-    width: 100%; 
-    height: 42px;
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; height: 42px;
     background: var(--bg);
     border: 1.5px solid rgba(0,0,0,0.08);
     border-radius: var(--radius-md);
@@ -380,11 +254,9 @@ html[data-theme="dark"] {
     -webkit-tap-highlight-color: transparent;
     overflow: hidden;
 }
-
 .theme-slider {
     position: absolute;
-    top: 3px; 
-    left: 3px;
+    top: 3px; left: 3px;
     width: calc(50% - 3px);
     height: calc(100% - 6px);
     background: #440003;
@@ -392,87 +264,19 @@ html[data-theme="dark"] {
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     z-index: 1;
 }
-
 html[data-theme="dark"] .theme-slider {
     transform: translateX(100%);
     background: #FFFFFF;
 }
-
 .theme-option {
-    position: relative; 
-    z-index: 2;
+    position: relative; z-index: 2;
     flex: 1;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     height: 100%;
     font-size: 18px;
     transition: opacity 0.3s, filter 0.3s;
 }
-
 .theme-option.light { opacity: 1; filter: grayscale(0); }
 .theme-option.dark { opacity: 0.35; filter: grayscale(1); }
 html[data-theme="dark"] .theme-option.light { opacity: 0.35; filter: grayscale(1); }
 html[data-theme="dark"] .theme-option.dark { opacity: 1; filter: grayscale(0); }
-
-.auth-buttons { 
-    display: flex; 
-    gap: 12px;
-    width: 100%;
-}
-
-.auth-btn { 
-    flex: 1; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    height: 42px; 
-    border-radius: var(--radius-md); 
-    font-size: 13px; 
-    font-weight: 600; 
-    cursor: pointer; 
-    transition: all 0.2s ease;
-    white-space: nowrap;
-}
-
-.login-btn, .register-btn {
-    background: #FFDD50; 
-    border: 1.5px solid rgba(255,255,255,0.15);
-    color: #0088FF;
-    font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-weight: 700; 
-    letter-spacing: 1.5px;
-}
-
-.login-btn span, .register-btn span {
-    display: inline-block; 
-    font-size: 16px; 
-    color: #11a0ff;
-    font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-}
-
-/* ════════════════════════════════════════════════════════════
-   ✅ 终极滚动条锁定规则 - 彻底解决sidebar左右摇晃问题
-   ════════════════════════════════════════════════════════════ */
-
-/* ✅ 方案1：强制主内容区域最小高度，防止滚动条动态出现/消失 */
-.main-content {
-    min-height: 100vh;
-    /* ✅ 如果内容不足100vh，也要保持100vh的高度，不会导致滚动条消失 */
-}
-
-/* ✅ 方案2：content-wrapper 不能超过100vh，防止溢出 */
-.content-wrapper {
-    /* ✅ 内容区最大高度限制 */
-}
-
-/* ✅ 方案3：全局禁止水平滚动 */
-* {
-    /* ✅ 防止任何元素导致水平滚动 */
-}
-
-/* ✅ 方案4：强制body和html都有固定的宽度计算 */
-html, body {
-    width: 100%;
-    /* ✅ 确保宽度固定在100%，不会因为滚动条而改变 */
-}
