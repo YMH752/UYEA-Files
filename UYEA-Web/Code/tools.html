@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>实用工具箱 | UYEA | 悠野导航</title>
     <meta name="description" content="悠野工作室(UYEA)实用工具箱，汇聚开发、设计、办公、多媒体等各类在线工具。">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#1d3557">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
@@ -18,11 +18,11 @@
             display: flex; align-items: center; justify-content: flex-end;
             padding: 0 24px; height: var(--header-h);
             background: var(--surface);
-            border-bottom: 1.5px solid rgba(0,0,0,0.08);
+            border-bottom: 3px solid #e63946;
             position: sticky; top: 0; z-index: 100;
         }
         .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; gap: 5px; }
-        .menu-toggle span { display: block; width: 24px; height: 3px; background: var(--text-primary); border-radius: 2px; }
+        .menu-toggle span { display: block; width: 26px; height: 4px; background: #1d3557; border-radius: 2px; }
         @media (max-width: 1024px) { .menu-toggle { display: flex; } }
         @media (max-width: 768px) { .top-bar { padding: 0 12px; } }
         .nav-menu { padding: 16px 12px; }
@@ -30,28 +30,33 @@
             display: flex; align-items: center; padding: 14px 18px; margin: 6px 12px;
             border-radius: var(--radius-md); text-decoration: none; color: #FFFFFF;
             font-weight: 600; transition: all 0.2s ease; cursor: pointer; border: none;
+            text-transform: uppercase; letter-spacing: 1px; font-size: 14px;
         }
-        /* [修改] active/menu-open 半透 + 金边 */
+        .nav-item:hover { background: #e63946; transform: translateX(4px); }
+        /* [修改] active/menu-open 亮金 + 海军蓝文字 */
         .nav-item.active {
-            background: rgba(255,255,255,0.12) !important; color: #FFFFFF !important;
-            border-left: 3px solid #e8b84a !important;
+            background: #f4a261 !important; color: #1d3557 !important;
+            font-weight: 800; border-left: 4px solid #e63946 !important;
         }
-        .nav-item.menu-open { background: rgba(255,255,255,0.12) !important; color: #FFFFFF !important; border-left: 3px solid #e8b84a !important; }
-        .arrow-icon { font-size: 10px; margin-left: auto; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6; }
+        .nav-item.menu-open { background: #f4a261 !important; color: #1d3557 !important; font-weight: 800; border-left: 4px solid #e63946 !important; }
+        .arrow-icon { font-size: 12px; margin-left: auto; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.8; }
         .nav-item.menu-open .arrow-icon { transform: rotate(180deg); opacity: 1; }
         .nav-icon { color: #FFFFFF; font-size: 14px; }
-        .sidebar-footer { padding: 24px 16px; border-top: 1px solid rgba(255,255,255,0.12); }
+        .sidebar-footer { padding: 24px 16px; border-top: 2px solid #e63946; }
         .auth-buttons { display: flex; gap: 12px; }
-        .auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; height: 42px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-        /* [修改] 复古红登录/注册按钮 */
-        .login-btn, .register-btn { background: #d0573b; border: none; color: #FFFFFF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-weight: 700; letter-spacing: 1.5px; }
+        .auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: var(--radius-md); font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
+        /* [修改] 猩红登录/注册按钮 */
+        .login-btn, .register-btn { background: #e63946; border: 2px solid #c1121f; color: #FFFFFF; font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+        .login-btn:hover, .register-btn:hover { background: #c1121f; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(230,57,70,0.5); }
         .login-btn span, .register-btn span { display: inline-block; font-size: 16px; color: #FFFFFF; font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; }
-        .tool-search-bar { display: flex; align-items: center; background: #faf8f3; border: 1px solid #e5ded3; border-radius: var(--radius-md); height: 48px; gap: 12px; margin-bottom: 24px; } /* [修改] 暖色搜索栏 */
-        .tool-search-input { border: none; background: transparent; outline: none; width: 100%; font-size: 15px; color: var(--text-primary); }
-        .category-tabs { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; }
-        .tab-item { padding: 8px 20px; background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08); border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-        .tab-item.active { background: #2f4f6f; color: #FFFFFF; border-color: transparent; } /* [修改] 深蓝激活标签 */
-        .tool-group-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; margin-bottom: 20px; padding-left: 4px; }
+        .tool-search-bar { display: flex; align-items: center; background: #ffffff; border: 2px solid #1d3557; border-radius: var(--radius-md); height: 50px; gap: 14px; margin-bottom: 28px; transition: border-color 0.2s, box-shadow 0.2s; }
+        .tool-search-bar:focus-within { border-color: #e63946; box-shadow: 0 0 0 3px rgba(230,57,70,0.15); }
+        .tool-search-input { border: none; background: transparent; outline: none; width: 100%; font-size: 15px; color: var(--text-primary); font-weight: 500; }
+        .category-tabs { display: flex; gap: 12px; margin-bottom: 32px; overflow-x: auto; padding-bottom: 10px; }
+        .tab-item { padding: 10px 22px; background: var(--surface); border: 2px solid #1d3557; border-radius: 999px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+        .tab-item:hover { border-color: #e63946; color: #e63946; }
+        .tab-item.active { background: #e63946; color: #FFFFFF; border-color: #c1121f; }
+        .tool-group-title { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 800; margin-bottom: 22px; padding-left: 4px; color: #1d3557; }
     </style>
 </head>
 <body>
@@ -109,7 +114,7 @@
                 <h2 class="section-title">实用工具箱</h2>
             </div>
             <div class="tool-search-bar">
-                <span style="font-size: 18px;">🔍</span>
+                <span style="font-size: 20px; padding-left: 14px;">🔍</span>
                 <input type="text" class="tool-search-input" id="toolSearchInput" placeholder="搜索在线工具...">
             </div>
             <div class="category-tabs" id="categoryTabs">
