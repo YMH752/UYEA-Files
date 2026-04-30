@@ -1,28 +1,31 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   美式海报风格：高饱和、强对比、活力奔放
+   最终版：子菜单折叠高度强制归零，侧边栏跳动彻底消除
    ============================================================ */
 :root {
-    --primary:        #e63946;      /* 高饱和猩红（主强调） */
-    --primary-dark:   #c1121f;      /* 深猩红 */
-    --primary-light:  #f4a261;      /* 亮金（点缀） */
-    --secondary:      #1d3557;      /* 海军蓝 */
-    --bg:             #fefae0;      /* 暖奶油背景 */
-    --surface:        #ffffff;      /* 卡片白 */
-    --border:         #d4a373;      /* 焦糖边框 */
-    --text-primary:   #1d3557;      /* 海军蓝主文字 */
-    --text-secondary: #6d6875;      /* 灰紫辅助文字 */
-    --text-muted:     #b5838d;      /* 柔和提示文字 */
-    --error:          #e63946;      /* 猩红（错误/主按钮） */
-    --warning:        #f4a261;      /* 亮金（次按钮） */
+    /* [修改] 全局变量调整为暖白背景、红橙强调色、轻边框与文字 */
+    --primary:        #E63946;   /* 主强调色，高饱和红 */
+    --primary-dark:   #BF2A36;   /* 主色深色变体 */
+    --primary-light:  #FDE6D3;   /* 暖橙浅底，用于标签背景 */
+    --secondary:      #F4A261;   /* 辅助强调色，暖橙 */
+    --bg:             #FFF7E8;   /* 暖奶油色页面背景 */
+    --surface:        #FFFFFF;   /* 卡片背景 */
+    --border:         #E5E7EB;   /* 卡片/组件边框 */
+    --text-primary:   #1C1C1C;   /* 主文字 */
+    --text-secondary: #6B7280;   /* 辅助文字 */
+    --text-muted:     #9CA3AF;   /* 更弱文字 */
+    --error:          #E63946;   /* 错误/强调同步主色 */
+    --warning:        #F4A261;   /* 警告同步辅助色 */
     --header-h:       64px;
     --sidebar-w:      210px;
-    --radius-sm:      6px;
+    /* [修改] 圆角统一调小: 按钮8px, 卡片10px */
+    --radius-sm:      8px;
     --radius-md:      10px;
-    --radius-lg:      10px;
+    --radius-lg:      16px;
     --duration:       0.3s;
-    --shadow-sm:      0 2px 4px rgba(0,0,0,0.08);
-    --shadow-md:      0 6px 16px rgba(0,0,0,0.12);
+    /* [修改] 阴影极轻，避免压迫感 */
+    --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md:      0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,8 +41,8 @@ body {
 .sidebar {
     width: var(--sidebar-w);
     height: 100vh;
-    background: #1d3557;              /* 高饱和海军蓝 */
-    border-right: 3px solid #e63946;  /* 猩红右边线 */
+    background: #005BBB;
+    border-right: 2px solid rgba(255,255,255,0.12);
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
@@ -48,24 +51,23 @@ body {
 
 .sidebar-header {
     padding: 24px;
-    border-bottom: 2px solid #e63946;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
     text-align: center;
-    background: #1d3557;
 }
 
 .logo-group { display: flex; align-items: baseline; gap: 8px; justify-content: center; }
 
 .logo-text { 
     position: relative;
-    font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
-    font-weight: 700; 
-    font-size: 40px; 
-    color: #f4a261;
-    letter-spacing: 3px;
-    -webkit-text-stroke: 2.5px #e63946;
+    font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
+    font-weight: 400; 
+    font-size: 36px; 
+    color: #FFD700;
+    letter-spacing: 2px;
+    -webkit-text-stroke: 2px #D32F2F;
     text-shadow:
-        3px 3px 0 rgba(0,0,0,0.4),
-        6px 6px 0 rgba(0,0,0,0.2);
+        2px 2px 0 rgba(0,0,0,0.3),
+        4px 4px 0 rgba(0,0,0,0.15);
 }
 
 .logo-sub { display: none; }
@@ -74,32 +76,24 @@ body {
 
 .nav-item {
     display: flex; align-items: center; gap: 12px;
-    padding: 14px 16px; border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    /* [修改] 圆角改为8px，为侧边栏hover层次准备 */
+    border-radius: 8px;
     color: #FFFFFF;
     text-decoration: none;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     transition: all var(--duration);
-    font-weight: 600;
-    font-size: 15px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-weight: 500;
 }
-/* hover 猩红背景 + 缩放 */
-.nav-item:hover { 
-    background: #e63946; 
-    color: #FFFFFF;
-    transform: translateX(4px);
-}
-
-/* active 亮金背景 + 海军蓝文字 */
+/* [修改] hover使用半透明白色，保证层次但色相不变 */
+.nav-item:hover { background: rgba(255,255,255,0.12); color: #FFFFFF; }
+/* [修改] active状态改为红底白字，保留高亮但不刺眼 */
 .nav-item.active {
-    background: #f4a261;
-    color: #1d3557;
-    font-weight: 800;
-    border-left: 4px solid #e63946;
+    background: #E63946;
+    color: #FFFFFF;
 }
 
-/* 折叠态子菜单 */
+/* 折叠态子菜单：高度绝对为0，无跳动 */
 .sub-menu {
     display: block;
     overflow: hidden;
@@ -123,21 +117,21 @@ body {
 
 .sub-nav-item {
     display: block;
-    padding: 12px 16px 12px 56px;
+    padding: 10px 16px 10px 56px;
     font-size: 14px;
-    font-weight: 700; 
+    font-weight: 800; 
     color: #FFFFFF;
     text-decoration: none;
     transition: all 0.2s ease;
 }
 .sub-nav-item:hover {
-    color: #f4a261;
-    background: rgba(230,57,70,0.2);
+    color: #E63946;          /* [修改] hover使用主强调色，统一反馈 */
+    background: rgba(0,0,0,0.03);
 }
 
 .sidebar-footer {
     padding: 24px 16px;
-    border-top: 2px solid #e63946;
+    border-top: 1px solid rgba(255,255,255,0.12);
 }
 
 .main-content { margin-left: var(--sidebar-w); min-height: 100vh; }
@@ -147,102 +141,84 @@ body {
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 24px; height: var(--header-h);
     background: var(--surface);
-    border-bottom: 3px solid #e63946;
+    border-bottom: 1px solid var(--border);  /* [修改] 轻边框，去除粗/黑色边框 */
     position: sticky; top: 0; z-index: 100;
 }
 .header-search-wrapper {
     width: 100%; max-width: 600px;
     display: flex; align-items: center;
-    background: #ffffff;
-    border: 2px solid #1d3557;
+    background: #FAFAFA;                     /* [修改] 输入框背景 */
+    border: 1px solid #E5E7EB;               /* [修改] 轻边框 */
     border-radius: var(--radius-lg);
 }
-.header-search-wrapper:focus-within {
-    border-color: #e63946;
-    box-shadow: 0 0 0 3px rgba(230,57,70,0.2);
-}
 
-/* 登录/注册按钮 → 猩红主按钮 */
 .login-btn {
-    padding: 10px 24px;
-    background: #e63946;
+    padding: 8px 20px;
+    /* [修改] 改为红底白字，无黑底 */
+    background: #E63946;
     color: #FFFFFF;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     text-decoration: none;
-    font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    border: 2px solid #c1121f;
+    font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    transition: opacity var(--duration);
 }
 .register-btn {
-    padding: 10px 24px;
-    background: #e63946;
+    padding: 8px 20px;
+    background: #E63946;
     color: #FFFFFF;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     text-decoration: none;
-    font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    border: 2px solid #c1121f;
+    font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    transition: opacity var(--duration);
 }
 .login-btn:hover,
-.register-btn:hover { 
-    background: #c1121f; 
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(230,57,70,0.4);
-}
+.register-btn:hover { opacity: 0.8; }
 
-.section-header { margin-bottom: 28px; }
+.section-header { margin-bottom: 24px; }
+/* [修改] 标题层级仅靠字重与间距，移除装饰线 */
 .section-title {
-    font-size: 26px; font-weight: 800; color: var(--secondary);
-    position: relative; padding-left: 20px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-primary);
+    position: relative;
+    padding-left: 0;
+    margin-bottom: 4px;
 }
-/* 左侧装饰条改为猩红粗条 */
-.section-title::before {
-    content: ""; position: absolute; left: 0; top: 10%; bottom: 10%;
-    width: 8px; background: #e63946; border-radius: 4px;
-}
+/* 删除原有 .section-title::before 装饰线，保持标题干净 */
 
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 24px;
+    gap: 24px;                       /* [修改] 卡片间距至少24px */
 }
 .card-item {
     background: var(--surface);
-    border: 2px solid #1d3557;
-    border-radius: 10px;
+    border: 1px solid var(--border);  /* [修改] 1px轻边框 */
+    border-radius: var(--radius-md); /* [修改] 10px圆角 */
     padding: 18px;
     display: flex; align-items: center; gap: 14px;
     text-decoration: none;
+    box-shadow: var(--shadow-sm);    /* [修改] 极轻阴影提供层级 */
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
 }
+/* [修改] 可点击卡片hover：红色边框+轻微上浮 */
 .card-item:hover {
-    transform: translateY(-6px);
-    border-color: #e63946;
-    box-shadow: 0 8px 20px rgba(230,57,70,0.2);
-    background: #fff5f5;
+    transform: translateY(-2px);
+    border-color: #E63946;
+    box-shadow: var(--shadow-md);
 }
-.card-title { 
-    font-size: 15px; 
-    font-weight: 700; 
-    color: var(--text-primary);
-}
+.card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
 .card-icon {
-    width: 40px; height: 40px;
+    width: 36px; height: 36px;
     border-radius: 8px;
-    background: #f1faee;
+    background: #f0f0f0;
     overflow: hidden;
-    border: 2px solid #1d3557;
 }
 
 @media (max-width: 1024px) {
@@ -256,25 +232,25 @@ body {
     100% { background-position:  200% 0; }
 }
 .card-icon.skeleton {
-    background: linear-gradient(90deg, #1d3557 25%, #e63946 50%, #1d3557 75%);
+    background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
     background-size: 200% 100%;
     animation: shimmer 1.4s ease-in-out infinite;
     border-radius: 8px;
 }
 .card-icon.skeleton img { opacity: 0; }
 
-/* 暗色模式 */
 html[data-theme="dark"] {
-    --primary:        #e63946;
-    --primary-dark:   #c1121f;
-    --primary-light:  #f4a261;
-    --secondary:      #f4a261;
-    --bg:             #1a1a2e;
-    --surface:        #16213e;
-    --border:         #e63946;
-    --text-primary:   #ffffff;
-    --text-secondary: #a8dadc;
-    --text-muted:     #6d6875;
+    /* [修改] 暗色模式适当调整颜色搭配，但不引入刺激性高饱和 */
+    --primary:        #E63946;
+    --primary-dark:   #BF2A36;
+    --primary-light:  #2A2A2A;
+    --secondary:      #F4A261;
+    --bg:             #121212;
+    --surface:        #1E1E1E;
+    --border:         #2C2C2C;
+    --text-primary:   #EAEAEA;
+    --text-secondary: #9CA3AF;
+    --text-muted:     #6B7280;
 }
 
 .theme-toggle-wrapper { width: 100%; margin-bottom: 16px; }
@@ -283,7 +259,7 @@ html[data-theme="dark"] {
     display: flex; align-items: center; justify-content: space-between;
     width: 100%; height: 42px;
     background: var(--bg);
-    border: 2px solid #1d3557;
+    border: 1px solid var(--border);               /* [修改] 轻边框 */
     border-radius: var(--radius-md);
     padding: 3px;
     user-select: none;
@@ -295,14 +271,14 @@ html[data-theme="dark"] {
     top: 3px; left: 3px;
     width: calc(50% - 3px);
     height: calc(100% - 6px);
-    background: #e63946;
+    background: #E63946;                             /* [修改] 主色滑块 */
     border-radius: calc(var(--radius-md) - 3px);
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     z-index: 1;
 }
 html[data-theme="dark"] .theme-slider {
     transform: translateX(100%);
-    background: #f4a261;
+    background: #FFFFFF;
 }
 .theme-option {
     position: relative; z-index: 2;
