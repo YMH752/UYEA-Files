@@ -27,10 +27,9 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* ✅ 简单粗暴方案：固定滚动条 + 简单布局 */
 html {
-    overflow-y: scroll;
-    height: 100vh;
-    width: 100vw;
+    overflow-y: scroll; /* 始终显示滚动条轨道 */
 }
 
 body {
@@ -39,26 +38,36 @@ body {
     color: var(--text-primary);
     overflow-x: hidden;
     line-height: 1.6;
-    height: 100vh;
-    width: 100vw;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: row;
 }
 
 .sidebar {
-    width: var(--sidebar-w);
+    /* ✅ 位置锁定：fixed 定位彻底固定在左侧，绝不动摇 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    
+    /* ✅ 尺寸锁定：宽度、高度必须绝对固定 */
+    width: var(--sidebar-w); /* 210px */
     height: 100vh;
+    
+    /* ✅ 样式 */
     background: #005BBB;
     border-right: 2px solid rgba(255,255,255,0.12);
-    position: fixed;
-    top: 0; left: 0; z-index: 1000;
-    transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* ✅ 滚动处理：内容超出时在sidebar内滚动，不影响外部页面 */
     overflow-y: auto;
-    flex-shrink: 0;
+    overflow-x: hidden;
+    
+    /* ✅ 过渡动画（仅用于移动端展开/收起） */
+    transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* ✅ 重置所有默认边距和填充，确保精确定位 */
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 .sidebar-header {
@@ -143,29 +152,32 @@ body {
     border-top: 1px solid rgba(255,255,255,0.12);
 }
 
+/* ✅ 主内容区域 - 简单直接，不搞复杂布局 */
 .main-content { 
-    flex: 1; 
-    height: 100vh;
-    overflow-y: auto;
+    /* ✅ 左侧给sidebar让位（210px） */
     margin-left: var(--sidebar-w);
-    display: flex;
-    flex-direction: column;
+    
+    /* ✅ 最小高度确保内容区足够大 */
+    min-height: 100vh;
 }
 .content-wrapper { 
     padding: 40px 32px; 
     max-width: 1200px; 
     margin: 0 auto;
-    flex: 1;
 }
 
+/* ✅ 顶部导航栏 - 简单sticky定位 */
 .top-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 24px; height: var(--header-h);
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    padding: 0 24px; 
+    height: var(--header-h);
     background: var(--surface);
     border-bottom: 2px solid rgba(0,0,0,0.08);
-    position: relative; 
+    position: sticky; 
+    top: 0; 
     z-index: 100;
-    flex-shrink: 0;
 }
 .header-search-wrapper {
     width: 100%; max-width: 600px;
@@ -239,17 +251,21 @@ body {
     overflow: hidden;
 }
 
+/* ✅ 响应式设计 - 1024px 以下隐藏sidebar */
 @media (max-width: 1024px) {
-    html { height: 100vh; }
-    body { height: 100vh; }
+    /* ✅ 移动端：sidebar 向左滑出屏幕 */
     .sidebar { 
         transform: translateX(-100%); 
-        flex-shrink: 0;
     }
-    .sidebar.open { transform: translateX(0); }
+    
+    /* ✅ sidebar.open 时向右滑入 */
+    .sidebar.open { 
+        transform: translateX(0); 
+    }
+    
+    /* ✅ 移动端：main-content 占满整个宽度 */
     .main-content { 
-        margin-left: 0;
-        height: 100vh;
+        margin-left: 0; 
     }
 }
 
