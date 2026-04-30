@@ -31,9 +31,9 @@
             text-decoration: none; color: #FFFFFF; font-weight: 600;
             transition: all 0.2s ease; cursor: pointer; border: none;
         }
+        /* [修改] active 背景色、文字色 */
         .nav-item.active {
-            background: #FFDD50 !important; color: #11a0ff !important;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
+            background: #163A5F !important; color: #FFFFFF !important;
         }
         .arrow-icon { display: none; }
         .nav-icon { color: #FFFFFF; font-size: 14px; }
@@ -81,7 +81,8 @@
         }
         .post-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 12px; color: var(--text-secondary); }
-        .post-tag { padding: 2px 8px; background: var(--bg); border-radius: 4px; color: var(--primary); font-weight: 600; }
+        /* [修改] 标签背景色、文字色 */
+        .post-tag { padding: 2px 8px; background: #F1F5F9; border-radius: 4px; color: #475569; font-weight: 600; }
         .post-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; }
         .post-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
     </style>
