@@ -1,6 +1,7 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
    风格方案：美日复古风 (Americana & Japanese Retro) - 增强版
+   修改记录：统一侧边栏结构，修复跳动，恢复底栏自然位置
    ============================================================ */
 
 :root {
@@ -45,9 +46,7 @@ body {
     position: fixed;
     top: 0; left: 0; z-index: 1000;
     transition: transform var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
-    /* [新增] flex 列布局，底栏自动置底 */
-    display: flex;
-    flex-direction: column;
+    overflow-y: auto;  /* 内容超出时可滚动，但通常不会 */
 }
 
 .sidebar-header {
@@ -91,11 +90,44 @@ body {
     color: #11a0ff;
 }
 
-/* 侧边栏底部（由 flex 自动推到底） */
+/* 子菜单默认折叠，强制高度为0，消除跳动 */
+.sub-menu {
+    display: block;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    padding-bottom: 0;
+    transition: max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                padding-bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    height: 0;  /* 关键：强制折叠态高度为0，确保不同页面菜单区高度一致 */
+}
+
+.sub-menu.open {
+    max-height: 200px;
+    opacity: 1;
+    padding-bottom: 10px;
+    height: auto;
+}
+
+.sub-nav-item {
+    display: block;
+    padding: 10px 16px 10px 56px;
+    font-size: 14px;
+    font-weight: 800; 
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.sub-nav-item:hover {
+    color: var(--primary);
+    background: rgba(0,0,0,0.03);
+}
+
+/* 侧边栏底部区域：自然跟随内容流，不固定、不弹性推底 */
 .sidebar-footer {
     padding: 24px 16px;
     border-top: 1px solid rgba(255,255,255,0.12);
-    margin-top: auto;
 }
 
 /* ── 主内容区 ── */
