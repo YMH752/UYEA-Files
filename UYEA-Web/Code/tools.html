@@ -31,26 +31,26 @@
             border-radius: var(--radius-md); text-decoration: none; color: #FFFFFF;
             font-weight: 600; transition: all 0.2s ease; cursor: pointer; border: none;
         }
-        /* [修改] active 背景色、文字色 */
+        /* [修改] active/menu-open 渐变 */
         .nav-item.active {
-            background: #163A5F !important; color: #FFFFFF !important;
+            background: linear-gradient(135deg, #3b82f6, #1e5fae) !important;
+            color: #FFFFFF !important;
         }
-        /* [修改] menu-open 背景色 */
-        .nav-item.menu-open { background: #163A5F !important; color: #FFFFFF !important; }
+        .nav-item.menu-open { background: linear-gradient(135deg, #3b82f6, #1e5fae) !important; color: #FFFFFF !important; }
         .arrow-icon { font-size: 10px; margin-left: auto; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6; }
         .nav-item.menu-open .arrow-icon { transform: rotate(180deg); opacity: 1; }
         .nav-icon { color: #FFFFFF; font-size: 14px; }
         .sidebar-footer { padding: 24px 16px; border-top: 1px solid rgba(255,255,255,0.12); }
         .auth-buttons { display: flex; gap: 12px; }
         .auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; height: 42px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-        .login-btn, .register-btn { background: #FFDD50; border: 1.5px solid rgba(255,255,255,0.15); color: #0088FF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-weight: 700; letter-spacing: 1.5px; }
-        .login-btn span, .register-btn span { display: inline-block; font-size: 16px; color: #11a0ff; font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; }
-        .tool-search-bar { display: flex; align-items: center; background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08); border-radius: var(--radius-md); height: 48px; gap: 12px; margin-bottom: 24px; }
+        /* [修改] 登录/注册按钮主色 */
+        .login-btn, .register-btn { background: #1e5fae; border: none; color: #FFFFFF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-weight: 700; letter-spacing: 1.5px; }
+        .login-btn span, .register-btn span { display: inline-block; font-size: 16px; color: #FFFFFF; /* [修改] 白色文字 */ font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; }
+        .tool-search-bar { display: flex; align-items: center; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: var(--radius-md); height: 48px; gap: 12px; margin-bottom: 24px; } /* [修改] 背景边框 */
         .tool-search-input { border: none; background: transparent; outline: none; width: 100%; font-size: 15px; color: var(--text-primary); }
         .category-tabs { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; }
         .tab-item { padding: 8px 20px; background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08); border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-        /* [修改] 激活标签背景色 */
-        .tab-item.active { background: #1F4E79; color: #FFFFFF; border-color: transparent; }
+        .tab-item.active { background: #1e5fae; color: #FFFFFF; border-color: transparent; } /* [修改] 标签激活色 */
         .tool-group-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; margin-bottom: 20px; padding-left: 4px; }
     </style>
 </head>
@@ -173,7 +173,7 @@
         const toolsNavTrigger = document.getElementById('toolsNavTrigger');
         const toolsSubMenu = document.getElementById('toolsSubMenu');
         toolsNavTrigger.addEventListener('click', function(e) {
-            e.preventDefault(); // 阻止默认跳转
+            e.preventDefault();
             const isOpening = !this.classList.contains('menu-open');
             this.classList.toggle('menu-open', isOpening);
             toolsSubMenu.classList.toggle('open', isOpening);
