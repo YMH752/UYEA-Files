@@ -31,10 +31,10 @@
             text-decoration: none; color: #FFFFFF; font-weight: 600;
             transition: all 0.2s ease; cursor: pointer; border: none;
         }
-        /* [修改] active 渐变样式 */
+        /* [修改] active 半透 + 左侧金边 */
         .nav-item.active {
-            background: linear-gradient(135deg, #3b82f6, #1e5fae) !important;
-            color: #FFFFFF !important;
+            background: rgba(255,255,255,0.12) !important; color: #FFFFFF !important;
+            border-left: 3px solid #e8b84a !important;
         }
         .arrow-icon { display: none; }
         .nav-icon { color: #FFFFFF; font-size: 14px; }
@@ -48,84 +48,74 @@
             height: 42px; border-radius: var(--radius-md);
             font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
         }
-        /* [修改] 登录/注册按钮主色 */
+        /* [修改] 复古红主按钮 */
         .login-btn, .register-btn {
-            background: #1e5fae; border: none;
+            background: #d0573b; border: none;
             color: #FFFFFF;
             font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
             font-weight: 700; letter-spacing: 1.5px;
         }
         .login-btn span, .register-btn span {
-            display: inline-block; font-size: 16px; color: #FFFFFF; /* [修改] 白色文字 */
+            display: inline-block; font-size: 16px; color: #FFFFFF;
             font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         }
         .forum-toolbar { display: flex; gap: 12px; margin-bottom: 24px; align-items: center; }
-        /* [修改] 发布按钮主色 */
+        /* [修改] 复古红发布按钮 */
         .post-btn {
             display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 24px; background: #1e5fae; color: #FFFFFF;
+            padding: 10px 24px; background: #d0573b; color: #FFFFFF;
             border-radius: 8px; text-decoration: none;
             font-weight: 600; font-size: 14px; transition: background 0.2s; white-space: nowrap;
         }
-        .post-btn:hover { background: #174a8a; }
+        .post-btn:hover { background: #b8442e; }
         .forum-search { flex: 1; position: relative; }
         .forum-search input {
             width: 100%; padding: 10px 16px 10px 40px;
-            background: #f1f5f9; border: 1px solid #e2e8f0;     /* [修改] 边框背景 */
+            background: #faf8f3; border: 1px solid #e5ded3;     /* [修改] 暖色输入框 */
             border-radius: var(--radius-md); outline: none; font-size: 14px; transition: border-color 0.2s;
         }
-        .forum-search input:focus { border-color: #1e5fae; background: #ffffff; } /* [修改] focus样式 */
+        .forum-search input:focus { border-color: #2f4f6f; background: #ffffff; }
         .forum-search span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
         .post-list { display: flex; flex-direction: column; gap: 16px; }
         .post-item {
-            background: var(--surface); border: 1px solid #e2e8f0;   /* [修改] 边框 */
-            border-radius: var(--radius-md); padding: 16px;          /* [修改] 内边距 */
+            background: var(--surface); border: 1px solid #e5ded3;   /* [修改] 暖灰边框 */
+            border-radius: var(--radius-md); padding: 16px;
             text-decoration: none;
             transition: transform 0.2s, box-shadow 0.2s; display: block;
         }
         .post-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 12px; color: var(--text-secondary); }
-        .post-tag { padding: 2px 8px; background: #f1f5f9; border-radius: 999px; color: #475569; font-weight: 600; } /* [修改] 圆角 pill */
+        /* [修改] 复古标签系统：浅背景+深文字 */
+        .post-tag { padding: 2px 8px; background: #f3d6cf; border-radius: 999px; color: #a63e2a; font-weight: 600; }
         .post-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; }
         .post-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
     </style>
 </head>
 <body>
-    <!-- ✅ 侧边栏 - 完全重写，彻底稳定 -->
+    <!-- ✅ 侧边栏 -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
-        <!-- ✅ SIDEBAR 头部：LOGO区域 -->
         <div class="sidebar-header">
             <div class="logo-group">
                 <span class="logo-text">UYEA</span>
                 <span class="logo-sub">悠野</span>
             </div>
         </div>
-
-        <!-- ✅ SIDEBAR 导航菜单 -->
         <nav class="nav-menu">
-            <!-- ✅ 导航项1：网站导航 -->
             <a href="index.html" class="nav-item">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">网站导航</span>
             </a>
-
-            <!-- ✅ 导航项2：线上工具 -->
             <a href="tools.html" class="nav-item">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">线上工具</span>
             </a>
-
-            <!-- ✅ 导航项3：悠野社区（当前页） -->
             <a href="forum.html" class="nav-item active">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">悠野社区</span>
             </a>
         </nav>
-
-        <!-- ✅ SIDEBAR 底部：主题切换 + 登录注册 -->
         <div class="sidebar-footer">
-            <!-- ✅ 主题切换按钮 -->
             <div class="theme-toggle-wrapper">
                 <div class="theme-toggle" role="button" tabindex="0" aria-label="切换主题">
                     <div class="theme-slider"></div>
@@ -133,7 +123,6 @@
                     <span class="theme-option dark">🌙</span>
                 </div>
             </div>
-            <!-- ✅ 登录 / 注册按钮 -->
             <div class="auth-buttons">
                 <div class="auth-btn login-btn" onclick="alert('登录功能开发中...')"><span>登录</span></div>
                 <div class="auth-btn register-btn" onclick="alert('注册功能开发中...')"><span>注册</span></div>
