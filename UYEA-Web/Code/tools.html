@@ -6,195 +6,54 @@
     <title>实用工具箱 | UYEA | 悠野导航</title>
     <meta name="description" content="悠野工作室(UYEA)实用工具箱，汇聚开发、设计、办公、多媒体等各类在线工具。">
     <meta name="theme-color" content="#000000">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@700;800&family=Lilita+One&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
-
     <link rel="stylesheet" href="style.css">
-    
     <style>
         .top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 0 24px;
-            height: var(--header-h);
+            display: flex; align-items: center; justify-content: flex-end;
+            padding: 0 24px; height: var(--header-h);
             background: var(--surface);
             border-bottom: 1.5px solid rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
         }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .menu-toggle span {
-            display: block;
-            width: 24px;
-            height: 3px;
-            background: var(--text-primary);
-            border-radius: 2px;
-        }
-
-        @media (max-width: 1024px) {
-            .menu-toggle { display: flex; }
-        }
-
-        @media (max-width: 768px) {
-            .top-bar { padding: 0 12px; }
-        }
-
-        .nav-menu {
-            padding: 16px 12px;
-        }
-
+        .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; gap: 5px; }
+        .menu-toggle span { display: block; width: 24px; height: 3px; background: var(--text-primary); border-radius: 2px; }
+        @media (max-width: 1024px) { .menu-toggle { display: flex; } }
+        @media (max-width: 768px) { .top-bar { padding: 0 12px; } }
+        .nav-menu { padding: 16px 12px; }
         .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 14px 18px;
-            margin: 6px 12px;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            color: #FFFFFF;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: none;
+            display: flex; align-items: center; padding: 14px 18px; margin: 6px 12px;
+            border-radius: var(--radius-md); text-decoration: none; color: #FFFFFF;
+            font-weight: 600; transition: all 0.2s ease; cursor: pointer; border: none;
         }
-
         .nav-item.active {
-            background: #FFDD50 !important;
-            color: #11a0ff !important;
+            background: #FFDD50 !important; color: #11a0ff !important;
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15) !important;
         }
-
-        .nav-item.menu-open {
-            background: var(--primary) !important;
-            color: #FFFFFF !important;
-            box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2);
-        }
-
-        .arrow-icon {
-            font-size: 10px;
-            margin-left: auto;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0.6;
-        }
-        .nav-item.menu-open .arrow-icon {
-            transform: rotate(180deg);
-            opacity: 1;
-        }
-
-        .nav-icon {
-            color: #FFFFFF;
-            font-size: 14px;
-        }
-
-        .sidebar-footer {
-            padding: 24px 16px;
-            border-top: 1px solid rgba(255,255,255,0.12);
-        }
-        .auth-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        .auth-btn {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 42px;
-            border-radius: var(--radius-md);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .login-btn,
-        .register-btn {
-            background: #FFDD50;
-            border: 1.5px solid rgba(255,255,255,0.15);
-            color: #0088FF;
-            font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-        }
-
-        .login-btn span, .register-btn span {
-            display: inline-block;
-            font-size: 16px;
-            color: #11a0ff;
-            font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-        }
-
-        .tool-search-bar {
-            display: flex;
-            align-items: center;
-            background: var(--surface);
-            border: 1.5px solid rgba(0,0,0,0.08);
-            border-radius: var(--radius-md);
-            height: 48px;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        .tool-search-input {
-            border: none;
-            background: transparent;
-            outline: none;
-            width: 100%;
-            font-size: 15px;
-            color: var(--text-primary);
-        }
-        .category-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-        .tab-item {
-            padding: 8px 20px;
-            background: var(--surface);
-            border: 1.5px solid rgba(0,0,0,0.08);
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-        .tab-item.active {
-            background: #000000;
-            color: #FFFFFF;
-            border-color: transparent;
-        }
-        .tool-group-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-left: 4px;
-        }
+        .nav-item.menu-open { background: var(--primary) !important; color: #FFFFFF !important; box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2); }
+        .arrow-icon { font-size: 10px; margin-left: auto; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6; }
+        .nav-item.menu-open .arrow-icon { transform: rotate(180deg); opacity: 1; }
+        .nav-icon { color: #FFFFFF; font-size: 14px; }
+        .sidebar-footer { padding: 24px 16px; border-top: 1px solid rgba(255,255,255,0.12); }
+        .auth-buttons { display: flex; gap: 12px; }
+        .auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; height: 42px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .login-btn, .register-btn { background: #FFDD50; border: 1.5px solid rgba(255,255,255,0.15); color: #0088FF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-weight: 700; letter-spacing: 1.5px; }
+        .login-btn span, .register-btn span { display: inline-block; font-size: 16px; color: #11a0ff; font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; }
+        .tool-search-bar { display: flex; align-items: center; background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08); border-radius: var(--radius-md); height: 48px; gap: 12px; margin-bottom: 24px; }
+        .tool-search-input { border: none; background: transparent; outline: none; width: 100%; font-size: 15px; color: var(--text-primary); }
+        .category-tabs { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; }
+        .tab-item { padding: 8px 20px; background: var(--surface); border: 1.5px solid rgba(0,0,0,0.08); border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+        .tab-item.active { background: #000000; color: #FFFFFF; border-color: transparent; }
+        .tool-group-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; margin-bottom: 20px; padding-left: 4px; }
     </style>
 </head>
 <body>
-
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-group">
@@ -202,31 +61,28 @@
                 <span class="logo-sub">悠野</span>
             </div>
         </div>
-        
         <nav class="nav-menu">
             <a href="index.html" class="nav-item">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">网站导航</span>
             </a>
-
-            <div class="nav-item active nav-dropdown-trigger" id="toolsNavTrigger">
+            <!-- 改成 <a> 标签，与 index.html 完全一致 -->
+            <a class="nav-item active nav-dropdown-trigger" id="toolsNavTrigger">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">线上工具</span>
                 <span class="arrow-icon">▼</span>
-            </div>
+            </a>
             <div class="sub-menu" id="toolsSubMenu">
                 <a href="#dev-tools" class="sub-nav-item">开发者工具</a>
                 <a href="#design-tools" class="sub-nav-item">设计美化</a>
                 <a href="#office-tools" class="sub-nav-item">办公效率</a>
                 <a href="#media-tools" class="sub-nav-item">多媒体处理</a>
             </div>
-            
             <a href="forum.html" class="nav-item">
                 <span class="nav-icon">●</span>
                 <span class="nav-text">悠野社区</span>
             </a>
         </nav>
-
         <div class="sidebar-footer">
             <div class="theme-toggle-wrapper">
                 <div class="theme-toggle" role="button" tabindex="0" aria-label="切换主题">
@@ -241,24 +97,20 @@
             </div>
         </div>
     </aside>
-
     <main class="main-content">
         <header class="top-bar">
             <button class="menu-toggle" id="hamburgerBtn">
                 <span></span><span></span><span></span>
             </button>
         </header>
-
         <div class="content-wrapper">
             <div class="section-header">
                 <h2 class="section-title">实用工具箱</h2>
             </div>
-
             <div class="tool-search-bar">
                 <span style="font-size: 18px;">🔍</span>
                 <input type="text" class="tool-search-input" id="toolSearchInput" placeholder="搜索在线工具...">
             </div>
-
             <div class="category-tabs" id="categoryTabs">
                 <div class="tab-item active" data-category="all">全部</div>
                 <div class="tab-item" data-category="dev">开发者工具</div>
@@ -266,7 +118,6 @@
                 <div class="tab-item" data-category="office">办公效率</div>
                 <div class="tab-item" data-category="media">多媒体处理</div>
             </div>
-
             <div id="toolsContainer">
                 <div class="tool-group" data-category="dev" id="dev-tools">
                     <div class="tool-group-title"><span>💻</span> 开发者工具</div>
@@ -277,7 +128,6 @@
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">时间戳转换</div></div></a>
                     </div>
                 </div>
-
                 <div class="tool-group" data-category="design" id="design-tools" style="margin-top: 40px;">
                     <div class="tool-group-title"><span>🎨</span> 设计美化</div>
                     <div class="grid-container">
@@ -286,7 +136,6 @@
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">渐变颜色生成</div></div></a>
                     </div>
                 </div>
-
                 <div class="tool-group" data-category="office" id="office-tools" style="margin-top: 40px;">
                     <div class="tool-group-title"><span>📂</span> 办公效率</div>
                     <div class="grid-container">
@@ -294,7 +143,6 @@
                         <a href="#" class="card-item"><div class="card-info"><div class="card-title">流程图绘制</div></div></a>
                     </div>
                 </div>
-
                 <div class="tool-group" data-category="media" id="media-tools" style="margin-top: 40px;">
                     <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
                     <div class="grid-container">
@@ -305,17 +153,16 @@
             </div>
         </div>
     </main>
-
     <script src="script.js" defer></script>
     <script>
         const toolsNavTrigger = document.getElementById('toolsNavTrigger');
         const toolsSubMenu = document.getElementById('toolsSubMenu');
-
-        toolsNavTrigger.addEventListener('click', function() {
-            const isOpening = this.classList.toggle('menu-open');
-            toolsSubMenu.style.display = isOpening ? 'block' : 'none';
+        toolsNavTrigger.addEventListener('click', function(e) {
+            e.preventDefault(); // 阻止默认跳转
+            const isOpening = !this.classList.contains('menu-open');
+            this.classList.toggle('menu-open', isOpening);
+            toolsSubMenu.classList.toggle('open', isOpening);
         });
-
         document.querySelectorAll('.sub-nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 const targetId = this.getAttribute('href').substring(1);
@@ -326,11 +173,9 @@
                 }
             });
         });
-
         const toolSearchInput = document.getElementById('toolSearchInput');
         const toolCards = document.querySelectorAll('.card-item');
         const toolGroups = document.querySelectorAll('.tool-group');
-
         toolSearchInput.addEventListener('input', function() {
             const keyword = this.value.toLowerCase().trim();
             toolCards.forEach(card => {
@@ -342,7 +187,6 @@
                 group.style.display = hasVisible ? 'block' : 'none';
             });
         });
-
         const tabItems = document.querySelectorAll('.tab-item');
         tabItems.forEach(tab => {
             tab.addEventListener('click', function() {
