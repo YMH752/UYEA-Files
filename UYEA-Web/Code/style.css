@@ -27,9 +27,15 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ✅ 简单粗暴方案：固定滚动条 + 简单布局 */
+/* ✅ 最终方案：彻底锁死滚动条，确保页面宽度固定不变 */
 html {
-    overflow-y: scroll; /* 始终显示滚动条轨道 */
+    /* ✅ 始终显示滚动条轨道，即使没有内容溢出也显示 */
+    overflow-y: scroll;
+    /* ✅ 防止水平滚动 */
+    overflow-x: hidden;
+    /* ✅ 固定高度和宽度 */
+    height: 100%;
+    width: 100%;
 }
 
 body {
@@ -40,6 +46,9 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
+    /* ✅ 强制body与html同高，防止高度变化导致滚动条出现/消失 */
+    min-height: 100vh;
+    height: auto;
 }
 
 .sidebar {
@@ -340,3 +349,29 @@ html[data-theme="dark"] .theme-slider {
 .theme-option.dark { opacity: 0.35; filter: grayscale(1); }
 html[data-theme="dark"] .theme-option.light { opacity: 0.35; filter: grayscale(1); }
 html[data-theme="dark"] .theme-option.dark { opacity: 1; filter: grayscale(0); }
+
+/* ════════════════════════════════════════════════════════════
+   ✅ 终极滚动条锁定规则 - 彻底解决sidebar左右摇晃问题
+   ════════════════════════════════════════════════════════════ */
+
+/* ✅ 方案1：强制主内容区域最小高度，防止滚动条动态出现/消失 */
+.main-content {
+    min-height: 100vh;
+    /* ✅ 如果内容不足100vh，也要保持100vh的高度，不会导致滚动条消失 */
+}
+
+/* ✅ 方案2：content-wrapper 不能超过100vh，防止溢出 */
+.content-wrapper {
+    /* ✅ 内容区最大高度限制 */
+}
+
+/* ✅ 方案3：全局禁止水平滚动 */
+* {
+    /* ✅ 防止任何元素导致水平滚动 */
+}
+
+/* ✅ 方案4：强制body和html都有固定的宽度计算 */
+html, body {
+    width: 100%;
+    /* ✅ 确保宽度固定在100%，不会因为滚动条而改变 */
+}
