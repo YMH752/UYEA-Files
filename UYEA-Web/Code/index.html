@@ -28,31 +28,39 @@
             <div class="header-right">
                 <!-- 语言切换 -->
                 <div class="lang-selector" id="langSelector">
+                    <!-- 修改位置：新增 .lang-highlight 滑动高亮元素 -->
+                    <!-- 前后逻辑：原无此元素，现作为激活状态滑动背景 -->
+                    <!-- 修改目的：实现点击按钮时激活高亮滑动到点击区域的动效 -->
+                    <div class="lang-highlight" id="langHighlight"></div>
                     <button class="lang-btn active" data-lang="zh-CN">中文</button>
                     <button class="lang-btn" data-lang="zh-TW">繁中</button>
                     <button class="lang-btn" data-lang="en">English</button>
                 </div>
 
-                <!-- 搜索框（可选，根据需要显示） -->
-                <div class="header-search-wrapper">
-                    <div class="search-container">
-                        <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
-                            <button class="engine-trigger-btn" id="engineTriggerBtn">
-                                <span id="engineTriggerLabel">百度</span>
-                            </button>
-                            <div class="engine-dropdown-list">
-                                <div class="engine-option-item selected" data-value="baidu">百度</div>
-                                <div class="engine-option-item" data-value="google">谷歌</div>
-                                <div class="engine-option-item" data-value="bing">必应</div>
-                            </div>
-                        </div>
-                        <input type="text" id="searchInput" class="search-input" placeholder="搜索导航...">
-                    </div>
-                </div>
+                <!-- 修改位置：删除 .auth-section 登录按钮区域 -->
+                <!-- 前后逻辑：原包含登录按钮，现完全移除 -->
+                <!-- 修改目的：去除登录按钮 -->
 
-                <!-- 登录按钮 -->
-                <div class="auth-section">
-                    <button class="login-btn" onclick="alert('登录功能开发中...')"><span>登录</span></button>
+                <!-- 修改位置：将 .header-search-wrapper 替换为放大镜图标按钮 -->
+                <!-- 前后逻辑：原为完整搜索组件（引擎下拉+输入框），现为图标按钮+下拉搜索框 -->
+                <!-- 修改目的：将顶部搜索栏改为放大镜矢量图，点击展开小搜索框 -->
+                <div class="header-search-wrapper" style="position: relative;">
+                    <button class="search-icon-btn" id="searchIconBtn">🔍</button>
+                    <div class="search-dropdown" id="searchDropdown">
+                        <div class="search-container">
+                            <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
+                                <button class="engine-trigger-btn" id="engineTriggerBtn">
+                                    <span id="engineTriggerLabel">百度</span>
+                                </button>
+                                <div class="engine-dropdown-list">
+                                    <div class="engine-option-item selected" data-value="baidu">百度</div>
+                                    <div class="engine-option-item" data-value="google">谷歌</div>
+                                    <div class="engine-option-item" data-value="bing">必应</div>
+                                </div>
+                            </div>
+                            <input type="text" id="searchInput" class="search-input" placeholder="搜索导航...">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 下拉菜单按钮 -->
@@ -82,12 +90,12 @@
     <!-- ✅ 主内容区 -->
     <main class="main-content">
         <div class="content-wrapper">
-            <!-- 顶部搜索栏（仅首页，内容页隐藏） -->
-            <div class="page-search-bar">
-                <div class="search-large">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="pageSearchInput" class="search-input-large" placeholder="搜索导航...">
-                </div>
+            <!-- 修改位置：将 .page-search-bar 替换为 .clock-display 时钟区域 -->
+            <!-- 前后逻辑：原为大搜索框（搜索图标+输入框），现为实时时钟显示 -->
+            <!-- 修改目的：将内容区搜索框去除改为时钟 [时:分:秒] -->
+            <div class="clock-display" id="clockDisplay">
+                <div class="clock-time" id="clockTime">00:00:00</div>
+                <div class="clock-date" id="clockDate">2026年1月1日 星期四</div>
             </div>
 
             <!-- AI智能体分类 -->
@@ -192,5 +200,71 @@
     </main>
 
     <script src="script.js" defer></script>
+    <!-- 修改位置：新增内联脚本，实现时钟更新和放大镜下拉交互 -->
+    <!-- 前后逻辑：原无此内联脚本，现添加时钟和搜索图标交互 -->
+    <!-- 修改目的：时钟实时更新 [时:分:秒]，放大镜点击展开/收起下拉搜索框 -->
+    <script>
+        // 时钟更新逻辑
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clockTime').textContent = `${hours}:${minutes}:${seconds}`;
+            
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const date = now.getDate();
+            const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const day = days[now.getDay()];
+            document.getElementById('clockDate').textContent = `${year}年${month}月${date}日 ${day}`;
+        }
+        
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // 语言切换滑动高亮
+        const langSelector = document.getElementById('langSelector');
+        const langHighlight = document.getElementById('langHighlight');
+        const langButtons = document.querySelectorAll('.lang-btn');
+        
+        function moveLangHighlight(targetBtn) {
+            if (!targetBtn || !langHighlight) return;
+            const selectorRect = langSelector.getBoundingClientRect();
+            const btnRect = targetBtn.getBoundingClientRect();
+            langHighlight.style.width = `${btnRect.width}px`;
+            langHighlight.style.transform = `translateX(${btnRect.left - selectorRect.left}px)`;
+        }
+        
+        // 初始化高亮位置到 active 按钮
+        const initialActiveBtn = document.querySelector('.lang-btn.active');
+        if (initialActiveBtn) {
+            moveLangHighlight(initialActiveBtn);
+        }
+        
+        // 点击时移动高亮
+        langButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                moveLangHighlight(this);
+            });
+        });
+
+        // 放大镜下拉搜索交互
+        const searchIconBtn = document.getElementById('searchIconBtn');
+        const searchDropdown = document.getElementById('searchDropdown');
+        
+        if (searchIconBtn && searchDropdown) {
+            searchIconBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                searchDropdown.classList.toggle('show');
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!searchDropdown.contains(e.target) && !searchIconBtn.contains(e.target)) {
+                    searchDropdown.classList.remove('show');
+                }
+            });
+        }
+    </script>
 </body>
 </html>
