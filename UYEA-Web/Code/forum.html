@@ -18,7 +18,7 @@
             display: flex; align-items: center; justify-content: flex-end;
             padding: 0 24px; height: var(--header-h);
             background: var(--surface);
-            border-bottom: 1px solid var(--border); /* [修改] 轻边框 */
+            border-bottom: 1px solid var(--border);
             position: sticky; top: 0; z-index: 100;
         }
         .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; gap: 5px; }
@@ -27,16 +27,16 @@
         @media (max-width: 768px) { .top-bar { padding: 0 12px; } }
         .nav-item {
             display: flex; align-items: center; padding: 14px 18px;
-            margin: 6px 12px; border-radius: 8px; /* [修改] 8px圆角 */
-            text-decoration: none; color: #FFFFFF; font-weight: 600;
+            margin: 6px 12px; border-radius: 8px;
+            text-decoration: none; color: #A0A0B8; font-weight: 600;
             transition: all 0.2s ease; cursor: pointer; border: none;
         }
-        /* [修改] active状态红底白字 */
+        .nav-item:hover { background: rgba(255,255,255,0.08); color: #FFFFFF; }
         .nav-item.active {
-            background: #E63946 !important; color: #FFFFFF !important;
+            background: #3B82F6 !important; color: #FFFFFF !important;
         }
         .arrow-icon { display: none; }
-        .nav-icon { color: #FFFFFF; font-size: 14px; }
+        .nav-icon { color: inherit; font-size: 14px; }
         .sidebar-footer {
             padding: 24px 16px;
             border-top: 1px solid rgba(255,255,255,0.12);
@@ -44,48 +44,65 @@
         .auth-buttons { display: flex; gap: 12px; }
         .auth-btn {
             flex: 1; display: flex; align-items: center; justify-content: center;
-            height: 42px; border-radius: 8px; /* [修改] 8px圆角 */
+            height: 42px; border-radius: 8px;
             font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
         }
-        /* [修改] 登录/注册按钮红底白字 */
-        .login-btn, .register-btn {
-            background: #E63946; border: none; color: #FFFFFF;
+        .login-btn {
+            background: transparent;
+            border: 1px solid #3B82F6;
+            color: #3B82F6;
+            font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-weight: 700; letter-spacing: 1.5px;
+        }
+        .register-btn {
+            background: #3B82F6;
+            border: 1px solid #3B82F6;
+            color: #FFFFFF;
             font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
             font-weight: 700; letter-spacing: 1.5px;
         }
         .login-btn span, .register-btn span {
-            display: inline-block; font-size: 16px; color: #FFFFFF;
+            display: inline-block; font-size: 16px; color: inherit;
             font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         }
         .forum-toolbar { display: flex; gap: 12px; margin-bottom: 24px; align-items: center; }
-        /* [修改] 发布按钮改为红底白字，8px圆角 */
         .post-btn {
             display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 24px; background: #E63946; color: #FFFFFF;
+            padding: 10px 24px; background: #3B82F6; color: #FFFFFF;
             border-radius: 8px; text-decoration: none;
             font-weight: 600; font-size: 14px; transition: background 0.2s; white-space: nowrap;
         }
-        .post-btn:hover { background: #BF2A36; }
+        .post-btn:hover { background: #2563EB; }
         .forum-search { flex: 1; position: relative; }
-        /* [修改] 搜索框背景、边框、focus边框 */
         .forum-search input {
             width: 100%; padding: 10px 16px 10px 40px;
-            background: #FAFAFA; border: 1px solid #E5E7EB;
+            background: #FFFFFF; border: 1px solid #CBD5E1;
             border-radius: var(--radius-md); outline: none; font-size: 14px; transition: border-color 0.2s;
         }
-        .forum-search input:focus { border-color: #005BBB; }
+        .forum-search input:focus { border-color: #3B82F6; }
         .forum-search span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
         .post-list { display: flex; flex-direction: column; gap: 16px; }
         .post-item {
-            background: var(--surface); border: 1px solid var(--border); /* [修改] 轻边框 */
-            border-radius: var(--radius-md); padding: 24px; text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s; display: block;
+            background: var(--surface);
+            border: 1px solid #E2E8F0;
+            border-radius: var(--radius-md);
+            padding: 24px; text-decoration: none;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: none;
         }
-        .post-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .post-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
         .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 12px; color: var(--text-secondary); }
-        /* [修改] 帖子标签改为暖橙浅底深字 */
-        .post-tag { padding: 2px 8px; background: #FDE6D3; border-radius: 4px; color: #A14A1A; font-weight: 600; }
-        .post-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; }
+        .post-tag {
+            padding: 2px 8px;
+            background: #EFF6FF;
+            border-radius: 4px;
+            color: #1E40AF;
+            font-weight: 600;
+        }
+        .post-title { font-size: 18px; font-weight: 700; color: #334155; margin-bottom: 8px; line-height: 1.4; }
         .post-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
     </style>
 </head>
