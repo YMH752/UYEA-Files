@@ -116,7 +116,12 @@ body {
     background: var(--bg);
     border-radius: 8px;
     padding: 4px;
+    position: relative; /* 修改位置：为滑动高亮提供定位上下文 */
 }
+
+/* 修改位置：lang-selector 新增 position: relative */
+/* 前后逻辑：原无定位，现需要作为 .lang-highlight 的绝对定位父容器 */
+/* 修改目的：支持激活高亮滑动效果 */
 
 .lang-btn {
     padding: 6px 12px;
@@ -128,17 +133,39 @@ body {
     cursor: pointer;
     border-radius: 6px;
     transition: all 0.2s ease;
+    position: relative; /* 修改位置：提升层级确保文字在滑动层之上 */
+    z-index: 2; /* 修改位置：确保文字在滑动高亮之上 */
 }
 
+/* 修改位置：.lang-btn 新增 position: relative; z-index: 2 */
+/* 前后逻辑：原无层级控制，现需确保文字显示在滑动背景之上 */
+/* 修改目的：支持激活高亮滑动效果 */
+
 .lang-btn.active {
-    background: var(--primary);
+    background: transparent; /* 修改位置：原 var(--primary)，现改为透明 */
     color: white;
 }
 
-.lang-btn:hover:not(.active) {
-    background: var(--border);
-    color: var(--text-primary);
+/* 修改位置：.lang-btn.active 背景色改为 transparent */
+/* 前后逻辑：原由按钮自身背景色高亮，现由独立滑动元素承担高亮 */
+/* 修改目的：滑动高亮元素显示在按钮背后 */
+
+/* 新增：语言切换滑动高亮元素 */
+.lang-highlight {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    height: calc(100% - 8px);
+    background: var(--primary);
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 1;
+    pointer-events: none;
 }
+
+/* 修改位置：新增 .lang-highlight 规则 */
+/* 前后逻辑：原无此元素，现作为滑动背景 */
+/* 修改目的：实现点击按钮时激活高亮滑动到点击区域的动效 */
 
 /* 搜索框 */
 .header-search-wrapper {
@@ -267,9 +294,69 @@ body {
     font-size: 14px;
 }
 
+/* 新增：放大镜图标按钮 */
+.search-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+/* 修改位置：新增 .search-icon-btn 规则 */
+/* 前后逻辑：原顶部搜索栏为完整输入组件，现替换为图标按钮 */
+/* 修改目的：将顶部搜索栏改为放大镜图标，点击展开下拉搜索 */
+
+.search-icon-btn:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* 新增：下拉搜索框容器 */
+.search-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 320px;
+    background: var(--surface);
+    border: 2px solid var(--accent-1);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    z-index: 300;
+    padding: 16px;
+    animation: fadeUp 0.2s ease;
+}
+
+/* 修改位置：新增 .search-dropdown 规则 */
+/* 前后逻辑：原无此组件，现作为放大镜点击后的展开内容 */
+/* 修改目的：实现点击放大镜展开小搜索框的功能 */
+
+.search-dropdown.show {
+    display: block;
+}
+
+.search-dropdown .search-container {
+    width: 100%;
+    border: 1px solid var(--border);
+}
+
+.search-dropdown .search-input {
+    width: 100%;
+}
+
 /* 菜单切换按钮 */
 .menu-toggle {
-    display: none;
+    display: flex; /* 修改位置：原 none，现 flex */
     background: none;
     border: none;
     cursor: pointer;
@@ -279,6 +366,10 @@ body {
     width: 32px;
     height: 32px;
 }
+
+/* 修改位置：.menu-toggle display 属性 */
+/* 前后逻辑：原默认隐藏，仅在媒体查询 ≤1024px 时显示 */
+/* 修改目的：汉堡菜单按钮改为全部显示 */
 
 .menu-toggle span {
     display: block;
@@ -437,6 +528,48 @@ body {
     color: var(--text-muted);
 }
 
+/* 新增：时钟显示区域 */
+.clock-display {
+    margin-bottom: 48px;
+    text-align: center;
+    padding: 24px;
+    background: linear-gradient(135deg, var(--surface), var(--bg));
+    border-radius: 16px;
+    border: 2px solid var(--accent-1);
+    box-shadow: var(--shadow-sm);
+}
+
+/* 修改位置：新增 .clock-display 规则 */
+/* 前后逻辑：原 .page-search-bar 为搜索框，现替换为时钟 */
+/* 修改目的：将内容区搜索框去除改为时钟显示 */
+
+.clock-time {
+    font-family: 'Space Mono', 'Outfit', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--accent-3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 4px;
+    line-height: 1.2;
+}
+
+/* 修改位置：新增 .clock-time 规则 */
+/* 前后逻辑：原无此元素，现作为时钟文字样式 */
+/* 修改目的：时钟 [时:分:秒] 的大字体渐变显示 */
+
+.clock-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+/* 修改位置：新增 .clock-date 规则 */
+/* 前后逻辑：原无此元素，现作为日期显示 */
+/* 修改目的：补充时钟区域的日期信息 */
+
 /* 分类区域 */
 .section-group {
     margin-bottom: 56px;
@@ -572,9 +705,9 @@ body {
         display: none;
     }
     
-    .menu-toggle {
-        display: flex;
-    }
+    /* 修改位置：删除原 .menu-toggle { display: flex; } */
+    /* 前后逻辑：原在此处设置菜单按钮显示，现已在默认规则中设置 */
+    /* 修改目的：避免重复/冲突，汉堡菜单已在默认状态显示 */
     
     .content-wrapper {
         padding: 32px 24px;
