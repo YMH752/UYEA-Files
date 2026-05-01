@@ -18,7 +18,7 @@
             display: flex; align-items: center; justify-content: flex-end;
             padding: 0 24px; height: var(--header-h);
             background: var(--surface);
-            border-bottom: 1px solid var(--border); /* [修改] 轻边框 */
+            border-bottom: 1px solid var(--border);
             position: sticky; top: 0; z-index: 100;
         }
         .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; gap: 5px; }
@@ -28,34 +28,62 @@
         .nav-menu { padding: 16px 12px; }
         .nav-item {
             display: flex; align-items: center; padding: 14px 18px; margin: 6px 12px;
-            border-radius: 8px; /* [修改] 8px圆角 */ text-decoration: none; color: #FFFFFF;
+            border-radius: 8px; text-decoration: none; color: #A0A0B8;
             font-weight: 600; transition: all 0.2s ease; cursor: pointer; border: none;
         }
-        /* [修改] active状态红底白字 */
+        .nav-item:hover { background: rgba(255,255,255,0.08); color: #FFFFFF; }
         .nav-item.active {
-            background: #E63946 !important; color: #FFFFFF !important;
+            background: #3B82F6 !important; color: #FFFFFF !important;
         }
-        .nav-item.menu-open { background: var(--primary) !important; color: #FFFFFF !important; box-shadow: 0 4px 12px rgba(166, 58, 38, 0.2); }
+        .nav-item.menu-open { background: #3B82F6 !important; color: #FFFFFF !important; }
         .arrow-icon { font-size: 10px; margin-left: auto; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.6; }
         .nav-item.menu-open .arrow-icon { transform: rotate(180deg); opacity: 1; }
-        .nav-icon { color: #FFFFFF; font-size: 14px; }
+        .nav-icon { color: inherit; font-size: 14px; }
         .sidebar-footer { padding: 24px 16px; border-top: 1px solid rgba(255,255,255,0.12); }
         .auth-buttons { display: flex; gap: 12px; }
-        .auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; height: 42px; border-radius: 8px; /* [修改] 8px圆角 */ font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-        /* [修改] 登录/注册按钮红底白字 */
-        .login-btn, .register-btn { background: #E63946; border: none; color: #FFFFFF; font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-weight: 700; letter-spacing: 1.5px; }
-        .login-btn span, .register-btn span { display: inline-block; font-size: 16px; color: #FFFFFF; font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; }
-        /* [修改] 工具搜索框背景与边框 */
-        .tool-search-bar { display: flex; align-items: center; background: #FAFAFA; border: 1px solid #E5E7EB; border-radius: var(--radius-md); height: 48px; gap: 12px; margin-bottom: 24px; }
-        /* [修改] focus 边框改为 #005BBB */
-        .tool-search-bar:focus-within { border-color: #005BBB; }
+        .auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; height: 42px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .login-btn {
+            background: transparent;
+            border: 1px solid #3B82F6;
+            color: #3B82F6;
+            font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-weight: 700; letter-spacing: 1.5px;
+        }
+        .register-btn {
+            background: #3B82F6;
+            border: 1px solid #3B82F6;
+            color: #FFFFFF;
+            font-family: 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-weight: 700; letter-spacing: 1.5px;
+        }
+        .login-btn span, .register-btn span { display: inline-block; font-size: 16px; color: inherit; font-family: 'Luckiest Guy', 'Lilita One', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; }
+        .tool-search-bar {
+            display: flex; align-items: center;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: var(--radius-md);
+            height: 40px;
+            gap: 12px; margin-bottom: 24px;
+            padding: 0 12px;
+        }
+        .tool-search-bar:focus-within { border-color: #3B82F6; }
         .tool-search-input { border: none; background: transparent; outline: none; width: 100%; font-size: 15px; color: var(--text-primary); }
         .category-tabs { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; }
-        /* [修改] 标签默认白底灰边 */
-        .tab-item { padding: 8px 20px; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-        /* [修改] active标签为暖橙浅底深字 */
-        .tab-item.active { background: #FDE6D3; color: #A14A1A; border-color: transparent; }
-        .tool-group-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; margin-bottom: 20px; padding-left: 4px; }
+        .tab-item {
+            padding: 8px 20px; background: #FFFFFF;
+            border: 1px solid #E2E8F0; border-radius: 20px;
+            font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s;
+        }
+        .tab-item.active {
+            background: #EFF6FF;
+            color: #1E40AF;
+            border-color: #BFDBFE;
+        }
+        .tool-group-title {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 14px; font-weight: 600; color: #64748B;
+            letter-spacing: 0.05em; margin-bottom: 20px; padding-left: 4px;
+        }
     </style>
 </head>
 <body>
@@ -177,7 +205,7 @@
         const toolsNavTrigger = document.getElementById('toolsNavTrigger');
         const toolsSubMenu = document.getElementById('toolsSubMenu');
         toolsNavTrigger.addEventListener('click', function(e) {
-            e.preventDefault(); // 阻止默认跳转
+            e.preventDefault();
             const isOpening = !this.classList.contains('menu-open');
             this.classList.toggle('menu-open', isOpening);
             toolsSubMenu.classList.toggle('open', isOpening);
