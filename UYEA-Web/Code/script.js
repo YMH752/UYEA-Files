@@ -156,10 +156,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.section-group');
 
     const engineUrls = {
+        site: null,
         baidu: "https://www.baidu.com/s?wd=",
         google: "https://www.google.com/search?q=",
         bing: "https://cn.bing.com/search?q="
     };
+
+    /* 修改位置：engineUrls 增加 site: null */
+    /* 前后逻辑：原仅有百度/谷歌/必应3个URL，现增加 site 键 */
+    /* 修改目的：支持站内搜索选项，site 不跳转外部URL而执行本地过滤 */
 
     const STORAGE_KEY_ENGINE = 'uyea-search-engine';
 
@@ -375,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 position:absolute; width:${size}px; height:${size}px;
                 left:${e.clientX - rect.left - size/2}px;
                 top:${e.clientY - rect.top - size/2}px;
-                background:rgba(255,107,107,0.15); border-radius:50%;
+                background:rgba(0,0,0,0.15); border-radius:50%;
                 transform:scale(0); animation:ripple 0.5s ease-out forwards;
                 pointer-events:none; z-index:1;
             `;
@@ -386,6 +391,10 @@ document.addEventListener('DOMContentLoaded', () => {
             ripple.addEventListener('animationend', () => ripple.remove());
         });
     });
+
+    /* 修改位置：波纹特效背景色 */
+    /* 前后逻辑：原为 rgba(255,107,107,0.15) 红色半透明，现为 rgba(0,0,0,0.15) 黑色半透明 */
+    /* 修改目的：黑白配色 */
 
     /* ════════════════════════════════════════════════════════════
        6. 主题切换
