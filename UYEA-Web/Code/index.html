@@ -28,22 +28,12 @@
             <div class="header-right">
                 <!-- 语言切换 -->
                 <div class="lang-selector" id="langSelector">
-                    <!-- 修改位置：新增 .lang-highlight 滑动高亮元素 -->
-                    <!-- 前后逻辑：原无此元素，现作为激活状态滑动背景 -->
-                    <!-- 修改目的：实现点击按钮时激活高亮滑动到点击区域的动效 -->
                     <div class="lang-highlight" id="langHighlight"></div>
                     <button class="lang-btn active" data-lang="zh-CN">中文</button>
                     <button class="lang-btn" data-lang="zh-TW">繁中</button>
                     <button class="lang-btn" data-lang="en">English</button>
                 </div>
 
-                <!-- 修改位置：删除 .auth-section 登录按钮区域 -->
-                <!-- 前后逻辑：原包含登录按钮，现完全移除 -->
-                <!-- 修改目的：去除登录按钮 -->
-
-                <!-- 修改位置：将 .header-search-wrapper 替换为放大镜图标按钮 -->
-                <!-- 前后逻辑：原为完整搜索组件（引擎下拉+输入框），现为图标按钮+下拉搜索框 -->
-                <!-- 修改目的：将顶部搜索栏改为放大镜矢量图，点击展开小搜索框 -->
                 <div class="header-search-wrapper" style="position: relative;">
                     <button class="search-icon-btn" id="searchIconBtn">🔍</button>
                     <div class="search-dropdown" id="searchDropdown">
@@ -53,6 +43,10 @@
                                     <span id="engineTriggerLabel">百度</span>
                                 </button>
                                 <div class="engine-dropdown-list">
+                                    <!-- 修改位置：新增「站内」搜索引擎选项 -->
+                                    <!-- 前后逻辑：原仅有百度/谷歌/必应3个选项，现增加第4个「站内」 -->
+                                    <!-- 修改目的：完善切换搜索引擎功能，支持站内搜索 -->
+                                    <div class="engine-option-item" data-value="site">站内</div>
                                     <div class="engine-option-item selected" data-value="baidu">百度</div>
                                     <div class="engine-option-item" data-value="google">谷歌</div>
                                     <div class="engine-option-item" data-value="bing">必应</div>
@@ -90,9 +84,6 @@
     <!-- ✅ 主内容区 -->
     <main class="main-content">
         <div class="content-wrapper">
-            <!-- 修改位置：将 .page-search-bar 替换为 .clock-display 时钟区域 -->
-            <!-- 前后逻辑：原为大搜索框（搜索图标+输入框），现为实时时钟显示 -->
-            <!-- 修改目的：将内容区搜索框去除改为时钟 [时:分:秒] -->
             <div class="clock-display" id="clockDisplay">
                 <div class="clock-time" id="clockTime">00:00:00</div>
                 <div class="clock-date" id="clockDate">2026年1月1日 星期四</div>
@@ -200,9 +191,6 @@
     </main>
 
     <script src="script.js" defer></script>
-    <!-- 修改位置：新增内联脚本，实现时钟更新和放大镜下拉交互 -->
-    <!-- 前后逻辑：原无此内联脚本，现添加时钟和搜索图标交互 -->
-    <!-- 修改目的：时钟实时更新 [时:分:秒]，放大镜点击展开/收起下拉搜索框 -->
     <script>
         // 时钟更新逻辑
         function updateClock() {
@@ -236,13 +224,11 @@
             langHighlight.style.transform = `translateX(${btnRect.left - selectorRect.left}px)`;
         }
         
-        // 初始化高亮位置到 active 按钮
         const initialActiveBtn = document.querySelector('.lang-btn.active');
         if (initialActiveBtn) {
             moveLangHighlight(initialActiveBtn);
         }
         
-        // 点击时移动高亮
         langButtons.forEach(btn => {
             btn.addEventListener('click', function() {
                 moveLangHighlight(this);
@@ -262,6 +248,59 @@
             document.addEventListener('click', function(e) {
                 if (!searchDropdown.contains(e.target) && !searchIconBtn.contains(e.target)) {
                     searchDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        // 修改位置：新增站内搜索逻辑补充
+        // 前后逻辑：原script.js中已有site分支但未完整配置，现补充确保站内搜索正常工作
+        // 修改目的：完善切换搜索引擎功能，站内选项执行本地卡片过滤
+        const searchInput = document.getElementById('searchInput');
+        const cardItems = document.querySelectorAll('.card-item');
+        const sections = document.querySelectorAll('.section-group');
+        const engineOptionItems = document.querySelectorAll('.engine-option-item');
+        const engineTriggerLabel = document.getElementById('engineTriggerLabel');
+        let currentEngine = 'baidu';
+
+        const engineUrls = {
+            baidu: "https://www.baidu.com/s?wd=",
+            google: "https://www.google.com/search?q=",
+            bing: "https://cn.bing.com/search?q="
+        };
+
+        engineOptionItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const engine = this.getAttribute('data-value');
+                currentEngine = engine;
+                
+                engineOptionItems.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                engineTriggerLabel.textContent = this.textContent.trim();
+            });
+        });
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                if (currentEngine === 'site') {
+                    const keyword = this.value.toLowerCase().trim();
+                    cardItems.forEach(card => {
+                        const title = card.querySelector('.card-title').textContent.toLowerCase();
+                        card.style.display = title.includes(keyword) ? 'flex' : 'none';
+                    });
+                    sections.forEach(section => {
+                        const hasVisible = Array.from(section.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
+                        section.style.display = hasVisible ? 'block' : 'none';
+                    });
+                }
+            });
+
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const keyword = this.value.trim();
+                    if (currentEngine !== 'site' && keyword !== '') {
+                        window.open(engineUrls[currentEngine] + encodeURIComponent(keyword), '_blank');
+                    }
                 }
             });
         }
