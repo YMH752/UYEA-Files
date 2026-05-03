@@ -40,11 +40,19 @@
             color: var(--accent-1);
         }
 
+        /* 修改位置：.tab-item:hover 颜色 */
+        /* 前后逻辑：原 hover 为霓虹青 #00D9FF，现为深灰 #333333 */
+        /* 修改目的：黑白配色 */
+
         .tab-item.active {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             border-color: var(--primary);
         }
+
+        /* 修改位置：.tab-item.active 背景渐变 */
+        /* 前后逻辑：原为红/深红渐变，现为黑/最深黑渐变 */
+        /* 修改目的：黑白配色 */
 
         .tool-group-title {
             font-family: 'Outfit', sans-serif;
@@ -84,40 +92,15 @@
             <div class="header-right">
                 <!-- 语言切换 -->
                 <div class="lang-selector" id="langSelector">
-                    <!-- 修改位置：新增 .lang-highlight 滑动高亮元素 -->
-                    <!-- 前后逻辑：原无此元素，现作为激活状态滑动背景 -->
-                    <!-- 修改目的：实现点击按钮时激活高亮滑动到点击区域的动效 -->
                     <div class="lang-highlight" id="langHighlight"></div>
                     <button class="lang-btn active" data-lang="zh-CN">中文</button>
                     <button class="lang-btn" data-lang="zh-TW">繁中</button>
                     <button class="lang-btn" data-lang="en">English</button>
                 </div>
 
-                <!-- 修改位置：删除 .auth-section 登录按钮区域 -->
-                <!-- 前后逻辑：原包含登录按钮，现完全移除 -->
-                <!-- 修改目的：去除登录按钮 -->
-
-                <!-- 修改位置：新增放大镜图标按钮（tools页原无搜索组件） -->
-                <!-- 前后逻辑：原无顶部搜索功能，现添加与index统一的放大镜图标 -->
-                <!-- 修改目的：顶部功能三页统一 -->
-                <div class="header-search-wrapper" style="position: relative;">
-                    <button class="search-icon-btn" id="searchIconBtn">🔍</button>
-                    <div class="search-dropdown" id="searchDropdown">
-                        <div class="search-container">
-                            <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
-                                <button class="engine-trigger-btn" id="engineTriggerBtn">
-                                    <span id="engineTriggerLabel">百度</span>
-                                </button>
-                                <div class="engine-dropdown-list">
-                                    <div class="engine-option-item selected" data-value="baidu">百度</div>
-                                    <div class="engine-option-item" data-value="google">谷歌</div>
-                                    <div class="engine-option-item" data-value="bing">必应</div>
-                                </div>
-                            </div>
-                            <input type="text" id="searchInput" class="search-input" placeholder="搜索导航...">
-                        </div>
-                    </div>
-                </div>
+                <!-- 修改位置：删除 .header-search-wrapper 放大镜图标区域 -->
+                <!-- 前后逻辑：原包含放大镜图标+下拉搜索，现完全移除 -->
+                <!-- 修改目的：tools页不显示放大镜搜索图标，仅index页显示 -->
 
                 <!-- 下拉菜单按钮 -->
                 <button class="menu-toggle" id="menuToggleBtn">
@@ -227,9 +210,6 @@
     </main>
 
     <script src="script.js" defer></script>
-    <!-- 修改位置：新增内联脚本，实现语言滑动高亮和放大镜下拉交互 -->
-    <!-- 前后逻辑：原无此内联脚本，现添加与index统一的功能 -->
-    <!-- 修改目的：顶部功能三页统一 -->
     <script>
         // 语言切换滑动高亮
         const langSelector = document.getElementById('langSelector');
@@ -254,23 +234,6 @@
                 moveLangHighlight(this);
             });
         });
-
-        // 放大镜下拉搜索交互
-        const searchIconBtn = document.getElementById('searchIconBtn');
-        const searchDropdown = document.getElementById('searchDropdown');
-        
-        if (searchIconBtn && searchDropdown) {
-            searchIconBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                searchDropdown.classList.toggle('show');
-            });
-            
-            document.addEventListener('click', function(e) {
-                if (!searchDropdown.contains(e.target) && !searchIconBtn.contains(e.target)) {
-                    searchDropdown.classList.remove('show');
-                }
-            });
-        }
     </script>
     <script>
         // 分类标签切换功能
