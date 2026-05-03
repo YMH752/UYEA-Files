@@ -179,6 +179,13 @@ document.addEventListener('DOMContentLoaded', () => {
             currentEngine = 'baidu';
         }
 
+        // 修改位置：添加搜索引擎状态验证 */
+        // 前后逻辑：原无验证，若 localStorage 保存失败会导致状态不一致，现添加验证 */
+        // 修改目的：确保 currentEngine 与 UI 和 localStorage 状态同步 */
+        if (!engineUrls.hasOwnProperty(currentEngine)) {
+            currentEngine = 'baidu';
+        }
+
         engineOptionItems.forEach(item => {
             if (item.getAttribute('data-value') === currentEngine) {
                 item.classList.add('selected');
@@ -196,6 +203,14 @@ document.addEventListener('DOMContentLoaded', () => {
         item.addEventListener('click', function(e) {
             e.stopPropagation();
             const engine = this.getAttribute('data-value');
+            
+            // 修改位置：搜索引擎选择时验证引擎有效性 */
+            // 前后逻辑：原无验证直接赋值，现验证后再赋值 */
+            // 修改目的：防止无效引擎值污染状态 */
+            if (!engineUrls.hasOwnProperty(engine)) {
+                return;
+            }
+            
             currentEngine = engine;
             
             engineOptionItems.forEach(opt => opt.classList.remove('selected'));
@@ -277,10 +292,20 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => reject(new Error('timeout')), 5000)
         );
 
-        const fetchPromise = fetch(url, { method: 'HEAD', mode: 'no-cors' })
-            .then(() => {
+        /* 修改位置：图标加载改用 GET 请求和更严格的错误检测 */
+        /* 前后逻辑：原使用 HEAD 请求 + mode: 'no-cors'，容易导致跨域失败，现改为 GET 请求并检查 response.status */
+        /* 修改目的：提高图标加载成功率，同时避免无效请求设置 img.src */
+        const fetchPromise = fetch(url, { mode: 'no-cors' })  // 改为 GET（默认）
+            .then(response => {
+                // 即使 no-cors 也尝试读取状态
+                if (response.status >= 400) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 img.src = url;
                 img.closest('.card-icon')?.classList.remove('skeleton');
+            })
+            .catch((err) => {
+                throw new Error(`Load failed: ${err.message}`);
             });
 
         Promise.race([fetchPromise, timeoutPromise])
