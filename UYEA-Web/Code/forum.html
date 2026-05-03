@@ -27,7 +27,7 @@
             align-items: center;
             gap: 8px;
             padding: 10px 24px;
-            background: linear-gradient(135deg, var(--accent-3), var(--primary));
+            background: linear-gradient(135deg, var(--accent-1), var(--primary));
             color: white;
             border: none;
             border-radius: 8px;
@@ -39,10 +39,18 @@
             cursor: pointer;
         }
 
+        /* 修改位置：.post-btn 背景渐变 */
+        /* 前后逻辑：原为紫/红渐变，现为深灰/黑渐变 */
+        /* 修改目的：黑白配色 */
+
         .post-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
+
+        /* 修改位置：.post-btn:hover 阴影颜色 */
+        /* 前后逻辑：原阴影为紫色半透明，现为黑色半透明 */
+        /* 修改目的：黑白配色 */
 
         .forum-search {
             flex: 1;
@@ -63,8 +71,12 @@
 
         .forum-search input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
         }
+
+        /* 修改位置：.forum-search input:focus 阴影颜色 */
+        /* 前后逻辑：原为红色半透明，现为黑色半透明 */
+        /* 修改目的：黑白配色 */
 
         .forum-search span {
             position: absolute;
@@ -98,6 +110,10 @@
             box-shadow: var(--shadow-md);
         }
 
+        /* 修改位置：.post-item:hover 边框颜色 */
+        /* 前后逻辑：原 hover 边框为热烈红 #FF6B6B，现为纯黑 #1A1A1A */
+        /* 修改目的：黑白配色 */
+
         .post-meta {
             display: flex;
             align-items: center;
@@ -110,13 +126,17 @@
 
         .post-tag {
             padding: 4px 10px;
-            background: linear-gradient(135deg, var(--primary-light), rgba(0, 217, 255, 0.08));
+            background: linear-gradient(135deg, var(--primary-light), rgba(0, 0, 0, 0.08));
             border-radius: 4px;
             color: var(--primary);
             font-weight: 600;
             font-size: 11px;
             border: 1px solid var(--primary);
         }
+
+        /* 修改位置：.post-tag 背景渐变和边框颜色 */
+        /* 前后逻辑：原为浅红/青色半透明背景+红色边框，现为浅灰/黑色半透明+黑色边框 */
+        /* 修改目的：黑白配色 */
 
         .post-title {
             font-family: 'Outfit', sans-serif;
@@ -131,6 +151,10 @@
         .post-item:hover .post-title {
             color: var(--primary);
         }
+
+        /* 修改位置：.post-item:hover .post-title 颜色 */
+        /* 前后逻辑：原 hover 为热烈红 #FF6B6B，现为纯黑 #1A1A1A */
+        /* 修改目的：黑白配色 */
 
         .post-excerpt {
             font-size: 14px;
@@ -152,40 +176,15 @@
             <div class="header-right">
                 <!-- 语言切换 -->
                 <div class="lang-selector" id="langSelector">
-                    <!-- 修改位置：新增 .lang-highlight 滑动高亮元素 -->
-                    <!-- 前后逻辑：原无此元素，现作为激活状态滑动背景 -->
-                    <!-- 修改目的：实现点击按钮时激活高亮滑动到点击区域的动效 -->
                     <div class="lang-highlight" id="langHighlight"></div>
                     <button class="lang-btn active" data-lang="zh-CN">中文</button>
                     <button class="lang-btn" data-lang="zh-TW">繁中</button>
                     <button class="lang-btn" data-lang="en">English</button>
                 </div>
 
-                <!-- 修改位置：删除 .auth-section 登录按钮区域 -->
-                <!-- 前后逻辑：原包含登录按钮，现完全移除 -->
-                <!-- 修改目的：去除登录按钮 -->
-
-                <!-- 修改位置：新增放大镜图标按钮（forum页原无搜索组件） -->
-                <!-- 前后逻辑：原无顶部搜索功能，现添加与index统一的放大镜图标 -->
-                <!-- 修改目的：顶部功能三页统一 -->
-                <div class="header-search-wrapper" style="position: relative;">
-                    <button class="search-icon-btn" id="searchIconBtn">🔍</button>
-                    <div class="search-dropdown" id="searchDropdown">
-                        <div class="search-container">
-                            <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
-                                <button class="engine-trigger-btn" id="engineTriggerBtn">
-                                    <span id="engineTriggerLabel">百度</span>
-                                </button>
-                                <div class="engine-dropdown-list">
-                                    <div class="engine-option-item selected" data-value="baidu">百度</div>
-                                    <div class="engine-option-item" data-value="google">谷歌</div>
-                                    <div class="engine-option-item" data-value="bing">必应</div>
-                                </div>
-                            </div>
-                            <input type="text" id="searchInput" class="search-input" placeholder="搜索导航...">
-                        </div>
-                    </div>
-                </div>
+                <!-- 修改位置：删除 .header-search-wrapper 放大镜图标区域 -->
+                <!-- 前后逻辑：原包含放大镜图标+下拉搜索，现完全移除 -->
+                <!-- 修改目的：forum页不显示放大镜搜索图标，仅index页显示 -->
 
                 <!-- 下拉菜单按钮 -->
                 <button class="menu-toggle" id="menuToggleBtn">
@@ -278,9 +277,6 @@
     </main>
 
     <script src="script.js" defer></script>
-    <!-- 修改位置：新增内联脚本，实现语言滑动高亮和放大镜下拉交互 -->
-    <!-- 前后逻辑：原无此内联脚本，现添加与index统一的功能 -->
-    <!-- 修改目的：顶部功能三页统一 -->
     <script>
         // 语言切换滑动高亮
         const langSelector = document.getElementById('langSelector');
@@ -305,23 +301,6 @@
                 moveLangHighlight(this);
             });
         });
-
-        // 放大镜下拉搜索交互
-        const searchIconBtn = document.getElementById('searchIconBtn');
-        const searchDropdown = document.getElementById('searchDropdown');
-        
-        if (searchIconBtn && searchDropdown) {
-            searchIconBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                searchDropdown.classList.toggle('show');
-            });
-            
-            document.addEventListener('click', function(e) {
-                if (!searchDropdown.contains(e.target) && !searchIconBtn.contains(e.target)) {
-                    searchDropdown.classList.remove('show');
-                }
-            });
-        }
     </script>
     <script>
         // 论坛搜索功能
