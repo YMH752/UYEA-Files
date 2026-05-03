@@ -151,7 +151,7 @@
                 <div class="section-header">
                     <h2 class="section-title" data-i18n="section.life">生活</h2>
                 </div>
-                <div class="grid-container" style="margin-bottom: 40px;">
+                <div class="grid-container">
                     <a href="https://www.xiaohongshu.com" target="_blank" class="card-item">
                         <div class="card-icon"><img src="" data-domain="xiaohongshu.com" data-site-name="小红书"></div>
                         <div class="card-info"><div class="card-title">小红书</div></div>
@@ -248,59 +248,6 @@
             document.addEventListener('click', function(e) {
                 if (!searchDropdown.contains(e.target) && !searchIconBtn.contains(e.target)) {
                     searchDropdown.classList.remove('show');
-                }
-            });
-        }
-
-        // 修改位置：新增站内搜索逻辑补充
-        // 前后逻辑：原script.js中已有site分支但未完整配置，现补充确保站内搜索正常工作
-        // 修改目的：完善切换搜索引擎功能，站内选项执行本地卡片过滤
-        const searchInput = document.getElementById('searchInput');
-        const cardItems = document.querySelectorAll('.card-item');
-        const sections = document.querySelectorAll('.section-group');
-        const engineOptionItems = document.querySelectorAll('.engine-option-item');
-        const engineTriggerLabel = document.getElementById('engineTriggerLabel');
-        let currentEngine = 'baidu';
-
-        const engineUrls = {
-            baidu: "https://www.baidu.com/s?wd=",
-            google: "https://www.google.com/search?q=",
-            bing: "https://cn.bing.com/search?q="
-        };
-
-        engineOptionItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const engine = this.getAttribute('data-value');
-                currentEngine = engine;
-                
-                engineOptionItems.forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                engineTriggerLabel.textContent = this.textContent.trim();
-            });
-        });
-
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                if (currentEngine === 'site') {
-                    const keyword = this.value.toLowerCase().trim();
-                    cardItems.forEach(card => {
-                        const title = card.querySelector('.card-title').textContent.toLowerCase();
-                        card.style.display = title.includes(keyword) ? 'flex' : 'none';
-                    });
-                    sections.forEach(section => {
-                        const hasVisible = Array.from(section.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                        section.style.display = hasVisible ? 'block' : 'none';
-                    });
-                }
-            });
-
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const keyword = this.value.trim();
-                    if (currentEngine !== 'site' && keyword !== '') {
-                        window.open(engineUrls[currentEngine] + encodeURIComponent(keyword), '_blank');
-                    }
                 }
             });
         }
