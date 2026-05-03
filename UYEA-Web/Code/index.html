@@ -94,10 +94,17 @@
                     <div class="clock-lunar" id="clockLunar">（农历正月初一）</div>
                 </div>
                 <div class="clock-right">
+                    <!-- 修改位置：日历容器缩小 + 添加日期跳转功能 -->
+                    <!-- 前后逻辑：原日历宽度280px，现改为240px；原无跳转功能，现添加输入框和跳转按钮 -->
+                    <!-- 修改目的：节省页面空间，提供快速日期跳转功能 -->
                     <div class="calendar-header">
                         <button class="calendar-nav-btn" id="prevMonth">◀</button>
                         <div class="calendar-title" id="calendarTitle">2026年1月</div>
                         <button class="calendar-nav-btn" id="nextMonth">▶</button>
+                    </div>
+                    <div class="calendar-jump">
+                        <input type="text" id="jumpDateInput" class="calendar-jump-input" placeholder="YYYY-MM-DD">
+                        <button class="calendar-jump-btn" id="jumpDateBtn">跳转</button>
                     </div>
                     <div class="calendar-weekdays">
                         <div class="weekday">日</div>
