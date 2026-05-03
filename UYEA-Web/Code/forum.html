@@ -161,6 +161,30 @@
             color: var(--text-secondary);
             line-height: 1.6;
         }
+
+        /* 修改位置：新增 .no-results 提示样式 */
+        /* 前后逻辑：原论坛搜索无结果时页面空白，现添加提示文案 */
+        /* 修改目的：改善用户体验，告知用户搜索无结果 */
+        .no-results {
+            display: none;
+            text-align: center;
+            padding: 64px 24px;
+            color: var(--text-secondary);
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        .no-results-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .no-results-text {
+            font-size: 16px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body data-lang="zh-CN">
@@ -273,6 +297,14 @@
                     <div class="post-excerpt">如果能让用户自己把最常用的几个工具顶在最前面，体验会更好，希望采纳！</div>
                 </a>
             </div>
+
+            <!-- 修改位置：新增无结果提示区域 -->
+            <!-- 前后逻辑：原论坛搜索无结果时页面空白，现添加提示 -->
+            <!-- 修改目的：改善用户体验，告知搜索无结果 -->
+            <div class="no-results" id="noResults">
+                <div class="no-results-icon">🔍</div>
+                <div class="no-results-text">未找到匹配的帖子</div>
+            </div>
         </div>
     </main>
 
@@ -306,19 +338,32 @@
         // 论坛搜索功能
         const forumSearchInput = document.getElementById('forumSearchInput');
         const postItems = document.querySelectorAll('.post-item');
+        const noResults = document.getElementById('noResults');
 
         if (forumSearchInput) {
             forumSearchInput.addEventListener('input', function() {
                 const keyword = this.value.toLowerCase().trim();
+                let hasVisiblePost = false;
+
                 postItems.forEach(post => {
                     const title = post.querySelector('.post-title').textContent.toLowerCase();
                     const excerpt = post.querySelector('.post-excerpt').textContent.toLowerCase();
                     if (title.includes(keyword) || excerpt.includes(keyword)) {
                         post.style.display = 'block';
+                        hasVisiblePost = true;
                     } else {
                         post.style.display = 'none';
                     }
                 });
+
+                /* 修改位置：论坛搜索无结果处理 */
+                /* 前后逻辑：原搜索无结果时页面空白，现检查是否有可见帖子并显示提示 */
+                /* 修改目的：改善用户体验，当搜索无结果时显示友好提示 */
+                if (hasVisiblePost) {
+                    noResults.classList.remove('show');
+                } else {
+                    noResults.classList.add('show');
+                }
             });
         }
     </script>
