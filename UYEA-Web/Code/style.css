@@ -1,19 +1,19 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   重构版：取消侧边栏 + 顶部导航 + 大胆活力色彩
+   重构版：取消侧边栏 + 顶部导航 + 黑白配色
    ============================================================ */
 
 :root {
-    /* 主色系 - 大胆且充满活力 */
-    --primary:          #FF6B6B;   /* 热烈红 */
-    --primary-dark:     #E63946;   /* 深红 */
-    --primary-light:    #FFE5E5;   /* 浅红背景 */
+    /* 主色系 - 黑白灰阶 */
+    --primary:          #1A1A1A;   /* 纯黑强调 */
+    --primary-dark:     #000000;   /* 最深黑 */
+    --primary-light:    #F5F5F5;   /* 浅灰背景 */
     
-    --accent-1:         #00D9FF;   /* 霓虹青 */
-    --accent-2:         #FFD700;   /* 耀眼金 */
-    --accent-3:         #7C3AED;   /* 紫罗兰 */
-    --accent-4:         #10B981;   /* 翠绿 */
-    --accent-5:         #F59E0B;   /* 琥珀色 */
+    --accent-1:         #333333;   /* 深灰 */
+    --accent-2:         #666666;   /* 中灰 */
+    --accent-3:         #999999;   /* 浅中灰 */
+    --accent-4:         #CCCCCC;   /* 浅灰 */
+    --accent-5:         #E0E0E0;   /* 更浅灰 */
     
     /* 中性色 */
     --bg:               #F5F5F5;   /* 浅灰背景 */
@@ -34,6 +34,10 @@
     --shadow-lg:        0 20px 50px rgba(0, 0, 0, 0.15);
 }
 
+/* 修改位置：:root 全部彩色变量替换为黑白灰阶 */
+/* 前后逻辑：原使用红/青/金/紫/绿/琥珀等彩色，现统一为灰阶 */
+/* 修改目的：将网页全部改为黑白配色 */
+
 /* ✅ 暗黑模式变量 */
 html[data-theme="dark"] {
     --bg:               #0F0F0F;
@@ -43,6 +47,10 @@ html[data-theme="dark"] {
     --text-secondary:   #CCCCCC;
     --text-muted:       #888888;
 }
+
+/* 修改位置：html[data-theme="dark"] 变量替换为灰阶 */
+/* 前后逻辑：原暗黑模式保留部分彩色语义，现统一为灰阶 */
+/* 修改目的：暗黑模式也保持黑白配色一致性 */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -70,6 +78,10 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
+/* 修改位置：.top-header border-bottom 颜色 */
+/* 前后逻辑：原 var(--accent-1) 为霓虹青 #00D9FF，现为深灰 #333333 */
+/* 修改目的：黑白配色 */
+
 .header-container {
     height: 100%;
     max-width: 100%;
@@ -89,7 +101,7 @@ body {
     font-family: 'Outfit', 'Space Mono', monospace;
     font-size: 32px;
     font-weight: 900;
-    background: linear-gradient(135deg, var(--primary), var(--accent-3), var(--accent-1));
+    background: linear-gradient(135deg, var(--primary), var(--accent-1), var(--accent-2));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -97,6 +109,10 @@ body {
     letter-spacing: 3px;
     transition: transform 0.2s ease;
 }
+
+/* 修改位置：.logo-text 渐变颜色 */
+/* 前后逻辑：原为红/紫/青渐变，现为黑/深灰/中灰渐变 */
+/* 修改目的：黑白配色 */
 
 .logo-text:hover {
     transform: scale(1.05);
@@ -116,41 +132,9 @@ body {
     background: var(--bg);
     border-radius: 8px;
     padding: 4px;
-    position: relative; /* 修改位置：为滑动高亮提供定位上下文 */
+    position: relative;
 }
 
-/* 修改位置：lang-selector 新增 position: relative */
-/* 前后逻辑：原无定位，现需要作为 .lang-highlight 的绝对定位父容器 */
-/* 修改目的：支持激活高亮滑动效果 */
-
-.lang-btn {
-    padding: 6px 12px;
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    position: relative; /* 修改位置：提升层级确保文字在滑动层之上 */
-    z-index: 2; /* 修改位置：确保文字在滑动高亮之上 */
-}
-
-/* 修改位置：.lang-btn 新增 position: relative; z-index: 2 */
-/* 前后逻辑：原无层级控制，现需确保文字显示在滑动背景之上 */
-/* 修改目的：支持激活高亮滑动效果 */
-
-.lang-btn.active {
-    background: transparent; /* 修改位置：原 var(--primary)，现改为透明 */
-    color: white;
-}
-
-/* 修改位置：.lang-btn.active 背景色改为 transparent */
-/* 前后逻辑：原由按钮自身背景色高亮，现由独立滑动元素承担高亮 */
-/* 修改目的：滑动高亮元素显示在按钮背后 */
-
-/* 新增：语言切换滑动高亮元素 */
 .lang-highlight {
     position: absolute;
     top: 4px;
@@ -163,9 +147,28 @@ body {
     pointer-events: none;
 }
 
-/* 修改位置：新增 .lang-highlight 规则 */
-/* 前后逻辑：原无此元素，现作为滑动背景 */
-/* 修改目的：实现点击按钮时激活高亮滑动到点击区域的动效 */
+/* 修改位置：.lang-highlight 背景色 */
+/* 前后逻辑：原为热烈红 #FF6B6B，现为纯黑 #1A1A1A */
+/* 修改目的：黑白配色 */
+
+.lang-btn {
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.lang-btn.active {
+    background: transparent;
+    color: white;
+}
 
 /* 搜索框 */
 .header-search-wrapper {
@@ -205,9 +208,17 @@ body {
     transition: all 0.2s ease;
 }
 
+/* 修改位置：.engine-trigger-btn 背景色 */
+/* 前后逻辑：原为霓虹青 #00D9FF，现为深灰 #333333 */
+/* 修改目的：黑白配色 */
+
 .engine-trigger-btn:hover {
     background: var(--accent-2);
 }
+
+/* 修改位置：.engine-trigger-btn:hover 背景色 */
+/* 前后逻辑：原 hover 为耀眼金 #FFD700，现为中灰 #666666 */
+/* 修改目的：黑白配色 */
 
 .engine-dropdown-list {
     display: none;
@@ -246,10 +257,18 @@ body {
     color: var(--primary);
 }
 
+/* 修改位置：.engine-option-item:hover 文字色 */
+/* 前后逻辑：原 hover 为热烈红 #FF6B6B，现为纯黑 #1A1A1A */
+/* 修改目的：黑白配色 */
+
 .engine-option-item.selected {
     color: var(--primary);
     font-weight: 700;
 }
+
+/* 修改位置：.engine-option-item.selected 文字色 */
+/* 前后逻辑：原 selected 为热烈红 #FF6B6B，现为纯黑 #1A1A1A */
+/* 修改目的：黑白配色 */
 
 .search-input {
     border: none;
@@ -284,17 +303,25 @@ body {
     font-family: 'Outfit', sans-serif;
 }
 
+/* 修改位置：.login-btn 背景渐变 */
+/* 前后逻辑：原为红/深红渐变，现为黑/最深黑渐变 */
+/* 修改目的：黑白配色（虽已删除该元素，保留样式定义） */
+
 .login-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
+
+/* 修改位置：.login-btn:hover 阴影颜色 */
+/* 前后逻辑：原阴影为红色半透明，现为黑色半透明 */
+/* 修改目的：黑白配色 */
 
 .login-btn span {
     display: inline-block;
     font-size: 14px;
 }
 
-/* 新增：放大镜图标按钮 */
+/* 放大镜图标按钮 */
 .search-icon-btn {
     display: flex;
     align-items: center;
@@ -311,17 +338,17 @@ body {
     position: relative;
 }
 
-/* 修改位置：新增 .search-icon-btn 规则 */
-/* 前后逻辑：原顶部搜索栏为完整输入组件，现替换为图标按钮 */
-/* 修改目的：将顶部搜索栏改为放大镜图标，点击展开下拉搜索 */
-
 .search-icon-btn:hover {
     background: var(--primary-light);
     border-color: var(--primary);
     color: var(--primary);
 }
 
-/* 新增：下拉搜索框容器 */
+/* 修改位置：.search-icon-btn:hover 颜色 */
+/* 前后逻辑：原 hover 为浅红/红/红，现为浅灰/黑/黑 */
+/* 修改目的：黑白配色 */
+
+/* 下拉搜索框容器 */
 .search-dropdown {
     display: none;
     position: absolute;
@@ -337,9 +364,9 @@ body {
     animation: fadeUp 0.2s ease;
 }
 
-/* 修改位置：新增 .search-dropdown 规则 */
-/* 前后逻辑：原无此组件，现作为放大镜点击后的展开内容 */
-/* 修改目的：实现点击放大镜展开小搜索框的功能 */
+/* 修改位置：.search-dropdown 边框颜色 */
+/* 前后逻辑：原边框为霓虹青 #00D9FF，现为深灰 #333333 */
+/* 修改目的：黑白配色 */
 
 .search-dropdown.show {
     display: block;
@@ -356,7 +383,7 @@ body {
 
 /* 菜单切换按钮 */
 .menu-toggle {
-    display: flex; /* 修改位置：原 none，现 flex */
+    display: flex;
     background: none;
     border: none;
     cursor: pointer;
@@ -366,10 +393,6 @@ body {
     width: 32px;
     height: 32px;
 }
-
-/* 修改位置：.menu-toggle display 属性 */
-/* 前后逻辑：原默认隐藏，仅在媒体查询 ≤1024px 时显示 */
-/* 修改目的：汉堡菜单按钮改为全部显示 */
 
 .menu-toggle span {
     display: block;
@@ -410,6 +433,10 @@ body {
     animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* 修改位置：.dropdown-menu 左边框颜色 */
+/* 前后逻辑：原左边框为霓虹青 #00D9FF，现为深灰 #333333 */
+/* 修改目的：黑白配色 */
+
 .dropdown-menu.show {
     display: flex;
     flex-direction: column;
@@ -435,8 +462,11 @@ body {
 .menu-item.active {
     background: var(--bg);
     color: var(--primary);
-    padding-left: 24px;
 }
+
+/* 修改位置：.menu-item:hover/active 文字色 */
+/* 前后逻辑：原 hover/active 为热烈红 #FF6B6B，现为纯黑 #1A1A1A */
+/* 修改目的：黑白配色 */
 
 .menu-divider {
     height: 1px;
@@ -463,10 +493,18 @@ body {
     font-family: 'Outfit', sans-serif;
 }
 
+/* 修改位置：.register-btn 背景渐变 */
+/* 前后逻辑：原为紫/红渐变，现为浅中灰/黑渐变 */
+/* 修改目的：黑白配色 */
+
 .register-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
+
+/* 修改位置：.register-btn:hover 阴影颜色 */
+/* 前后逻辑：原阴影为紫色半透明，现为黑色半透明 */
+/* 修改目的：黑白配色 */
 
 /* ════════════════════════════════════════════════════════════
    主内容区
@@ -484,80 +522,32 @@ body {
     padding: 40px 32px;
 }
 
-/* 页面搜索栏（大搜索） */
-.page-search-bar {
-    margin-bottom: 48px;
-    text-align: center;
-}
-
-.search-large {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 20px;
-    background: linear-gradient(135deg, var(--primary-light), rgba(0, 217, 255, 0.05));
-    border-radius: 16px;
-    border: 2px solid var(--accent-1);
-}
-
-.search-icon {
-    font-size: 24px;
-}
-
-.search-input-large {
-    width: 100%;
-    max-width: 500px;
-    padding: 12px 20px;
-    border: 2px solid var(--accent-1);
-    background: var(--surface);
-    color: var(--text-primary);
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-.search-input-large:focus {
-    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
-    border-color: var(--primary);
-}
-
-.search-input-large::placeholder {
-    color: var(--text-muted);
-}
-
-/* 新增：时钟显示区域 */
+/* 时钟显示区域 */
 .clock-display {
     margin-bottom: 48px;
     text-align: center;
     padding: 24px;
     background: linear-gradient(135deg, var(--surface), var(--bg));
     border-radius: 16px;
-    border: 2px solid var(--accent-1);
     box-shadow: var(--shadow-sm);
 }
 
-/* 修改位置：新增 .clock-display 规则 */
-/* 前后逻辑：原 .page-search-bar 为搜索框，现替换为时钟 */
-/* 修改目的：将内容区搜索框去除改为时钟显示 */
+/* 修改位置：.clock-display 删除 border 属性 */
+/* 前后逻辑：原有 border: 2px solid var(--accent-1)，现完全移除 */
+/* 修改目的：将时钟区域的边框全部去掉 */
 
 .clock-time {
     font-family: 'Space Mono', 'Outfit', monospace;
     font-size: 48px;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary), var(--accent-3));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--primary);
     letter-spacing: 4px;
     line-height: 1.2;
 }
 
-/* 修改位置：新增 .clock-time 规则 */
-/* 前后逻辑：原无此元素，现作为时钟文字样式 */
-/* 修改目的：时钟 [时:分:秒] 的大字体渐变显示 */
+/* 修改位置：.clock-time 文字样式 */
+/* 前后逻辑：原为渐变文字（红/紫），现为纯色纯黑 #1A1A1A */
+/* 修改目的：黑白配色，同时移除渐变效果 */
 
 .clock-date {
     font-size: 14px;
@@ -565,10 +555,6 @@ body {
     margin-top: 8px;
     font-weight: 500;
 }
-
-/* 修改位置：新增 .clock-date 规则 */
-/* 前后逻辑：原无此元素，现作为日期显示 */
-/* 修改目的：补充时钟区域的日期信息 */
 
 /* 分类区域 */
 .section-group {
@@ -601,6 +587,10 @@ body {
     border-radius: 2px;
 }
 
+/* 修改位置：.section-title::after 渐变颜色 */
+/* 前后逻辑：原为青/紫渐变，现为深灰/浅中灰渐变 */
+/* 修改目的：黑白配色 */
+
 /* 网格布局 */
 .grid-container {
     display: grid;
@@ -631,16 +621,24 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, transparent, rgba(255, 107, 107, 0.05));
+    background: linear-gradient(135deg, transparent, rgba(0, 0, 0, 0.05));
     opacity: 0;
     transition: opacity 0.3s ease;
 }
+
+/* 修改位置：.card-item::before 渐变颜色 */
+/* 前后逻辑：原为红色半透明，现为黑色半透明 */
+/* 修改目的：黑白配色 */
 
 .card-item:hover {
     transform: translateY(-8px);
     border-color: var(--primary);
     box-shadow: var(--shadow-md);
 }
+
+/* 修改位置：.card-item:hover 边框颜色 */
+/* 前后逻辑：原 hover 边框为热烈红 #FF6B6B，现为纯黑 #1A1A1A */
+/* 修改目的：黑白配色 */
 
 .card-item:hover::before {
     opacity: 1;
@@ -650,7 +648,7 @@ body {
     width: 48px;
     height: 48px;
     border-radius: 8px;
-    background: linear-gradient(135deg, var(--primary-light), rgba(0, 217, 255, 0.08));
+    background: linear-gradient(135deg, var(--primary-light), rgba(0, 0, 0, 0.08));
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -658,6 +656,10 @@ body {
     flex-shrink: 0;
     border: 1px solid var(--border);
 }
+
+/* 修改位置：.card-icon 背景渐变 */
+/* 前后逻辑：原为浅红/青色半透明，现为浅灰/黑色半透明 */
+/* 修改目的：黑白配色 */
 
 .card-icon img {
     width: 100%;
@@ -705,10 +707,6 @@ body {
         display: none;
     }
     
-    /* 修改位置：删除原 .menu-toggle { display: flex; } */
-    /* 前后逻辑：原在此处设置菜单按钮显示，现已在默认规则中设置 */
-    /* 修改目的：避免重复/冲突，汉堡菜单已在默认状态显示 */
-    
     .content-wrapper {
         padding: 32px 24px;
     }
@@ -739,12 +737,20 @@ body {
         gap: 12px;
     }
     
-    .lang-selector {
-        display: none;
-    }
+    /* 修改位置：删除 .lang-selector { display: none; } */
+    /* 前后逻辑：原在 ≤768px 时隐藏语言切换，现改为始终显示 */
+    /* 修改目的：语言切换按钮固定显示，根据尺寸自适应 */
     
     .auth-section {
         display: none;
+    }
+    
+    /* 修改位置：新增 .lang-btn 移动端缩小样式 */
+    /* 前后逻辑：原无此规则，现添加窄屏自适应 */
+    /* 修改目的：语言按钮在移动端缩小尺寸以适配屏幕 */
+    .lang-btn {
+        padding: 4px 8px;
+        font-size: 10px;
     }
     
     .dropdown-menu {
