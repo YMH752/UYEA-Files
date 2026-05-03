@@ -474,16 +474,19 @@ body {
     gap: 40px;
     margin-bottom: 48px;
     padding: 32px;
-    background: linear-gradient(135deg, var(--surface), var(--bg));
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 16px;
     box-shadow: var(--shadow-sm);
     position: relative;
     overflow: hidden;
 }
 
-/* 修改位置：添加像素画背景 */
-/* 前后逻辑：原无背景装饰，现添加8-bit棋盘纹理 */
-/* 修改目的：增强视觉效果，营造复古像素风格 */
+/* 修改位置：添加毛玻璃背景效果 */
+/* 前后逻辑：原为线性渐变背景，现改为毛玻璃效果(透明度20%+模糊10px) */
+/* 修改目的：实现现代毛玻璃视觉效果 */
+
 .clock-display::before {
     content: '';
     position: absolute;
@@ -505,10 +508,13 @@ body {
 }
 
 .clock-right {
-    flex: 1;
-    min-width: 320px;
+    flex: 0 0 240px;
     z-index: 1;
 }
+
+/* 修改位置：日历容器宽度缩小 */
+/* 前后逻辑：原flex: 1导致日历占据剩余空间，现改为flex: 0 0 240px固定宽度 */
+/* 修改目的：回归卡片原始尺寸，不占据过多页面空间 */
 
 .clock-time {
     font-family: 'Space Mono', 'Outfit', monospace;
@@ -537,24 +543,28 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 16px;
+    gap: 8px;
+    margin-bottom: 12px;
 }
 
 .calendar-nav-btn {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     color: var(--text-primary);
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
+/* 修改位置：日历按钮缩小 */
+/* 前后逻辑：原32×32px，现改为28×28px */
+/* 修改目的：适配缩小后的日历尺寸 */
 
 .calendar-nav-btn:hover {
     background: var(--primary);
@@ -564,31 +574,86 @@ body {
 
 .calendar-title {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 12px;
     color: var(--text-primary);
     text-align: center;
     flex: 1;
 }
 
-.calendar-weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+/* 修改位置：新增日期跳转输入框 */
+/* 前后逻辑：原无跳转功能，现添加输入框和按钮 */
+/* 修改目的：支持用户快速跳转到指定日期 */
+.calendar-jump {
+    display: flex;
     gap: 4px;
     margin-bottom: 8px;
 }
 
+.calendar-jump-input {
+    flex: 1;
+    padding: 4px 6px;
+    font-size: 11px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.calendar-jump-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+}
+
+.calendar-jump-input::placeholder {
+    color: var(--text-muted);
+}
+
+.calendar-jump-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.calendar-jump-btn:hover {
+    background: var(--accent-1);
+}
+
+.calendar-jump-btn:active {
+    transform: scale(0.95);
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 4px;
+}
+
+/* 修改位置：日历间距缩小 */
+/* 前后逻辑：原gap: 4px，现改为gap: 2px */
+/* 修改目的：适配缩小后的日历尺寸 */
+
 .weekday {
     text-align: center;
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 700;
     color: var(--text-secondary);
-    padding: 6px 0;
+    padding: 3px 0;
 }
 
 .calendar-dates {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
+    gap: 2px;
 }
 
 .calendar-date {
@@ -597,14 +662,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 10px;
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     transition: all 0.2s ease;
     color: var(--text-primary);
     background: var(--surface);
 }
+
+/* 修改位置：日期字号和内边距缩小 */
+/* 前后逻辑：原font-size: 12px/border-radius: 4px，现改为10px/3px */
+/* 修改目的：缩小卡片尺寸，回归原始卡片大小 */
 
 .calendar-date:hover {
     border-color: var(--primary);
@@ -628,9 +697,6 @@ body {
     border-color: var(--accent-3);
 }
 
-/* 修改位置：节假日日期样式 */
-/* 前后逻辑：原无节假日标记，现添加颜色区分 */
-/* 修改目的：突出显示节假日日期 */
 .calendar-date.holiday-cn {
     background: rgba(255, 107, 107, 0.1);
     border-color: var(--holiday-cn);
@@ -658,11 +724,11 @@ body {
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 9px;
     white-space: nowrap;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -834,7 +900,8 @@ body {
     }
 
     .clock-right {
-        min-width: 100%;
+        min-width: 240px;
+        flex: 0 0 240px;
     }
 }
 
