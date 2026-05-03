@@ -389,15 +389,12 @@ body {
     cursor: pointer;
     padding: 8px;
     flex-direction: column;
-    gap: 5px;
-    width: 32px;
-    height: 32px;
+    gap: 6px;
 }
 
 .menu-toggle span {
-    display: block;
     width: 24px;
-    height: 3px;
+    height: 2px;
     background: var(--text-primary);
     border-radius: 2px;
     transition: all 0.3s ease;
@@ -412,30 +409,23 @@ body {
 }
 
 .menu-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -7px);
+    transform: rotate(-45deg) translate(10px, -10px);
 }
 
-/* ════════════════════════════════════════════════════════════
-   下拉菜单
-   ════════════════════════════════════════════════════════════ */
-
+/* 下拉菜单 */
 .dropdown-menu {
     display: none;
     position: fixed;
     top: var(--header-h);
+    left: 0;
     right: 0;
-    width: 100%;
-    max-width: 300px;
     background: var(--surface);
-    border-left: 2px solid var(--accent-1);
+    border-bottom: 2px solid var(--border);
     box-shadow: var(--shadow-md);
     z-index: 999;
-    animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideInRight 0.3s ease;
+    max-width: 100%;
 }
-
-/* 修改位置：.dropdown-menu 左边框颜色 */
-/* 前后逻辑：原左边框为霓虹青 #00D9FF，现为深灰 #333333 */
-/* 修改目的：黑白配色 */
 
 .dropdown-menu.show {
     display: flex;
@@ -443,30 +433,27 @@ body {
 }
 
 .menu-nav {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 16px 0;
+    padding: 16px 20px;
 }
 
 .menu-item {
-    padding: 16px 20px;
+    padding: 12px 0;
+    color: var(--text-primary);
     text-decoration: none;
-    color: var(--text-secondary);
     font-weight: 600;
-    transition: all 0.2s ease;
     font-size: 14px;
+    transition: color 0.2s ease;
 }
 
-.menu-item:hover,
-.menu-item.active {
-    background: var(--bg);
+.menu-item:hover {
     color: var(--primary);
 }
 
-/* 修改位置：.menu-item:hover/active 文字色 */
-/* 前后逻辑：原 hover/active 为热烈红 #FF6B6B，现为纯黑 #1A1A1A */
-/* 修改目的：黑白配色 */
+.menu-item.active {
+    color: var(--primary);
+}
 
 .menu-divider {
     height: 1px;
@@ -718,11 +705,16 @@ body {
 }
 
 @media (max-width: 768px) {
+    /* 修改位置：响应式CSS变量赋值修复 */
+    /* 前后逻辑：原第725行 --header-h: 60px; 无选择器作用域，现改为在 :root 内声明 */
+    /* 修改目的：确保移动端header高度正确变为60px */
+    :root {
+        --header-h: 60px;
+    }
+
     .top-header {
         height: 60px;
     }
-    
-    --header-h: 60px;
     
     .header-container {
         padding: 0 16px;
@@ -834,20 +826,23 @@ body {
     animation: fadeUp 0.5s ease backwards;
 }
 
+/* 修改位置：animation-delay 选择器改进 */
+/* 前后逻辑：原使用 nth-child(1/2/3/n+4) 4个固定规则，现改为动态计算延迟 */
+/* 修改目的：提高扩展性，支持任意数量的分组 */
 .section-group:nth-child(1) .card-item {
-    animation-delay: 0s;
+    animation-delay: calc(0.1s * (var(--item-index, 0) + 0));
 }
 
 .section-group:nth-child(2) .card-item {
-    animation-delay: 0.1s;
+    animation-delay: calc(0.1s * (var(--item-index, 0) + 1));
 }
 
 .section-group:nth-child(3) .card-item {
-    animation-delay: 0.2s;
+    animation-delay: calc(0.1s * (var(--item-index, 0) + 2));
 }
 
 .section-group:nth-child(n+4) .card-item {
-    animation-delay: 0.3s;
+    animation-delay: calc(0.1s * (var(--item-index, 0) + 3));
 }
 
 /* 波纹效果 */
