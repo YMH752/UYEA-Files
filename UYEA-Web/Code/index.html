@@ -43,9 +43,6 @@
                                     <span id="engineTriggerLabel">百度</span>
                                 </button>
                                 <div class="engine-dropdown-list">
-                                    <!-- 修改位置：新增「站内」搜索引擎选项 -->
-                                    <!-- 前后逻辑：原仅有百度/谷歌/必应3个选项，现增加第4个「站内」 -->
-                                    <!-- 修改目的：完善切换搜索引擎功能，支持站内搜索 -->
                                     <div class="engine-option-item" data-value="site">站内</div>
                                     <div class="engine-option-item selected" data-value="baidu">百度</div>
                                     <div class="engine-option-item" data-value="google">谷歌</div>
@@ -77,16 +74,42 @@
             <a href="forum.html" class="menu-item" data-i18n="nav.forum">悠野社区</a>
         </nav>
         <div class="menu-auth-section">
-            <button class="register-btn" onclick="alert('注册功能开发中...')"><span data-i18n="btn.register">注册</span></button>
+            <!-- 修改位置：注册按钮改为登录/注册 -->
+            <!-- 前后逻辑：原为"注册"单一功能，现改为"登录/注册"双功能 -->
+            <!-- 修改目的：提供更完整的身份认证选项 -->
+            <button class="register-btn" onclick="alert('登录/注册功能开发中...')"><span data-i18n="btn.auth">登录/注册</span></button>
         </div>
     </div>
 
     <!-- ✅ 主内容区 -->
     <main class="main-content">
         <div class="content-wrapper">
+            <!-- 修改位置：时钟区域改为左右布局 -->
+            <!-- 前后逻辑：原为单一时钟显示，现分为左侧时钟+农历+右侧日历 -->
+            <!-- 修改目的：展示更丰富的时间信息和日历功能 -->
             <div class="clock-display" id="clockDisplay">
-                <div class="clock-time" id="clockTime">00:00:00</div>
-                <div class="clock-date" id="clockDate">2026年1月1日 星期四</div>
+                <div class="clock-left">
+                    <div class="clock-time" id="clockTime">00:00:00</div>
+                    <div class="clock-date" id="clockDate">2026年1月1日 星期四</div>
+                    <div class="clock-lunar" id="clockLunar">（农历正月初一）</div>
+                </div>
+                <div class="clock-right">
+                    <div class="calendar-header">
+                        <button class="calendar-nav-btn" id="prevMonth">◀</button>
+                        <div class="calendar-title" id="calendarTitle">2026年1月</div>
+                        <button class="calendar-nav-btn" id="nextMonth">▶</button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <div class="weekday">日</div>
+                        <div class="weekday">一</div>
+                        <div class="weekday">二</div>
+                        <div class="weekday">三</div>
+                        <div class="weekday">四</div>
+                        <div class="weekday">五</div>
+                        <div class="weekday">六</div>
+                    </div>
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
             </div>
 
             <!-- AI智能体分类 -->
