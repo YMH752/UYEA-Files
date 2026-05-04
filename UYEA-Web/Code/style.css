@@ -461,9 +461,12 @@ body {
 }
 
 .content-wrapper {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 32px;
+    /* 修改位置：.content-wrapper 布局 */
+    /* 前后逻辑：原 max-width:1200px margin:0 auto 居中，现为全宽扩散 */
+    /* 修改目的：桌面端卡片扩散，不要全部居中，根据屏幕宽度自适应均匀扩散 */
+    max-width: 100%;
+    margin: 0;
+    padding: 40px 24px;
 }
 
 /* 时钟显示区域 */
@@ -841,7 +844,7 @@ body {
 }
 
 /* ════════════════════════════════════════════════════════════
-   时间日历模块（重构版）
+   时间日历模块（减半尺寸重构版）
    ════════════════════════════════════════════════════════════ */
 
 .clock-display {
@@ -850,23 +853,24 @@ body {
     background: linear-gradient(135deg, var(--surface), var(--bg));
     border-radius: 16px;
     box-shadow: var(--shadow-sm);
-    /* 修改位置：.clock-display 布局与样式 */
-    /* 前后逻辑：原 flex 两端对齐+毛玻璃背景+32px padding，现为线性渐变背景+flex 左右分栏+24px padding */
-    /* 修改目的：在参考图外观尺寸内嵌入完整月历功能，高度由内容自适应 */
+    /* 修改位置：.clock-display 布局与自适应 */
+    /* 前后逻辑：原 flex 双栏较大尺寸，现为减半尺寸自适应 */
+    /* 修改目的：整体尺寸缩小一半，高度由内容自适应 */
     display: flex;
-    gap: 24px;
+    gap: 16px;
     text-align: left;
     border: none;
     position: relative;
     overflow: visible;
+    width: 100%;
 }
 
 .clock-left {
-    /* 修改位置：新增 .clock-left 样式 */
-    /* 前后逻辑：原无明确宽度定义，现为固定比例左栏 */
-    /* 修改目的：左侧时间区占30%，垂直居中，文字左对齐 */
-    flex: 0 0 30%;
-    min-width: 280px;
+    /* 修改位置：.clock-left 尺寸调整 */
+    /* 前后逻辑：原 flex:0 0 30% min-width:280px，现为更紧凑 */
+    /* 修改目的：左侧时间区尺寸减半 */
+    flex: 0 0 auto;
+    min-width: 200px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -875,58 +879,59 @@ body {
 }
 
 .clock-time-main {
-    /* 修改位置：新增 .clock-time-main 样式 */
-    /* 前后逻辑：原 .clock-time 类似但无明确字间距，现按规格精确定义 */
-    /* 修改目的：左侧第一层实时时间显示 */
+    /* 修改位置：.clock-time-main 字号减半 */
+    /* 前后逻辑：原 font-size:48px，现为28px */
+    /* 修改目的：时间文字尺寸减半 */
     font-family: 'Space Mono', 'Outfit', monospace;
-    font-size: 48px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--primary);
-    letter-spacing: 4px;
+    letter-spacing: 2px;
     line-height: 1.2;
 }
 
 .clock-date-gregorian {
-    /* 修改位置：新增 .clock-date-gregorian 样式 */
-    /* 前后逻辑：原 .clock-date 包含星期信息，现分离为纯公历日期 */
-    /* 修改目的：左侧第二层公历日期，格式 YYYY年M月D日 */
-    font-size: 16px;
+    /* 修改位置：.clock-date-gregorian 尺寸调整 */
+    /* 前后逻辑：原 font-size:16px，现为14px */
+    /* 修改目的：公历日期尺寸减半 */
+    font-size: 14px;
     font-weight: 500;
     color: var(--text-secondary);
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 .clock-date-lunar {
-    /* 修改位置：新增 .clock-date-lunar 样式 */
-    /* 前后逻辑：原 .clock-lunar 类似，现字号与颜色按规格调整 */
-    /* 修改目的：左侧第三层农历日期 */
-    font-size: 14px;
+    /* 修改位置：.clock-date-lunar 尺寸调整 */
+    /* 前后逻辑：原 font-size:14px，现为12px */
+    /* 修改目的：农历日期尺寸减半 */
+    font-size: 12px;
     font-weight: 400;
     color: var(--text-muted);
-    margin-top: 4px;
+    margin-top: 3px;
 }
 
 .clock-right {
-    /* 修改位置：新增 .clock-right 样式 */
-    /* 前后逻辑：原 flex:1 占据剩余空间，现为固定比例右栏 */
-    /* 修改目的：右侧月历区占70%，承载完整月历 */
-    flex: 0 0 70%;
-    min-width: 420px;
+    /* 修改位置：.clock-right 尺寸与布局调整 */
+    /* 前后逻辑：原 flex:0 0 70% min-width:420px，现为自适应 */
+    /* 修改目的：右侧月历区尺寸减半，上下翻页按钮 */
+    flex: 1 1 auto;
+    min-width: 300px;
     display: flex;
     flex-direction: column;
     position: relative;
+    gap: 4px;
 }
 
 .calendar-container {
-    /* 修改位置：新增 .calendar-container 样式 */
-    /* 前后逻辑：原无此容器，现新增毛玻璃效果容器 */
-    /* 修改目的：月历整体容器，浅色/深色模式自适应毛玻璃 */
+    /* 修改位置：.calendar-container 尺寸调整 */
+    /* 前后逻辑：原 padding:16px，现为10px */
+    /* 修改目的：月历容器尺寸减半 */
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 12px;
     border: 1px solid var(--border);
-    padding: 16px;
+    padding: 10px;
     position: relative;
     overflow: hidden;
 }
@@ -936,20 +941,20 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-header {
-    /* 修改位置：新增 .calendar-header 样式 */
-    /* 前后逻辑：原 .calendar-header 存在但无跳转按钮样式，现整合标题与跳转 */
-    /* 修改目的：月历标题栏，显示年月与跳转按钮 */
+    /* 修改位置：.calendar-header 尺寸调整 */
+    /* 前后逻辑：原 margin-bottom:12px，现为8px */
+    /* 修改目的：标题栏尺寸减半 */
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .calendar-title {
-    /* 修改位置：.calendar-title 样式调整 */
-    /* 前后逻辑：原 font-size:12px text-align:center flex:1，现为18px左对齐 */
-    /* 修改目的：匹配需求规格月历标题 */
-    font-size: 18px;
+    /* 修改位置：.calendar-title 字号调整 */
+    /* 前后逻辑：原 font-size:18px，现为14px */
+    /* 修改目的：标题字号减半 */
+    font-size: 14px;
     font-weight: 700;
     color: var(--text-primary);
     text-align: left;
@@ -957,12 +962,12 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-jump-btn-header {
-    /* 修改位置：新增跳转按钮样式 */
-    /* 前后逻辑：原无独立跳转按钮，现新增标题栏右侧跳转 */
-    /* 修改目的：触发模态框的跳转按钮 */
-    font-size: 13px;
-    padding: 4px 12px;
-    border-radius: 6px;
+    /* 修改位置：跳转按钮尺寸调整 */
+    /* 前后逻辑：原 font-size:13px padding:4px 12px，现为更小 */
+    /* 修改目的：按钮尺寸减半 */
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
     background: var(--bg);
     border: 1px solid var(--border);
     color: var(--text-primary);
@@ -978,42 +983,42 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-weekdays {
-    /* 修改位置：.calendar-weekdays 样式调整 */
-    /* 前后逻辑：原 gap:2px margin-bottom:4px，现为规范7列网格 */
-    /* 修改目的：星期标题行，7列等宽 */
+    /* 修改位置：星期行尺寸调整 */
+    /* 前后逻辑：原 gap:4px margin-bottom:4px，现为更紧凑 */
+    /* 修改目的：星期行尺寸减半 */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-    margin-bottom: 4px;
+    gap: 2px;
+    margin-bottom: 2px;
 }
 
 .weekday {
-    /* 修改位置：.weekday 样式调整 */
-    /* 前后逻辑：原 font-size:9px padding:3px，现为12px/600/8px */
-    /* 修改目的：匹配需求规格星期标题 */
+    /* 修改位置：星期标题尺寸调整 */
+    /* 前后逻辑：原 font-size:12px padding:8px，现为更小 */
+    /* 修改目的：星期标题尺寸减半 */
     text-align: center;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     color: var(--text-muted);
-    padding: 8px 0;
+    padding: 4px 0;
 }
 
 .calendar-grid {
-    /* 修改位置：新增 .calendar-grid 样式 */
-    /* 前后逻辑：原 .calendar-dates 使用类似网格，现规范为 calendar-grid */
-    /* 修改目的：日期网格，7列等宽，间距4px */
+    /* 修改位置：日期网格尺寸调整 */
+    /* 前后逻辑：原 gap:4px，现为2px */
+    /* 修改目的：网格间距减半 */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
+    gap: 2px;
 }
 
 .calendar-cell {
-    /* 修改位置：新增 .calendar-cell 样式 */
-    /* 前后逻辑：原 .calendar-date 类似，现按规格精确定义三层文字与高度 */
-    /* 修改目的：日期单元格，最小高度72px，容纳三行文字 */
-    min-height: 72px;
-    padding: 6px;
-    border-radius: 8px;
+    /* 修改位置：.calendar-cell 核心尺寸调整 */
+    /* 前后逻辑：原 min-height:72px padding:6px，现为40px/4px */
+    /* 修改目的：单元格高度减半，精简数据显示 */
+    min-height: 40px;
+    padding: 4px;
+    border-radius: 4px;
     background: transparent;
     border: 2px solid transparent;
     cursor: pointer;
@@ -1021,7 +1026,7 @@ html[data-theme="dark"] .calendar-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 2px;
+    gap: 1px;
     position: relative;
 }
 
@@ -1035,36 +1040,37 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .cell-solar {
-    /* 修改位置：新增阳历日期文字样式 */
-    /* 前后逻辑：原无独立类名，现分离 */
-    /* 修改目的：单元格第一层阳历日期 */
-    font-size: 14px;
+    /* 修改位置：阳历日期字号调整 */
+    /* 前后逻辑：原 font-size:14px，现为12px */
+    /* 修改目的：阳历日期字号减半 */
+    font-size: 12px;
     font-weight: 700;
     color: var(--text-primary);
 }
 
 .calendar-cell.today .cell-solar {
-    /* 修改位置：新增今天样式 */
-    /* 前后逻辑：原 .calendar-date.today 直接作用，现通过子元素 */
-    /* 修改目的：今天阳历日期加粗并带下划线 */
+    /* 修改位置：今天样式调整 */
+    /* 前后逻辑：原 font-weight:800 text-decoration:underline，现为更紧凑 */
+    /* 修改目的：今天标记更精简 */
     font-weight: 800;
     text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 .cell-lunar {
-    /* 修改位置：新增农历日期文字样式 */
-    /* 前后逻辑：原无独立类名，现分离 */
-    /* 修改目的：单元格第二层农历日期 */
-    font-size: 11px;
+    /* 修改位置：农历日期字号调整 */
+    /* 前后逻辑：原 font-size:11px，现为9px */
+    /* 修改目的：农历日期字号减半 */
+    font-size: 9px;
     font-weight: 400;
     color: var(--text-muted);
 }
 
 .cell-holiday {
-    /* 修改位置：新增节日标注文字样式 */
-    /* 前后逻辑：原无独立类名，现分离 */
-    /* 修改目的：单元格第三层节日标注，最多显示两个 */
-    font-size: 10px;
+    /* 修改位置：节日标注字号调整 */
+    /* 前后逻辑：原 font-size:10px，现为8px */
+    /* 修改目的：节日标注字号减半，仅显示中国节日 */
+    font-size: 8px;
     font-weight: 600;
     color: var(--primary);
     white-space: nowrap;
@@ -1073,21 +1079,40 @@ html[data-theme="dark"] .calendar-container {
     max-width: 100%;
 }
 
-.calendar-cell.other-month {
-    /* 修改位置：新增非当月样式 */
-    /* 前后逻辑：原 .calendar-date.other-month 类似 */
-    /* 修改目的：非当月日期透明度0.4 */
-    opacity: 0.4;
+.cell-rest {
+    /* 修改位置：新增 .cell-rest 样式 */
+    /* 前后逻辑：原无"休"字标记，现新增右上角休字 */
+    /* 修改目的：多个中国节日时，日期右上角显示休字 */
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 8px;
+    font-weight: 700;
+    color: white;
+    background: var(--primary);
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
+.calendar-cell.other-month {
+    /* 修改位置：非当月样式 */
+    /* 前后逻辑：原 opacity:0.4，现为更淡 */
+    /* 修改目的：非当月日期更淡化 */
+    opacity: 0.3;
+}
+
+/* 上下翻页按钮 */
 .calendar-nav-btn {
-    /* 修改位置：.calendar-nav-btn 样式调整 */
-    /* 前后逻辑：原 28x28px 绝对定位在标题栏，现为两侧透明按钮区 */
-    /* 修改目的：左右翻页控制，24px宽透明按钮区 */
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 24px;
+    /* 修改位置：翻页按钮改为上下布局 */
+    /* 前后逻辑：原左右绝对定位24px宽，现为上下居中 */
+    /* 修改目的：翻页按钮改为上下排列 */
+    width: 100%;
+    height: 20px;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -1095,38 +1120,38 @@ html[data-theme="dark"] .calendar-container {
     align-items: center;
     justify-content: center;
     color: var(--text-muted);
-    font-size: 12px;
-    opacity: 0;
+    font-size: 10px;
+    opacity: 0.6;
     transition: opacity 0.2s ease;
-    z-index: 10;
     padding: 0;
 }
 
-.clock-right:hover .calendar-nav-btn {
+.calendar-nav-btn:hover {
     opacity: 1;
+    color: var(--primary);
 }
 
-.calendar-nav-prev {
-    left: -24px;
+.calendar-nav-up {
+    margin-bottom: 2px;
 }
 
-.calendar-nav-next {
-    right: -24px;
+.calendar-nav-down {
+    margin-top: 2px;
 }
 
 .holiday-bar {
-    /* 修改位置：新增 .holiday-bar 样式 */
-    /* 前后逻辑：原无节日条，现新增底部节日展示条 */
-    /* 修改目的：月历容器下方节日条，圆角长条，横向滚动 */
-    margin-top: 12px;
+    /* 修改位置：节日条尺寸调整 */
+    /* 前后逻辑：原 min-height:44px padding:10px 16px，现为更紧凑 */
+    /* 修改目的：节日条高度减半 */
+    margin-top: 8px;
     width: 100%;
-    min-height: 44px;
-    padding: 10px 16px;
-    border-radius: 22px;
+    min-height: 28px;
+    padding: 6px 10px;
+    border-radius: 14px;
     background: rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(8px);
     display: flex;
-    gap: 8px;
+    gap: 6px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     transition: all 0.3s ease;
@@ -1146,15 +1171,26 @@ html[data-theme="dark"] .holiday-bar {
     margin-top: 0;
 }
 
+.holiday-bar.filtered {
+    /* 修改位置：新增过滤状态样式 */
+    /* 前后逻辑：原无过滤状态，现新增 */
+    /* 修改目的：点击日期后节日条显示过滤状态 */
+    background: rgba(26, 26, 26, 0.08);
+}
+
+html[data-theme="dark"] .holiday-bar.filtered {
+    background: rgba(255, 255, 255, 0.15);
+}
+
 .holiday-tag {
-    /* 修改位置：新增 .holiday-tag 样式 */
-    /* 前后逻辑：原无节日标签，现新增 */
-    /* 修改目的：节日标签，显示格式 节日名[国家] */
-    padding: 4px 12px;
-    border-radius: 12px;
+    /* 修改位置：节日标签尺寸调整 */
+    /* 前后逻辑：原 padding:4px 12px font-size:12px，现为更小 */
+    /* 修改目的：节日标签尺寸减半 */
+    padding: 2px 8px;
+    border-radius: 8px;
     background: var(--surface);
     border: 1px solid var(--border);
-    font-size: 12px;
+    font-size: 10px;
     white-space: nowrap;
     scroll-snap-align: start;
     flex-shrink: 0;
@@ -1162,9 +1198,9 @@ html[data-theme="dark"] .holiday-bar {
 }
 
 .modal-overlay {
-    /* 修改位置：新增模态框遮罩层 */
-    /* 前后逻辑：原无模态框，现新增 */
-    /* 修改目的：跳转模态框遮罩，固定定位全屏 */
+    /* 修改位置：模态框遮罩层 */
+    /* 前后逻辑：原无变化 */
+    /* 修改目的：跳转模态框遮罩 */
     display: none;
     position: fixed;
     top: 0;
@@ -1180,17 +1216,17 @@ html[data-theme="dark"] .holiday-bar {
 }
 
 .modal-jump {
-    /* 修改位置：新增跳转模态框 */
-    /* 前后逻辑：原无模态框，现新增 */
-    /* 修改目的：居中显示跳转模态框 */
+    /* 修改位置：模态框尺寸调整 */
+    /* 前后逻辑：原 width:360px padding:24px，现为更小 */
+    /* 修改目的：模态框尺寸减半 */
     display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 360px;
-    padding: 24px;
-    border-radius: 16px;
+    width: 300px;
+    padding: 16px;
+    border-radius: 12px;
     background: var(--surface);
     box-shadow: var(--shadow-lg);
     z-index: 10000;
@@ -1202,42 +1238,42 @@ html[data-theme="dark"] .holiday-bar {
 }
 
 .modal-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .modal-radio-group {
     display: flex;
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
 .modal-radio-group label {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 14px;
+    gap: 4px;
+    font-size: 12px;
     color: var(--text-secondary);
     cursor: pointer;
 }
 
 .modal-inputs {
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 6px;
+    margin-bottom: 12px;
 }
 
 .modal-inputs input {
-    width: 80px;
-    height: 36px;
-    border-radius: 6px;
+    width: 70px;
+    height: 32px;
+    border-radius: 4px;
     border: 1px solid var(--border);
     background: var(--bg);
     color: var(--text-primary);
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
     outline: none;
     transition: all 0.2s ease;
 }
@@ -1250,14 +1286,14 @@ html[data-theme="dark"] .holiday-bar {
 .modal-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 6px;
 }
 
 .modal-btn {
-    padding: 8px 24px;
-    border-radius: 6px;
+    padding: 6px 16px;
+    border-radius: 4px;
     border: none;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -1284,16 +1320,16 @@ html[data-theme="dark"] .holiday-bar {
 }
 
 .mobile-holiday-badge {
-    /* 修改位置：新增移动端节日徽章 */
-    /* 前后逻辑：原无移动端节日显示，现新增 */
-    /* 修改目的：移动端时间区下方节日徽章 */
+    /* 修改位置：移动端节日徽章尺寸调整 */
+    /* 前后逻辑：原 padding:4px 16px font-size:12px，现为更小 */
+    /* 修改目的：移动端徽章尺寸减半 */
     display: none;
-    margin-top: 12px;
-    padding: 4px 16px;
-    border-radius: 12px;
+    margin-top: 8px;
+    padding: 2px 10px;
+    border-radius: 8px;
     background: var(--primary);
     color: white;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
 }
 
@@ -1303,12 +1339,16 @@ html[data-theme="dark"] .holiday-bar {
 }
 
 /* ════════════════════════════════════════════════════════════
-   时间日历模块响应式
+   时间日历模块响应式（减半尺寸）
    ════════════════════════════════════════════════════════════ */
 
 @media (max-width: 1024px) {
     .clock-right {
-        min-width: 360px;
+        min-width: 260px;
+    }
+
+    .clock-left {
+        min-width: 160px;
     }
 }
 
@@ -1318,6 +1358,7 @@ html[data-theme="dark"] .holiday-bar {
         /* 前后逻辑：原 flex 双栏，现为单栏 */
         /* 修改目的：移动端降级为精简时间显示 */
         flex-direction: column;
+        gap: 12px;
     }
 
     .clock-right {
@@ -1336,7 +1377,16 @@ html[data-theme="dark"] .holiday-bar {
     }
 
     .clock-time-main {
-        font-size: 36px;
+        font-size: 24px;
+        letter-spacing: 1px;
+    }
+
+    .clock-date-gregorian {
+        font-size: 12px;
+    }
+
+    .clock-date-lunar {
+        font-size: 11px;
     }
 }
 
@@ -1346,15 +1396,14 @@ html[data-theme="dark"] .holiday-bar {
     }
 
     .clock-time-main {
-        font-size: 28px;
-        letter-spacing: 2px;
+        font-size: 20px;
     }
 
     .clock-date-gregorian {
-        font-size: 14px;
+        font-size: 11px;
     }
 
     .clock-date-lunar {
-        font-size: 12px;
+        font-size: 10px;
     }
 }
