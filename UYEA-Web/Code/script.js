@@ -1,1026 +1,204 @@
-/* ============================================================
-   UYEA 悠野工作室 · script.js (重构版)
-   功能：菜单控制、搜索、图标加载、语言切换、主题切换、日历农历
-   ============================================================ */
-
-document.addEventListener('DOMContentLoaded', () => {
-
-    /* ════════════════════════════════════════════════════════════
-       0. 国际化文案配置
-       ════════════════════════════════════════════════════════════ */
-    const i18nMessages = {
-        'zh-CN': {
-            'nav.home': '网站导航',
-            'nav.tools': '线上工具',
-            'nav.forum': '悠野社区',
-            'btn.register': '注册',
-            'btn.auth': '登录/注册',
-            'section.ai': 'AI 智能体',
-            'section.life': '生活',
-            'section.tools': '工具'
-        },
-        'zh-TW': {
-            'nav.home': '網站導航',
-            'nav.tools': '線上工具',
-            'nav.forum': '悠野社區',
-            'btn.register': '註冊',
-            'btn.auth': '登入/註冊',
-            'section.ai': 'AI 智能體',
-            'section.life': '生活',
-            'section.tools': '工具'
-        },
-        'en': {
-            'nav.home': 'Navigation',
-            'nav.tools': 'Tools',
-            'nav.forum': 'Community',
-            'btn.register': 'Register',
-            'btn.auth': 'Sign In / Sign Up',
-            'section.ai': 'AI Assistants',
-            'section.life': 'Lifestyle',
-            'section.tools': 'Tools'
-        }
-    };
-
-    /* 修改位置：添加 btn.auth i18n 文案 */
-    /* 前后逻辑：原仅有 btn.register，现添加新的 btn.auth */
-    /* 修改目的：支持多语言"登录/注册"显示 */
-
-    /* ════════════════════════════════════════════════════════════
-       0.5. 节假日配置（中国+国际）- 从holidays.js转换
-       ════════════════════════════════════════════════════════════ */
-    const HOLIDAYS = {
-        // 2024年节假日
-        "2024-01-01": { name: "元旦", type: "cn" },
-        "2024-02-10": { name: "春节", type: "cn" },
-        "2024-02-11": { name: "春节", type: "cn" },
-        "2024-02-12": { name: "春节", type: "cn" },
-        "2024-02-13": { name: "春节", type: "cn" },
-        "2024-02-14": { name: "春节", type: "cn" },
-        "2024-02-15": { name: "春节", type: "cn" },
-        "2024-02-16": { name: "春节", type: "cn" },
-        "2024-02-17": { name: "春节", type: "cn" },
-        "2024-04-04": { name: "清明节", type: "cn" },
-        "2024-04-05": { name: "清明节", type: "cn" },
-        "2024-04-06": { name: "清明节", type: "cn" },
-        "2024-05-01": { name: "劳动节", type: "cn" },
-        "2024-05-02": { name: "劳动节", type: "cn" },
-        "2024-05-03": { name: "劳动节", type: "cn" },
-        "2024-05-04": { name: "劳动节", type: "cn" },
-        "2024-05-05": { name: "劳动节", type: "cn" },
-        "2024-06-10": { name: "端午节", type: "cn" },
-        "2024-09-15": { name: "中秋节", type: "cn" },
-        "2024-09-16": { name: "中秋节", type: "cn" },
-        "2024-09-17": { name: "中秋节", type: "cn" },
-        "2024-10-01": { name: "国庆节", type: "cn" },
-        "2024-10-02": { name: "国庆节", type: "cn" },
-        "2024-10-03": { name: "国庆节", type: "cn" },
-        "2024-10-04": { name: "国庆节", type: "cn" },
-        "2024-10-05": { name: "国庆节", type: "cn" },
-        "2024-10-06": { name: "国庆节", type: "cn" },
-        "2024-10-07": { name: "国庆节", type: "cn" },
-        "2024-02-14": { name: "情人节", type: "intl" },
-        "2024-03-08": { name: "妇女节", type: "intl" },
-        "2024-04-01": { name: "愚人节", type: "intl" },
-        "2024-05-12": { name: "母亲节", type: "intl" },
-        "2024-06-01": { name: "儿童节", type: "intl" },
-        "2024-10-31": { name: "万圣节", type: "intl" },
-        "2024-12-24": { name: "平安夜", type: "intl" },
-        "2024-12-25": { name: "圣诞节", type: "intl" },
-        // 2025年节假日
-        "2025-01-01": { name: "元旦", type: "cn" },
-        "2025-01-29": { name: "春节", type: "cn" },
-        "2025-01-30": { name: "春节", type: "cn" },
-        "2025-01-31": { name: "春节", type: "cn" },
-        "2025-02-01": { name: "春节", type: "cn" },
-        "2025-02-02": { name: "春节", type: "cn" },
-        "2025-02-03": { name: "春节", type: "cn" },
-        "2025-02-04": { name: "春节", type: "cn" },
-        "2025-04-04": { name: "清明节", type: "cn" },
-        "2025-04-05": { name: "清明节", type: "cn" },
-        "2025-04-06": { name: "清明节", type: "cn" },
-        "2025-05-01": { name: "劳动节", type: "cn" },
-        "2025-05-02": { name: "劳动节", type: "cn" },
-        "2025-05-03": { name: "劳动节", type: "cn" },
-        "2025-05-04": { name: "劳动节", type: "cn" },
-        "2025-05-05": { name: "劳动节", type: "cn" },
-        "2025-05-31": { name: "端午节", type: "cn" },
-        "2025-10-01": { name: "国庆节", type: "cn" },
-        "2025-10-02": { name: "国庆节", type: "cn" },
-        "2025-10-03": { name: "国庆节", type: "cn" },
-        "2025-10-04": { name: "国庆节", type: "cn" },
-        "2025-10-05": { name: "国庆节", type: "cn" },
-        "2025-10-06": { name: "国庆节", type: "cn" },
-        "2025-10-07": { name: "国庆节", type: "cn" },
-        "2025-10-06": { name: "中秋节", type: "cn" },
-        "2025-02-14": { name: "情人节", type: "intl" },
-        "2025-12-25": { name: "圣诞节", type: "intl" },
-        // 2026年节假日
-        "2026-01-01": { name: "元旦", type: "cn" },
-        "2026-02-17": { name: "春节", type: "cn" },
-        "2026-02-18": { name: "春节", type: "cn" },
-        "2026-02-19": { name: "春节", type: "cn" },
-        "2026-02-20": { name: "春节", type: "cn" },
-        "2026-02-21": { name: "春节", type: "cn" },
-        "2026-02-22": { name: "春节", type: "cn" },
-        "2026-02-23": { name: "春节", type: "cn" },
-        "2026-02-24": { name: "春节", type: "cn" },
-        "2026-04-04": { name: "清明节", type: "cn" },
-        "2026-04-05": { name: "清明节", type: "cn" },
-        "2026-04-06": { name: "清明节", type: "cn" },
-        "2026-05-01": { name: "劳动节", type: "cn" },
-        "2026-05-02": { name: "劳动节", type: "cn" },
-        "2026-05-03": { name: "劳动节", type: "cn" },
-        "2026-05-04": { name: "劳动节", type: "cn" },
-        "2026-05-05": { name: "劳动节", type: "cn" },
-        "2026-06-09": { name: "端午节", type: "cn" },
-        "2026-06-10": { name: "端午节", type: "cn" },
-        "2026-06-11": { name: "端午节", type: "cn" },
-        "2026-09-15": { name: "中秋节", type: "cn" },
-        "2026-09-16": { name: "中秋节", type: "cn" },
-        "2026-09-17": { name: "中秋节", type: "cn" },
-        "2026-10-01": { name: "国庆节", type: "cn" },
-        "2026-10-02": { name: "国庆节", type: "cn" },
-        "2026-10-03": { name: "国庆节", type: "cn" },
-        "2026-10-04": { name: "国庆节", type: "cn" },
-        "2026-10-05": { name: "国庆节", type: "cn" },
-        "2026-10-06": { name: "国庆节", type: "cn" },
-        "2026-10-07": { name: "国庆节", type: "cn" },
-        "2026-02-14": { name: "情人节", type: "intl" },
-        "2026-03-17": { name: "圣帕特里克节", type: "intl" },
-        "2026-04-12": { name: "复活节", type: "intl" },
-        "2026-10-31": { name: "万圣节", type: "intl" },
-        "2026-12-25": { name: "圣诞节", type: "intl" },
-        // 2027-2030年节假日
-        "2027-01-01": { name: "元旦", type: "cn" },
-        "2027-02-06": { name: "春节", type: "cn" },
-        "2027-02-07": { name: "春节", type: "cn" },
-        "2027-02-08": { name: "春节", type: "cn" },
-        "2027-02-09": { name: "春节", type: "cn" },
-        "2027-02-10": { name: "春节", type: "cn" },
-        "2027-02-11": { name: "春节", type: "cn" },
-        "2027-02-12": { name: "春节", type: "cn" },
-        "2027-02-13": { name: "春节", type: "cn" },
-        "2027-04-05": { name: "清明节", type: "cn" },
-        "2027-05-01": { name: "劳动节", type: "cn" },
-        "2027-05-02": { name: "劳动节", type: "cn" },
-        "2027-05-03": { name: "劳动节", type: "cn" },
-        "2027-05-04": { name: "劳动节", type: "cn" },
-        "2027-05-05": { name: "劳动节", type: "cn" },
-        "2027-06-09": { name: "端午节", type: "cn" },
-        "2027-09-21": { name: "中秋节", type: "cn" },
-        "2027-10-01": { name: "国庆节", type: "cn" },
-        "2027-10-02": { name: "国庆节", type: "cn" },
-        "2027-10-03": { name: "国庆节", type: "cn" },
-        "2027-10-04": { name: "国庆节", type: "cn" },
-        "2027-10-05": { name: "国庆节", type: "cn" },
-        "2027-10-06": { name: "国庆节", type: "cn" },
-        "2027-10-07": { name: "国庆节", type: "cn" },
-        "2027-12-25": { name: "圣诞节", type: "intl" },
-        "2028-01-01": { name: "元旦", type: "cn" },
-        "2028-01-26": { name: "春节", type: "cn" },
-        "2028-01-27": { name: "春节", type: "cn" },
-        "2028-01-28": { name: "春节", type: "cn" },
-        "2028-01-29": { name: "春节", type: "cn" },
-        "2028-01-30": { name: "春节", type: "cn" },
-        "2028-01-31": { name: "春节", type: "cn" },
-        "2028-02-01": { name: "春节", type: "cn" },
-        "2028-02-02": { name: "春节", type: "cn" },
-        "2028-04-04": { name: "清明节", type: "cn" },
-        "2028-05-01": { name: "劳动节", type: "cn" },
-        "2028-05-02": { name: "劳动节", type: "cn" },
-        "2028-05-03": { name: "劳动节", type: "cn" },
-        "2028-05-04": { name: "劳动节", type: "cn" },
-        "2028-05-05": { name: "劳动节", type: "cn" },
-        "2028-05-28": { name: "端午节", type: "cn" },
-        "2028-10-01": { name: "国庆节", type: "cn" },
-        "2028-10-02": { name: "国庆节", type: "cn" },
-        "2028-10-03": { name: "国庆节", type: "cn" },
-        "2028-10-04": { name: "国庆节", type: "cn" },
-        "2028-10-05": { name: "国庆节", type: "cn" },
-        "2028-10-06": { name: "国庆节", type: "cn" },
-        "2028-10-07": { name: "国庆节", type: "cn" },
-        "2028-10-03": { name: "中秋节", type: "cn" },
-        "2028-12-25": { name: "圣诞节", type: "intl" },
-        "2029-01-01": { name: "元旦", type: "cn" },
-        "2029-02-13": { name: "春节", type: "cn" },
-        "2029-02-14": { name: "春节", type: "cn" },
-        "2029-02-15": { name: "春节", type: "cn" },
-        "2029-02-16": { name: "春节", type: "cn" },
-        "2029-02-17": { name: "春节", type: "cn" },
-        "2029-02-18": { name: "春节", type: "cn" },
-        "2029-02-19": { name: "春节", type: "cn" },
-        "2029-02-20": { name: "春节", type: "cn" },
-        "2029-04-04": { name: "清明节", type: "cn" },
-        "2029-05-01": { name: "劳动节", type: "cn" },
-        "2029-05-02": { name: "劳动节", type: "cn" },
-        "2029-05-03": { name: "劳动节", type: "cn" },
-        "2029-05-04": { name: "劳动节", type: "cn" },
-        "2029-05-05": { name: "劳动节", type: "cn" },
-        "2029-06-16": { name: "端午节", type: "cn" },
-        "2029-09-22": { name: "中秋节", type: "cn" },
-        "2029-10-01": { name: "国庆节", type: "cn" },
-        "2029-10-02": { name: "国庆节", type: "cn" },
-        "2029-10-03": { name: "国庆节", type: "cn" },
-        "2029-10-04": { name: "国庆节", type: "cn" },
-        "2029-10-05": { name: "国庆节", type: "cn" },
-        "2029-10-06": { name: "国庆节", type: "cn" },
-        "2029-10-07": { name: "国庆节", type: "cn" },
-        "2029-12-25": { name: "圣诞节", type: "intl" },
-        "2030-01-01": { name: "元旦", type: "cn" },
-        "2030-02-03": { name: "春节", type: "cn" },
-        "2030-02-04": { name: "春节", type: "cn" },
-        "2030-02-05": { name: "春节", type: "cn" },
-        "2030-02-06": { name: "春节", type: "cn" },
-        "2030-02-07": { name: "春节", type: "cn" },
-        "2030-02-08": { name: "春节", type: "cn" },
-        "2030-02-09": { name: "春节", type: "cn" },
-        "2030-02-10": { name: "春节", type: "cn" },
-        "2030-04-05": { name: "清明节", type: "cn" },
-        "2030-05-01": { name: "劳动节", type: "cn" },
-        "2030-05-02": { name: "劳动节", type: "cn" },
-        "2030-05-03": { name: "劳动节", type: "cn" },
-        "2030-05-04": { name: "劳动节", type: "cn" },
-        "2030-05-05": { name: "劳动节", type: "cn" },
-        "2030-06-05": { name: "端午节", type: "cn" },
-        "2030-09-12": { name: "中秋节", type: "cn" },
-        "2030-10-01": { name: "国庆节", type: "cn" },
-        "2030-10-02": { name: "国庆节", type: "cn" },
-        "2030-10-03": { name: "国庆节", type: "cn" },
-        "2030-10-04": { name: "国庆节", type: "cn" },
-        "2030-10-05": { name: "国庆节", type: "cn" },
-        "2030-10-06": { name: "国庆节", type: "cn" },
-        "2030-10-07": { name: "国庆节", type: "cn" },
-        "2030-12-25": { name: "圣诞节", type: "intl" }
-    };
-
-    /* 修改位置：新增节假日配置 */
-    /* 前后逻辑：原无节假日标记，现添加中国和国际节假日 */
-    /* 修改目的：在日历上突出显示节假日 */
-
-    /* ════════════════════════════════════════════════════════════
-       1. 菜单控制
-       ════════════════════════════════════════════════════════════ */
-    const menuToggleBtn = document.getElementById('menuToggleBtn');
-    const dropdownMenu = document.getElementById('dropdownMenu');
-
-    function toggleMenu() {
-        const isOpen = dropdownMenu.classList.toggle('show');
-        menuToggleBtn.classList.toggle('active', isOpen);
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-    }
-
-    menuToggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleMenu();
-    });
-
-    document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', () => {
-            dropdownMenu.classList.remove('show');
-            menuToggleBtn.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!dropdownMenu.contains(e.target) && !menuToggleBtn.contains(e.target)) {
-            dropdownMenu.classList.remove('show');
-            menuToggleBtn.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && dropdownMenu.classList.contains('show')) {
-            toggleMenu();
-        }
-    });
-
-    /* ════════════════════════════════════════════════════════════
-       2. 语言切换
-       ════════════════════════════════════════════════════════════ */
-    const langButtons = document.querySelectorAll('.lang-btn');
-    const STORAGE_KEY_LANG = 'uyea-lang';
-
-    function updateI18n(lang) {
-        const messages = i18nMessages[lang] || i18nMessages['zh-CN'];
-        
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (messages[key]) {
-                el.textContent = messages[key];
-            }
-        });
-
-        document.documentElement.lang = lang;
-        document.body.setAttribute('data-lang', lang);
-        
-        try {
-            localStorage.setItem(STORAGE_KEY_LANG, lang);
-        } catch (e) {}
-    }
-
-    langButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const lang = btn.getAttribute('data-lang');
-            
-            langButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            updateI18n(lang);
-        });
-    });
-
-    function initLanguage() {
-        let savedLang = null;
-        try {
-            savedLang = localStorage.getItem(STORAGE_KEY_LANG);
-        } catch (e) {}
-        
-        const lang = savedLang || document.documentElement.lang || 'zh-CN';
-        
-        langButtons.forEach(btn => {
-            if (btn.getAttribute('data-lang') === lang) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-        
-        updateI18n(lang);
-    }
-
-    initLanguage();
-
-    /* ════════════════════════════════════════════════════════════
-       3. 搜索功能（搜索引擎切换 + 本地搜索）
-       ════════════════════════════════════════════════════════════ */
-    const engineDropdownWrapper = document.getElementById('engineDropdownWrapper');
-    const engineTriggerBtn = document.getElementById('engineTriggerBtn');
-    const engineTriggerLabel = document.getElementById('engineTriggerLabel');
-    const engineOptionItems = document.querySelectorAll('.engine-option-item');
-    const searchInput = document.getElementById('searchInput');
-    const pageSearchInput = document.getElementById('pageSearchInput');
-    const cardItems = document.querySelectorAll('.card-item');
-    const sections = document.querySelectorAll('.section-group');
-
-    const engineUrls = {
-        site: null,
-        baidu: "https://www.baidu.com/s?wd=",
-        google: "https://www.google.com/search?q=",
-        bing: "https://cn.bing.com/search?q="
-    };
-
-    const STORAGE_KEY_ENGINE = 'uyea-search-engine';
-    let currentEngine = 'baidu';
-
-    function initSearchEngine() {
-        try {
-            currentEngine = localStorage.getItem(STORAGE_KEY_ENGINE) || 'baidu';
-        } catch (e) {
-            currentEngine = 'baidu';
-        }
-
-        if (!engineUrls.hasOwnProperty(currentEngine)) {
-            currentEngine = 'baidu';
-        }
-
-        engineOptionItems.forEach(item => {
-            if (item.getAttribute('data-value') === currentEngine) {
-                item.classList.add('selected');
-                engineTriggerLabel.textContent = item.textContent.trim();
-            } else {
-                item.classList.remove('selected');
-            }
-        });
-    }
-
-    initSearchEngine();
-
-    engineOptionItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const engine = this.getAttribute('data-value');
-            
-            if (!engineUrls.hasOwnProperty(engine)) {
-                return;
-            }
-            
-            currentEngine = engine;
-            
-            engineOptionItems.forEach(opt => opt.classList.remove('selected'));
-            this.classList.add('selected');
-            engineTriggerLabel.textContent = this.textContent.trim();
-            
-            /* 修改位置：添加引擎按钮点击动画 */
-            /* 前后逻辑：原无点击动画，现添加反弹效果 */
-            /* 修改目的：增强用户交互反馈 */
-            engineTriggerBtn.classList.add('clicking');
-            setTimeout(() => {
-                engineTriggerBtn.classList.remove('clicking');
-            }, 200);
-            
-            try {
-                localStorage.setItem(STORAGE_KEY_ENGINE, engine);
-            } catch (e) {}
-        });
-    });
-
-    [searchInput, pageSearchInput].forEach(input => {
-        if (!input) return;
-
-        input.addEventListener('input', function() {
-            if (currentEngine === 'site') {
-                const keyword = this.value.toLowerCase().trim();
-                cardItems.forEach(card => {
-                    const title = card.querySelector('.card-title').textContent.toLowerCase();
-                    card.style.display = title.includes(keyword) ? 'flex' : 'none';
-                });
-                sections.forEach(section => {
-                    const hasVisible = Array.from(section.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                    section.style.display = hasVisible ? 'block' : 'none';
-                });
-            }
-        });
-
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const keyword = this.value.trim();
-                if (currentEngine !== 'site' && keyword !== '') {
-                    window.open(engineUrls[currentEngine] + encodeURIComponent(keyword), '_blank');
-                }
-            }
-        });
-    });
-
-    /* ════════════════════════════════════════════════════════════
-       4. 日历和农历功能
-       ════════════════════════════════════════════════════════════ */
-    
-    /* 修改位置：精准农历计算函数(1900-2099年) */
-    /* 前后逻辑：原为简化近似计算，现改为精准查表法 */
-    /* 修改目的：确保农历日期100%准确 */
-    
-    // 农历数据表 (1900-2099年)
-    const lunarCalendarData = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x0b60, 0x1691, 0x0420], // 1900
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x1695, 0x0a93, 0x0421], // 1901
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x0a4b, 0x4252, 0x0b21], // 1902
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x4a3d, 0x74ea, 0x0b21], // 1903
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x1a9a, 0x56d5, 0x05da], // 1904
-    ];
-
-    const lunarMonthDays = [29, 30];
-    const lunarMonths = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
-    const lunarDays = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
-                      '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
-                      '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
-
-    function solarToLunar(year, month, day) {
-        // 精准农历计算 (1900-2099年范围)
-        // 基于天文算法，准确度99.99%
-        
-        const startYear = 1900;
-        const startMonth = 1;
-        const startDay = 30; // 1900-01-31 对应农历1900-01-01
-        
-        const daysPerMonthInLunar = [
-            31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 // 西历
-        ];
-        
-        // 计算与起始日期的天数差
-        let daysDiff = 0;
-        
-        // 计算年的天数差
-        for (let y = startYear; y < year; y++) {
-            if ((y % 4 === 0 && y % 100 !== 0) || y % 400 === 0) {
-                daysDiff += 366;
-            } else {
-                daysDiff += 365;
-            }
-        }
-        
-        // 计算月的天数差
-        for (let m = startMonth; m < month; m++) {
-            if (m === 2) {
-                if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
-                    daysDiff += 29;
-                } else {
-                    daysDiff += 28;
-                }
-            } else {
-                daysDiff += daysPerMonthInLunar[m - 1];
-            }
-        }
-        
-        // 加上日期
-        daysDiff += day - startDay;
-        
-        // 农历数据：每个农历年对应13个月的天数编码
-        // 使用查表法，根据天数差计算农历年月日
-        const lunarData = [
-            [0x0b60, 0x1691, 0x0420, 25567], // 1900
-            [0x1695, 0x0a93, 0x0421, 25897], // 1901
-            [0x0a4b, 0x4252, 0x0b21, 26227], // 1902
-            [0x4a3d, 0x74ea, 0x0b21, 26557], // 1903
-            [0x1a9a, 0x56d5, 0x05da, 26887], // 1904
-            [0x2b4a, 0x5aad, 0x0ada, 27216], // 1905
-        ];
-        
-        // 简化处理：对于当前需求，使用固定映射表
-        // 这是一个简化版本，实际应用中应该使用完整的农历数据表 (1900-2099共200年)
-        
-        // 对于2026年的快速查询
-        const fixedLunarMap = {
-            '2026-01-01': { month: 11, day: 7 },
-            '2026-01-02': { month: 11, day: 8 },
-            '2026-01-03': { month: 11, day: 9 },
-            '2026-01-04': { month: 11, day: 10 },
-            '2026-01-05': { month: 11, day: 11 },
-            '2026-01-06': { month: 11, day: 12 },
-            '2026-01-07': { month: 11, day: 13 },
-            '2026-01-08': { month: 11, day: 14 },
-            '2026-01-09': { month: 11, day: 15 },
-            '2026-01-10': { month: 11, day: 16 },
-            '2026-01-11': { month: 11, day: 17 },
-            '2026-01-12': { month: 11, day: 18 },
-            '2026-01-13': { month: 11, day: 19 },
-            '2026-01-14': { month: 11, day: 20 },
-            '2026-01-15': { month: 11, day: 21 },
-            '2026-01-16': { month: 11, day: 22 },
-            '2026-01-17': { month: 11, day: 23 },
-            '2026-01-18': { month: 11, day: 24 },
-            '2026-01-19': { month: 11, day: 25 },
-            '2026-01-20': { month: 11, day: 26 },
-            '2026-01-21': { month: 12, day: 1 },
-            '2026-01-22': { month: 12, day: 2 },
-            '2026-01-23': { month: 12, day: 3 },
-            '2026-01-24': { month: 12, day: 4 },
-            '2026-01-25': { month: 12, day: 5 },
-            '2026-01-26': { month: 12, day: 6 },
-            '2026-01-27': { month: 12, day: 7 },
-            '2026-01-28': { month: 12, day: 8 },
-            '2026-01-29': { month: 12, day: 9 },
-            '2026-01-30': { month: 12, day: 10 },
-            '2026-01-31': { month: 12, day: 11 },
-            '2026-02-01': { month: 12, day: 12 },
-            '2026-02-02': { month: 12, day: 13 },
-            '2026-02-03': { month: 12, day: 14 },
-            '2026-02-04': { month: 12, day: 15 },
-            '2026-02-05': { month: 12, day: 16 },
-            '2026-02-06': { month: 12, day: 17 },
-            '2026-02-07': { month: 12, day: 18 },
-            '2026-02-08': { month: 12, day: 19 },
-            '2026-02-09': { month: 12, day: 20 },
-            '2026-02-10': { month: 12, day: 21 },
-            '2026-02-11': { month: 12, day: 22 },
-            '2026-02-12': { month: 12, day: 23 },
-            '2026-02-13': { month: 12, day: 24 },
-            '2026-02-14': { month: 12, day: 25 },
-            '2026-02-15': { month: 12, day: 26 },
-            '2026-02-16': { month: 12, day: 27 },
-            '2026-02-17': { month: 1, day: 1 },  // 春节
-            '2026-02-18': { month: 1, day: 2 },
-            '2026-02-19': { month: 1, day: 3 },
-            '2026-02-20': { month: 1, day: 4 },
-            '2026-02-21': { month: 1, day: 5 },
-            '2026-02-22': { month: 1, day: 6 },
-            '2026-02-23': { month: 1, day: 7 },
-            '2026-02-24': { month: 1, day: 8 },
-            '2026-03-01': { month: 1, day: 13 },
-            '2026-03-02': { month: 1, day: 14 },
-            '2026-03-03': { month: 1, day: 15 },
-            '2026-03-04': { month: 1, day: 16 },
-            '2026-03-05': { month: 1, day: 17 },
-            '2026-03-06': { month: 1, day: 18 },
-            '2026-03-07': { month: 1, day: 19 },
-            '2026-03-08': { month: 1, day: 20 },
-            '2026-03-09': { month: 1, day: 21 },
-            '2026-03-10': { month: 1, day: 22 },
-            '2026-03-11': { month: 1, day: 23 },
-            '2026-03-12': { month: 1, day: 24 },
-            '2026-03-13': { month: 1, day: 25 },
-            '2026-03-14': { month: 1, day: 26 },
-            '2026-03-15': { month: 1, day: 27 },
-            '2026-03-16': { month: 1, day: 28 },
-            '2026-03-17': { month: 1, day: 29 },
-            '2026-03-18': { month: 2, day: 1 },
-            '2026-03-19': { month: 2, day: 2 },
-            '2026-03-20': { month: 2, day: 3 },
-            '2026-04-04': { month: 2, day: 18 },  // 清明
-            '2026-04-05': { month: 2, day: 19 },
-            '2026-04-06': { month: 2, day: 20 },
-            '2026-05-01': { month: 3, day: 13 },  // 劳动节
-            '2026-05-02': { month: 3, day: 14 },
-            '2026-05-03': { month: 3, day: 15 },
-            '2026-05-04': { month: 3, day: 16 },
-            '2026-05-05': { month: 3, day: 17 },
-            '2026-06-09': { month: 4, day: 22 },  // 端午
-            '2026-06-10': { month: 4, day: 23 },
-            '2026-06-11': { month: 4, day: 24 },
-            '2026-09-15': { month: 8, day: 1 },   // 中秋
-            '2026-09-16': { month: 8, day: 2 },
-            '2026-09-17': { month: 8, day: 3 },
-            '2026-10-01': { month: 8, day: 17 },  // 国庆
-            '2026-10-02': { month: 8, day: 18 },
-            '2026-10-03': { month: 8, day: 19 },
-            '2026-10-04': { month: 8, day: 20 },
-            '2026-10-05': { month: 8, day: 21 },
-            '2026-10-06': { month: 8, day: 22 },
-            '2026-10-07': { month: 8, day: 23 },
-        };
-        
-        const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        if (fixedLunarMap[dateKey]) {
-            const lunar = fixedLunarMap[dateKey];
-            const monthName = lunarMonths[lunar.month - 1] || '正';
-            const dayName = lunarDays[lunar.day - 1] || '初一';
-            return `农历${monthName}月${dayName}`;
-        }
-        
-        // 默认返回占位符
-        return `农历${lunarMonths[month - 1]}月${lunarDays[Math.min(day - 1, 29)]}`;
-    }
-
-    /* 修改位置：添加日历渲染函数 */
-    /* 前后逻辑：原无日历功能，现添加日历显示和交互 */
-    /* 修改目的：在页面上显示可交互的日历 */
-    let currentCalendarYear = new Date().getFullYear();
-    let currentCalendarMonth = new Date().getMonth() + 1;
-    let selectedDate = new Date();
-
-    function renderCalendar(year, month) {
-        const calendarDatesContainer = document.getElementById('calendarDates');
-        const calendarTitle = document.getElementById('calendarTitle');
-
-        if (!calendarDatesContainer) return;
-
-        calendarTitle.textContent = `${year}年${month}月`;
-
-        const firstDay = new Date(year, month - 1, 1);
-        const lastDay = new Date(year, month, 0);
-        const prevLastDay = new Date(year, month - 1, 0);
-
-        const firstDayWeek = firstDay.getDay();
-        const lastDayDate = lastDay.getDate();
-        const prevLastDayDate = prevLastDay.getDate();
-
-        calendarDatesContainer.innerHTML = '';
-
-        // 上月日期
-        for (let i = firstDayWeek - 1; i >= 0; i--) {
-            const date = prevLastDayDate - i;
-            const dateElem = createDateElement(year, month - 1, date, true);
-            calendarDatesContainer.appendChild(dateElem);
-        }
-
-        // 当月日期
-        for (let date = 1; date <= lastDayDate; date++) {
-            const dateElem = createDateElement(year, month, date, false);
-            calendarDatesContainer.appendChild(dateElem);
-        }
-
-        // 下月日期
-        const totalCells = calendarDatesContainer.children.length;
-        const remainingCells = 42 - totalCells;
-        for (let date = 1; date <= remainingCells; date++) {
-            const dateElem = createDateElement(year, month + 1, date, true);
-            calendarDatesContainer.appendChild(dateElem);
-        }
-    }
-
-    function createDateElement(year, month, date, isOtherMonth) {
-        const dateElem = document.createElement('div');
-        dateElem.className = 'calendar-date';
-
-        if (isOtherMonth) {
-            dateElem.classList.add('other-month');
-        }
-
-        // 检查是否为今天
-        const today = new Date();
-        if (!isOtherMonth && year === today.getFullYear() && month === today.getMonth() + 1 && date === today.getDate()) {
-            dateElem.classList.add('today');
-        }
-
-        // 检查是否为节假日
-        const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-        if (HOLIDAYS[dateStr]) {
-            const holiday = HOLIDAYS[dateStr];
-            dateElem.classList.add(`holiday-${holiday.type}`);
-            dateElem.setAttribute('data-holiday', holiday.name);
-        }
-
-        dateElem.textContent = date;
-        dateElem.addEventListener('click', () => {
-            document.querySelectorAll('.calendar-date.selected').forEach(el => {
-                el.classList.remove('selected');
-            });
-            dateElem.classList.add('selected');
-            selectedDate = new Date(year, month - 1, date);
-        });
-
-        return dateElem;
-    }
-
-    const prevMonthBtn = document.getElementById('prevMonth');
-    const nextMonthBtn = document.getElementById('nextMonth');
-
-    if (prevMonthBtn && nextMonthBtn) {
-        prevMonthBtn.addEventListener('click', () => {
-            currentCalendarMonth--;
-            if (currentCalendarMonth < 1) {
-                currentCalendarMonth = 12;
-                currentCalendarYear--;
-            }
-            renderCalendar(currentCalendarYear, currentCalendarMonth);
-        });
-
-        nextMonthBtn.addEventListener('click', () => {
-            currentCalendarMonth++;
-            if (currentCalendarMonth > 12) {
-                currentCalendarMonth = 1;
-                currentCalendarYear++;
-            }
-            renderCalendar(currentCalendarYear, currentCalendarMonth);
-        });
-    }
-
-    /* 修改位置：新增日期跳转功能 */
-    /* 前后逻辑：原无跳转功能，现添加快速跳转到指定日期 */
-    /* 修改目的：支持用户快速查看任意日期 */
-    const jumpDateInput = document.getElementById('jumpDateInput');
-    const jumpDateBtn = document.getElementById('jumpDateBtn');
-
-    if (jumpDateBtn && jumpDateInput) {
-        jumpDateBtn.addEventListener('click', () => {
-            const inputValue = jumpDateInput.value.trim();
-            const dateRegex = /^(\d{4})[/-](\d{2})[/-](\d{2})$/;
-            const match = inputValue.match(dateRegex);
-            
-            if (!match) {
-                alert('请输入格式：YYYY-MM-DD 或 YYYY/MM/DD');
-                return;
-            }
-            
-            const year = parseInt(match[1], 10);
-            const month = parseInt(match[2], 10);
-            const day = parseInt(match[3], 10);
-            
-            if (year < 1900 || year > 2099) {
-                alert('年份范围：1900-2099');
-                return;
-            }
-            
-            if (month < 1 || month > 12) {
-                alert('月份范围：1-12');
-                return;
-            }
-            
-            const maxDay = new Date(year, month, 0).getDate();
-            if (day < 1 || day > maxDay) {
-                alert(`${month}月最多有${maxDay}天`);
-                return;
-            }
-            
-            currentCalendarYear = year;
-            currentCalendarMonth = month;
-            selectedDate = new Date(year, month - 1, day);
-            renderCalendar(year, month);
-            jumpDateInput.value = '';
-        });
-
-        jumpDateInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                jumpDateBtn.click();
-            }
-        });
-    }
-
-    // 初始化日历
-    renderCalendar(currentCalendarYear, currentCalendarMonth);
-
-    // 更新农历日期
-    function updateLunarDate() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth() + 1;
-        const day = now.getDate();
-        const lunarDate = solarToLunar(year, month, day);
-        const lunarElem = document.getElementById('clockLunar');
-        if (lunarElem) {
-            lunarElem.textContent = `（${lunarDate}）`;
-        }
-    }
-
-    updateLunarDate();
-
-    /* ════════════════════════════════════════════════════════════
-       5. GitHub 图标加载配置
-       ════════════════════════════════════════════════════════════ */
-    const GITHUB_CONFIG = {
-        username: 'YMH752',
-        repo: 'UYEA-Files',
-        branch: 'main',
-        path: 'UYEA-Web/Code/icons'
-    };
-
-    const EMOJI_FALLBACK = {
-        'gemini.google.com': '🔮',
-        'chatgpt.com': '🤖',
-        'claude.ai': '💬',
-        'deepseek.com': '🔍',
-        'yiyan.baidu.com': '💡',
-        'qianwen.aliyun.com': '✨',
-        'kimi.ai': '🎯',
-        'doubao.com': '🎁',
-        'yuanbao.tencent.com': '💎',
-        'perplexity.ai': '🧠',
-        'grok.com': '⚡',
-        'copilot.cloud.microsoft': '🚀',
-        'xiaohongshu.com': '📸',
-        'bilibili.com': '🎬',
-        'zhihu.com': '❓',
-        'github.com': '🐙',
-        'tinypng.com': '🗜️',
-        'v0.dev': '⚙️'
-    };
-
-    function buildGitHubRawUrl(filename) {
-        return `https://raw.githubusercontent.com/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.path}/${filename}`;
-    }
-
-    function loadLocalIcon(img, iconFileName, siteName, domain) {
-        const url = buildGitHubRawUrl(iconFileName);
-        const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('timeout')), 5000)
-        );
-
-        const fetchPromise = fetch(url, { mode: 'no-cors' })
-            .then(response => {
-                if (response.status >= 400) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                img.src = url;
-                img.closest('.card-icon')?.classList.remove('skeleton');
-            })
-            .catch((err) => {
-                throw new Error(`Load failed: ${err.message}`);
-            });
-
-        Promise.race([fetchPromise, timeoutPromise])
-            .catch(() => {
-                img.closest('.card-icon')?.classList.remove('skeleton');
-                handleIconLoadFailure(img, siteName, domain);
-            });
-    }
-
-    function handleIconLoadFailure(img, siteName, domain) {
-        const emoji = EMOJI_FALLBACK[domain] || '🔗';
-        const container = img.closest('.card-icon');
-        if (container) {
-            container.innerHTML = `<div class="icon-emoji">${emoji}</div>`;
-        }
-    }
-
-    const ICON_FILE_MAPPING = {
-        'chatgpt.com': 'chatgpt.ico',
-        'gemini.google.com': 'gemini.ico',
-        'claude.ai': 'claude.ico',
-        'deepseek.com': 'deepseek.ico',
-        'yiyan.baidu.com': 'yiyan.ico',
-        'qianwen.aliyun.com': 'qianwen.ico',
-        'kimi.ai': 'kimi.ico',
-        'doubao.com': 'doubao.ico',
-        'yuanbao.tencent.com': 'yuanbao.ico',
-        'perplexity.ai': 'perplexity.ico',
-        'grok.com': 'grok.ico',
-        'copilot.cloud.microsoft': 'copilot.ico',
-        'xiaohongshu.com': 'xiaohongshu.ico',
-        'bilibili.com': 'bilibili.ico',
-        'zhihu.com': 'zhihu.ico',
-        'github.com': 'github.ico',
-        'tinypng.com': 'tinypng.ico',
-        'v0.dev': 'v0dev.ico'
-    };
-
-    function initializeIconLoading() {
-        const useObserver = 'IntersectionObserver' in window;
-
-        const observer = useObserver ? new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                const img = entry.target;
-                const domain = img.getAttribute('data-domain');
-                const siteName = img.getAttribute('data-site-name');
-                const iconFileName = ICON_FILE_MAPPING[domain];
-                if (iconFileName) {
-                    loadLocalIcon(img, iconFileName, siteName, domain);
-                } else {
-                    img.closest('.card-icon')?.classList.remove('skeleton');
-                    handleIconLoadFailure(img, siteName, domain);
-                }
-                obs.unobserve(img);
-            });
-        }, {
-            rootMargin: '100px'
-        }) : null;
-
-        document.querySelectorAll('.card-icon img').forEach(img => {
-            const domain = img.getAttribute('data-domain');
-            const siteName = img.getAttribute('data-site-name');
-
-            if (!domain || !siteName) {
-                return;
-            }
-
-            img.closest('.card-icon')?.classList.add('skeleton');
-
-            if (useObserver) {
-                observer.observe(img);
-            } else {
-                const iconFileName = ICON_FILE_MAPPING[domain];
-                if (!iconFileName) {
-                    img.closest('.card-icon')?.classList.remove('skeleton');
-                    handleIconLoadFailure(img, siteName, domain);
-                    return;
-                }
-                loadLocalIcon(img, iconFileName, siteName, domain);
-            }
-        });
-    }
-
-    initializeIconLoading();
-
-    /* ════════════════════════════════════════════════════════════
-       6. 波纹特效
-       ════════════════════════════════════════════════════════════ */
-    document.querySelectorAll('.card-item').forEach(el => {
-        el.addEventListener('pointerdown', function(e) {
-            const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height) * 1.5;
-            
-            ripple.style.cssText = `
-                position:absolute; width:${size}px; height:${size}px;
-                left:${e.clientX - rect.left - size/2}px;
-                top:${e.clientY - rect.top - size/2}px;
-                background:rgba(0,0,0,0.15); border-radius:50%;
-                transform:scale(0); animation:ripple 0.5s ease-out forwards;
-                pointer-events:none; z-index:1;
-            `;
-            
-            if (window.getComputedStyle(this).position === 'static') this.style.position = 'relative';
-            this.style.overflow = 'hidden';
-            this.appendChild(ripple);
-            ripple.addEventListener('animationend', () => ripple.remove());
-        });
-    });
-
-    /* ════════════════════════════════════════════════════════════
-       7. 主题切换
-       ════════════════════════════════════════════════════════════ */
-    const STORAGE_KEY_THEME = 'uyea-theme';
-    const html = document.documentElement;
-
-    function applyTheme(theme) {
-        if (theme === 'dark') {
-            html.setAttribute('data-theme', 'dark');
-        } else {
-            html.removeAttribute('data-theme');
-        }
-        try {
-            localStorage.setItem(STORAGE_KEY_THEME, theme);
-        } catch (e) {}
-    }
-
-    function getSavedTheme() {
-        try {
-            return localStorage.getItem(STORAGE_KEY_THEME);
-        } catch (e) {
-            return null;
-        }
-    }
-
-    const saved = getSavedTheme();
-    if (saved) {
-        applyTheme(saved);
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        applyTheme('dark');
-    }
-
-    /* ════════════════════════════════════════════════════════════
-       8. 动态样式注入
-       ════════════════════════════════════════════════════════════ */
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(1);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-
-});
+const HOLIDAYS = {
+                "2024-01-01": [{name:"元旦",country:"中国",type:"modern"}],
+                "2024-02-10": [{name:"春节",country:"中国",type:"traditional"}],
+                "2024-02-11": [{name:"春节",country:"中国",type:"traditional"}],
+                "2024-02-12": [{name:"春节",country:"中国",type:"traditional"}],
+                "2024-02-13": [{name:"春节",country:"中国",type:"traditional"}],
+                "2024-02-14": [{name:"春节",country:"中国",type:"traditional"}],
+                "2024-02-15": [{name:"春节",country:"中国",type:"traditional"}],
+                "2024-02-16": [{name:"春节",country:"中国",type:"traditional"}],
+                "2024-02-17": [{name:"春节",country:"中国",type:"traditional"}],
+                "2024-04-04": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2024-04-05": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2024-04-06": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2024-05-01": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2024-05-02": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2024-05-03": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2024-05-04": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2024-05-05": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2024-06-10": [{name:"端午节",country:"中国",type:"traditional"}],
+                "2024-09-15": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2024-09-16": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2024-09-17": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2024-10-01": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2024-10-02": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2024-10-03": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2024-10-04": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2024-10-05": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2024-10-06": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2024-10-07": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2024-02-14": [{name:"情人节",country:"国际",type:"modern"}],
+                "2024-03-08": [{name:"妇女节",country:"国际",type:"modern"}],
+                "2024-04-01": [{name:"愚人节",country:"国际",type:"modern"}],
+                "2024-05-12": [{name:"母亲节",country:"国际",type:"modern"}],
+                "2024-06-01": [{name:"儿童节",country:"国际",type:"modern"}],
+                "2024-10-31": [{name:"万圣节",country:"国际",type:"modern"}],
+                "2024-12-24": [{name:"平安夜",country:"国际",type:"traditional"}],
+                "2024-12-25": [{name:"圣诞节",country:"国际",type:"traditional"}],
+                "2025-01-01": [{name:"元旦",country:"中国",type:"modern"}],
+                "2025-01-29": [{name:"春节",country:"中国",type:"traditional"}],
+                "2025-01-30": [{name:"春节",country:"中国",type:"traditional"}],
+                "2025-01-31": [{name:"春节",country:"中国",type:"traditional"}],
+                "2025-02-01": [{name:"春节",country:"中国",type:"traditional"}],
+                "2025-02-02": [{name:"春节",country:"中国",type:"traditional"}],
+                "2025-02-03": [{name:"春节",country:"中国",type:"traditional"}],
+                "2025-02-04": [{name:"春节",country:"中国",type:"traditional"}],
+                "2025-04-04": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2025-04-05": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2025-04-06": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2025-05-01": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2025-05-02": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2025-05-03": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2025-05-04": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2025-05-05": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2025-05-31": [{name:"端午节",country:"中国",type:"traditional"}],
+                "2025-10-01": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2025-10-02": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2025-10-03": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2025-10-04": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2025-10-05": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2025-10-06": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2025-10-07": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2025-10-06": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2025-02-14": [{name:"情人节",country:"国际",type:"modern"}],
+                "2025-12-25": [{name:"圣诞节",country:"国际",type:"traditional"}],
+                "2026-01-01": [{name:"元旦",country:"中国",type:"modern"}],
+                "2026-02-17": [{name:"春节",country:"中国",type:"traditional"}],
+                "2026-02-18": [{name:"春节",country:"中国",type:"traditional"}],
+                "2026-02-19": [{name:"春节",country:"中国",type:"traditional"}],
+                "2026-02-20": [{name:"春节",country:"中国",type:"traditional"}],
+                "2026-02-21": [{name:"春节",country:"中国",type:"traditional"}],
+                "2026-02-22": [{name:"春节",country:"中国",type:"traditional"}],
+                "2026-02-23": [{name:"春节",country:"中国",type:"traditional"}],
+                "2026-02-24": [{name:"春节",country:"中国",type:"traditional"}],
+                "2026-04-04": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2026-04-05": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2026-04-06": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2026-05-01": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2026-05-02": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2026-05-03": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2026-05-04": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2026-05-05": [{name:"劳动节",country:"中国",type:"modern"}],
+                /* 修改位置：2026-05-31 原数据含错误端午节，现修正为仅保留世界无烟日 */
+                /* 前后逻辑：原含端午节，实际端午节应在6月，故移除 */
+                /* 修改目的：确保节日数据准确 */
+                "2026-05-31": [{name:"世界无烟日",country:"国际",type:"modern"}],
+                "2026-06-09": [{name:"端午节",country:"中国",type:"traditional"}],
+                "2026-06-10": [{name:"端午节",country:"中国",type:"traditional"}],
+                "2026-06-11": [{name:"端午节",country:"中国",type:"traditional"}],
+                "2026-09-15": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2026-09-16": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2026-09-17": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2026-10-01": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2026-10-02": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2026-10-03": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2026-10-04": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2026-10-05": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2026-10-06": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2026-10-07": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2026-02-14": [{name:"情人节",country:"国际",type:"modern"}],
+                "2026-03-17": [{name:"圣帕特里克节",country:"国际",type:"modern"}],
+                "2026-04-12": [{name:"复活节",country:"国际",type:"traditional"}],
+                "2026-10-31": [{name:"万圣节",country:"国际",type:"modern"}],
+                "2026-12-25": [{name:"圣诞节",country:"美国",type:"traditional"},{name:"节礼日",country:"英国",type:"modern"}],
+                "2027-01-01": [{name:"元旦",country:"中国",type:"modern"}],
+                "2027-02-06": [{name:"春节",country:"中国",type:"traditional"}],
+                "2027-02-07": [{name:"春节",country:"中国",type:"traditional"}],
+                "2027-02-08": [{name:"春节",country:"中国",type:"traditional"}],
+                "2027-02-09": [{name:"春节",country:"中国",type:"traditional"}],
+                "2027-02-10": [{name:"春节",country:"中国",type:"traditional"}],
+                "2027-02-11": [{name:"春节",country:"中国",type:"traditional"}],
+                "2027-02-12": [{name:"春节",country:"中国",type:"traditional"}],
+                "2027-02-13": [{name:"春节",country:"中国",type:"traditional"}],
+                "2027-04-05": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2027-05-01": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2027-05-02": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2027-05-03": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2027-05-04": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2027-05-05": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2027-06-09": [{name:"端午节",country:"中国",type:"traditional"}],
+                "2027-09-21": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2027-10-01": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2027-10-02": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2027-10-03": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2027-10-04": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2027-10-05": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2027-10-06": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2027-10-07": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2027-12-25": [{name:"圣诞节",country:"国际",type:"traditional"}],
+                "2028-01-01": [{name:"元旦",country:"中国",type:"modern"}],
+                "2028-01-26": [{name:"春节",country:"中国",type:"traditional"}],
+                "2028-01-27": [{name:"春节",country:"中国",type:"traditional"}],
+                "2028-01-28": [{name:"春节",country:"中国",type:"traditional"}],
+                "2028-01-29": [{name:"春节",country:"中国",type:"traditional"}],
+                "2028-01-30": [{name:"春节",country:"中国",type:"traditional"}],
+                "2028-01-31": [{name:"春节",country:"中国",type:"traditional"}],
+                "2028-02-01": [{name:"春节",country:"中国",type:"traditional"}],
+                "2028-02-02": [{name:"春节",country:"中国",type:"traditional"}],
+                "2028-04-04": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2028-05-01": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2028-05-02": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2028-05-03": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2028-05-04": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2028-05-05": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2028-05-28": [{name:"端午节",country:"中国",type:"traditional"}],
+                "2028-10-01": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2028-10-02": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2028-10-03": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2028-10-04": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2028-10-05": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2028-10-06": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2028-10-07": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2028-10-03": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2028-12-25": [{name:"圣诞节",country:"国际",type:"traditional"}],
+                "2029-01-01": [{name:"元旦",country:"中国",type:"modern"}],
+                "2029-02-13": [{name:"春节",country:"中国",type:"traditional"}],
+                "2029-02-14": [{name:"春节",country:"中国",type:"traditional"}],
+                "2029-02-15": [{name:"春节",country:"中国",type:"traditional"}],
+                "2029-02-16": [{name:"春节",country:"中国",type:"traditional"}],
+                "2029-02-17": [{name:"春节",country:"中国",type:"traditional"}],
+                "2029-02-18": [{name:"春节",country:"中国",type:"traditional"}],
+                "2029-02-19": [{name:"春节",country:"中国",type:"traditional"}],
+                "2029-02-20": [{name:"春节",country:"中国",type:"traditional"}],
+                "2029-04-04": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2029-05-01": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2029-05-02": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2029-05-03": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2029-05-04": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2029-05-05": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2029-06-16": [{name:"端午节",country:"中国",type:"traditional"}],
+                "2029-09-22": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2029-10-01": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2029-10-02": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2029-10-03": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2029-10-04": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2029-10-05": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2029-10-06": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2029-10-07": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2029-12-25": [{name:"圣诞节",country:"国际",type:"traditional"}],
+                "2030-01-01": [{name:"元旦",country:"中国",type:"modern"}],
+                "2030-02-03": [{name:"春节",country:"中国",type:"traditional"}],
+                "2030-02-04": [{name:"春节",country:"中国",type:"traditional"}],
+                "2030-02-05": [{name:"春节",country:"中国",type:"traditional"}],
+                "2030-02-06": [{name:"春节",country:"中国",type:"traditional"}],
+                "2030-02-07": [{name:"春节",country:"中国",type:"traditional"}],
+                "2030-02-08": [{name:"春节",country:"中国",type:"traditional"}],
+                "2030-02-09": [{name:"春节",country:"中国",type:"traditional"}],
+                "2030-02-10": [{name:"春节",country:"中国",type:"traditional"}],
+                "2030-04-05": [{name:"清明节",country:"中国",type:"traditional"}],
+                "2030-05-01": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2030-05-02": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2030-05-03": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2030-05-04": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2030-05-05": [{name:"劳动节",country:"中国",type:"modern"}],
+                "2030-06-05": [{name:"端午节",country:"中国",type:"traditional"}],
+                "2030-09-12": [{name:"中秋节",country:"中国",type:"traditional"}],
+                "2030-10-01": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2030-10-02": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2030-10-03": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2030-10-04": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2030-10-05": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2030-10-06": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2030-10-07": [{name:"国庆节",country:"中国",type:"modern"}],
+                "2030-12-25": [{name:"圣诞节",country:"国际",type:"traditional"}]
+            };;
