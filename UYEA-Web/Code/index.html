@@ -98,7 +98,7 @@
                     <button class="calendar-nav-btn calendar-nav-up" id="prevMonth">&#9650;</button>
                     <div class="calendar-container">
                         <div class="calendar-header">
-                            <div class="calendar-title" id="calendarTitle">2026年1月</div>
+                            <div class="calendar-title" id="calendarTitle" style="text-align: center; flex: 1;">2026年1月</div>
                             <button class="calendar-jump-btn-header" id="jumpBtnHeader">跳转</button>
                         </div>
                         <div class="calendar-weekdays">
@@ -321,10 +321,9 @@
                 const badge = document.getElementById('mobileHolidayBadge');
                 if (badge) {
                     const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
-                    const holidays = HOLIDAYS[dateKey] || [];
-                    const cnTrad = holidays.filter(h => h.country === '中国' && h.type === 'traditional');
-                    if (cnTrad.length > 0 && window.innerWidth <= 768) {
-                        badge.textContent = cnTrad[0].name;
+                    const holiday = HOLIDAYS[dateKey];
+                    if (holiday && holiday.type === 'cn' && window.innerWidth <= 768) {
+                        badge.textContent = holiday.name;
                         badge.style.display = 'inline-block';
                     } else {
                         badge.style.display = 'none';
@@ -420,34 +419,33 @@
                 lunarEl.textContent = getCellLunarText(year, month, day);
                 cell.appendChild(lunarEl);
 
-                // 节日处理：只显示中国节日，国际节日不显示在单元格
+                // 节日处理：节假日只显示在当天，其余假期显示为"休"
                 const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-                const holidays = HOLIDAYS[dateKey] || [];
-                const cnHolidays = holidays.filter(h => h.country === '中国');
+                const holiday = HOLIDAYS[dateKey];
 
-                if (cnHolidays.length > 0 && !isOtherMonth) {
-                    // 只显示第一个中国节日名称
+                if (holiday && !isOtherMonth) {
+                    // 只显示节日名称在当天单元格中
                     const holidayEl = document.createElement('div');
                     holidayEl.className = 'cell-holiday';
-                    holidayEl.textContent = cnHolidays[0].name;
+                    holidayEl.textContent = holiday.name;
                     cell.appendChild(holidayEl);
-
-                    // 如果有多个中国节日，在日期右上角显示"休"
-                    if (cnHolidays.length > 1) {
-                        const restEl = document.createElement('div');
-                        restEl.className = 'cell-rest';
-                        restEl.textContent = '休';
-                        cell.appendChild(restEl);
-                    }
+                    
+                    // 标记节假日类型（用于样式）
+                    cell.classList.add(`holiday-${holiday.type}`);
                 }
 
+                // 修改位置：点击日期逻辑 - 支持取消选中
+                // 前后逻辑：原点击仅添加selected，现支持点击已选中日期时取消选中
+                // 修改目的：实现切换选择状态
                 cell.addEventListener('click', () => {
+                    const isCurrentlySelected = cell.classList.contains('selected');
                     document.querySelectorAll('.calendar-cell.selected').forEach(el => el.classList.remove('selected'));
-                    cell.classList.add('selected');
-                    selectedDate = new Date(year, month - 1, day);
-                    // 修改位置：点击日期过滤节日条
-                    // 前后逻辑：原点击仅选中日期，现触发节日条过滤显示该日节日
-                    // 修改目的：点击日期后节日条只显示该日期的所有节日
+                    
+                    // 如果点击的是已选中的日期，则取消选中；否则选中新日期
+                    if (!isCurrentlySelected) {
+                        cell.classList.add('selected');
+                        selectedDate = new Date(year, month - 1, day);
+                    }
                     renderHolidayBar(currentCalendarYear, currentCalendarMonth, day);
                 });
 
@@ -467,7 +465,8 @@
                     // 修改目的：点击日期后节日条精准过滤
                     const key = `${year}-${String(month).padStart(2,'0')}-${String(filterDay).padStart(2,'0')}`;
                     if (HOLIDAYS[key]) {
-                        holidays = HOLIDAYS[key].map(h => ({...h, day: filterDay}));
+                        const holiday = HOLIDAYS[key];
+                        holidays.push({...holiday, day: filterDay});
                     }
                     bar.classList.add('filtered');
                 } else {
@@ -476,9 +475,8 @@
                     for (let d = 1; d <= lastDay; d++) {
                         const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                         if (HOLIDAYS[key]) {
-                            HOLIDAYS[key].forEach(h => {
-                                holidays.push({...h, day: d});
-                            });
+                            const holiday = HOLIDAYS[key];
+                            holidays.push({...holiday, day: d});
                         }
                     }
                     bar.classList.remove('filtered');
@@ -487,19 +485,18 @@
                 // 去重
                 const seen = new Set();
                 const unique = holidays.filter(h => {
-                    const k = h.name + '|' + h.country;
+                    const k = h.name + '|' + h.type;
                     if (seen.has(k)) return false;
                     seen.add(k);
                     return true;
                 });
 
-                // 排序：中国传统节日置顶 -> 国家A-Z -> 名称A-Z
+                // 排序：中国节日置顶 -> 名称A-Z
                 unique.sort((a, b) => {
-                    const aIsCnTrad = a.country === '中国' && a.type === 'traditional';
-                    const bIsCnTrad = b.country === '中国' && b.type === 'traditional';
-                    if (aIsCnTrad && !bIsCnTrad) return -1;
-                    if (!aIsCnTrad && bIsCnTrad) return 1;
-                    if (a.country !== b.country) return a.country.localeCompare(b.country);
+                    const aIsCn = a.type === 'cn';
+                    const bIsCn = b.type === 'cn';
+                    if (aIsCn && !bIsCn) return -1;
+                    if (!aIsCn && bIsCn) return 1;
                     return a.name.localeCompare(b.name);
                 });
 
@@ -511,7 +508,8 @@
                     unique.forEach(h => {
                         const tag = document.createElement('div');
                         tag.className = 'holiday-tag';
-                        tag.textContent = `${h.name}[${h.country}]`;
+                        const typeText = h.type === 'cn' ? '中国' : '国际';
+                        tag.textContent = `${h.name}[${typeText}]`;
                         bar.appendChild(tag);
                     });
                 }
