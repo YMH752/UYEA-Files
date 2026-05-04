@@ -535,8 +535,16 @@ body {
     gap: 20px;
 }
 
+/* 修改位置：.card-item 背景改为像素风景纹理 */
+/* 前后逻辑：原为纯色背景，现使用 CSS 重复锥形渐变模拟像素网格 */
+/* 修改目的：临时实现像素风视觉，无需外部图片 */
 .card-item {
-    background: var(--surface);
+    background:
+        repeating-conic-gradient(
+            var(--bg) 0% 25%,
+            var(--border) 0% 50%
+        ) 0 0 / 4px 4px;
+    background-color: var(--surface); /* 保持原有底色 */
     border: 2px solid var(--border);
     border-radius: var(--radius-md);
     padding: 16px;
@@ -931,38 +939,23 @@ body {
 }
 
 .calendar-container {
-    /* 修改位置：.calendar-container 毛玻璃效果 + 像素风景背景 */
-    /* 前后逻辑：原 rgba(255,255,255,0.7)，现为更强毛玻璃效果 + CSS像素背景 */
-    /* 修改目的：添加冻砂/毛玻璃视觉效果 + 像素艺术风景 */
-    background: 
-        linear-gradient(to top, 
-            #FFD700 0%, 
-            #FFE66D 5%, 
-            #87CEEB 20%, 
-            #87CEEB 100%),
-        rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    /* 修改位置：.calendar-container 极端压缩 */
+    /* 前后逻辑：原 padding:10px，现为3px */
+    /* 修改目的：强行压缩月历容器 */
+    background: rgba(255, 255, 255, 0.2); /* 修改位置：毛玻璃淡灰效果 */
+    /* 前后逻辑：原透明度0.7，现改为0.2并保留模糊 */
+    /* 修改目的：实现淡灰色毛玻璃背景 */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--border);
     padding: 3px;
     position: relative;
     overflow: hidden;
-    /* CSS像素风景装饰 */
-    box-shadow: 
-        inset 0 0 0 1px rgba(255, 255, 255, 0.4),
-        0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 html[data-theme="dark"] .calendar-container {
-    background: 
-        linear-gradient(to top,
-            #2A2A2A 0%,
-            #1F1F1F 5%,
-            #1A1A1A 20%,
-            #1A1A1A 100%),
-        rgba(26, 26, 26, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(38, 38, 38, 0.2); /* 暗黑模式对应透明度 */
 }
 
 .calendar-header {
@@ -976,23 +969,23 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-title {
-    /* 修改位置：.calendar-title 极端压缩 */
-    /* 前后逻辑：原 font-size:14px，现为9px */
-    /* 修改目的：强行压缩标题字号 */
+    /* 修改位置：.calendar-title 标题居中 */
+    /* 前后逻辑：原左对齐，现改为居中对齐 */
+    /* 修改目的：使日历标题文字居中 */
     font-size: 9px;
     font-weight: 700;
     color: var(--text-primary);
-    text-align: left;
+    text-align: center;
     flex: 1;
 }
 
 .calendar-jump-btn-header {
-    /* 修改位置：跳转按钮极端压缩 */
-    /* 前后逻辑：原 font-size:11px，现为7px */
-    /* 修改目的：强行压缩跳转按钮 */
+    /* 修改位置：跳转按钮圆角取消 */
+    /* 前后逻辑：原 border-radius: 2px，现改为 0 */
+    /* 修改目的：直角按钮与卡片风格统一 */
     font-size: 7px;
     padding: 1px 4px;
-    border-radius: 2px;
+    border-radius: 0;
     background: var(--bg);
     border: 1px solid var(--border);
     color: var(--text-primary);
@@ -1008,19 +1001,19 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-weekdays {
-    /* 修改位置：星期行极端压缩 */
-    /* 前后逻辑：原 gap:2px margin-bottom:2px，现为 gap:1px margin-bottom:1px */
-    /* 修改目的：强行压缩星期行 */
+    /* 修改位置：星期间距微调 */
+    /* 前后逻辑：原 margin-bottom:1px，现增加为2px */
+    /* 修改目的：改善与日期块的视觉间距 */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 1px;
-    margin-bottom: 1px;
+    margin-bottom: 2px;
 }
 
 .weekday {
-    /* 修改位置：星期标题极端压缩 */
-    /* 前后逻辑：原 font-size:10px padding:4px，现为 font-size:7px padding:1px */
-    /* 修改目的：强行压缩星期标题 */
+    /* 修改位置：星期标题文字居中 */
+    /* 前后逻辑：原左对齐，现改为居中 */
+    /* 修改目的：与日期数字居中对齐 */
     text-align: center;
     font-size: 7px;
     font-weight: 600;
@@ -1029,18 +1022,18 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-grid {
-    /* 修改位置：日期网格间距调整 */
-    /* 前后逻辑：原 gap:1px，现为 gap:0.5px */
-    /* 修改目的：进一步减少日期与日期之间的间距 */
+    /* 修改位置：日期网格间距微调 */
+    /* 前后逻辑：原 gap:1px，现增加为2px */
+    /* 修改目的：改善单元格间距 */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 0.5px;
+    gap: 2px;
 }
 
 .calendar-cell {
-    /* 修改位置：.calendar-cell 极端压缩 */
-    /* 前后逻辑：原 min-height:40px padding:4px，现为14px/1px */
-    /* 修改目的：强行将单元格压到极限，塞进参考图尺寸 */
+    /* 修改位置：.calendar-cell 内容居中 */
+    /* 前后逻辑：原 flex-direction: column; align-items: flex-start; */
+    /* 修改目的：所有子元素居中对齐 */
     min-height: 14px;
     padding: 1px;
     border-radius: 2px;
@@ -1050,7 +1043,7 @@ html[data-theme="dark"] .calendar-container {
     transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 0;
     position: relative;
     overflow: hidden;
@@ -1066,39 +1059,38 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .cell-solar {
-    /* 修改位置：阳历日期极端压缩 */
-    /* 前后逻辑：原 font-size:12px，现为8px */
-    /* 修改目的：强行压缩阳历日期 */
+    /* 修改位置：阳历日期文字居中 */
+    /* 前后逻辑：原左对齐，现改为居中 */
+    /* 修改目的：数字在单元格内居中 */
     font-size: 8px;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1;
+    text-align: center;
 }
 
 .calendar-cell.today .cell-solar {
-    /* 修改位置：今天样式极端压缩 */
-    /* 前后逻辑：原 underline，现为 color 变化 */
-    /* 修改目的：节省空间 */
     font-weight: 800;
     color: var(--primary);
 }
 
 .cell-lunar {
-    /* 修改位置：农历日期极端压缩 */
-    /* 前后逻辑：原 font-size:9px，现为6px */
-    /* 修改目的：强行压缩农历日期 */
+    /* 修改位置：农历文字居中 */
+    /* 前后逻辑：原左对齐，现改为居中 */
+    /* 修改目的：与阳历数字对齐 */
     font-size: 6px;
     font-weight: 400;
     color: var(--text-muted);
     line-height: 1;
     max-height: 6px;
     overflow: hidden;
+    text-align: center;
 }
 
 .cell-holiday {
-    /* 修改位置：节日标注极端压缩 */
-    /* 前后逻辑：原 font-size:8px，现为5px */
-    /* 修改目的：强行压缩节日标注 */
+    /* 修改位置：节日标注文字居中 */
+    /* 前后逻辑：原左对齐，现改为居中 */
+    /* 修改目的：与上方数字对齐 */
     font-size: 5px;
     font-weight: 600;
     color: var(--primary);
@@ -1108,6 +1100,7 @@ html[data-theme="dark"] .calendar-container {
     max-width: 100%;
     line-height: 1;
     max-height: 5px;
+    text-align: center;
 }
 
 .cell-rest {
@@ -1131,17 +1124,11 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-cell.other-month {
-    /* 修改位置：非当月样式极端压缩 */
-    /* 前后逻辑：原 opacity:0.3，现为0.2 */
-    /* 修改目的：进一步淡化非当月 */
     opacity: 0.2;
 }
 
 /* 上下翻页按钮 */
 .calendar-nav-btn {
-    /* 修改位置：翻页按钮极端压缩 */
-    /* 前后逻辑：原 height:20px，现为10px */
-    /* 修改目的：强行压缩翻页按钮 */
     width: 100%;
     height: 10px;
     background: transparent;
@@ -1172,9 +1159,6 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .holiday-bar {
-    /* 修改位置：节日条极端压缩 */
-    /* 前后逻辑：原 min-height:28px padding:6px 10px，现为14px/2px 4px */
-    /* 修改目的：强行压缩节日条 */
     margin-top: 2px;
     width: 100%;
     min-height: 14px;
@@ -1204,9 +1188,6 @@ html[data-theme="dark"] .holiday-bar {
 }
 
 .holiday-bar.filtered {
-    /* 修改位置：新增过滤状态样式 */
-    /* 前后逻辑：原无过滤状态，现新增 */
-    /* 修改目的：点击日期后节日条显示过滤状态 */
     background: rgba(26, 26, 26, 0.08);
 }
 
@@ -1215,9 +1196,6 @@ html[data-theme="dark"] .holiday-bar.filtered {
 }
 
 .holiday-tag {
-    /* 修改位置：节日标签极端压缩 */
-    /* 前后逻辑：原 padding:2px 8px font-size:10px，现为1px 3px/6px */
-    /* 修改目的：强行压缩节日标签 */
     padding: 1px 3px;
     border-radius: 3px;
     background: var(--surface);
@@ -1230,132 +1208,48 @@ html[data-theme="dark"] .holiday-bar.filtered {
     line-height: 1;
 }
 
-.modal-overlay {
-    /* 修改位置：模态框遮罩层 */
-    /* 前后逻辑：原无变化 */
-    /* 修改目的：跳转模态框遮罩 */
+/* 修改位置：新增加跳转下拉面板样式 */
+/* 前后逻辑：原模态框居中弹出，现改为按钮下方滑动展开的下拉面板 */
+/* 修改目的：实现下拉滑动交互，更贴合日历卡片 */
+.jump-dropdown {
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: absolute;
+    top: calc(100% + 4px);
     right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
+    width: 200px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    padding: 10px;
+    z-index: 1500;
+    transform-origin: top right;
+    animation: dropdownSlideIn 0.3s ease;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.modal-overlay.show {
-    display: block;
+.jump-dropdown.show {
+    display: flex;
+}
+
+.modal-overlay {
+    /* 修改位置：原遮罩层隐藏 */
+    /* 前后逻辑：原用于跳转模态框，现不再需要，但保留标签仅隐藏 */
+    /* 修改目的：避免影响其他可能的使用，仅修改显示 */
+    display: none;
 }
 
 .modal-jump {
-    /* 修改位置：模态框尺寸调整 */
-    /* 前后逻辑：原 width:360px padding:24px，现为更小 */
-    /* 修改目的：模态框尺寸减半 */
+    /* 修改位置：原模态框样式保留但不再使用，改为下拉面板控制 */
+    /* 前后逻辑：原居中显示，现通过 .jump-dropdown 替代，此样式保留以防备用 */
     display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 300px;
-    padding: 16px;
-    border-radius: 12px;
-    background: var(--surface);
-    box-shadow: var(--shadow-lg);
-    z-index: 10000;
 }
 
-.modal-jump.show {
-    display: block;
-    animation: modalPop 0.2s ease;
-}
-
-.modal-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 12px;
-}
-
-.modal-radio-group {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.modal-radio-group label {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    cursor: pointer;
-}
-
-.modal-inputs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 12px;
-}
-
-.modal-inputs input {
-    width: 70px;
-    height: 32px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text-primary);
-    text-align: center;
-    font-size: 12px;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-.modal-inputs input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 6px;
-}
-
-.modal-btn {
-    padding: 6px 16px;
-    border-radius: 4px;
-    border: none;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: 'Noto Sans SC', 'Fredoka', system-ui, sans-serif;
-}
-
-.modal-btn-cancel {
-    background: var(--bg);
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-}
-
-.modal-btn-cancel:hover {
-    background: var(--border);
-}
-
-.modal-btn-confirm {
-    background: var(--primary);
-    color: white;
-}
-
-.modal-btn-confirm:hover {
-    background: var(--accent-1);
-}
+/* 保留原有模态框样式供可能回退使用，但不显示 */
+.modal-jump.show { display: none; }
 
 .mobile-holiday-badge {
-    /* 修改位置：移动端节日徽章尺寸调整 */
-    /* 前后逻辑：原 padding:4px 16px font-size:12px，现为更小 */
-    /* 修改目的：移动端徽章尺寸减半 */
     display: none;
     margin-top: 8px;
     padding: 2px 10px;
@@ -1387,18 +1281,12 @@ html[data-theme="dark"] .holiday-bar.filtered {
 
 @media (max-width: 768px) {
     .clock-display {
-        /* 修改位置：移动端不再隐藏月历，同样压缩 */
-        /* 前后逻辑：原隐藏月历，现显示完整但压缩 */
-        /* 修改目的：移动端也显示完整月历 */
         flex-direction: row;
         gap: 4px;
         padding: 8px;
     }
 
     .clock-right {
-        /* 修改位置：移动端显示右侧月历 */
-        /* 前后逻辑：原 display:none，现为 display:flex */
-        /* 修改目的：移动端不再隐藏月历 */
         display: flex;
         min-width: 120px;
     }
