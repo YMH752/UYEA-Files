@@ -95,7 +95,7 @@
                     <div class="mobile-holiday-badge" id="mobileHolidayBadge" style="display:none;"></div>
                 </div>
                 <div class="clock-right">
-                    <button class="calendar-nav-btn calendar-nav-prev" id="prevMonth">&#9664;</button>
+                    <button class="calendar-nav-btn calendar-nav-up" id="prevMonth">&#9650;</button>
                     <div class="calendar-container">
                         <div class="calendar-header">
                             <div class="calendar-title" id="calendarTitle">2026年1月</div>
@@ -113,7 +113,7 @@
                         <div class="calendar-grid" id="calendarGrid"></div>
                         <div class="holiday-bar" id="holidayBar"></div>
                     </div>
-                    <button class="calendar-nav-btn calendar-nav-next" id="nextMonth">&#9654;</button>
+                    <button class="calendar-nav-btn calendar-nav-down" id="nextMonth">&#9660;</button>
                 </div>
             </div>
 
@@ -420,41 +420,68 @@
                 lunarEl.textContent = getCellLunarText(year, month, day);
                 cell.appendChild(lunarEl);
 
-                // 节日（最多两个）
+                // 节日处理：只显示中国节日，国际节日不显示在单元格
                 const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                 const holidays = HOLIDAYS[dateKey] || [];
-                if (holidays.length > 0 && !isOtherMonth) {
+                const cnHolidays = holidays.filter(h => h.country === '中国');
+
+                if (cnHolidays.length > 0 && !isOtherMonth) {
+                    // 只显示第一个中国节日名称
                     const holidayEl = document.createElement('div');
                     holidayEl.className = 'cell-holiday';
-                    const names = holidays.slice(0, 2).map(h => h.name).join(' ');
-                    holidayEl.textContent = names;
+                    holidayEl.textContent = cnHolidays[0].name;
                     cell.appendChild(holidayEl);
+
+                    // 如果有多个中国节日，在日期右上角显示"休"
+                    if (cnHolidays.length > 1) {
+                        const restEl = document.createElement('div');
+                        restEl.className = 'cell-rest';
+                        restEl.textContent = '休';
+                        cell.appendChild(restEl);
+                    }
                 }
 
                 cell.addEventListener('click', () => {
                     document.querySelectorAll('.calendar-cell.selected').forEach(el => el.classList.remove('selected'));
                     cell.classList.add('selected');
                     selectedDate = new Date(year, month - 1, day);
+                    // 修改位置：点击日期过滤节日条
+                    // 前后逻辑：原点击仅选中日期，现触发节日条过滤显示该日节日
+                    // 修改目的：点击日期后节日条只显示该日期的所有节日
+                    renderHolidayBar(currentCalendarYear, currentCalendarMonth, day);
                 });
 
                 return cell;
             }
 
             // 渲染节日条
-            function renderHolidayBar(year, month) {
+            function renderHolidayBar(year, month, filterDay) {
                 const bar = document.getElementById('holidayBar');
                 if (!bar) return;
 
-                const holidays = [];
-                const lastDay = new Date(year, month, 0).getDate();
+                let holidays = [];
 
-                for (let d = 1; d <= lastDay; d++) {
-                    const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                if (filterDay) {
+                    // 修改位置：点击日期过滤逻辑
+                    // 前后逻辑：原显示整月节日，现只显示点击日期的所有节日
+                    // 修改目的：点击日期后节日条精准过滤
+                    const key = `${year}-${String(month).padStart(2,'0')}-${String(filterDay).padStart(2,'0')}`;
                     if (HOLIDAYS[key]) {
-                        HOLIDAYS[key].forEach(h => {
-                            holidays.push({...h, day: d});
-                        });
+                        holidays = HOLIDAYS[key].map(h => ({...h, day: filterDay}));
                     }
+                    bar.classList.add('filtered');
+                } else {
+                    // 显示整月节日
+                    const lastDay = new Date(year, month, 0).getDate();
+                    for (let d = 1; d <= lastDay; d++) {
+                        const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                        if (HOLIDAYS[key]) {
+                            HOLIDAYS[key].forEach(h => {
+                                holidays.push({...h, day: d});
+                            });
+                        }
+                    }
+                    bar.classList.remove('filtered');
                 }
 
                 // 去重
@@ -497,9 +524,12 @@
 
                 const grid = document.getElementById('calendarGrid');
                 if (grid) {
+                    // 修改位置：翻页动画方向
+                    // 前后逻辑：原水平位移 translateX，现为垂直位移 translateY
+                    // 修改目的：翻页按钮改为上下布局，动画同步改为上下
                     grid.style.transition = 'all 0.2s ease-out';
                     grid.style.opacity = '0';
-                    grid.style.transform = `translateX(${delta > 0 ? '-20px' : '20px'})`;
+                    grid.style.transform = `translateY(${delta > 0 ? '-20px' : '20px'})`;
                 }
 
                 setTimeout(() => {
@@ -516,11 +546,11 @@
 
                     if (grid) {
                         grid.style.transition = 'none';
-                        grid.style.transform = `translateX(${delta > 0 ? '20px' : '-20px'})`;
+                        grid.style.transform = `translateY(${delta > 0 ? '20px' : '-20px'})`;
                         requestAnimationFrame(() => {
                             grid.style.transition = 'all 0.2s ease-out';
                             grid.style.opacity = '1';
-                            grid.style.transform = 'translateX(0)';
+                            grid.style.transform = 'translateY(0)';
                             setTimeout(() => { isAnimating = false; }, 200);
                         });
                     } else {
@@ -538,12 +568,12 @@
             const calendarContainer = document.querySelector('.calendar-container');
             if (calendarContainer) {
                 calendarContainer.addEventListener('touchstart', (e) => {
-                    touchStartX = e.changedTouches[0].screenX;
+                    touchStartY = e.changedTouches[0].screenY;
                 }, {passive: true});
 
                 calendarContainer.addEventListener('touchend', (e) => {
-                    touchEndX = e.changedTouches[0].screenX;
-                    const diff = touchStartX - touchEndX;
+                    touchEndY = e.changedTouches[0].screenY;
+                    const diff = touchStartY - touchEndY;
                     if (Math.abs(diff) > 50) {
                         changeMonth(diff > 0 ? 1 : -1);
                     }
