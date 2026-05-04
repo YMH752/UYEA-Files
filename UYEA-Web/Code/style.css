@@ -931,21 +931,38 @@ body {
 }
 
 .calendar-container {
-    /* 修改位置：.calendar-container 极端压缩 */
-    /* 前后逻辑：原 padding:10px，现为3px */
-    /* 修改目的：强行压缩月历容器 */
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    /* 修改位置：.calendar-container 毛玻璃效果 + 像素风景背景 */
+    /* 前后逻辑：原 rgba(255,255,255,0.7)，现为更强毛玻璃效果 + CSS像素背景 */
+    /* 修改目的：添加冻砂/毛玻璃视觉效果 + 像素艺术风景 */
+    background: 
+        linear-gradient(to top, 
+            #FFD700 0%, 
+            #FFE66D 5%, 
+            #87CEEB 20%, 
+            #87CEEB 100%),
+        rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-radius: 8px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     padding: 3px;
     position: relative;
     overflow: hidden;
+    /* CSS像素风景装饰 */
+    box-shadow: 
+        inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+        0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 html[data-theme="dark"] .calendar-container {
-    background: rgba(38, 38, 38, 0.7);
+    background: 
+        linear-gradient(to top,
+            #2A2A2A 0%,
+            #1F1F1F 5%,
+            #1A1A1A 20%,
+            #1A1A1A 100%),
+        rgba(26, 26, 26, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .calendar-header {
@@ -1012,12 +1029,12 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-grid {
-    /* 修改位置：日期网格极端压缩 */
-    /* 前后逻辑：原 gap:2px，现为 gap:1px */
-    /* 修改目的：强行压缩网格间距 */
+    /* 修改位置：日期网格间距调整 */
+    /* 前后逻辑：原 gap:1px，现为 gap:0.5px */
+    /* 修改目的：进一步减少日期与日期之间的间距 */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
+    gap: 0.5px;
 }
 
 .calendar-cell {
