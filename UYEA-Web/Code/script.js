@@ -309,12 +309,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const lunar = fixedLunarMap[dateKey];
             const monthName = lunarMonths[lunar.month - 1] || '正';
             const dayName = lunarDays[lunar.day - 1] || '初一';
-            return `农历${monthName}月${dayName}`;
+            return `农历${dayName}`;
         }
         
         const safeMonth = Math.max(1, Math.min(month, 12));
     const safeDay = Math.max(1, Math.min(day, 30));
-    return `农历${lunarMonths[safeMonth - 1]}月${lunarDays[safeDay - 1]}`;
+    return `农历${lunarDays[safeDay - 1]}`;
     }
 
     // 更新农历日期
