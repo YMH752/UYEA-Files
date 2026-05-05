@@ -322,11 +322,12 @@
                         }
                     }
 
-                    // 农历日期
+                    // 农历日期 - 仅显示日
                     const lunar = solarToLunar(year, month, day);
-                    const lunarMatch = lunar.match(/\d+月\d+日/);
-                    if (lunarMatch) {
-                        cellHTML += `<div class="cell-lunar">${lunarMatch[0]}</div>`;
+                    // 提取农历的日部分（如"初一"、"初二"）
+                    const lunarDayMatch = lunar.match(/月(.+)$/);
+                    if (lunarDayMatch) {
+                        cellHTML += `<div class="cell-lunar">${lunarDayMatch[1]}</div>`;
                     }
 
                     cell.innerHTML = cellHTML;
