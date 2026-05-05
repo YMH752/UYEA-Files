@@ -875,15 +875,15 @@ body {
 
 
 .clock-left {
-    /* 修改位置：.clock-left 极端压缩 */
-    /* 前后逻辑：原 min-width:200px，现为 min-width:90px */
-    /* 修改目的：强行压缩左侧时间区 */
-    flex: 0 0 auto;
-    min-width: 90px;
+    /* 修改位置：.clock-left 比例调整为 4:6 */
+    /* 前后逻辑：原 min-width:90px 固定，现为 flex: 0 0 40% 比例 */
+    /* 修改目的：左侧占40%宽度，右侧占60% */
+    flex: 0 0 40%;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     text-align: left;
     overflow: hidden;
 }
@@ -926,11 +926,11 @@ body {
 }
 
 .clock-right {
-    /* 修改位置：.clock-right 极端压缩 */
-    /* 前后逻辑：原 min-width:300px，现为 min-width:160px */
-    /* 修改目的：强行压缩右侧月历区 */
-    flex: 1 1 auto;
-    min-width: 160px;
+    /* 修改位置：.clock-right 比例调整为 4:6 */
+    /* 前后逻辑：原 flex: 1 1 auto min-width:160px，现为 flex: 0 0 60% 比例 */
+    /* 修改目的：右侧占60%宽度 */
+    flex: 0 0 60%;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -957,24 +957,25 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-header {
-    /* 修改位置：.calendar-header 极端压缩 */
-    /* 前后逻辑：原 margin-bottom:8px，现为2px */
-    /* 修改目的：强行压缩标题栏 */
+    /* 修改位置：.calendar-header 居中对齐 */
+    /* 前后逻辑：原 justify-content:space-between，现为center */
+    /* 修改目的：标题栏内容居中 */
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin-bottom: 2px;
 }
 
 .calendar-title {
-    /* 修改位置：.calendar-title 极端压缩 */
-    /* 前后逻辑：原 font-size:14px，现为9px */
-    /* 修改目的：强行压缩标题字号 */
+    /* 修改位置：.calendar-title 居中对齐 */
+    /* 前后逻辑：原 text-align:left flex:1，现为text-align:center */
+    /* 修改目的：日期标题居中显示 */
     font-size: 9px;
     font-weight: 700;
     color: var(--text-primary);
-    text-align: left;
-    flex: 1;
+    text-align: center;
+    flex: 0;
+    margin-right: 4px;
 }
 
 .calendar-jump-btn-header {
@@ -1006,7 +1007,7 @@ html[data-theme="dark"] .calendar-container {
     grid-template-columns: repeat(7, 1fr);
     gap: 1px;
     margin-bottom: 1px;
-text-align: center; }
+}
 
 .weekday {
     /* 修改位置：星期标题极端压缩 */
@@ -1029,9 +1030,9 @@ text-align: center; }
 }
 
 .calendar-cell {
-    /* 修改位置：.calendar-cell 极端压缩 */
-    /* 前后逻辑：原 min-height:40px padding:4px，现为14px/1px */
-    /* 修改目的：强行将单元格压到极限，塞进参考图尺寸 */
+    /* 修改位置：.calendar-cell 居中对齐 */
+    /* 前后逻辑：原 align-items:flex-start，现为center */
+    /* 修改目的：日期内容在单元格中居中 */
     min-height: 14px;
     padding: 1px;
     border-radius: 2px;
@@ -1042,6 +1043,7 @@ text-align: center; }
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 0;
     position: relative;
     overflow: hidden;
@@ -1459,4 +1461,12 @@ html[data-theme="dark"] .holiday-bar.filtered {
     .cell-lunar {
         font-size: 5px;
     }
+}
+
+/* ════════════════════════════════════════════════════════════
+   日历内容淡入
+   ════════════════════════════════════════════════════════════ */
+
+.calendar-grid {
+    animation: fadeUp 0.3s ease;
 }
