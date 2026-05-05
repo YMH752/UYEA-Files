@@ -270,6 +270,27 @@
     <!-- 前后逻辑：原为加载本地holidays.js，现改为API获取节假日 -->
     <!-- 修改目的：完全替换为API数据源，无需本地文件 -->
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@2.0.17/lunar.min.js" defer></script>
+
+    <!-- ✅ 模态框 HTML（必须在内联脚本之前被解析） -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-jump" id="modalJump">
+        <div class="modal-title">跳转到指定日期</div>
+        <div class="modal-radio-group">
+            <label><input type="radio" name="calendarType" value="solar" checked> 公历</label>
+            <label><input type="radio" name="calendarType" value="lunar"> 农历</label>
+        </div>
+        <div class="modal-inputs">
+            <input type="number" id="jumpYear" placeholder="年" min="1900" max="2099">
+            <input type="number" id="jumpMonth" placeholder="月" min="1" max="12">
+            <input type="number" id="jumpDay" placeholder="日" min="1" max="31">
+        </div>
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" id="modalCancel">取消</button>
+            <button class="modal-btn modal-btn-confirm" id="modalConfirm">确认</button>
+        </div>
+    </div>
+
+    <!-- ✅ 日历内联脚本（移至底部，确保 modalOverlay / modalJump 已加载） -->
     <script>
         (function() {
             // 日历全局变量
@@ -597,7 +618,7 @@
                 }, {passive: true});
             }
 
-            // 模态框
+            // ✅ 模态框（modalOverlay / modalJump 现在已在上方的 HTML 中定义，此处 getElementById 可正确获取）
             const modalOverlay = document.getElementById('modalOverlay');
             const modalJump = document.getElementById('modalJump');
 
@@ -686,23 +707,5 @@
             initializeHolidayData();
         })();
     </script>
-
-    <div class="modal-overlay" id="modalOverlay"></div>
-    <div class="modal-jump" id="modalJump">
-        <div class="modal-title">跳转到指定日期</div>
-        <div class="modal-radio-group">
-            <label><input type="radio" name="calendarType" value="solar" checked> 公历</label>
-            <label><input type="radio" name="calendarType" value="lunar"> 农历</label>
-        </div>
-        <div class="modal-inputs">
-            <input type="number" id="jumpYear" placeholder="年" min="1900" max="2099">
-            <input type="number" id="jumpMonth" placeholder="月" min="1" max="12">
-            <input type="number" id="jumpDay" placeholder="日" min="1" max="31">
-        </div>
-        <div class="modal-actions">
-            <button class="modal-btn modal-btn-cancel" id="modalCancel">取消</button>
-            <button class="modal-btn modal-btn-confirm" id="modalConfirm">确认</button>
-        </div>
-    </div>
 </body>
 </html>
