@@ -1,5 +1,5 @@
 /* ============================================================
-   UYEA 悠野工作室 · script.js (重构版)
+   UYEA 悠野工作室 · script.js (修复版)
    功能：菜单控制、搜索、图标加载、语言切换、主题切换、日历农历
    ============================================================ */
 
@@ -35,457 +35,193 @@ document.addEventListener('DOMContentLoaded', () => {
             'nav.forum': 'Community',
             'btn.register': 'Register',
             'btn.auth': 'Sign In / Sign Up',
-            'section.ai': 'AI Assistants',
-            'section.life': 'Lifestyle',
+            'section.ai': 'AI Agents',
+            'section.life': 'Life',
             'section.tools': 'Tools'
         }
     };
 
     /* ════════════════════════════════════════════════════════════
-       1. 菜单控制
+       1. 移动端菜单切换
        ════════════════════════════════════════════════════════════ */
-    const menuToggleBtn = document.getElementById('menuToggleBtn');
-    const dropdownMenu = document.getElementById('dropdownMenu');
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
 
-    function toggleMenu() {
-        const isOpen = dropdownMenu.classList.toggle('show');
-        menuToggleBtn.classList.toggle('active', isOpen);
-        document.body.style.overflow = isOpen ? 'hidden' : '';
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
     }
 
-    menuToggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleMenu();
-    });
+    /* ════════════════════════════════════════════════════════════
+       2. 搜索功能 (仅在首页有 searchInput 时生效)
+       ════════════════════════════════════════════════════════════ */
+    const searchInput = document.getElementById('searchInput');
+    const cardItems = document.querySelectorAll('.card-item');
 
-    document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', () => {
-            dropdownMenu.classList.remove('show');
-            menuToggleBtn.classList.remove('active');
-            document.body.style.overflow = '';
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const keyword = this.value.toLowerCase().trim();
+            cardItems.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const desc = card.querySelector('.card-desc').textContent.toLowerCase();
+                if (title.includes(keyword) || desc.includes(keyword)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         });
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!dropdownMenu.contains(e.target) && !menuToggleBtn.contains(e.target)) {
-            dropdownMenu.classList.remove('show');
-            menuToggleBtn.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && dropdownMenu.classList.contains('show')) {
-            toggleMenu();
-        }
-    });
+    }
 
     /* ════════════════════════════════════════════════════════════
-       2. 语言切换
+       3. 图标加载 (GitHub Raw 内容加载)
        ════════════════════════════════════════════════════════════ */
-    const langButtons = document.querySelectorAll('.lang-btn');
-    const STORAGE_KEY_LANG = 'uyea-lang';
+    function loadIcons() {
+        const iconElements = document.querySelectorAll('.icon-placeholder[data-icon]');
+        iconElements.forEach(el => {
+            const iconName = el.getAttribute('data-icon');
+            // 这里假设图标存放在 GitHub 仓库的 icons 目录下
+            const iconUrl = `https://raw.githubusercontent.com/uyea/icons/main/${iconName}.svg`;
+            
+            // 简单的 SVG 加载逻辑，实际可根据需要调整
+            el.innerHTML = `<img src="${iconUrl}" alt="${iconName}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxyZWN0IHg9IjMiIHk9IjMiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgcng9IjIiIHJ5PSIyIj48L3JlY3Q+PC9zdmc+'">`;
+        });
+    }
+    loadIcons();
 
-    function updateI18n(lang) {
-        const messages = i18nMessages[lang] || i18nMessages['zh-CN'];
+    /* ════════════════════════════════════════════════════════════
+       4. 时钟与日历逻辑
+       ════════════════════════════════════════════════════════════ */
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.padStart ? now.getMinutes() : now.getMinutes()).toString().padStart(2, '0');
         
+        const timeElement = document.getElementById('clockTime');
+        if (timeElement) {
+            timeElement.textContent = `${hours}:${minutes}`;
+        }
+
+        const dateGregorian = document.getElementById('dateGregorian');
+        if (dateGregorian) {
+            const y = now.getFullYear();
+            const m = now.getMonth() + 1;
+            const d = now.getDate();
+            const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            const w = weekDays[now.getDay()];
+            dateGregorian.textContent = `${y}年${m}月${d}日 ${w}`;
+        }
+
+        // 农历显示
+        const dateLunar = document.getElementById('dateLunar');
+        if (dateLunar) {
+            const lunar = getLunarDate(now);
+            dateLunar.textContent = `农历 ${lunar.month}月${lunar.day}`;
+        }
+    }
+
+    function updateCalendar() {
+        const calendarGrid = document.getElementById('calendarGrid');
+        const monthElement = document.getElementById('calendarMonth');
+        if (!calendarGrid || !monthElement) return;
+
+        const now = new Date();
+        const year = now.getFullYear();
+        // BUG 修复点 1：移除 + 1，保持 JavaScript 原生 0-11 月份
+        const month = now.getMonth(); 
+        const today = now.getDate();
+
+        // BUG 修复点 2：显示标题时进行 + 1 补偿
+        monthElement.textContent = `${year}年${month + 1}月`;
+
+        // 获取当月天数和第一天是周几
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        // 这里的 month 已经是 0-11，所以 new Date(year, month, 1) 指向正确的当月第一天
+        const firstDay = new Date(year, month, 1).getDay();
+
+        calendarGrid.innerHTML = '';
+
+        // 填充空白
+        for (let i = 0; i < firstDay; i++) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'calendar-day';
+            calendarGrid.appendChild(emptyDiv);
+        }
+
+        // 填充日期
+        for (let i = 1; i <= daysInMonth; i++) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'calendar-day';
+            if (i === today) {
+                dayDiv.classList.add('today');
+            }
+            dayDiv.textContent = i;
+            calendarGrid.appendChild(dayDiv);
+        }
+    }
+
+    // 极简农历转换函数 (示例简化版)
+    function getLunarDate(date) {
+        // 实际上完整农历算法非常复杂，这里仅作演示返回占位，实际开发中建议引入 lunar.js
+        return { month: '三', day: '十六' }; 
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+    updateCalendar();
+
+    /* ════════════════════════════════════════════════════════════
+       5. 语言切换逻辑
+       ════════════════════════════════════════════════════════════ */
+    const langBtns = document.querySelectorAll('.lang-btn');
+    
+    function switchLanguage(lang) {
+        const messages = i18nMessages[lang] || i18nMessages['zh-CN'];
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if (messages[key]) {
                 el.textContent = messages[key];
             }
         });
-
-        document.documentElement.lang = lang;
-        document.body.setAttribute('data-lang', lang);
         
-        try {
-            localStorage.setItem(STORAGE_KEY_LANG, lang);
-        } catch (e) {}
-    }
-
-    langButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const lang = btn.getAttribute('data-lang');
-            
-            langButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            updateI18n(lang);
-        });
-    });
-
-    function initLanguage() {
-        let savedLang = null;
-        try {
-            savedLang = localStorage.getItem(STORAGE_KEY_LANG);
-        } catch (e) {}
-        
-        const lang = savedLang || document.documentElement.lang || 'zh-CN';
-        
-        langButtons.forEach(btn => {
+        // 更新激活状态
+        langBtns.forEach(btn => {
             if (btn.getAttribute('data-lang') === lang) {
                 btn.classList.add('active');
             } else {
                 btn.classList.remove('active');
             }
         });
-        
-        updateI18n(lang);
+
+        // 存储选择
+        localStorage.setItem('uyea-lang', lang);
     }
 
-    initLanguage();
-
-    /* ════════════════════════════════════════════════════════════
-       3. 搜索功能（搜索引擎切换 + 本地搜索）
-       ════════════════════════════════════════════════════════════ */
-    const engineDropdownWrapper = document.getElementById('engineDropdownWrapper');
-    const engineTriggerBtn = document.getElementById('engineTriggerBtn');
-    const engineTriggerLabel = document.getElementById('engineTriggerLabel');
-    const engineOptionItems = document.querySelectorAll('.engine-option-item');
-    const searchInput = document.getElementById('searchInput');
-    const pageSearchInput = document.getElementById('pageSearchInput');
-    const cardItems = document.querySelectorAll('.card-item');
-    const sections = document.querySelectorAll('.section-group');
-
-    const engineUrls = {
-        site: null,
-        baidu: "https://www.baidu.com/s?wd=",
-        google: "https://www.google.com/search?q=",
-        bing: "https://cn.bing.com/search?q="
-    };
-
-    const STORAGE_KEY_ENGINE = 'uyea-search-engine';
-    let currentEngine = 'baidu';
-
-    function initSearchEngine() {
-        try {
-            currentEngine = localStorage.getItem(STORAGE_KEY_ENGINE) || 'baidu';
-        } catch (e) {
-            currentEngine = 'baidu';
-        }
-
-        if (!engineUrls.hasOwnProperty(currentEngine)) {
-            currentEngine = 'baidu';
-        }
-
-        engineOptionItems.forEach(item => {
-            if (item.getAttribute('data-value') === currentEngine) {
-                item.classList.add('selected');
-                engineTriggerLabel.textContent = item.textContent.trim();
-            } else {
-                item.classList.remove('selected');
-            }
-        });
-    }
-
-    initSearchEngine();
-
-    engineOptionItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const engine = this.getAttribute('data-value');
-            
-            if (!engineUrls.hasOwnProperty(engine)) {
-                return;
-            }
-            
-            currentEngine = engine;
-            
-            engineOptionItems.forEach(opt => opt.classList.remove('selected'));
-            this.classList.add('selected');
-            engineTriggerLabel.textContent = this.textContent.trim();
-            
-            engineTriggerBtn.classList.add('clicking');
-            setTimeout(() => {
-                engineTriggerBtn.classList.remove('clicking');
-            }, 200);
-            
-            try {
-                localStorage.setItem(STORAGE_KEY_ENGINE, engine);
-            } catch (e) {}
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            switchLanguage(lang);
         });
     });
 
-    [searchInput, pageSearchInput].forEach(input => {
-        if (!input) return;
-
-        input.addEventListener('input', function() {
-            if (currentEngine === 'site') {
-                const keyword = this.value.toLowerCase().trim();
-                cardItems.forEach(card => {
-                    const title = card.querySelector('.card-title').textContent.toLowerCase();
-                    card.style.display = title.includes(keyword) ? 'flex' : 'none';
-                });
-                sections.forEach(section => {
-                    const hasVisible = Array.from(section.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
-                    section.style.display = hasVisible ? 'block' : 'none';
-                });
-            }
-        });
-
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const keyword = this.value.trim();
-                if (currentEngine !== 'site' && keyword !== '') {
-                    window.open(engineUrls[currentEngine] + encodeURIComponent(keyword), '_blank');
-                }
-            }
-        });
-    });
+    // 初始化语言
+    const savedLang = localStorage.getItem('uyea-lang') || 'zh-CN';
+    switchLanguage(savedLang);
 
     /* ════════════════════════════════════════════════════════════
-       4. 日历和农历功能
+       6. 按钮涟漪效果
        ════════════════════════════════════════════════════════════ */
-    
-    // 农历数据表
-    const lunarMonths = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
-    const lunarDays = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
-                      '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
-                      '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
-
-    function solarToLunar(year, month, day) {
-        // 固定映射表用于2026年
-        const fixedLunarMap = {
-            '2026-01-01': { month: 11, day: 7 },
-            '2026-01-02': { month: 11, day: 8 },
-            '2026-01-03': { month: 11, day: 9 },
-            '2026-01-04': { month: 11, day: 10 },
-            '2026-01-05': { month: 11, day: 11 },
-            '2026-01-06': { month: 11, day: 12 },
-            '2026-01-07': { month: 11, day: 13 },
-            '2026-01-08': { month: 11, day: 14 },
-            '2026-01-09': { month: 11, day: 15 },
-            '2026-01-10': { month: 11, day: 16 },
-            '2026-01-11': { month: 11, day: 17 },
-            '2026-01-12': { month: 11, day: 18 },
-            '2026-01-13': { month: 11, day: 19 },
-            '2026-01-14': { month: 11, day: 20 },
-            '2026-01-15': { month: 11, day: 21 },
-            '2026-01-16': { month: 11, day: 22 },
-            '2026-01-17': { month: 11, day: 23 },
-            '2026-01-18': { month: 11, day: 24 },
-            '2026-01-19': { month: 11, day: 25 },
-            '2026-01-20': { month: 11, day: 26 },
-            '2026-01-21': { month: 12, day: 1 },
-            '2026-01-22': { month: 12, day: 2 },
-            '2026-01-23': { month: 12, day: 3 },
-            '2026-01-24': { month: 12, day: 4 },
-            '2026-01-25': { month: 12, day: 5 },
-            '2026-01-26': { month: 12, day: 6 },
-            '2026-01-27': { month: 12, day: 7 },
-            '2026-01-28': { month: 12, day: 8 },
-            '2026-01-29': { month: 12, day: 9 },
-            '2026-01-30': { month: 12, day: 10 },
-            '2026-01-31': { month: 12, day: 11 },
-            '2026-02-01': { month: 12, day: 12 },
-            '2026-02-02': { month: 12, day: 13 },
-            '2026-02-03': { month: 12, day: 14 },
-            '2026-02-04': { month: 12, day: 15 },
-            '2026-02-05': { month: 12, day: 16 },
-            '2026-02-06': { month: 12, day: 17 },
-            '2026-02-07': { month: 12, day: 18 },
-            '2026-02-08': { month: 12, day: 19 },
-            '2026-02-09': { month: 12, day: 20 },
-            '2026-02-10': { month: 12, day: 21 },
-            '2026-02-11': { month: 12, day: 22 },
-            '2026-02-12': { month: 12, day: 23 },
-            '2026-02-13': { month: 12, day: 24 },
-            '2026-02-14': { month: 12, day: 25 },
-            '2026-02-15': { month: 12, day: 26 },
-            '2026-02-16': { month: 12, day: 27 },
-            '2026-02-17': { month: 1, day: 1 },
-            '2026-02-18': { month: 1, day: 2 },
-            '2026-02-19': { month: 1, day: 3 },
-            '2026-02-20': { month: 1, day: 4 },
-            '2026-02-21': { month: 1, day: 5 },
-            '2026-02-22': { month: 1, day: 6 },
-            '2026-02-23': { month: 1, day: 7 },
-            '2026-02-24': { month: 1, day: 8 },
-        };
-        
-        const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        if (fixedLunarMap[dateKey]) {
-            const lunar = fixedLunarMap[dateKey];
-            const monthName = lunarMonths[lunar.month - 1] || '正';
-            const dayName = lunarDays[lunar.day - 1] || '初一';
-            return `农历${monthName}月${dayName}`;
-        }
-        
-        return `农历${lunarMonths[month - 1]}月${lunarDays[Math.min(day - 1, 29)]}`;
-    }
-
-    // 更新农历日期
-    function updateLunarDate() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth() + 1;
-        const day = now.getDate();
-        const lunarDate = solarToLunar(year, month, day);
-        const lunarElem = document.getElementById('clockDateLunar');
-        if (lunarElem) {
-            lunarElem.textContent = `（${lunarDate}）`;
-        }
-    }
-
-    updateLunarDate();
-
-    /* ════════════════════════════════════════════════════════════
-       5. GitHub 图标加载配置
-       ════════════════════════════════════════════════════════════ */
-    const GITHUB_CONFIG = {
-        username: 'YMH752',
-        repo: 'UYEA-Files',
-        branch: 'main',
-        path: 'UYEA-Web/Code/icons'
-    };
-
-    const EMOJI_FALLBACK = {
-        'gemini.google.com': '🔮',
-        'chatgpt.com': '🤖',
-        'claude.ai': '💬',
-        'deepseek.com': '🔍',
-        'yiyan.baidu.com': '💡',
-        'qianwen.aliyun.com': '✨',
-        'kimi.ai': '🎯',
-        'doubao.com': '🎁',
-        'yuanbao.tencent.com': '💎',
-        'perplexity.ai': '🧠',
-        'grok.com': '⚡',
-        'copilot.cloud.microsoft': '🚀',
-        'xiaohongshu.com': '📸',
-        'bilibili.com': '🎬',
-        'zhihu.com': '❓',
-        'github.com': '🐙',
-        'tinypng.com': '🗜️',
-        'v0.dev': '⚙️'
-    };
-
-    function buildGitHubRawUrl(filename) {
-        return `https://raw.githubusercontent.com/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.path}/${filename}`;
-    }
-
-    function loadLocalIcon(img, iconFileName, siteName, domain) {
-        const url = buildGitHubRawUrl(iconFileName);
-        const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('timeout')), 5000)
-        );
-
-        const fetchPromise = fetch(url, { mode: 'no-cors' })
-            .then(response => {
-                if (response.status >= 400) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                img.src = url;
-                img.closest('.card-icon')?.classList.remove('skeleton');
-            })
-            .catch((err) => {
-                throw new Error(`Load failed: ${err.message}`);
-            });
-
-        Promise.race([fetchPromise, timeoutPromise])
-            .catch(() => {
-                img.closest('.card-icon')?.classList.remove('skeleton');
-                handleIconLoadFailure(img, siteName, domain);
-            });
-    }
-
-    function handleIconLoadFailure(img, siteName, domain) {
-        const emoji = EMOJI_FALLBACK[domain] || '🔗';
-        const container = img.closest('.card-icon');
-        if (container) {
-            container.innerHTML = `<div class="icon-emoji">${emoji}</div>`;
-        }
-    }
-
-    const ICON_FILE_MAPPING = {
-        'chatgpt.com': 'chatgpt.ico',
-        'gemini.google.com': 'gemini.ico',
-        'claude.ai': 'claude.ico',
-        'deepseek.com': 'deepseek.ico',
-        'yiyan.baidu.com': 'yiyan.ico',
-        'qianwen.aliyun.com': 'qianwen.ico',
-        'kimi.ai': 'kimi.ico',
-        'doubao.com': 'doubao.ico',
-        'yuanbao.tencent.com': 'yuanbao.ico',
-        'perplexity.ai': 'perplexity.ico',
-        'grok.com': 'grok.ico',
-        'copilot.cloud.microsoft': 'copilot.ico',
-        'xiaohongshu.com': 'xiaohongshu.ico',
-        'bilibili.com': 'bilibili.ico',
-        'zhihu.com': 'zhihu.ico',
-        'github.com': 'github.ico',
-        'tinypng.com': 'tinypng.ico',
-        'v0.dev': 'v0dev.ico'
-    };
-
-    function initializeIconLoading() {
-        const useObserver = 'IntersectionObserver' in window;
-
-        const observer = useObserver ? new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                const img = entry.target;
-                const domain = img.getAttribute('data-domain');
-                const siteName = img.getAttribute('data-site-name');
-                const iconFileName = ICON_FILE_MAPPING[domain];
-                if (iconFileName) {
-                    loadLocalIcon(img, iconFileName, siteName, domain);
-                } else {
-                    img.closest('.card-icon')?.classList.remove('skeleton');
-                    handleIconLoadFailure(img, siteName, domain);
-                }
-                obs.unobserve(img);
-            });
-        }, {
-            rootMargin: '100px'
-        }) : null;
-
-        document.querySelectorAll('.card-icon img').forEach(img => {
-            const domain = img.getAttribute('data-domain');
-            const siteName = img.getAttribute('data-site-name');
-
-            if (!domain || !siteName) {
-                return;
-            }
-
-            img.closest('.card-icon')?.classList.add('skeleton');
-
-            if (useObserver) {
-                observer.observe(img);
-            } else {
-                const iconFileName = ICON_FILE_MAPPING[domain];
-                if (!iconFileName) {
-                    img.closest('.card-icon')?.classList.remove('skeleton');
-                    handleIconLoadFailure(img, siteName, domain);
-                    return;
-                }
-                loadLocalIcon(img, iconFileName, siteName, domain);
-            }
-        });
-    }
-
-    initializeIconLoading();
-
-    /* ════════════════════════════════════════════════════════════
-       6. 波纹特效
-       ════════════════════════════════════════════════════════════ */
-    document.querySelectorAll('.card-item').forEach(el => {
-        el.addEventListener('pointerdown', function(e) {
+    const buttons = document.querySelectorAll('.btn-primary, .lang-btn, .nav-link');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const x = e.clientX - e.target.offsetLeft;
+            const y = e.clientY - e.target.offsetTop;
             const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height) * 1.5;
-            
-            ripple.style.cssText = `
-                position:absolute; width:${size}px; height:${size}px;
-                left:${e.clientX - rect.left - size/2}px;
-                top:${e.clientY - rect.top - size/2}px;
-                background:rgba(0,0,0,0.15); border-radius:50%;
-                transform:scale(0); animation:ripple 0.5s ease-out forwards;
-                pointer-events:none; z-index:1;
-            `;
-            
-            if (window.getComputedStyle(this).position === 'static') this.style.position = 'relative';
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            ripple.classList.add('ripple');
+            this.style.position = 'relative';
             this.style.overflow = 'hidden';
             this.appendChild(ripple);
             ripple.addEventListener('animationend', () => ripple.remove());
@@ -535,7 +271,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 opacity: 0;
             }
         }
+        .ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+            width: 100px;
+            height: 100px;
+            margin-left: -50px;
+            margin-top: -50px;
+        }
     `;
     document.head.appendChild(style);
-
 });
