@@ -235,44 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ════════════════════════════════════════════════════════════
-       4. 实时时钟更新
-       ════════════════════════════════════════════════════════════ */
-    
-    function updateClock() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        
-        const clockTimeMain = document.getElementById('clockTimeMain');
-        if (clockTimeMain) {
-            clockTimeMain.textContent = `${hours}:${minutes}:${seconds}`;
-        }
-        
-        const year = now.getFullYear();
-        const month = now.getMonth() + 1;
-        const date = now.getDate();
-        
-        const clockDateGregorian = document.getElementById('clockDateGregorian');
-        if (clockDateGregorian) {
-            clockDateGregorian.textContent = `${year}年${month}月${date}日`;
-        }
-        
-        // 实时更新农历日期
-        const lunarDate = solarToLunar(year, month, date);
-        const lunarElem = document.getElementById('clockDateLunar');
-        if (lunarElem) {
-            lunarElem.textContent = `（${lunarDate}）`;
-        }
-    }
-    
-    // 初始更新一次
-    updateClock();
-    // 每秒更新一次
-    setInterval(updateClock, 1000);
-
-    /* ════════════════════════════════════════════════════════════
-       5. 日历和农历功能
+       4. 日历和农历功能
        ════════════════════════════════════════════════════════════ */
     
     // 农历数据表
@@ -282,16 +245,6 @@ document.addEventListener('DOMContentLoaded', () => {
                       '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
 
     function solarToLunar(year, month, day) {
-        // 优先使用 Lunar.js 库（如果已加载）
-        try {
-            if (typeof Lunar !== 'undefined') {
-                const lunar = Lunar.fromSolar(year, month, day);
-                return lunar.toString();
-            }
-        } catch (e) {
-            // 如果库出错，降级到固定映射表
-        }
-        
         // 固定映射表用于2026年
         const fixedLunarMap = {
             '2026-01-01': { month: 11, day: 7 },
@@ -351,11 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
             '2026-02-24': { month: 1, day: 8 },
         };
         
-        const lunarMonths = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
-        const lunarDays = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
-                          '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
-                          '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
-        
         const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         if (fixedLunarMap[dateKey]) {
             const lunar = fixedLunarMap[dateKey];
@@ -364,11 +312,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return `农历${monthName}月${dayName}`;
         }
         
-        // 如果不在固定映射表中，返回占位符
-        return `农历${month}月${day}日`;
+        const safeMonth = Math.max(1, Math.min(month, 12));
+    const safeDay = Math.max(1, Math.min(day, 30));
+    return `农历${lunarMonths[safeMonth - 1]}月${lunarDays[safeDay - 1]}`;
     }
 
-    // 农历日期已在 updateClock() 中实时更新
+    // 更新农历日期
+    function updateLunarDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const day = now.getDate();
+        const lunarDate = solarToLunar(year, month, day);
+        const lunarElem = document.getElementById('clockDateLunar');
+        if (lunarElem) {
+            lunarElem.textContent = `（${lunarDate}）`;
+        }
+    }
+
+    updateLunarDate();
 
     /* ════════════════════════════════════════════════════════════
        5. GitHub 图标加载配置
