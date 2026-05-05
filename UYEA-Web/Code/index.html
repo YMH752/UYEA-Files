@@ -269,7 +269,6 @@
     <!-- 修改位置：删除holidays.js引入 -->
     <!-- 前后逻辑：原为加载本地holidays.js，现改为API获取节假日 -->
     <!-- 修改目的：完全替换为API数据源，无需本地文件 -->
-    <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@2.0.17/lunar.min.js" defer></script>
 
     <!-- ✅ 模态框 HTML（必须在内联脚本之前被解析） -->
     <div class="modal-overlay" id="modalOverlay"></div>
@@ -290,7 +289,10 @@
         </div>
     </div>
 
-    <!-- ✅ 日历内联脚本（移至底部，确保 modalOverlay / modalJump 已加载） -->
+    <!-- ✅ 农历计算库（同步加载，确保内联脚本可用） -->
+    <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@2.0.17/lunar.min.js"></script>
+
+    <!-- ✅ 日历内联脚本（Lunar 库已加载完毕） -->
     <script>
         (function() {
             // 日历全局变量
@@ -345,9 +347,9 @@
                 if (grid) grid.style.display = 'grid';
             }
 
-            // ✅ 农历转换函数（只返回农历日，不返回月份）
+            // ✅ 农历转换函数（使用 lunar-javascript 库，只返回农历日）
             function solarToLunar(year, month, day) {
-                // 优先使用 lunar-javascript 库
+                // 优先使用已加载的 Lunar 库
                 if (typeof Lunar !== 'undefined') {
                     try {
                         const lunar = Lunar.fromSolar(year, month, day);
@@ -357,7 +359,7 @@
                         // 库调用失败时走回退
                     }
                 }
-                // 本地回退：基于 2026-02-17 正月初一 的简化推算
+                // 本地回退（仅当库完全不可用时启用，基于 2026-02-17 正月初一 的简化推算）
                 const baseDate = new Date(2026, 1, 17); // 2026年2月17日 = 正月初一
                 const targetDate = new Date(year, month - 1, day);
                 const diffDays = Math.round((targetDate - baseDate) / (1000 * 60 * 60 * 24));
