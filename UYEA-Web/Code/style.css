@@ -875,10 +875,10 @@ body {
 
 
 .clock-left {
-    /* 修改位置：.clock-left 比例调整为 4:6 */
-    /* 前后逻辑：原 min-width:90px 固定，现为 flex: 0 0 40% 比例 */
-    /* 修改目的：左侧占40%宽度，右侧占60% */
-    flex: 0 0 40%;
+    /* 修改位置：.clock-left 比例调整为 3:7 */
+    /* 前后逻辑：原 flex: 0 0 40%，现为 flex: 0 0 30% */
+    /* 修改目的：时钟占30%，日历占70%，放大时钟显示 */
+    flex: 0 0 30%;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -886,50 +886,51 @@ body {
     align-items: flex-start;
     text-align: left;
     overflow: hidden;
+    padding-right: 8px;
 }
 
 .clock-time-main {
-    /* 修改位置：.clock-time-main 极端压缩 */
-    /* 前后逻辑：原 font-size:28px，现为16px */
-    /* 修改目的：强行压缩时间文字 */
+    /* 修改位置：.clock-time-main 放大 */
+    /* 前后逻辑：原 font-size:16px，现为24px */
+    /* 修改目的：时钟显示更大，减少留白 */
     font-family: 'Space Mono', 'Outfit', monospace;
-    font-size: 16px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--primary);
     letter-spacing: 1px;
-    line-height: 1.1;
+    line-height: 1;
     white-space: nowrap;
 }
 
 .clock-date-gregorian {
-    /* 修改位置：.clock-date-gregorian 极端压缩 */
-    /* 前后逻辑：原 font-size:14px，现为9px */
-    /* 修改目的：强行压缩公历日期 */
-    font-size: 9px;
+    /* 修改位置：.clock-date-gregorian 放大 */
+    /* 前后逻辑：原 font-size:9px，现为12px */
+    /* 修改目的：日期显示更清晰 */
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-secondary);
-    margin-top: 2px;
-    line-height: 1.1;
+    margin-top: 4px;
+    line-height: 1;
     white-space: nowrap;
 }
 
 .clock-date-lunar {
-    /* 修改位置：.clock-date-lunar 极端压缩 */
-    /* 前后逻辑：原 font-size:12px，现为8px */
-    /* 修改目的：强行压缩农历日期 */
-    font-size: 8px;
+    /* 修改位置：.clock-date-lunar 放大 */
+    /* 前后逻辑：原 font-size:8px，现为10px */
+    /* 修改目的：农历显示更清晰 */
+    font-size: 10px;
     font-weight: 400;
     color: var(--text-muted);
-    margin-top: 1px;
-    line-height: 1.1;
+    margin-top: 2px;
+    line-height: 1;
     white-space: nowrap;
 }
 
 .clock-right {
-    /* 修改位置：.clock-right 比例调整为 4:6 */
-    /* 前后逻辑：原 flex: 1 1 auto min-width:160px，现为 flex: 0 0 60% 比例 */
-    /* 修改目的：右侧占60%宽度 */
-    flex: 0 0 60%;
+    /* 修改位置：.clock-right 比例调整为 3:7 */
+    /* 前后逻辑：原 flex: 0 0 60%，现为 flex: 0 0 70% */
+    /* 修改目的：右侧占70%宽度 */
+    flex: 0 0 70%;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -1060,32 +1061,32 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .cell-solar {
-    /* 修改位置：阳历日期极端压缩 */
-    /* 前后逻辑：原 font-size:12px，现为8px */
-    /* 修改目的：强行压缩阳历日期 */
-    font-size: 8px;
+    /* 修改位置：阳历日期 - 比例3:7后放大 */
+    /* 前后逻辑：原 font-size:8px，现为9px */
+    /* 修改目的：日历占比增大，日期可以更大 */
+    font-size: 9px;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1;
 }
 
 .calendar-cell.today .cell-solar {
-    /* 修改位置：今天样式极端压缩 */
-    /* 前后逻辑：原 underline，现为 color 变化 */
-    /* 修改目的：节省空间 */
+    /* 修改位置：今天样式 */
+    /* 前后逻辑：原无变化 */
+    /* 修改目的：突出今日日期 */
     font-weight: 800;
     color: var(--primary);
 }
 
 .cell-lunar {
-    /* 修改位置：农历日期极端压缩 */
-    /* 前后逻辑：原 font-size:9px，现为6px */
-    /* 修改目的：强行压缩农历日期 */
-    font-size: 6px;
+    /* 修改位置：农历日期简化显示 */
+    /* 前后逻辑：原 font-size:6px 显示完整农历，现为7px 仅显示日 */
+    /* 修改目的：只显示农历日（初一、初二等），提高可读性 */
+    font-size: 7px;
     font-weight: 400;
     color: var(--text-muted);
     line-height: 1;
-    max-height: 6px;
+    max-height: 7px;
     overflow: hidden;
 }
 
