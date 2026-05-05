@@ -291,9 +291,11 @@
 
             // 初始化加载节假日数据
             async function initializeHolidayData() {
+                const grid = document.getElementById('calendarGrid');
                 holidayData = await fetchHolidaysByYear(currentCalendarYear);
                 renderCalendar(currentCalendarYear, currentCalendarMonth);
                 renderHolidayBar(currentCalendarYear, currentCalendarMonth);
+                if (grid) grid.style.display = 'grid';
             }
 
             // 农历转换函数
