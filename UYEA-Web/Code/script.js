@@ -257,6 +257,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clockDateGregorian) {
             clockDateGregorian.textContent = `${year}年${month}月${date}日`;
         }
+        
+        // 实时更新农历日期
+        const lunarDate = solarToLunar(year, month, date);
+        const lunarElem = document.getElementById('clockDateLunar');
+        if (lunarElem) {
+            lunarElem.textContent = `（${lunarDate}）`;
+        }
     }
     
     // 初始更新一次
@@ -361,20 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return `农历${month}月${day}日`;
     }
 
-    // 更新农历日期
-    function updateLunarDate() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth() + 1;
-        const day = now.getDate();
-        const lunarDate = solarToLunar(year, month, day);
-        const lunarElem = document.getElementById('clockDateLunar');
-        if (lunarElem) {
-            lunarElem.textContent = `（${lunarDate}）`;
-        }
-    }
-
-    updateLunarDate();
+    // 农历日期已在 updateClock() 中实时更新
 
     /* ════════════════════════════════════════════════════════════
        5. GitHub 图标加载配置
