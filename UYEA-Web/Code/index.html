@@ -82,7 +82,7 @@
     </div>
 
     <!-- ✅ 主内容区 -->
-    <main class="main-content active">
+    <main class="main-content">
         <div class="content-wrapper">
             <!-- 修改位置：时钟区域改为左右布局 -->
             <!-- 前后逻辑：原为单一时钟显示，现分为左侧时钟+农历+右侧日历 -->
@@ -90,7 +90,7 @@
             <div class="clock-display" id="clockDisplay">
                 <div class="clock-left">
                     <div class="clock-time-main" id="clockTimeMain">00:00:00</div>
-                    <div class="clock-date-gregorian" id="clockDateGregorian">2026年1月1日</div>
+                    <div class="clock-date-gregorian" id="clockDateGregorian">2024年1月1日</div>
                     <div class="clock-date-lunar" id="clockDateLunar">（农历正月初一）</div>
                     <div class="mobile-holiday-badge" id="mobileHolidayBadge" style="display:none;"></div>
                 </div>
@@ -111,61 +111,6 @@
                             <div class="weekday">六</div>
                         </div>
                         <div class="calendar-grid" id="calendarGrid"></div>
-                        <div class="calendar-skeleton" id="calendarSkeleton">
-                            <div class="skeleton-weekdays">
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                            </div>
-                            <div class="skeleton-cells">
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div>
-                            </div>
-                        </div>
                         <div class="holiday-bar" id="holidayBar"></div>
                     </div>
                     <button class="calendar-nav-btn calendar-nav-down" id="nextMonth">&#9660;</button>
@@ -273,9 +218,10 @@
     <script>
         (function() {
             // 日历全局变量
-            let currentCalendarYear = 2026;
-            let currentCalendarMonth = 1;
-            let selectedDate = new Date(2026, 0, 1);
+            const nowDate = new Date();
+            let currentCalendarYear = nowDate.getFullYear();
+            let currentCalendarMonth = nowDate.getMonth() + 1;
+            let selectedDate = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate());
             let isAnimating = false;
             let touchStartY = 0;
             let touchEndY = 0;
@@ -311,17 +257,9 @@
 
             // 初始化加载节假日数据
             async function initializeHolidayData() {
-                const skeleton = document.getElementById('calendarSkeleton');
-                const grid = document.getElementById('calendarGrid');
-                if (skeleton) skeleton.classList.remove('hidden');
-                if (grid) grid.style.display = 'none';
-
                 holidayData = await fetchHolidaysByYear(currentCalendarYear);
                 renderCalendar(currentCalendarYear, currentCalendarMonth);
                 renderHolidayBar(currentCalendarYear, currentCalendarMonth);
-
-                if (skeleton) skeleton.classList.add('hidden');
-                if (grid) grid.style.display = 'grid';
             }
 
             // 农历转换函数
@@ -532,8 +470,6 @@
                     } else {
                         isAnimating = false;
                     }
-                    const skeleton = document.getElementById('calendarSkeleton');
-                    if (skeleton) skeleton.classList.add('hidden');
                 }, 200);
             };
 
@@ -622,8 +558,6 @@
                         renderHolidayBar(currentCalendarYear, currentCalendarMonth);
                     } finally {
                         fetchLock = false;
-                        const skeleton = document.getElementById('calendarSkeleton');
-                        if (skeleton) skeleton.classList.add('hidden');
                     }
                 })();
 
