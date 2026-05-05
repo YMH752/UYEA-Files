@@ -111,6 +111,61 @@
                             <div class="weekday">六</div>
                         </div>
                         <div class="calendar-grid" id="calendarGrid"></div>
+                        <div class="calendar-skeleton" id="calendarSkeleton">
+                            <div class="skeleton-weekdays">
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                            </div>
+                            <div class="skeleton-cells">
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                            </div>
+                        </div>
                         <div class="holiday-bar" id="holidayBar"></div>
                     </div>
                     <button class="calendar-nav-btn calendar-nav-down" id="nextMonth">&#9660;</button>
@@ -256,9 +311,17 @@
 
             // 初始化加载节假日数据
             async function initializeHolidayData() {
+                const skeleton = document.getElementById('calendarSkeleton');
+                const grid = document.getElementById('calendarGrid');
+                if (skeleton) skeleton.classList.remove('hidden');
+                if (grid) grid.style.display = 'none';
+
                 holidayData = await fetchHolidaysByYear(currentCalendarYear);
                 renderCalendar(currentCalendarYear, currentCalendarMonth);
                 renderHolidayBar(currentCalendarYear, currentCalendarMonth);
+
+                if (skeleton) skeleton.classList.add('hidden');
+                if (grid) grid.style.display = 'grid';
             }
 
             // 农历转换函数
@@ -469,6 +532,8 @@
                     } else {
                         isAnimating = false;
                     }
+                    const skeleton = document.getElementById('calendarSkeleton');
+                    if (skeleton) skeleton.classList.add('hidden');
                 }, 200);
             };
 
@@ -557,6 +622,8 @@
                         renderHolidayBar(currentCalendarYear, currentCalendarMonth);
                     } finally {
                         fetchLock = false;
+                        const skeleton = document.getElementById('calendarSkeleton');
+                        if (skeleton) skeleton.classList.add('hidden');
                     }
                 })();
 
