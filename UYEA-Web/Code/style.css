@@ -1052,7 +1052,8 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-cell.selected {
-    border: 2px solid var(--primary);
+    outline: 2px solid var(--primary);
+    outline-offset: -1px;
     background: var(--primary-light);
 }
 
