@@ -305,7 +305,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 15px;
     color: var(--text-primary);
     transition: all 0.2s ease;
     position: relative;
@@ -692,7 +692,7 @@ body {
     }
     
     .section-title {
-        font-size: 18px;
+        font-size: 15px;
     }
     
     .grid-container {
@@ -875,63 +875,62 @@ body {
 
 
 .clock-left {
-    /* 修改位置：.clock-left 比例调整为 3:7 */
-    /* 前后逻辑：原 flex: 0 0 40%，现为 flex: 0 0 30% */
-    /* 修改目的：时钟占30%，日历占70%，放大时钟显示 */
-    flex: 0 0 30%;
-    min-width: 0;
+    /* 修改位置：.clock-left 极端压缩 */
+    /* 前后逻辑：原 min-width:200px，现为 min-width:90px */
+    /* 修改目的：强行压缩左侧时间区 */
+    flex: 0 0 auto;
+    min-width: 90px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
     text-align: left;
     overflow: hidden;
-    padding-right: 8px;
 }
 
 .clock-time-main {
-    /* 修改位置：.clock-time-main 放大 */
-    /* 前后逻辑：原 font-size:16px，现为24px */
-    /* 修改目的：时钟显示更大，减少留白 */
+    /* 修改位置：.clock-time-main 极端压缩 */
+    /* 前后逻辑：原 font-size:28px，现为16px */
+    /* 修改目的：强行压缩时间文字 */
     font-family: 'Space Mono', 'Outfit', monospace;
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--primary);
     letter-spacing: 1px;
-    line-height: 1;
+    line-height: 1.1;
     white-space: nowrap;
 }
 
 .clock-date-gregorian {
-    /* 修改位置：.clock-date-gregorian 放大 */
-    /* 前后逻辑：原 font-size:9px，现为12px */
-    /* 修改目的：日期显示更清晰 */
-    font-size: 12px;
+    /* 修改位置：.clock-date-gregorian 极端压缩 */
+    /* 前后逻辑：原 font-size:14px，现为9px */
+    /* 修改目的：强行压缩公历日期 */
+    font-size: 9px;
     font-weight: 500;
     color: var(--text-secondary);
-    margin-top: 4px;
-    line-height: 1;
+    margin-top: 2px;
+    line-height: 1.1;
     white-space: nowrap;
 }
 
 .clock-date-lunar {
-    /* 修改位置：.clock-date-lunar 放大 */
-    /* 前后逻辑：原 font-size:8px，现为10px */
-    /* 修改目的：农历显示更清晰 */
-    font-size: 10px;
+    /* 修改位置：.clock-date-lunar 极端压缩 */
+    /* 前后逻辑：原 font-size:12px，现为8px */
+    /* 修改目的：强行压缩农历日期 */
+    font-size: 8px;
     font-weight: 400;
     color: var(--text-muted);
-    margin-top: 2px;
-    line-height: 1;
+    margin-top: 1px;
+    line-height: 1.1;
     white-space: nowrap;
 }
 
 .clock-right {
-    /* 修改位置：.clock-right 比例调整为 3:7 */
-    /* 前后逻辑：原 flex: 0 0 60%，现为 flex: 0 0 70% */
-    /* 修改目的：右侧占70%宽度 */
-    flex: 0 0 70%;
-    min-width: 0;
+    /* 修改位置：.clock-right 极端压缩 */
+    /* 前后逻辑：原 min-width:300px，现为 min-width:160px */
+    /* 修改目的：强行压缩右侧月历区 */
+    flex: 1 1 auto;
+    min-width: 160px;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -958,25 +957,24 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-header {
-    /* 修改位置：.calendar-header 居中对齐 */
-    /* 前后逻辑：原 justify-content:space-between，现为center */
-    /* 修改目的：标题栏内容居中 */
+    /* 修改位置：.calendar-header 极端压缩 */
+    /* 前后逻辑：原 margin-bottom:8px，现为2px */
+    /* 修改目的：强行压缩标题栏 */
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     margin-bottom: 2px;
 }
 
 .calendar-title {
-    /* 修改位置：.calendar-title 居中对齐 */
-    /* 前后逻辑：原 text-align:left flex:1，现为text-align:center */
-    /* 修改目的：日期标题居中显示 */
+    /* 修改位置：.calendar-title 极端压缩 */
+    /* 前后逻辑：原 font-size:14px，现为9px */
+    /* 修改目的：强行压缩标题字号 */
     font-size: 9px;
     font-weight: 700;
     color: var(--text-primary);
-    text-align: center;
-    flex: 0;
-    margin-right: 4px;
+    text-align: left;
+    flex: 1;
 }
 
 .calendar-jump-btn-header {
@@ -1031,9 +1029,9 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-cell {
-    /* 修改位置：.calendar-cell 居中对齐 */
-    /* 前后逻辑：原 align-items:flex-start，现为center */
-    /* 修改目的：日期内容在单元格中居中 */
+    /* 修改位置：.calendar-cell 极端压缩 */
+    /* 前后逻辑：原 min-height:40px padding:4px，现为14px/1px */
+    /* 修改目的：强行将单元格压到极限，塞进参考图尺寸 */
     min-height: 14px;
     padding: 1px;
     border-radius: 2px;
@@ -1043,8 +1041,7 @@ html[data-theme="dark"] .calendar-container {
     transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
     gap: 0;
     position: relative;
     overflow: hidden;
@@ -1061,32 +1058,32 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .cell-solar {
-    /* 修改位置：阳历日期 - 比例3:7后放大 */
-    /* 前后逻辑：原 font-size:8px，现为9px */
-    /* 修改目的：日历占比增大，日期可以更大 */
-    font-size: 9px;
+    /* 修改位置：阳历日期极端压缩 */
+    /* 前后逻辑：原 font-size:12px，现为8px */
+    /* 修改目的：强行压缩阳历日期 */
+    font-size: 8px;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1;
 }
 
 .calendar-cell.today .cell-solar {
-    /* 修改位置：今天样式 */
-    /* 前后逻辑：原无变化 */
-    /* 修改目的：突出今日日期 */
+    /* 修改位置：今天样式极端压缩 */
+    /* 前后逻辑：原 underline，现为 color 变化 */
+    /* 修改目的：节省空间 */
     font-weight: 800;
     color: var(--primary);
 }
 
 .cell-lunar {
-    /* 修改位置：农历日期简化显示 */
-    /* 前后逻辑：原 font-size:6px 显示完整农历，现为7px 仅显示日 */
-    /* 修改目的：只显示农历日（初一、初二等），提高可读性 */
-    font-size: 7px;
+    /* 修改位置：农历日期极端压缩 */
+    /* 前后逻辑：原 font-size:9px，现为6px */
+    /* 修改目的：强行压缩农历日期 */
+    font-size: 6px;
     font-weight: 400;
     color: var(--text-muted);
     line-height: 1;
-    max-height: 7px;
+    max-height: 6px;
     overflow: hidden;
 }
 
@@ -1465,9 +1462,47 @@ html[data-theme="dark"] .holiday-bar.filtered {
 }
 
 /* ════════════════════════════════════════════════════════════
-   日历内容淡入
+   日历骨架屏加载动画
    ════════════════════════════════════════════════════════════ */
 
+.calendar-skeleton {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    animation: fadeUp 0.3s ease;
+}
+
+.calendar-skeleton .skeleton-weekdays {
+    display: contents;
+}
+
+.calendar-skeleton .skeleton-weekday {
+    height: 14px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    margin-bottom: 1px;
+}
+
+.calendar-skeleton .skeleton-cells {
+    display: contents;
+}
+
+.calendar-skeleton .skeleton-cell {
+    min-height: 14px;
+    padding: 1px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.calendar-skeleton.hidden {
+    display: none;
+}
+
+/* 日历内容淡入 */
 .calendar-grid {
     animation: fadeUp 0.3s ease;
 }
