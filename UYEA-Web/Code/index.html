@@ -345,14 +345,14 @@
                 if (grid) grid.style.display = 'grid';
             }
 
-            // ✅ 农历转换函数（修复前：依赖正则匹配中文数字失败；修复后：优先使用 lunar 库的中文方法，回退用本地数组）
+            // ✅ 农历转换函数（只返回农历日，不返回月份）
             function solarToLunar(year, month, day) {
                 // 优先使用 lunar-javascript 库
                 if (typeof Lunar !== 'undefined') {
                     try {
                         const lunar = Lunar.fromSolar(year, month, day);
-                        // getMonthInChinese() 返回如 "正月"，getDayInChinese() 返回如 "初一"
-                        return lunar.getMonthInChinese() + lunar.getDayInChinese();
+                        // 只返回“日”部分，如“初一”、“廿三”
+                        return lunar.getDayInChinese();
                     } catch (e) {
                         // 库调用失败时走回退
                     }
@@ -362,14 +362,12 @@
                 const targetDate = new Date(year, month - 1, day);
                 const diffDays = Math.round((targetDate - baseDate) / (1000 * 60 * 60 * 24));
                 
-                const lunarMonths = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
                 const lunarDays = [
                     '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
                     '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
                     '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'
                 ];
                 
-                let lunarYear = 2026;
                 let lunarMonth = 1;
                 let lunarDay = diffDays + 1;
                 
@@ -379,21 +377,18 @@
                     lunarMonth++;
                     if (lunarMonth > 12) {
                         lunarMonth = 1;
-                        lunarYear++;
                     }
                 }
                 while (lunarDay < 1) {
                     lunarMonth--;
                     if (lunarMonth < 1) {
                         lunarMonth = 12;
-                        lunarYear--;
                     }
                     lunarDay += 30;
                 }
                 
-                const monthIdx = Math.max(0, Math.min(lunarMonth - 1, 11));
                 const dayIdx = Math.max(0, Math.min(lunarDay - 1, 29));
-                return lunarMonths[monthIdx] + '月' + lunarDays[dayIdx];
+                return lunarDays[dayIdx];
             }
 
             // 修改位置：renderCalendar函数添加日期与星期居中对齐
@@ -445,7 +440,7 @@
                         }
                     }
 
-                    // ✅ 农历日期：直接使用 solarToLunar 的结果（已确认返回中文月日）
+                    // ✅ 农历日期：只显示日（初一、廿三等）
                     const lunarStr = solarToLunar(year, month, day);
                     if (lunarStr) {
                         cellHTML += `<div class="cell-lunar">${lunarStr}</div>`;
