@@ -24,103 +24,129 @@
     --text-muted:       #999999;   /* 弱文字 */
     
     /* 节假日颜色 */
-    --holiday-cn:       #FF6B6B;   /* 中国节假日红 */
-    --holiday-intl:     #4A90E2;   /* 国际节假日蓝 */
-    
-    /* 尺寸与间距 */
-    --header-h:         70px;
-    --radius-sm:        8px;
-    --radius-md:        12px;
-    --radius-lg:        16px;
-    --duration:         0.3s;
-    --shadow-sm:        0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-md:        0 10px 30px rgba(0, 0, 0, 0.12);
-    --shadow-lg:        0 20px 50px rgba(0, 0, 0, 0.15);
+    --holiday-cn:       #FF6B6B;   /* 红色系 */
+    --rest-day:         #4ECDC4;   /* 青色系 */
 }
 
-/* ✅ 暗黑模式变量 */
-html[data-theme="dark"] {
-    --bg:               #0F0F0F;
+/* 暗黑模式变量 */
+[data-theme="dark"] {
+    --bg:               #0A0A0A;
     --surface:          #1A1A1A;
     --border:           #333333;
     --text-primary:     #F5F5F5;
-    --text-secondary:   #CCCCCC;
-    --text-muted:       #888888;
+    --text-secondary:   #999999;
+    --text-muted:       #666666;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* 全局重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
 body {
-    font-family: 'Noto Sans SC', 'Fredoka', system-ui, -apple-system, sans-serif;
+    font-family: 'Fredoka', 'Outfit', 'Noto Sans SC', sans-serif;
     background-color: var(--bg);
     color: var(--text-primary);
-    overflow-x: hidden;
     line-height: 1.6;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
 }
 
 /* ════════════════════════════════════════════════════════════
-   顶部导航栏
+   1. 顶部导航栏 (Navbar)
    ════════════════════════════════════════════════════════════ */
-
-.top-header {
-    width: 100%;
-    height: var(--header-h);
-    background: var(--surface);
-    border-bottom: 2px solid var(--accent-1);
-    position: sticky;
+.navbar {
+    position: fixed;
     top: 0;
-    z-index: 1000;
-    box-shadow: var(--shadow-sm);
-}
-
-.header-container {
-    height: 100%;
-    max-width: 100%;
-    padding: 0 24px;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: var(--surface);
+    border-bottom: 2px solid var(--primary);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0 40px;
+    z-index: 1000;
 }
 
-/* LOGO 部分 */
-.logo-section {
+.nav-left {
     display: flex;
     align-items: center;
+    gap: 30px;
 }
 
-.logo-text {
-    font-family: 'Outfit', 'Space Mono', monospace;
-    font-size: 32px;
+.logo {
+    font-size: 24px;
     font-weight: 900;
-    background: linear-gradient(135deg, var(--primary), var(--accent-1), var(--accent-2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    letter-spacing: -1px;
+    color: var(--primary);
     text-decoration: none;
-    letter-spacing: 3px;
-    transition: transform 0.2s ease;
-}
-
-.logo-text:hover {
-    transform: scale(1.05);
-}
-
-/* 右侧功能区 */
-.header-right {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 8px;
 }
 
-/* 语言选择器 */
-.lang-selector {
+.logo-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 2px;
+}
+
+.nav-links {
     display: flex;
-    gap: 4px;
-    background: var(--bg);
+    gap: 20px;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 8px 12px;
     border-radius: 8px;
+    transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.nav-item:hover, .nav-item.active {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* 语言切换器 */
+.lang-switch {
+    display: flex;
+    background: var(--primary-light);
     padding: 4px;
+    border-radius: 10px;
     position: relative;
+    border: 1px solid var(--border);
+}
+
+.lang-btn {
+    border: none;
+    background: none;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 1;
+    transition: color 0.3s;
+}
+
+.lang-btn.active {
+    color: var(--primary);
 }
 
 .lang-highlight {
@@ -128,767 +154,179 @@ body {
     top: 4px;
     left: 4px;
     height: calc(100% - 8px);
+    background: #FFFFFF;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 0;
+}
+
+.auth-btn {
     background: var(--primary);
-    border-radius: 6px;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 1;
-    pointer-events: none;
-}
-
-.lang-btn {
-    padding: 6px 12px;
+    color: #FFF;
     border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
     cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    position: relative;
-    z-index: 2;
+    transition: transform 0.2s;
 }
 
-.lang-btn.active {
-    background: transparent;
-    color: white;
+.auth-btn:active {
+    transform: scale(0.95);
 }
 
-/* 搜索框 */
-.header-search-wrapper {
+/* ════════════════════════════════════════════════════════════
+   2. 搜索区域 (Search Section)
+   ════════════════════════════════════════════════════════════ */
+.hero-section {
+    padding: 120px 40px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
 .search-container {
-    display: flex;
-    align-items: center;
-    background: var(--bg);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    height: 40px;
-    overflow: visible;
-}
-
-.engine-dropdown-wrapper {
+    width: 100%;
+    max-width: 700px;
     position: relative;
-    flex-shrink: 0;
+    margin-bottom: 40px;
 }
 
-.engine-trigger-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0 12px;
-    height: 40px;
-    background: var(--accent-1);
-    color: white;
-    border: none;
-    border-radius: 8px 0 0 8px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s ease;
-}
-
-/* 修改位置：添加引擎按钮点击动画 */
-/* 前后逻辑：原无动画，现添加反弹效果 */
-/* 修改目的：增强用户交互反馈 */
-.engine-trigger-btn:hover {
-    background: var(--accent-2);
-}
-
-.engine-trigger-btn:active,
-.engine-trigger-btn.clicking {
-    animation: buttonBounce 0.2s ease-out;
-}
-
-.engine-dropdown-list {
-    display: none;
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    min-width: 100%;
+.search-box {
+    width: 100%;
+    height: 70px;
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: var(--shadow-md);
-    z-index: 200;
-    overflow: hidden;
-    animation: dropdownSlideIn 0.3s ease-out;
-}
-
-/* 修改位置：添加下拉列表显示动画 */
-/* 前后逻辑：原无动画，现添加淡入滑出效果 */
-/* 修改目的：增强动画体验 */
-
-.engine-dropdown-wrapper:hover .engine-dropdown-list,
-.engine-dropdown-wrapper.open .engine-dropdown-list {
-    display: block;
-}
-
-.engine-option-item {
-    padding: 10px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-    transition: all 0.2s ease;
-}
-
-.engine-option-item:last-child {
-    border-bottom: none;
-}
-
-.engine-option-item:hover {
-    background: var(--bg);
-    color: var(--primary);
-}
-
-.engine-option-item.selected {
-    color: var(--primary);
-    font-weight: 700;
-}
-
-.search-input {
-    border: none;
-    background: transparent;
-    outline: none;
-    width: 180px;
-    padding: 0 12px;
-    font-size: 13px;
-    color: var(--text-primary);
-}
-
-.search-input::placeholder {
-    color: var(--text-muted);
-}
-
-/* 认证区域 */
-.auth-section {
-    display: flex;
-    align-items: center;
-}
-
-.login-btn {
-    padding: 8px 16px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 13px;
+    border: 3px solid var(--primary);
+    border-radius: 20px;
+    padding: 0 140px 0 30px;
+    font-size: 18px;
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: 'Outfit', sans-serif;
+    font-family: inherit;
+    box-shadow: 8px 8px 0px var(--border);
+    transition: all 0.3s;
 }
 
-.login-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+.search-box:focus {
+    outline: none;
+    transform: translate(-2px, -2px);
+    box-shadow: 12px 12px 0px var(--primary);
 }
 
-.login-btn span {
-    display: inline-block;
-    font-size: 14px;
-}
-
-/* 放大镜图标按钮 */
-.search-icon-btn {
+.search-engine-select {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    gap: 8px;
+}
+
+.engine-btn {
     width: 40px;
     height: 40px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    color: var(--text-primary);
-    transition: all 0.2s ease;
-    position: relative;
-}
-
-.search-icon-btn:hover {
-    background: var(--primary-light);
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-/* 下拉搜索框容器 */
-.search-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    width: 320px;
-    background: var(--surface);
-    border: 2px solid var(--accent-1);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    z-index: 300;
-    padding: 16px;
-    animation: fadeUp 0.2s ease;
-}
-
-.search-dropdown.show {
-    display: block;
-}
-
-.search-dropdown .search-container {
-    width: 100%;
-    border: 1px solid var(--border);
-}
-
-.search-dropdown .search-input {
-    width: 100%;
-}
-
-/* 菜单切换按钮 */
-.menu-toggle {
-    display: flex;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.menu-toggle span {
-    width: 24px;
-    height: 2px;
-    background: var(--text-primary);
-    border-radius: 2px;
-    transition: all 0.3s ease;
-}
-
-.menu-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(10px, 10px);
-}
-
-.menu-toggle.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(10px, -10px);
-}
-
-/* 下拉菜单 */
-.dropdown-menu {
-    display: none;
-    position: fixed;
-    top: var(--header-h);
-    left: 0;
-    right: 0;
-    background: var(--surface);
-    border-bottom: 2px solid var(--border);
-    box-shadow: var(--shadow-md);
-    z-index: 999;
-    animation: slideInRight 0.3s ease;
-    max-width: 100%;
-}
-
-.dropdown-menu.show {
-    display: flex;
-    flex-direction: column;
-}
-
-.menu-nav {
-    display: flex;
-    flex-direction: column;
-    padding: 12px 0;
-    flex: 1;
-}
-
-.menu-item {
-    padding: 16px 24px;
-    text-decoration: none;
-    color: var(--text-primary);
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    border-left: 4px solid transparent;
-}
-
-.menu-item:hover {
-    background: var(--bg);
-    color: var(--primary);
-    border-left-color: var(--primary);
-}
-
-.menu-item.active {
-    background: var(--bg);
-    color: var(--primary);
-    border-left-color: var(--primary);
-}
-
-.menu-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 0;
-}
-
-.menu-auth-section {
-    padding: 12px 24px;
-    border-top: 1px solid var(--border);
-}
-
-.register-btn {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid var(--primary);
-    background: var(--primary);
-    color: white;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: 'Noto Sans SC', 'Fredoka', system-ui, sans-serif;
-}
-
-.register-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
-.register-btn span {
-    display: inline-block;
-}
-
-/* ════════════════════════════════════════════════════════════
-   主内容区
-   ════════════════════════════════════════════════════════════ */
-
-.main-content {
-    flex: 1;
-    width: 100%;
-    padding-top: var(--header-h);
-}
-
-.content-wrapper {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 24px 16px;
-}
-
-/* ════════════════════════════════════════════════════════════
-   页面分组与卡片布局
-   ════════════════════════════════════════════════════════════ */
-
-.section-group {
-    margin-bottom: 48px;
-}
-
-.section-header {
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.section-title {
-    font-family: 'Outfit', sans-serif;
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--text-primary);
-    letter-spacing: 2px;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-.card-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    background: var(--surface);
+    border-radius: 12px;
     border: 2px solid var(--border);
-    border-radius: var(--radius-md);
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    position: relative;
+    background: var(--surface);
     cursor: pointer;
-}
-
-.card-item:hover {
-    border-color: var(--primary);
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
-}
-
-.card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    background: var(--bg);
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.engine-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.engine-btn.active {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+/* ════════════════════════════════════════════════════════════
+   3. 时钟与日历卡片 (Clock & Calendar)
+   ════════════════════════════════════════════════════════════ */
+.clock-display {
+    /* 修改说明：应用淡灰色毛玻璃效果 */
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    background: rgba(245, 245, 245, 0.7); /* 半透明淡灰色 */
+    border: 1px solid rgba(224, 224, 224, 0.5); /* 半透明边框 */
+    border-radius: 24px;
+    padding: 12px;
+    gap: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(10px); /* 模糊效果 */
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
     overflow: hidden;
 }
 
-.card-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.card-icon.skeleton {
-    animation: skeletonShimmer 1.5s infinite;
-    background: linear-gradient(90deg, var(--bg) 25%, var(--border) 50%, var(--bg) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-}
-
-.card-info {
-    flex: 1;
-}
-
-.card-title {
-    font-family: 'Outfit', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: 1px;
-    transition: color 0.2s ease;
-}
-
-.card-item:hover .card-title {
-    color: var(--primary);
-}
-
-/* ════════════════════════════════════════════════════════════
-   主题切换按钮
-   ════════════════════════════════════════════════════════════ */
-
-.theme-toggle {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-lg);
-    transition: all 0.3s ease;
-    z-index: 100;
-}
-
-.theme-toggle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-}
-
-/* ════════════════════════════════════════════════════════════
-   动画定义
-   ════════════════════════════════════════════════════════════ */
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes dropdownSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes shimmer {
-    0% {
-        background-position: -1000px 0;
-    }
-    100% {
-        background-position: 1000px 0;
-    }
-}
-
-@keyframes buttonBounce {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(0.95);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes ripple {
-    to {
-        transform: scale(1);
-        opacity: 0;
-    }
-}
-
-/* 卡片进入动画 */
-.card-item {
-    animation: fadeUp 0.5s ease backwards;
-}
-
-.section-group:nth-child(1) .card-item {
-    animation-delay: calc(0.1s * (var(--item-index, 0) + 0));
-}
-
-.section-group:nth-child(2) .card-item {
-    animation-delay: calc(0.1s * (var(--item-index, 0) + 1));
-}
-
-.section-group:nth-child(3) .card-item {
-    animation-delay: calc(0.1s * (var(--item-index, 0) + 2));
-}
-
-.section-group:nth-child(n+4) .card-item {
-    animation-delay: calc(0.1s * (var(--item-index, 0) + 3));
-}
-
-/* 波纹效果 */
-.icon-emoji {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 600;
-    user-select: none;
-}
-
-/* ════════════════════════════════════════════════════════════
-   时间日历模块（减半尺寸重构版）
-   ════════════════════════════════════════════════════════════ */
-
-.clock-display {
-    /* 修改位置：添加毛玻璃+像素背景 */
-    /* 前后逻辑：原background: linear-gradient(135deg, var(--surface), var(--bg))，现添加毛玻璃和像素背景 */
-    /* 修改目的：实现毛玻璃效果和像素艺术背景 */
-    margin-bottom: 48px;
-    padding: 12px;
-    background: 
-        repeating-linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.03) 0px,
-            rgba(0, 0, 0, 0.03) 1px,
-            transparent 1px,
-            transparent 3px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.03) 0px,
-            rgba(0, 0, 0, 0.03) 1px,
-            transparent 1px,
-            transparent 3px
-        ),
-        linear-gradient(135deg, var(--surface), var(--bg));
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 16px;
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    gap: 6px;
-    text-align: left;
-    border: none;
-    position: relative;
-    overflow: visible;
-    width: 100%;
-    min-height: 0;
+/* 暗黑模式下的毛玻璃适配 */
+[data-theme="dark"] .clock-display {
+    background: rgba(26, 26, 26, 0.7);
+    border: 1px solid rgba(51, 51, 51, 0.5);
 }
 
 .clock-left {
-    flex: 0 0 auto;
-    min-width: 90px;
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    text-align: left;
-    overflow: hidden;
+    align-items: center;
+    padding: 0 10px;
+    min-width: 180px;
 }
 
 .clock-time-main {
-    font-family: 'Space Mono', 'Outfit', monospace;
-    font-size: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 32px;
     font-weight: 700;
     color: var(--primary);
-    letter-spacing: 1px;
-    line-height: 1.1;
-    white-space: nowrap;
+    letter-spacing: -1px;
 }
 
 .clock-date-gregorian {
-    font-size: 9px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 700;
     color: var(--text-secondary);
-    margin-top: 2px;
-    line-height: 1.1;
-    white-space: nowrap;
 }
 
 .clock-date-lunar {
-    font-size: 8px;
-    font-weight: 400;
+    font-size: 11px;
+    font-weight: 600;
     color: var(--text-muted);
-    margin-top: 1px;
-    line-height: 1.1;
-    white-space: nowrap;
 }
 
 .clock-right {
-    flex: 1 1 auto;
-    min-width: 160px;
+    flex: 2;
+    background: var(--primary-light);
+    border-radius: 16px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    position: relative;
-    gap: 2px;
-    overflow: hidden;
+    min-width: 280px;
 }
 
-.calendar-container {
-    /* 修改位置：添加毛玻璃+像素背景 */
-    /* 前后逻辑：原background: rgba(255, 255, 255, 0.7) + backdrop-filter: blur(10px)，现添加像素背景图 */
-    /* 修改目的：实现毛玻璃和像素艺术风格背景 */
-    background: 
-        repeating-linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.02) 0px,
-            rgba(0, 0, 0, 0.02) 1px,
-            transparent 1px,
-            transparent 3px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.02) 0px,
-            rgba(0, 0, 0, 0.02) 1px,
-            transparent 1px,
-            transparent 3px
-        ),
-        rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    padding: 3px;
-    position: relative;
-    overflow: hidden;
-}
-
-html[data-theme="dark"] .calendar-container {
-    background: 
-        repeating-linear-gradient(
-            0deg,
-            rgba(255, 255, 255, 0.05) 0px,
-            rgba(255, 255, 255, 0.05) 1px,
-            transparent 1px,
-            transparent 3px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0.05) 0px,
-            rgba(255, 255, 255, 0.05) 1px,
-            transparent 1px,
-            transparent 3px
-        ),
-        rgba(38, 38, 38, 0.7);
-}
-
+/* 日历网格样式 */
 .calendar-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    margin-bottom: 2px;
+    align-items: center;
+    padding: 0 4px 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
 }
 
 .calendar-title {
-    font-size: 9px;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-align: left;
-    flex: 1;
-}
-
-.calendar-jump-btn-header {
-    font-size: 7px;
-    padding: 1px 4px;
-    border-radius: 2px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    font-family: 'Noto Sans SC', 'Fredoka', system-ui, sans-serif;
-}
-
-.calendar-jump-btn-header:hover {
-    background: var(--primary-light);
-    border-color: var(--primary);
-}
-
-.calendar-weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
-    margin-bottom: 1px;
-}
-
-.weekday {
-    text-align: center;
-    font-size: 7px;
-    font-weight: 600;
-    color: var(--text-muted);
-    padding: 1px 0;
+    font-size: 11px;
+    font-weight: 800;
 }
 
 .calendar-grid {
@@ -897,304 +335,174 @@ html[data-theme="dark"] .calendar-container {
     gap: 1px;
 }
 
+.calendar-weekday {
+    font-size: 9px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-muted);
+    padding: 2px 0;
+}
+
 .calendar-cell {
-    /* 修改位置：调整对齐方式和justify-content */
-    /* 前后逻辑：原align-items: flex-start，现改为center；添加justify-content: center */
-    /* 修改目的：实现日期在单元格中的居中显示，改善可读性和间距 */
-    min-height: 14px;
-    padding: 1px;
-    border-radius: 2px;
-    background: transparent;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    aspect-ratio: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.calendar-cell:hover {
+    background: var(--surface);
+}
+
+.calendar-cell.today {
+    background: var(--primary);
+}
+
+.calendar-cell.today .cell-day {
+    color: #FFF;
+}
+
+.cell-day {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.cell-lunar {
+    font-size: 7px;
+    transform: scale(0.85);
+    color: var(--text-muted);
+}
+
+.calendar-cell.holiday .cell-day {
+    color: var(--holiday-cn);
+}
+
+/* ════════════════════════════════════════════════════════════
+   4. 分类卡片布局 (Category Grid)
+   ════════════════════════════════════════════════════════════ */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 40px 80px;
+}
+
+.section-group {
+    margin-bottom: 60px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-line {
+    flex: 1;
+    height: 3px;
+    background: var(--primary);
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+}
+
+.nav-card {
+    background: var(--surface);
+    border: 2px solid var(--primary);
+    border-radius: 18px;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
     overflow: hidden;
 }
 
-.calendar-cell:hover {
-    background: var(--bg);
+.nav-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 6px 6px 0px var(--primary);
 }
 
-.calendar-cell.selected {
-    border: 2px solid var(--primary);
+.card-icon {
+    width: 45px;
+    height: 45px;
     background: var(--primary-light);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 15px;
 }
 
-.cell-solar {
-    font-size: 8px;
+.card-info h3 {
+    font-size: 16px;
     font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1;
+    margin-bottom: 6px;
 }
 
-.calendar-cell.today .cell-solar {
-    font-weight: 800;
-    color: var(--primary);
+.card-info p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
 }
 
-.cell-lunar {
-    font-size: 6px;
-    font-weight: 400;
+/* ════════════════════════════════════════════════════════════
+   5. 底部装饰与弹窗 (Footer & Modals)
+   ════════════════════════════════════════════════════════════ */
+.footer {
+    text-align: center;
+    padding: 40px;
     color: var(--text-muted);
-    line-height: 1;
-    max-height: 6px;
-    overflow: hidden;
-}
-
-.cell-holiday {
-    font-size: 5px;
+    font-size: 13px;
     font-weight: 600;
-    color: var(--primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    line-height: 1;
-    max-height: 5px;
 }
 
-.cell-rest {
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 5px;
-    font-weight: 700;
-    color: white;
-    background: var(--primary);
-    width: 8px;
-    height: 8px;
-    border-radius: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
-
-.calendar-cell.other-month {
-    opacity: 0.2;
-}
-
-/* 上下翻页按钮 */
-.calendar-nav-btn {
-    width: 100%;
-    height: 10px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    font-size: 8px;
-    opacity: 0.6;
-    transition: opacity 0.2s ease;
-    padding: 0;
-    line-height: 1;
-}
-
-.calendar-nav-btn:hover {
-    opacity: 1;
-    color: var(--primary);
-}
-
-.calendar-nav-up {
-    margin-bottom: 2px;
-}
-
-.calendar-nav-down {
-    margin-top: 2px;
-}
-
-.holiday-bar {
-    margin-top: 2px;
-    width: 100%;
-    min-height: 14px;
-    padding: 2px 4px;
-    border-radius: 7px;
-    background: rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(8px);
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    transition: all 0.3s ease;
-    transform: translateX(0);
-    opacity: 1;
-}
-
-html[data-theme="dark"] .holiday-bar {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.holiday-bar.empty {
-    transform: translateX(100%);
-    opacity: 0;
-    min-height: 0;
-    padding: 0;
-    margin-top: 0;
-}
-
-.holiday-bar.filtered {
-    background: rgba(26, 26, 26, 0.08);
-}
-
-html[data-theme="dark"] .holiday-bar.filtered {
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.holiday-tag {
-    padding: 1px 3px;
-    border-radius: 3px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    font-size: 6px;
-    white-space: nowrap;
-    scroll-snap-align: start;
-    flex-shrink: 0;
-    color: var(--text-primary);
-    line-height: 1;
-}
-
+/* 弹窗基础样式 */
 .modal-overlay {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-}
-
-.modal-overlay.show {
-    display: block;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 2000;
+    backdrop-filter: blur(4px);
 }
 
 .modal-jump {
-    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 300px;
-    padding: 16px;
-    border-radius: 12px;
     background: var(--surface);
-    box-shadow: var(--shadow-lg);
-    z-index: 10000;
-}
-
-.modal-jump.show {
-    display: block;
-    animation: modalPop 0.2s ease;
-}
-
-.modal-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 12px;
-}
-
-.modal-radio-group {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.modal-radio-group label {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    cursor: pointer;
-}
-
-.modal-inputs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 12px;
-}
-
-.modal-inputs input {
-    width: 70px;
-    height: 32px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text-primary);
-    text-align: center;
-    font-size: 12px;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-.modal-inputs input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 6px;
-}
-
-.modal-btn {
-    padding: 6px 16px;
-    border-radius: 4px;
-    border: none;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: 'Noto Sans SC', 'Fredoka', system-ui, sans-serif;
-}
-
-.modal-btn-cancel {
-    background: var(--bg);
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-}
-
-.modal-btn-cancel:hover {
-    background: var(--border);
-}
-
-.modal-btn-confirm {
-    background: var(--primary);
-    color: white;
-}
-
-.modal-btn-confirm:hover {
-    background: var(--accent-1);
-}
-
-.mobile-holiday-badge {
+    border: 3px solid var(--primary);
+    border-radius: 24px;
+    padding: 30px;
+    width: 90%;
+    max-width: 340px;
     display: none;
-    margin-top: 8px;
-    padding: 2px 10px;
-    border-radius: 8px;
-    background: var(--primary);
-    color: white;
-    font-size: 10px;
-    font-weight: 600;
-}
-
-@keyframes modalPop {
-    from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
-    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    z-index: 2100;
 }
 
 /* ════════════════════════════════════════════════════════════
-   时间日历模块响应式（减半尺寸）
+   6. 响应式适配 (Responsive)
    ════════════════════════════════════════════════════════════ */
 
 @media (max-width: 1024px) {
@@ -1242,45 +550,15 @@ html[data-theme="dark"] .holiday-bar.filtered {
 }
 
 @media (max-width: 480px) {
-    .clock-display {
-        padding: 6px;
-        gap: 3px;
+    .navbar {
+        padding: 0 15px;
     }
-
-    .clock-left {
-        min-width: 60px;
+    
+    .nav-links {
+        display: none;
     }
-
-    .clock-right {
-        min-width: 100px;
-    }
-
-    .clock-time-main {
-        font-size: 12px;
-    }
-
-    .clock-date-gregorian {
-        font-size: 7px;
-    }
-
-    .clock-date-lunar {
-        font-size: 6px;
-    }
-
-    .calendar-container {
-        padding: 2px;
-    }
-
-    .calendar-cell {
-        min-height: 12px;
-        padding: 0;
-    }
-
-    .cell-solar {
-        font-size: 7px;
-    }
-
-    .cell-lunar {
-        font-size: 5px;
+    
+    .hero-section {
+        padding-top: 100px;
     }
 }
