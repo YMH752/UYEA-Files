@@ -111,7 +111,61 @@
                             <div class="weekday">六</div>
                         </div>
                         <div class="calendar-grid" id="calendarGrid"></div>
-                        
+                        <div class="calendar-skeleton" id="calendarSkeleton">
+                            <div class="skeleton-weekdays">
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div>
+                            </div>
+                            <div class="skeleton-cells">
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
+                            </div>
+                        </div>
                         <div class="holiday-bar" id="holidayBar"></div>
                     </div>
                     <button class="calendar-nav-btn calendar-nav-down" id="nextMonth">&#9660;</button>
@@ -232,88 +286,53 @@
             // 前后逻辑：原使用硬编码HOLIDAYS对象，现调用API获取当前年份数据
             // 修改目的：根据年份动态获取节假日数据
             async function fetchHolidaysByYear(year) {
-                const holidays = {};
-
-                // 方案1：尝试使用 lunar-javascript 的 HolidayUtil
                 try {
-                    if (typeof HolidayUtil !== 'undefined') {
-                        // HolidayUtil 可以获取指定日期的节假日
-                        const daysInYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0) ? 366 : 365;
-                        for (let i = 0; i < daysInYear; i++) {
-                            const d = new Date(year, 0, 1);
-                            d.setDate(d.getDate() + i);
-                            const m = d.getMonth() + 1;
-                            const day = d.getDate();
-                            const holiday = HolidayUtil.getHoliday(year, m, day);
-                            if (holiday) {
-                                const dateKey = `${year}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                                if (!holidays[dateKey]) holidays[dateKey] = [];
-                                holidays[dateKey].push({
-                                    name: holiday.getName(),
-                                    isRest: holiday.isWork() === false
-                                });
+                    const response = await fetch(`https://www.mxnzp.com/api/holiday/list?year=${year}`);
+                    const result = await response.json();
+                    if (result.code === 0 && result.data) {
+                        const holidays = {};
+                        result.data.forEach(holiday => {
+                            const dateKey = holiday.chineseDate;
+                            if (!holidays[dateKey]) {
+                                holidays[dateKey] = [];
                             }
-                        }
+                            holidays[dateKey].push({
+                                name: holiday.name,
+                                isRest: holiday.isRest === 1
+                            });
+                        });
                         return holidays;
                     }
-                } catch (e) {}
-
-                // 方案2：使用本地主要节假日数据（兜底）
-                const majorHolidays = {
-                    '01-01': { name: '元旦', isRest: true },
-                    '05-01': { name: '劳动节', isRest: true },
-                    '10-01': { name: '国庆节', isRest: true },
-                    '10-02': { name: '国庆节', isRest: true },
-                    '10-03': { name: '国庆节', isRest: true },
-                    '04-05': { name: '清明节', isRest: true },
-                    '06-01': { name: '儿童节', isRest: false },
-                    '08-01': { name: '建军节', isRest: false },
-                    '03-08': { name: '妇女节', isRest: false },
-                    '05-04': { name: '青年节', isRest: false },
-                    '07-01': { name: '建党节', isRest: false },
-                };
-
-                // 添加春节（根据农历正月初一，这里用固定日期近似）
-                // 2026年春节是2月17日
-                if (year === 2026) {
-                    majorHolidays['02-17'] = { name: '春节', isRest: true };
-                    majorHolidays['02-18'] = { name: '春节', isRest: true };
-                    majorHolidays['02-19'] = { name: '春节', isRest: true };
+                } catch (error) {
+                    console.warn('节假日API获取失败，使用空数据');
                 }
-
-                Object.keys(majorHolidays).forEach(key => {
-                    const dateKey = `${year}-${key}`;
-                    holidays[dateKey] = [majorHolidays[key]];
-                });
-
-                return holidays;
+                return {};
             }
 
             // 初始化加载节假日数据
             async function initializeHolidayData() {
+                const skeleton = document.getElementById('calendarSkeleton');
                 const grid = document.getElementById('calendarGrid');
-                // 先同步渲染日历（不等待节假日数据）
-                renderCalendar(currentCalendarYear, currentCalendarMonth);
-                renderHolidayBar(currentCalendarYear, currentCalendarMonth);
-                if (grid) grid.style.display = 'grid';
-                // 再异步获取节假日数据并更新
+                if (skeleton) skeleton.classList.remove('hidden');
+                if (grid) grid.style.display = 'none';
+
                 holidayData = await fetchHolidaysByYear(currentCalendarYear);
                 renderCalendar(currentCalendarYear, currentCalendarMonth);
                 renderHolidayBar(currentCalendarYear, currentCalendarMonth);
+
+                if (skeleton) skeleton.classList.add('hidden');
+                if (grid) grid.style.display = 'grid';
             }
 
             // 农历转换函数
             function solarToLunar(year, month, day) {
                 try {
-                    if (typeof Solar !== 'undefined' && typeof Lunar !== 'undefined') {
-                        const solar = Solar.fromYmd(year, month, day);
-                        const lunar = solar.getLunar();
-                        const monthStr = lunar.getMonthInChinese();
-                        const dayStr = lunar.getDayInChinese();
-                        return `${monthStr}月${dayStr}`;
+                    if (typeof Lunar !== 'undefined') {
+                        const lunar = Lunar.fromSolar(year, month, day);
+                        return lunar.toString();
                     }
-                } catch (e) { console.warn('农历转换失败:', e); }
-                return '';
+                } catch (e) {}
+                return `农历${month}月${day}日`;
             }
 
             // 修改位置：renderCalendar函数添加日期与星期居中对齐
@@ -352,6 +371,9 @@
 
                     let cellHTML = `<div class="cell-solar">${day}</div>`;
 
+                    // 修改位置：节假日显示逻辑修改
+                    // 前后逻辑：原全天显示节假日名，现仅首日显示名称，其余显示休字
+                    // 修改目的：优化空间利用，突出节假日首日
                     const holidays = holidayData[dateStr];
                     if (holidays && holidays.length > 0) {
                         const firstHoliday = holidays[0];
@@ -364,8 +386,9 @@
 
                     // 农历日期
                     const lunar = solarToLunar(year, month, day);
-                    if (lunar) {
-                        cellHTML += `<div class="cell-lunar">${lunar}</div>`;
+                    const lunarMatch = lunar.match(/\d+月\d+日/);
+                    if (lunarMatch) {
+                        cellHTML += `<div class="cell-lunar">${lunarMatch[0]}</div>`;
                     }
 
                     cell.innerHTML = cellHTML;
@@ -509,7 +532,8 @@
                     } else {
                         isAnimating = false;
                     }
-                    
+                    const skeleton = document.getElementById('calendarSkeleton');
+                    if (skeleton) skeleton.classList.add('hidden');
                 }, 200);
             };
 
@@ -598,7 +622,8 @@
                         renderHolidayBar(currentCalendarYear, currentCalendarMonth);
                     } finally {
                         fetchLock = false;
-                        
+                        const skeleton = document.getElementById('calendarSkeleton');
+                        if (skeleton) skeleton.classList.add('hidden');
                     }
                 })();
 
