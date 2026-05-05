@@ -1460,3 +1460,49 @@ html[data-theme="dark"] .holiday-bar.filtered {
         font-size: 5px;
     }
 }
+
+/* ════════════════════════════════════════════════════════════
+   日历骨架屏加载动画
+   ════════════════════════════════════════════════════════════ */
+
+.calendar-skeleton {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    animation: fadeUp 0.3s ease;
+}
+
+.calendar-skeleton .skeleton-weekdays {
+    display: contents;
+}
+
+.calendar-skeleton .skeleton-weekday {
+    height: 14px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    margin-bottom: 1px;
+}
+
+.calendar-skeleton .skeleton-cells {
+    display: contents;
+}
+
+.calendar-skeleton .skeleton-cell {
+    min-height: 14px;
+    padding: 1px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.calendar-skeleton.hidden {
+    display: none;
+}
+
+/* 日历内容淡入 */
+.calendar-grid {
+    animation: fadeUp 0.3s ease;
+}
