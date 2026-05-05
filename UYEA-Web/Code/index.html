@@ -225,6 +225,7 @@
             let touchStartY = 0;
             let touchEndY = 0;
             let holidayData = {};
+            let fetchLock = false;
 
             // 修改位置：添加API获取节假日函数
             // 前后逻辑：原使用硬编码HOLIDAYS对象，现调用API获取当前年份数据
@@ -366,7 +367,16 @@
             // 判断是否为节假日的第一天
             function isFirstDayOfHoliday(dateStr, holidays) {
                 const [year, month, day] = dateStr.split('-').map(Number);
-                const prevDateStr = `${year}-${String(month).padStart(2, '0')}-${String(day - 1).padStart(2, '0')}`;
+                let prevYear = year, prevMonth = month, prevDay = day - 1;
+                if (prevDay < 1) {
+                    prevMonth -= 1;
+                    if (prevMonth < 1) {
+                        prevMonth = 12;
+                        prevYear -= 1;
+                    }
+                    prevDay = new Date(prevYear, prevMonth, 0).getDate();
+                }
+                const prevDateStr = `${prevYear}-${String(prevMonth).padStart(2, '0')}-${String(prevDay).padStart(2, '0')}`;
                 const prevHolidays = holidayData[prevDateStr];
                 if (!prevHolidays) return true;
                 return !prevHolidays.some(h => h.name === holidays[0].name);
@@ -377,6 +387,30 @@
                 const holidayBar = document.getElementById('holidayBar');
                 if (!holidayBar) return;
                 holidayBar.innerHTML = '';
+
+                const daysInMonth = new Date(year, month, 0).getDate();
+                const addedNames = new Set();
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const holidays = holidayData[dateStr];
+                    if (holidays && holidays.length > 0) {
+                        const h = holidays[0];
+                        if (!addedNames.has(h.name)) {
+                            addedNames.add(h.name);
+                            const tag = document.createElement('div');
+                            tag.className = 'holiday-tag';
+                            tag.textContent = `${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${h.name}${h.isRest ? ' · 休' : ''}`;
+                            holidayBar.appendChild(tag);
+                        }
+                    }
+                }
+
+                if (addedNames.size === 0) {
+                    holidayBar.classList.add('empty');
+                } else {
+                    holidayBar.classList.remove('empty');
+                }
             }
 
             // 修改位置：日历默认展开状态
@@ -412,9 +446,15 @@
                     // 前后逻辑：原使用固定HOLIDAYS对象，现根据年份动态获取
                     // 修改目的：支持跨年份浏览时自动更新节假日
                     (async () => {
-                        holidayData = await fetchHolidaysByYear(currentCalendarYear);
-                        renderCalendar(currentCalendarYear, currentCalendarMonth);
-                        renderHolidayBar(currentCalendarYear, currentCalendarMonth);
+                        if (fetchLock) return;
+                        fetchLock = true;
+                        try {
+                            holidayData = await fetchHolidaysByYear(currentCalendarYear);
+                            renderCalendar(currentCalendarYear, currentCalendarMonth);
+                            renderHolidayBar(currentCalendarYear, currentCalendarMonth);
+                        } finally {
+                            fetchLock = false;
+                        }
                     })();
 
                     if (grid) {
@@ -509,9 +549,15 @@
                 // 前后逻辑：原仅更新日历，现同时获取新年份节假日
                 // 修改目的：确保不同年份的节假日正确显示
                 (async () => {
-                    holidayData = await fetchHolidaysByYear(currentCalendarYear);
-                    renderCalendar(currentCalendarYear, currentCalendarMonth);
-                    renderHolidayBar(currentCalendarYear, currentCalendarMonth);
+                    if (fetchLock) return;
+                    fetchLock = true;
+                    try {
+                        holidayData = await fetchHolidaysByYear(currentCalendarYear);
+                        renderCalendar(currentCalendarYear, currentCalendarMonth);
+                        renderHolidayBar(currentCalendarYear, currentCalendarMonth);
+                    } finally {
+                        fetchLock = false;
+                    }
                 })();
 
                 // 高亮目标日期
