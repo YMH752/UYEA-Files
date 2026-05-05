@@ -400,24 +400,30 @@ body {
 .menu-nav {
     display: flex;
     flex-direction: column;
-    padding: 16px 20px;
+    padding: 12px 0;
+    flex: 1;
 }
 
 .menu-item {
-    padding: 12px 0;
-    color: var(--text-primary);
+    padding: 16px 24px;
     text-decoration: none;
-    font-weight: 600;
+    color: var(--text-primary);
     font-size: 14px;
-    transition: color 0.2s ease;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
 }
 
 .menu-item:hover {
+    background: var(--bg);
     color: var(--primary);
+    border-left-color: var(--primary);
 }
 
 .menu-item.active {
+    background: var(--bg);
     color: var(--primary);
+    border-left-color: var(--primary);
 }
 
 .menu-divider {
@@ -427,22 +433,22 @@ body {
 }
 
 .menu-auth-section {
-    padding: 16px 20px;
+    padding: 12px 24px;
     border-top: 1px solid var(--border);
 }
 
 .register-btn {
     width: 100%;
-    padding: 10px 16px;
-    background: linear-gradient(135deg, var(--accent-3), var(--primary));
+    padding: 12px;
+    border: 2px solid var(--primary);
+    background: var(--primary);
     color: white;
-    border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Noto Sans SC', 'Fredoka', system-ui, sans-serif;
 }
 
 .register-btn:hover {
@@ -450,325 +456,173 @@ body {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
+.register-btn span {
+    display: inline-block;
+}
+
 /* ════════════════════════════════════════════════════════════
    主内容区
    ════════════════════════════════════════════════════════════ */
 
 .main-content {
+    flex: 1;
     width: 100%;
-    min-height: calc(100vh - var(--header-h));
-    padding-top: 0;
+    padding-top: var(--header-h);
 }
 
 .content-wrapper {
-    /* 修改位置：.content-wrapper 布局 */
-    /* 前后逻辑：原 max-width:1200px margin:0 auto 居中，现为全宽扩散 */
-    /* 修改目的：桌面端卡片扩散，不要全部居中，根据屏幕宽度自适应均匀扩散 */
-    max-width: 100%;
-    margin: 0;
-    padding: 40px 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px 16px;
 }
 
-/* 时钟显示区域 */
+/* ════════════════════════════════════════════════════════════
+   页面分组与卡片布局
+   ════════════════════════════════════════════════════════════ */
 
-/* 修改位置：添加毛玻璃背景效果 */
-/* 前后逻辑：原为线性渐变背景，现改为毛玻璃效果(透明度20%+模糊10px) */
-/* 修改目的：实现现代毛玻璃视觉效果 */
-
-/* 修改位置：日历容器宽度缩小 */
-/* 前后逻辑：原flex: 1导致日历占据剩余空间，现改为flex: 0 0 240px固定宽度 */
-/* 修改目的：回归卡片原始尺寸，不占据过多页面空间 */
-
-/* 日历样式 */
-
-/* 修改位置：日历按钮缩小 */
-/* 前后逻辑：原32×32px，现改为28×28px */
-/* 修改目的：适配缩小后的日历尺寸 */
-
-/* 修改位置：新增日期跳转输入框 */
-/* 前后逻辑：原无跳转功能，现添加输入框和按钮 */
-/* 修改目的：支持用户快速跳转到指定日期 */
-
-/* 修改位置：日历间距缩小 */
-/* 前后逻辑：原gap: 4px，现改为gap: 2px */
-/* 修改目的：适配缩小后的日历尺寸 */
-
-/* 修改位置：日期字号和内边距缩小 */
-/* 前后逻辑：原font-size: 12px/border-radius: 4px，现改为10px/3px */
-/* 修改目的：缩小卡片尺寸，回归原始卡片大小 */
-
-/* 分类区域 */
 .section-group {
-    margin-bottom: 56px;
+    margin-bottom: 48px;
 }
 
 .section-header {
-    margin-bottom: 28px;
-}
-
-.section-title {
-    font-family: 'Outfit', 'Space Mono', monospace;
-    font-size: 24px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    color: var(--text-primary);
-    position: relative;
-    display: inline-block;
-    padding-bottom: 8px;
-}
-
-.section-title::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent-1), var(--accent-3));
-    border-radius: 2px;
-}
-
-/* 网格布局 */
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-/* 修改位置：.card-item 背景改为像素风景纹理 */
-/* 前后逻辑：原为纯色背景，现使用 CSS 重复锥形渐变模拟像素网格 */
-/* 修改目的：临时实现像素风视觉，无需外部图片 */
-.card-item {
-    background:
-        repeating-conic-gradient(
-            var(--bg) 0% 25%,
-            var(--border) 0% 50%
-        ) 0 0 / 4px 4px;
-    background-color: var(--surface); /* 保持原有底色 */
-    border: 2px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 16px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 12px;
-    text-decoration: none;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    position: relative;
-    overflow: hidden;
 }
 
-.card-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, transparent, rgba(0, 0, 0, 0.05));
-    opacity: 0;
-    transition: opacity 0.3s ease;
+.section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: 2px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.card-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    cursor: pointer;
 }
 
 .card-item:hover {
-    transform: translateY(-8px);
     border-color: var(--primary);
+    transform: translateY(-4px);
     box-shadow: var(--shadow-md);
-}
-
-.card-item:hover::before {
-    opacity: 1;
 }
 
 .card-icon {
     width: 48px;
     height: 48px;
     border-radius: 8px;
-    background: linear-gradient(135deg, var(--primary-light), rgba(0, 0, 0, 0.08));
-    overflow: hidden;
+    background: var(--bg);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    border: 1px solid var(--border);
+    overflow: hidden;
 }
 
 .card-icon img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    filter: grayscale(15%) opacity(0.85);
-    transition: filter 0.3s ease;
-}
-
-.card-item:hover .card-icon img {
-    filter: grayscale(0%) opacity(1);
 }
 
 .card-icon.skeleton {
-    background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+    animation: skeletonShimmer 1.5s infinite;
+    background: linear-gradient(90deg, var(--bg) 25%, var(--border) 50%, var(--bg) 75%);
     background-size: 200% 100%;
-    animation: shimmer 1.4s ease-in-out infinite;
-}
-
-.card-icon.skeleton img {
-    opacity: 0;
+    animation: shimmer 1.5s infinite;
 }
 
 .card-info {
     flex: 1;
-    min-width: 0;
 }
 
 .card-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    letter-spacing: 1px;
+    transition: color 0.2s ease;
+}
+
+.card-item:hover .card-title {
+    color: var(--primary);
 }
 
 /* ════════════════════════════════════════════════════════════
-   响应式设计
+   主题切换按钮
    ════════════════════════════════════════════════════════════ */
 
-@media (max-width: 1024px) {
-    /* 修改位置：删除搜索框隐藏规则，改为缩小宽度 */
-    /* 前后逻辑：原 display: none，现改为缩小并保持显示 */
-    /* 修改目的：放大镜功能全尺寸显示（除极限缩放） */
-    .header-search-wrapper {
-        min-width: 200px;
-        flex-shrink: 1;
-    }
-
-    .search-dropdown {
-        width: 280px;
-    }
-
-    .search-input {
-        width: 140px;
-    }
-
-    .content-wrapper {
-        padding: 32px 24px;
-    }
-
-    .grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 16px;
-    }
-
+.theme-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
+    z-index: 100;
 }
 
-@media (max-width: 768px) {
-    :root {
-        --header-h: 60px;
-    }
-
-    .top-header {
-        height: 60px;
-    }
-    
-    .header-container {
-        padding: 0 16px;
-    }
-    
-    .logo-text {
-        font-size: 24px;
-        letter-spacing: 2px;
-    }
-    
-    .header-right {
-        gap: 12px;
-    }
-    
-    .lang-btn {
-        padding: 4px 8px;
-        font-size: 10px;
-    }
-    
-    .dropdown-menu {
-        max-width: 100%;
-        right: 0;
-        left: 0;
-    }
-    
-    .content-wrapper {
-        padding: 24px 16px;
-    }
-    
-    .section-title {
-        font-size: 18px;
-    }
-    
-    .grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 12px;
-    }
-    
-    .card-item {
-        padding: 12px;
-        gap: 10px;
-    }
-    
-    .card-icon {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .card-title {
-        font-size: 12px;
-    }
-
-}
-
-@media (max-width: 480px) {
-    /* 修改位置：极限缩放时隐藏搜索框 */
-    /* 前后逻辑：原在 1024px 时隐藏，现改为 480px 才隐藏 */
-    /* 修改目的：在极限小屏幕下隐藏搜索框以节省空间 */
-    .header-search-wrapper {
-        display: none;
-    }
-
-    .header-right {
-        gap: 8px;
-    }
-
-    .content-wrapper {
-        padding: 16px 12px;
-    }
-
-    .grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 10px;
-    }
-
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 /* ════════════════════════════════════════════════════════════
-   动画
+   动画定义
    ════════════════════════════════════════════════════════════ */
 
-/* 修改位置：新增按钮反弹动画 */
-/* 前后逻辑：原无点击动画，现添加反弹效果 */
-/* 修改目的：增强交互反馈 */
-@keyframes buttonBounce {
-    0% {
-        transform: scale(1);
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
     }
-    50% {
-        transform: scale(0.95);
-    }
-    100% {
-        transform: scale(1);
+    to {
+        opacity: 1;
+        transform: translateX(0);
     }
 }
 
-/* 修改位置：新增下拉列表淡入滑出动画 */
-/* 前后逻辑：原无显示动画，现添加淡入滑出效果 */
-/* 修改目的：增强动画体验 */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @keyframes dropdownSlideIn {
     from {
         opacity: 0;
@@ -780,23 +634,24 @@ body {
     }
 }
 
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
     }
-    to {
-        transform: translateX(0);
-        opacity: 1;
+    100% {
+        background-position: 1000px 0;
     }
 }
 
-@keyframes shimmer {
+@keyframes buttonBounce {
     0% {
-        background-position: -200% 0;
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
     }
     100% {
-        background-position: 200% 0;
+        transform: scale(1);
     }
 }
 
@@ -856,14 +711,31 @@ body {
    ════════════════════════════════════════════════════════════ */
 
 .clock-display {
+    /* 修改位置：添加毛玻璃+像素背景 */
+    /* 前后逻辑：原background: linear-gradient(135deg, var(--surface), var(--bg))，现添加毛玻璃和像素背景 */
+    /* 修改目的：实现毛玻璃效果和像素艺术背景 */
     margin-bottom: 48px;
     padding: 12px;
-    background: linear-gradient(135deg, var(--surface), var(--bg));
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.03) 0px,
+            rgba(0, 0, 0, 0.03) 1px,
+            transparent 1px,
+            transparent 3px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.03) 0px,
+            rgba(0, 0, 0, 0.03) 1px,
+            transparent 1px,
+            transparent 3px
+        ),
+        linear-gradient(135deg, var(--surface), var(--bg));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 16px;
     box-shadow: var(--shadow-sm);
-    /* 修改位置：.clock-display 极端压缩 */
-    /* 前后逻辑：原 padding:24px gap:16px，现为 padding:12px gap:6px */
-    /* 修改目的：强行将完整月历塞进参考图尺寸卡片 */
     display: flex;
     gap: 6px;
     text-align: left;
@@ -875,9 +747,6 @@ body {
 }
 
 .clock-left {
-    /* 修改位置：.clock-left 极端压缩 */
-    /* 前后逻辑：原 min-width:200px，现为 min-width:90px */
-    /* 修改目的：强行压缩左侧时间区 */
     flex: 0 0 auto;
     min-width: 90px;
     display: flex;
@@ -889,9 +758,6 @@ body {
 }
 
 .clock-time-main {
-    /* 修改位置：.clock-time-main 极端压缩 */
-    /* 前后逻辑：原 font-size:28px，现为16px */
-    /* 修改目的：强行压缩时间文字 */
     font-family: 'Space Mono', 'Outfit', monospace;
     font-size: 16px;
     font-weight: 700;
@@ -902,9 +768,6 @@ body {
 }
 
 .clock-date-gregorian {
-    /* 修改位置：.clock-date-gregorian 极端压缩 */
-    /* 前后逻辑：原 font-size:14px，现为9px */
-    /* 修改目的：强行压缩公历日期 */
     font-size: 9px;
     font-weight: 500;
     color: var(--text-secondary);
@@ -914,9 +777,6 @@ body {
 }
 
 .clock-date-lunar {
-    /* 修改位置：.clock-date-lunar 极端压缩 */
-    /* 前后逻辑：原 font-size:12px，现为8px */
-    /* 修改目的：强行压缩农历日期 */
     font-size: 8px;
     font-weight: 400;
     color: var(--text-muted);
@@ -926,9 +786,6 @@ body {
 }
 
 .clock-right {
-    /* 修改位置：.clock-right 极端压缩 */
-    /* 前后逻辑：原 min-width:300px，现为 min-width:160px */
-    /* 修改目的：强行压缩右侧月历区 */
     flex: 1 1 auto;
     min-width: 160px;
     display: flex;
@@ -939,12 +796,25 @@ body {
 }
 
 .calendar-container {
-    /* 修改位置：.calendar-container 极端压缩 */
-    /* 前后逻辑：原 padding:10px，现为3px */
-    /* 修改目的：强行压缩月历容器 */
-    background: rgba(255, 255, 255, 0.2); /* 修改位置：毛玻璃淡灰效果 */
-    /* 前后逻辑：原透明度0.7，现改为0.2并保留模糊 */
-    /* 修改目的：实现淡灰色毛玻璃背景 */
+    /* 修改位置：添加毛玻璃+像素背景 */
+    /* 前后逻辑：原background: rgba(255, 255, 255, 0.7) + backdrop-filter: blur(10px)，现添加像素背景图 */
+    /* 修改目的：实现毛玻璃和像素艺术风格背景 */
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.02) 0px,
+            rgba(0, 0, 0, 0.02) 1px,
+            transparent 1px,
+            transparent 3px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.02) 0px,
+            rgba(0, 0, 0, 0.02) 1px,
+            transparent 1px,
+            transparent 3px
+        ),
+        rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 8px;
@@ -955,13 +825,25 @@ body {
 }
 
 html[data-theme="dark"] .calendar-container {
-    background: rgba(38, 38, 38, 0.2); /* 暗黑模式对应透明度 */
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.05) 0px,
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 1px,
+            transparent 3px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.05) 0px,
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 1px,
+            transparent 3px
+        ),
+        rgba(38, 38, 38, 0.7);
 }
 
 .calendar-header {
-    /* 修改位置：.calendar-header 极端压缩 */
-    /* 前后逻辑：原 margin-bottom:8px，现为2px */
-    /* 修改目的：强行压缩标题栏 */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -969,23 +851,17 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-title {
-    /* 修改位置：.calendar-title 标题居中 */
-    /* 前后逻辑：原左对齐，现改为居中对齐 */
-    /* 修改目的：使日历标题文字居中 */
     font-size: 9px;
     font-weight: 700;
     color: var(--text-primary);
-    text-align: center;
+    text-align: left;
     flex: 1;
 }
 
 .calendar-jump-btn-header {
-    /* 修改位置：跳转按钮圆角取消 */
-    /* 前后逻辑：原 border-radius: 2px，现改为 0 */
-    /* 修改目的：直角按钮与卡片风格统一 */
     font-size: 7px;
     padding: 1px 4px;
-    border-radius: 0;
+    border-radius: 2px;
     background: var(--bg);
     border: 1px solid var(--border);
     color: var(--text-primary);
@@ -1001,19 +877,13 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-weekdays {
-    /* 修改位置：星期间距微调 */
-    /* 前后逻辑：原 margin-bottom:1px，现增加为2px */
-    /* 修改目的：改善与日期块的视觉间距 */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 1px;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
 }
 
 .weekday {
-    /* 修改位置：星期标题文字居中 */
-    /* 前后逻辑：原左对齐，现改为居中 */
-    /* 修改目的：与日期数字居中对齐 */
     text-align: center;
     font-size: 7px;
     font-weight: 600;
@@ -1022,18 +892,15 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .calendar-grid {
-    /* 修改位置：日期网格间距微调 */
-    /* 前后逻辑：原 gap:1px，现增加为2px */
-    /* 修改目的：改善单元格间距 */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
+    gap: 1px;
 }
 
 .calendar-cell {
-    /* 修改位置：.calendar-cell 内容居中 */
-    /* 前后逻辑：原 flex-direction: column; align-items: flex-start; */
-    /* 修改目的：所有子元素居中对齐 */
+    /* 修改位置：调整对齐方式和justify-content */
+    /* 前后逻辑：原align-items: flex-start，现改为center；添加justify-content: center */
+    /* 修改目的：实现日期在单元格中的居中显示，改善可读性和间距 */
     min-height: 14px;
     padding: 1px;
     border-radius: 2px;
@@ -1044,6 +911,7 @@ html[data-theme="dark"] .calendar-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 0;
     position: relative;
     overflow: hidden;
@@ -1059,14 +927,10 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .cell-solar {
-    /* 修改位置：阳历日期文字居中 */
-    /* 前后逻辑：原左对齐，现改为居中 */
-    /* 修改目的：数字在单元格内居中 */
     font-size: 8px;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1;
-    text-align: center;
 }
 
 .calendar-cell.today .cell-solar {
@@ -1075,22 +939,15 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .cell-lunar {
-    /* 修改位置：农历文字居中 */
-    /* 前后逻辑：原左对齐，现改为居中 */
-    /* 修改目的：与阳历数字对齐 */
     font-size: 6px;
     font-weight: 400;
     color: var(--text-muted);
     line-height: 1;
     max-height: 6px;
     overflow: hidden;
-    text-align: center;
 }
 
 .cell-holiday {
-    /* 修改位置：节日标注文字居中 */
-    /* 前后逻辑：原左对齐，现改为居中 */
-    /* 修改目的：与上方数字对齐 */
     font-size: 5px;
     font-weight: 600;
     color: var(--primary);
@@ -1100,13 +957,9 @@ html[data-theme="dark"] .calendar-container {
     max-width: 100%;
     line-height: 1;
     max-height: 5px;
-    text-align: center;
 }
 
 .cell-rest {
-    /* 修改位置：.cell-rest 极端压缩 */
-    /* 前后逻辑：原 14x14px，现为 8x8px */
-    /* 修改目的：强行压缩休字标记 */
     position: absolute;
     top: 0;
     right: 0;
@@ -1208,46 +1061,121 @@ html[data-theme="dark"] .holiday-bar.filtered {
     line-height: 1;
 }
 
-/* 修改位置：新增加跳转下拉面板样式 */
-/* 前后逻辑：原模态框居中弹出，现改为按钮下方滑动展开的下拉面板 */
-/* 修改目的：实现下拉滑动交互，更贴合日历卡片 */
-.jump-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 4px);
-    right: 0;
-    width: 200px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: var(--shadow-md);
-    padding: 10px;
-    z-index: 1500;
-    transform-origin: top right;
-    animation: dropdownSlideIn 0.3s ease;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.jump-dropdown.show {
-    display: flex;
-}
-
 .modal-overlay {
-    /* 修改位置：原遮罩层隐藏 */
-    /* 前后逻辑：原用于跳转模态框，现不再需要，但保留标签仅隐藏 */
-    /* 修改目的：避免影响其他可能的使用，仅修改显示 */
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+.modal-overlay.show {
+    display: block;
 }
 
 .modal-jump {
-    /* 修改位置：原模态框样式保留但不再使用，改为下拉面板控制 */
-    /* 前后逻辑：原居中显示，现通过 .jump-dropdown 替代，此样式保留以防备用 */
     display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow-lg);
+    z-index: 10000;
 }
 
-/* 保留原有模态框样式供可能回退使用，但不显示 */
-.modal-jump.show { display: none; }
+.modal-jump.show {
+    display: block;
+    animation: modalPop 0.2s ease;
+}
+
+.modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.modal-radio-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.modal-radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.modal-inputs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.modal-inputs input {
+    width: 70px;
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-primary);
+    text-align: center;
+    font-size: 12px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.modal-inputs input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.modal-btn {
+    padding: 6px 16px;
+    border-radius: 4px;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Noto Sans SC', 'Fredoka', system-ui, sans-serif;
+}
+
+.modal-btn-cancel {
+    background: var(--bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+.modal-btn-cancel:hover {
+    background: var(--border);
+}
+
+.modal-btn-confirm {
+    background: var(--primary);
+    color: white;
+}
+
+.modal-btn-confirm:hover {
+    background: var(--accent-1);
+}
 
 .mobile-holiday-badge {
     display: none;
