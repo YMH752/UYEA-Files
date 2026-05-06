@@ -111,6 +111,7 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
+    margin-left: auto;
 }
 
 /* 语言选择器 */
@@ -366,7 +367,8 @@ body {
 }
 
 .menu-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(10px, 10px);
+    transform: rotate(90deg) translateY(12px);
+    width: 2px;
 }
 
 .menu-toggle.active span:nth-child(2) {
@@ -374,7 +376,8 @@ body {
 }
 
 .menu-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(10px, -10px);
+    transform: rotate(90deg) translateY(-12px);
+    width: 2px;
 }
 
 /* 下拉菜单 */
@@ -876,53 +879,11 @@ body {
 
 .clock-left {
     /* 修改位置：.clock-left 极端压缩 */
-    /* 前后逻辑：原 min-width:200px，现为 min-width:90px */
-    /* 修改目的：强行压缩左侧时间区 */
-    flex: 0 0 auto;
-    min-width: 90px;
+    flex-basis: 30%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    text-align: left;
-    overflow: hidden;
-}
-
-.clock-time-main {
-    /* 修改位置：.clock-time-main 极端压缩 */
-    /* 前后逻辑：原 font-size:28px，现为16px */
-    /* 修改目的：强行压缩时间文字 */
-    font-family: 'Space Mono', 'Outfit', monospace;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--primary);
-    letter-spacing: 1px;
-    line-height: 1.1;
-    white-space: nowrap;
-}
-
-.clock-date-gregorian {
-    /* 修改位置：.clock-date-gregorian 极端压缩 */
-    /* 前后逻辑：原 font-size:14px，现为9px */
-    /* 修改目的：强行压缩公历日期 */
-    font-size: 9px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    margin-top: 2px;
-    line-height: 1.1;
-    white-space: nowrap;
-}
-
-.clock-date-lunar {
-    /* 修改位置：.clock-date-lunar 极端压缩 */
-    /* 前后逻辑：原 font-size:12px，现为8px */
-    /* 修改目的：强行压缩农历日期 */
-    font-size: 8px;
-    font-weight: 400;
-    color: var(--text-muted);
-    margin-top: 1px;
-    line-height: 1.1;
-    white-space: nowrap;
+    align-items: center;
 }
 
 .clock-right {
@@ -1076,15 +1037,15 @@ html[data-theme="dark"] .calendar-container {
 }
 
 .cell-lunar {
-    /* 修改位置：农历日期极端压缩 */
-    /* 前后逻辑：原 font-size:9px，现为6px */
-    /* 修改目的：强行压缩农历日期 */
-    font-size: 6px;
+    /* 修改位置：农历日期改为可见大小 */
+    /* 前后逻辑：原font-size:6px max-height:6px，现改为10px */
+    /* 修改目的：农历与阳历同行显示 */
+    font-size: 10px;
     font-weight: 400;
     color: var(--text-muted);
     line-height: 1;
-    max-height: 6px;
-    overflow: hidden;
+    max-height: 10px;
+    overflow: visible;
 }
 
 .cell-holiday {
@@ -1284,14 +1245,16 @@ html[data-theme="dark"] .holiday-bar.filtered {
     cursor: pointer;
 }
 
-.modal-inputs {
+.modal-inputs-wrapper {
     display: flex;
+    flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 12px;
 }
 
-.modal-inputs input {
-    width: 70px;
+.modal-inputs-wrapper input {
+    flex: 1;
+    min-width: 60px;
     height: 32px;
     border-radius: 4px;
     border: 1px solid var(--border);
@@ -1303,7 +1266,7 @@ html[data-theme="dark"] .holiday-bar.filtered {
     transition: all 0.2s ease;
 }
 
-.modal-inputs input:focus {
+.modal-inputs-wrapper input:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 }
@@ -1369,11 +1332,11 @@ html[data-theme="dark"] .holiday-bar.filtered {
 
 @media (max-width: 1024px) {
     .clock-right {
-        min-width: 260px;
+        flex-basis: 70%;
     }
 
     .clock-left {
-        min-width: 160px;
+        flex-basis: 30%;
     }
 }
 
