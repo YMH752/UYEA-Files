@@ -1469,3 +1469,156 @@ html[data-theme="dark"] .holiday-bar.filtered {
 .calendar-grid {
     animation: fadeUp 0.3s ease;
 }
+
+
+/* ════════════════════════════════════════════════════════════
+   移动端优化 (不改变HTML结构)
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    /* 时钟日历改为垂直堆叠 */
+    .clock-display {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px;
+    }
+    
+    .clock-left {
+        flex-basis: auto;
+        width: 100%;
+        min-width: unset;
+        text-align: center;
+    }
+    
+    .clock-right {
+        flex-basis: auto;
+        width: 100%;
+        min-width: unset;
+    }
+    
+    /* 时钟时间显示优化 */
+    .clock-time-main {
+        font-size: 36px;
+        letter-spacing: -1px;
+    }
+    
+    .clock-date-gregorian {
+        font-size: 13px !important;
+    }
+    
+    .clock-date-lunar {
+        font-size: 12px !important;
+    }
+    
+    /* 日历优化 */
+    .calendar-header {
+        margin-bottom: 6px;
+    }
+    
+    .calendar-title {
+        font-size: 16px;
+    }
+    
+    .calendar-jump-btn-header {
+        font-size: 11px;
+    }
+    
+    .weekday {
+        font-size: 12px;
+        padding: 1px 0;
+    }
+    
+    .calendar-cell {
+        min-height: 24px;
+        padding: 2px;
+        gap: 1px;
+    }
+    
+    .cell-solar {
+        font-size: 14px;
+    }
+    
+    .cell-lunar {
+        font-size: 9px;
+        max-height: 9px;
+    }
+    
+    /* 卡片布局 */
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .card-item {
+        min-height: 100px;
+    }
+    
+    /* 搜索框宽度 */
+    .search-input {
+        width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .clock-display {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .clock-time-main {
+        font-size: 32px;
+        letter-spacing: -2px;
+    }
+    
+    .clock-date-gregorian {
+        font-size: 12px !important;
+    }
+    
+    .clock-date-lunar {
+        font-size: 11px !important;
+    }
+    
+    .calendar-title {
+        font-size: 15px;
+    }
+    
+    .weekday {
+        font-size: 11px;
+    }
+    
+    .calendar-cell {
+        min-height: 22px;
+        padding: 1px;
+    }
+    
+    .cell-solar {
+        font-size: 13px;
+    }
+    
+    .cell-lunar {
+        font-size: 8px;
+        max-height: 8px;
+    }
+    
+    .grid-container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    
+    .search-input {
+        width: 100px;
+    }
+    
+    .header-right {
+        gap: 8px;
+    }
+    
+    .lang-selector {
+        padding: 2px;
+    }
+    
+    .lang-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+}
