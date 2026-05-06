@@ -1471,16 +1471,45 @@ html[data-theme="dark"] .holiday-bar.filtered {
 }
 
 
+
+
+/* 桌面版紧凑优化 */
+.main-content {
+    padding: 12px !important;
+}
+
+.content-wrapper {
+    max-width: 100%;
+}
+
+.clock-display {
+    margin-bottom: 12px;
+}
+
+.section-group {
+    margin-bottom: 20px;
+}
+
+.section-header {
+    margin-bottom: 12px;
+    padding-bottom: 4px;
+}
+
+.grid-container {
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
 /* ════════════════════════════════════════════════════════════
-   移动端优化 (不改变HTML结构)
+   极端压缩模式 - 最大化紧凑
    ════════════════════════════════════════════════════════════ */
 
 @media (max-width: 768px) {
-    /* 时钟日历改为垂直堆叠 */
     .clock-display {
         flex-direction: column;
-        gap: 12px;
-        padding: 12px;
+        gap: 6px;
+        padding: 8px;
+        margin-bottom: 8px;
     }
     
     .clock-left {
@@ -1488,6 +1517,7 @@ html[data-theme="dark"] .holiday-bar.filtered {
         width: 100%;
         min-width: unset;
         text-align: center;
+        padding: 4px 0;
     }
     
     .clock-right {
@@ -1496,129 +1526,278 @@ html[data-theme="dark"] .holiday-bar.filtered {
         min-width: unset;
     }
     
-    /* 时钟时间显示优化 */
     .clock-time-main {
-        font-size: 36px;
+        font-size: 32px;
         letter-spacing: -1px;
+        line-height: 1;
+        margin: 0;
     }
     
     .clock-date-gregorian {
-        font-size: 13px !important;
+        font-size: 12px !important;
+        margin-top: 2px;
+        line-height: 1.2;
     }
     
     .clock-date-lunar {
-        font-size: 12px !important;
+        font-size: 11px !important;
+        margin-top: 0px;
+        line-height: 1.2;
     }
     
-    /* 日历优化 */
+    .mobile-holiday-badge {
+        margin-top: 2px !important;
+    }
+    
+    /* 日历容器压缩 */
+    .calendar-container {
+        padding: 6px;
+        gap: 2px;
+    }
+    
     .calendar-header {
-        margin-bottom: 6px;
+        margin-bottom: 4px;
+        gap: 8px;
     }
     
     .calendar-title {
-        font-size: 16px;
+        font-size: 15px;
+        font-weight: 600;
     }
     
     .calendar-jump-btn-header {
-        font-size: 11px;
+        font-size: 10px;
+    }
+    
+    .calendar-weekdays {
+        gap: 0px;
+        margin-bottom: 2px;
     }
     
     .weekday {
-        font-size: 12px;
-        padding: 1px 0;
+        font-size: 11px;
+        padding: 0px;
+        line-height: 1;
+        height: 18px;
+    }
+    
+    .calendar-grid {
+        gap: 0px;
     }
     
     .calendar-cell {
-        min-height: 24px;
-        padding: 2px;
-        gap: 1px;
+        min-height: 20px;
+        padding: 1px 0;
+        gap: 0;
+        border-radius: 2px;
     }
     
     .cell-solar {
-        font-size: 14px;
+        font-size: 13px;
+        line-height: 1;
+        font-weight: 600;
     }
     
     .cell-lunar {
-        font-size: 9px;
-        max-height: 9px;
+        font-size: 8px;
+        line-height: 1;
+        max-height: 8px;
+        overflow: hidden;
     }
     
-    /* 卡片布局 */
+    .cell-rest,
+    .cell-holiday {
+        font-size: 7px;
+        line-height: 1;
+        max-height: 8px;
+    }
+    
+    .calendar-nav-btn {
+        height: 8px;
+        font-size: 7px;
+        padding: 0;
+        margin: 1px 0;
+    }
+    
+    .holiday-bar {
+        min-height: 12px;
+        padding: 1px 2px;
+        margin-top: 1px;
+        gap: 1px;
+    }
+    
+    .holiday-tag {
+        font-size: 7px;
+        padding: 1px 3px;
+        border-radius: 2px;
+    }
+    
+    /* 卡片布局极端压缩 */
+    .section-header {
+        margin-bottom: 12px;
+        padding-bottom: 4px;
+    }
+    
+    .section-title {
+        font-size: 16px;
+        margin: 0;
+        padding-bottom: 4px;
+    }
+    
     .grid-container {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 8px;
+        margin-bottom: 16px;
     }
     
     .card-item {
-        min-height: 100px;
+        min-height: 80px;
+        padding: 8px;
+        border-radius: 8px;
     }
     
-    /* 搜索框宽度 */
-    .search-input {
-        width: 120px;
+    .card-title {
+        font-size: 13px;
     }
 }
 
 @media (max-width: 480px) {
     .clock-display {
         flex-direction: column;
-        gap: 10px;
-        padding: 10px;
+        gap: 4px;
+        padding: 6px;
+        margin-bottom: 6px;
+    }
+    
+    .clock-left {
+        padding: 2px 0;
     }
     
     .clock-time-main {
-        font-size: 32px;
+        font-size: 28px;
         letter-spacing: -2px;
+        line-height: 0.9;
+        margin: 0;
     }
     
     .clock-date-gregorian {
-        font-size: 12px !important;
+        font-size: 11px !important;
+        margin-top: 1px;
+        line-height: 1.1;
     }
     
     .clock-date-lunar {
-        font-size: 11px !important;
+        font-size: 10px !important;
+        margin-top: 0px;
+        line-height: 1.1;
+    }
+    
+    .calendar-container {
+        padding: 4px;
+        gap: 1px;
+    }
+    
+    .calendar-header {
+        margin-bottom: 2px;
+        gap: 6px;
     }
     
     .calendar-title {
-        font-size: 15px;
-    }
-    
-    .weekday {
-        font-size: 11px;
-    }
-    
-    .calendar-cell {
-        min-height: 22px;
-        padding: 1px;
-    }
-    
-    .cell-solar {
         font-size: 13px;
     }
     
+    .calendar-jump-btn-header {
+        font-size: 9px;
+    }
+    
+    .calendar-weekdays {
+        gap: 0px;
+        margin-bottom: 1px;
+    }
+    
+    .weekday {
+        font-size: 10px;
+        padding: 0px;
+        line-height: 1;
+        height: 16px;
+    }
+    
+    .calendar-grid {
+        gap: 0px;
+    }
+    
+    .calendar-cell {
+        min-height: 18px;
+        padding: 0px 1px;
+        gap: 0;
+    }
+    
+    .cell-solar {
+        font-size: 12px;
+        line-height: 0.95;
+    }
+    
     .cell-lunar {
-        font-size: 8px;
-        max-height: 8px;
+        font-size: 7px;
+        line-height: 0.9;
+        max-height: 7px;
+        overflow: hidden;
+    }
+    
+    .calendar-nav-btn {
+        height: 6px;
+        font-size: 6px;
+        margin: 0;
+    }
+    
+    .holiday-bar {
+        min-height: 10px;
+        padding: 1px 2px;
+        margin-top: 0px;
+        gap: 1px;
+    }
+    
+    .holiday-tag {
+        font-size: 6px;
+        padding: 1px 2px;
     }
     
     .grid-container {
         grid-template-columns: repeat(1, 1fr);
+        gap: 6px;
+        margin-bottom: 12px;
     }
     
-    .search-input {
-        width: 100px;
+    .card-item {
+        min-height: 70px;
+        padding: 6px;
     }
     
-    .header-right {
-        gap: 8px;
+    .card-title {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .clock-time-main {
+        font-size: 24px;
+        letter-spacing: -2px;
     }
     
-    .lang-selector {
-        padding: 2px;
+    .calendar-title {
+        font-size: 12px;
     }
     
-    .lang-btn {
-        padding: 4px 8px;
+    .calendar-cell {
+        min-height: 16px;
+    }
+    
+    .cell-solar {
         font-size: 11px;
+    }
+    
+    .cell-lunar {
+        font-size: 6px;
+        max-height: 6px;
     }
 }
