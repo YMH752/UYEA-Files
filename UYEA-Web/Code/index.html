@@ -358,14 +358,16 @@
 
             // ✅ 农历转换函数（使用本地 Lunar 库，只返回农历日）
             function solarToLunar(year, month, day) {
-                if (typeof Lunar !== 'undefined') {
-                    try {
-                        const solar = Lunar.Solar.fromYmd(year, month, day);
-                        const lunar = Lunar.Lunar.fromSolar(solar);
-                        return lunar.getDayInChinese();
-                    } catch (e) {
-                        console.warn('农历转换失败:', e);
+                try {
+                    // lunar.js 导出到全局作用域，直接使用 Solar 和 Lunar
+                    if (typeof Solar !== 'undefined' && typeof Lunar !== 'undefined') {
+                        const solar = Solar.fromYmd(year, month, day);
+                        const lunar = Lunar.fromSolar(solar);
+                        const dayStr = lunar.getDayInChinese();
+                        return dayStr;
                     }
+                } catch (e) {
+                    console.warn(`农历转换失败[${year}/${month}/${day}]:`, e);
                 }
                 return '';
             }
@@ -413,6 +415,9 @@
                     const lunarStr = solarToLunar(year, month, day);
                     if (lunarStr) {
                         cellHTML += `<div class="cell-lunar">${lunarStr}</div>`;
+                    } else {
+                        // 调试：如果solarToLunar返回空，显示提示
+                        console.warn(`日期${year}/${month}/${day}的农历为空`);
                     }
 
                     cell.innerHTML = cellHTML;
