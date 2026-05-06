@@ -289,4 +289,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     initClock();
+
+    /* ════════════════════════════════════════════════════════════
+       6. 图标加载（从 GitHub 仓库，失败时使用 emoji 替代）
+       ════════════════════════════════════════════════════════════ */
+    (function loadIcons() {
+        const iconBase = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/';
+        const emojiFallback = {
+            'ChatGPT': '🤖',
+            'Gemini': '✨',
+            'Claude': '🎯',
+            'DeepSeek': '🧠',
+            '文心一言': '📝',
+            '通义千问': '💬',
+            'Kimi': '🌟',
+            '豆包': '🫘',
+            '腾讯元宝': '💰',
+            'Perplexity': '🔍',
+            'Copilot': '🧑‍✈️',
+            'Grok': '🧬',
+            '小红书': '📕',
+            'B站': '📺',
+            '知乎': '💡',
+            'GitHub': '🐙',
+            'TinyPNG': '🐼',
+            'v0': '🌀'
+        };
+
+        const iconImgs = document.querySelectorAll('.card-icon img[data-site-name]');
+
+        iconImgs.forEach(img => {
+            const siteName = img.getAttribute('data-site-name');
+            if (!siteName) return;
+
+            const iconUrl = `${iconBase}${siteName}.ico`;
+            img.src = iconUrl;
+
+            img.onerror = function() {
+                const emoji = emojiFallback[siteName] || '🔗';
+                const cardIcon = img.parentElement;
+                img.remove();
+                const emojiSpan = document.createElement('span');
+                emojiSpan.className = 'icon-emoji';
+                emojiSpan.textContent = emoji;
+                emojiSpan.title = siteName;
+                cardIcon.appendChild(emojiSpan);
+            };
+        });
+    })();
 });
