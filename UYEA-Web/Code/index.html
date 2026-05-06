@@ -329,12 +329,24 @@
                 return {};
             }
 
-            // 初始化加载节假日数据
+            // 初始化加载节假日数据（等待Lunar库加载）
             async function initializeHolidayData() {
                 const skeleton = document.getElementById('calendarSkeleton');
                 const grid = document.getElementById('calendarGrid');
                 if (skeleton) skeleton.classList.remove('hidden');
                 if (grid) grid.style.display = 'none';
+
+                // 等待Lunar库加载
+                await new Promise(resolve => {
+                    function checkLunar() {
+                        if (typeof Lunar !== 'undefined') {
+                            resolve();
+                        } else {
+                            setTimeout(checkLunar, 50);
+                        }
+                    }
+                    checkLunar();
+                });
 
                 holidayData = await fetchHolidaysByYear(currentCalendarYear);
                 renderCalendar(currentCalendarYear, currentCalendarMonth);
