@@ -492,44 +492,16 @@
 
             // ✅ 农历转换函数（使用本地 Lunar 库，只返回农历日）
             function solarToLunar(year, month, day) {
-                // 优先使用已加载的 Lunar 库
-                if (typeof Lunar !== 'undefined') {
-                    try {
-                        const lunar = Lunar.fromSolar(year, month, day);
-                        // 只返回“日”部分，如“初一”、“廿三”
+                try {
+                    if (typeof Solar !== 'undefined' && typeof Lunar !== 'undefined') {
+                        const solar = Solar.fromYmd(year, month, day);
+                        const lunar = Lunar.fromSolar(solar);
                         return lunar.getDayInChinese();
-                    } catch (e) {
-                        // 库调用失败时走回退
                     }
+                } catch (e) {
+                    console.warn(`农历转换失败[${year}/${month}/${day}]:`, e);
                 }
-                // 本地回退（仅当库完全不可用时启用，基于 2026-02-17 正月初一 的简化推算）
-                const baseDate = new Date(2026, 1, 17); // 2026年2月17日 = 正月初一
-                const targetDate = new Date(year, month - 1, day);
-                const diffDays = Math.round((targetDate - baseDate) / (1000 * 60 * 60 * 24));
-                
-                const lunarDays = [
-                    '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
-                    '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
-                    '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'
-                ];
-                
-                let lunarMonth = 1;
-                let lunarDay = diffDays + 1;
-                
-                // 极简逐月调整（30天/月）
-                while (lunarDay > 30) {
-                    lunarDay -= 30;
-                    lunarMonth++;
-                    if (lunarMonth > 12) lunarMonth = 1;
-                }
-                while (lunarDay < 1) {
-                    lunarMonth--;
-                    if (lunarMonth < 1) lunarMonth = 12;
-                    lunarDay += 30;
-                }
-                
-                const dayIdx = Math.max(0, Math.min(lunarDay - 1, 29));
-                return lunarDays[dayIdx];
+                return '';
             }
 
             function renderCalendar(year, month) {
