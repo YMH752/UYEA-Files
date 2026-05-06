@@ -53,6 +53,18 @@
             text-align: center;
         }
         
+        .clock-date-gregorian {
+            font-size: 16px !important;
+            font-weight: 500;
+        }
+        
+        .clock-date-lunar {
+            font-size: 14px !important;
+            font-weight: 400;
+            white-space: nowrap;
+            overflow: visible;
+        }
+        
         .calendar-header {
             display: flex;
             justify-content: center;
@@ -175,9 +187,9 @@
                 <!-- 语言切换 -->
                 <div class="lang-selector" id="langSelector">
                     <div class="lang-highlight" id="langHighlight"></div>
-                    <button class="lang-btn active" data-lang="zh-CN">中文</button>
-                    <button class="lang-btn" data-lang="zh-TW">繁中</button>
-                    <button class="lang-btn" data-lang="en">English</button>
+                    <button class="lang-btn active" data-lang="zh-CN">CN</button>
+                    <button class="lang-btn" data-lang="zh-TW">CN_HK</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
                 </div>
 
                 <div class="header-search-wrapper" style="position: relative;">
