@@ -163,6 +163,7 @@
                                 <div class="skeleton-cell"></div>
                                 <div class="skeleton-cell"></div>
                                 <div class="skeleton-cell"></div>
+                                <div class="skeleton-cell"></div>
                             </div>
                         </div>
                         <div class="holiday-bar" id="holidayBar"></div>
@@ -265,9 +266,6 @@
     </main>
 
     <script src="script.js" defer></script>
-    <!-- 修改位置：删除holidays.js引入以及lunar.min.js CDN加载 -->
-    <!-- 前后逻辑：原为加载本地holidays.js，后改为CDN的lunar库，现全部移除 -->
-    <!-- 修改目的：使用内置精确农历硬编码表，彻底解决CDN加载和计算错误问题 -->
 
     <!-- ✅ 模态框 HTML（必须在内联脚本之前被解析） -->
     <div class="modal-overlay" id="modalOverlay"></div>
@@ -288,7 +286,10 @@
         </div>
     </div>
 
-    <!-- ✅ 日历内联脚本（使用内置精确农历表） -->
+    <!-- ✅ 本地农历计算库（未压缩版，便于调试） -->
+    <script src="lunar.js"></script>
+
+    <!-- ✅ 日历内联脚本（Lunar 库已就绪） -->
     <script>
         (function() {
             // 日历全局变量
@@ -301,20 +302,9 @@
             let holidayData = {};
             let fetchLock = false;
 
-            // ✅ 内置精确农历数据：每年 [正月初一公历Date对象, 每月天数数组(12个月)]
-            const LUNAR_DATA = {
-                2026: [new Date(2026, 1, 17), [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 30]],
-                2027: [new Date(2027, 1, 5),  [30, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30]],
-                2028: [new Date(2028, 0, 26), [30, 30, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29]]  // 预备
-            };
-
-            const LUNAR_DAYS = [
-                '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
-                '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
-                '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'
-            ];
-
             // 修改位置：添加API获取节假日函数
+            // 前后逻辑：原使用硬编码HOLIDAYS对象，现调用API获取当前年份数据
+            // 修改目的：根据年份动态获取节假日数据
             async function fetchHolidaysByYear(year) {
                 try {
                     const response = await fetch(`https://www.mxnzp.com/api/holiday/list?year=${year}`);
@@ -339,6 +329,7 @@
                 return {};
             }
 
+            // 初始化加载节假日数据
             async function initializeHolidayData() {
                 const skeleton = document.getElementById('calendarSkeleton');
                 const grid = document.getElementById('calendarGrid');
@@ -353,60 +344,59 @@
                 if (grid) grid.style.display = 'grid';
             }
 
-            // ✅ 精确农历转换（内置表，无依赖）
+            // ✅ 农历转换函数（使用本地 Lunar 库，只返回农历日）
             function solarToLunar(year, month, day) {
-                const info = LUNAR_DATA[year];
-                if (info) {
-                    const baseDate = info[0];
-                    const monthDays = info[1];
-                    const targetDate = new Date(year, month - 1, day);
-                    const diffDays = Math.round((targetDate - baseDate) / (1000 * 60 * 60 * 24));
-                    if (diffDays >= 0) {
-                        let remaining = diffDays;
-                        for (let m = 0; m < 12; m++) {
-                            if (remaining < monthDays[m]) {
-                                return LUNAR_DAYS[remaining]; // remaining 是 0-index 的天数
-                            }
-                            remaining -= monthDays[m];
-                        }
-                        // 如果超出当年，顺延到下一年（可能用于12月底跨年）
-                    } else {
-                        // 日期在当年正月初一之前，属于上一农历年
-                        // 尝试查找上一年的数据
-                        const prevYearInfo = LUNAR_DATA[year - 1];
-                        if (prevYearInfo) {
-                            const prevBase = prevYearInfo[0];
-                            const prevMonthDays = prevYearInfo[1];
-                            const prevDiff = Math.round((targetDate - prevBase) / (1000 * 60 * 60 * 24));
-                            if (prevDiff >= 0) {
-                                let remaining = prevDiff;
-                                for (let m = 0; m < 12; m++) {
-                                    if (remaining < prevMonthDays[m]) {
-                                        return LUNAR_DAYS[remaining];
-                                    }
-                                    remaining -= prevMonthDays[m];
-                                }
-                            }
-                        }
+                // 优先使用已加载的 Lunar 库
+                if (typeof Lunar !== 'undefined') {
+                    try {
+                        const lunar = Lunar.fromSolar(year, month, day);
+                        // 只返回“日”部分，如“初一”、“廿三”
+                        return lunar.getDayInChinese();
+                    } catch (e) {
+                        // 库调用失败时走回退
                     }
                 }
-                // 回退：使用简单线性估算（极少执行）
-                const baseDate = new Date(2026, 1, 17);
+                // 本地回退（仅当库完全不可用时启用，基于 2026-02-17 正月初一 的简化推算）
+                const baseDate = new Date(2026, 1, 17); // 2026年2月17日 = 正月初一
                 const targetDate = new Date(year, month - 1, day);
                 const diffDays = Math.round((targetDate - baseDate) / (1000 * 60 * 60 * 24));
-                let lunarDay = ((diffDays % 30) + 30) % 30;
-                return LUNAR_DAYS[lunarDay];
+                
+                const lunarDays = [
+                    '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
+                    '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+                    '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'
+                ];
+                
+                let lunarMonth = 1;
+                let lunarDay = diffDays + 1;
+                
+                // 极简逐月调整（30天/月）
+                while (lunarDay > 30) {
+                    lunarDay -= 30;
+                    lunarMonth++;
+                    if (lunarMonth > 12) lunarMonth = 1;
+                }
+                while (lunarDay < 1) {
+                    lunarMonth--;
+                    if (lunarMonth < 1) lunarMonth = 12;
+                    lunarDay += 30;
+                }
+                
+                const dayIdx = Math.max(0, Math.min(lunarDay - 1, 29));
+                return lunarDays[dayIdx];
             }
 
             function renderCalendar(year, month) {
                 const firstDay = new Date(year, month - 1, 1).getDay();
                 const daysInMonth = new Date(year, month, 0).getDate();
                 const daysInPrevMonth = new Date(year, month - 1, 0).getDate();
+
                 const grid = document.getElementById('calendarGrid');
                 if (!grid) return;
+
                 grid.innerHTML = '';
 
-                // 上个月日期
+                // 上个月的日期
                 for (let i = firstDay - 1; i >= 0; i--) {
                     const cell = document.createElement('div');
                     cell.className = 'calendar-cell other-month';
@@ -414,11 +404,12 @@
                     grid.appendChild(cell);
                 }
 
-                // 当月日期
+                // 当月的日期
                 const today = new Date();
                 for (let day = 1; day <= daysInMonth; day++) {
                     const cell = document.createElement('div');
                     cell.className = 'calendar-cell';
+
                     const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     const isToday = today.getFullYear() === year && today.getMonth() === month - 1 && today.getDate() === day;
                     if (isToday) cell.classList.add('today');
@@ -441,6 +432,7 @@
                     }
 
                     cell.innerHTML = cellHTML;
+
                     cell.addEventListener('click', () => {
                         const alreadySelected = cell.classList.contains('selected');
                         document.querySelectorAll('.calendar-cell.selected').forEach(c => c.classList.remove('selected'));
@@ -449,10 +441,11 @@
                             selectedDate = new Date(year, month - 1, day);
                         }
                     });
+
                     grid.appendChild(cell);
                 }
 
-                // 下个月日期
+                // 下个月的日期
                 const totalCells = grid.children.length;
                 const remainingCells = 42 - totalCells;
                 for (let day = 1; day <= remainingCells; day++) {
@@ -591,19 +584,17 @@
                 const d = parseInt(document.getElementById('jumpDay').value, 10);
                 if (!y || !m || !d) { alert('请输入完整的年月日'); return; }
                 let targetYear = y, targetMonth = m, targetDay = d;
-                if (type === 'lunar') {
-                    // 使用内置数据反向查找
-                    const info = LUNAR_DATA[y];
-                    if (!info) { alert('暂不支持该年份的农历跳转'); return; }
-                    const base = info[0];
-                    const monthDays = info[1];
-                    let offset = -1;
-                    for (let i = 0; i < m - 1; i++) offset += monthDays[i];
-                    offset += d;
-                    const targetDate = new Date(base.getTime() + offset * 24 * 60 * 60 * 1000);
-                    targetYear = targetDate.getFullYear();
-                    targetMonth = targetDate.getMonth() + 1;
-                    targetDay = targetDate.getDate();
+                if (type === 'lunar' && typeof Lunar !== 'undefined') {
+                    try {
+                        const lunar = Lunar.fromYmd(y, m, d);
+                        const solar = lunar.getSolar();
+                        targetYear = solar.getYear();
+                        targetMonth = solar.getMonth();
+                        targetDay = solar.getDay();
+                    } catch (e) {
+                        alert('农历日期转换失败');
+                        return;
+                    }
                 }
                 const maxDay = new Date(targetYear, targetMonth, 0).getDate();
                 if (targetDay < 1 || targetDay > maxDay) { alert(`${targetMonth}月最多有${maxDay}天`); return; }
