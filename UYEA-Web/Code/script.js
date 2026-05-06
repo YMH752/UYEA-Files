@@ -278,9 +278,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // 初始化时钟
-    updateClock();
-    
-    // 每秒更新一次时钟
-    setInterval(updateClock, 1000);
+    // 初始化时钟（等待Lunar库加载）
+    function initClock() {
+        if (typeof Lunar !== 'undefined') {
+            updateClock();
+            setInterval(updateClock, 1000);
+        } else {
+            // 如果Lunar库还未加载，继续等待
+            setTimeout(initClock, 100);
+        }
+    }
+    initClock();
 });
