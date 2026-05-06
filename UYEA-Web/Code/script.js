@@ -265,10 +265,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 更新农历日期
         const clockDateLunar = document.getElementById('clockDateLunar');
-        if (clockDateLunar && typeof Lunar !== 'undefined') {
+        if (clockDateLunar && typeof Solar !== 'undefined' && typeof Lunar !== 'undefined') {
             try {
-                const solar = Lunar.Solar.fromYmd(year, month, day);
-                const lunar = Lunar.Lunar.fromSolar(solar);
+                const solar = Solar.fromYmd(year, month, day);
+                const lunar = Lunar.fromSolar(solar);
                 const lunarMonthStr = lunar.getMonthInChinese();
                 const lunarDayStr = lunar.getDayInChinese();
                 clockDateLunar.textContent = `（农历${lunarMonthStr}${lunarDayStr}）`;
