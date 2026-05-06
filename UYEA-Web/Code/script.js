@@ -238,21 +238,49 @@ document.addEventListener('DOMContentLoaded', () => {
        4. 日历和农历功能
        ════════════════════════════════════════════════════════════ */
     
-    // 农历数据表
-    const lunarMonths = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
-    const lunarDays = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
-                      '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
-                      '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
-
-    function solarToLunar(year, month, day) {
-    try {
-        // 使用 lunar-javascript 库计算
-        const date = new Date(year, month - 1, day);
-        const lunar = Lunar.fromDate(date);
-        const dayName = lunar.getDayInChinese();
-        return `农历${dayName}`;
-    } catch (e) {
-        console.error('Lunar library error:', e);
-        return '获取中...';
+    /* ════════════════════════════════════════════════════════════
+       5. 实时时钟更新（包括农历）
+       ════════════════════════════════════════════════════════════ */
+    
+    function updateClock() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const day = now.getDate();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+        // 更新数字时钟
+        const clockTimeMain = document.getElementById('clockTimeMain');
+        if (clockTimeMain) {
+            clockTimeMain.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        // 更新公历日期
+        const clockDateGregorian = document.getElementById('clockDateGregorian');
+        if (clockDateGregorian) {
+            clockDateGregorian.textContent = `${year}年${month}月${day}日`;
+        }
+        
+        // 更新农历日期
+        const clockDateLunar = document.getElementById('clockDateLunar');
+        if (clockDateLunar && typeof Lunar !== 'undefined') {
+            try {
+                const solar = Lunar.Solar.fromYmd(year, month, day);
+                const lunar = Lunar.Lunar.fromSolar(solar);
+                const lunarMonthStr = lunar.getMonthInChinese();
+                const lunarDayStr = lunar.getDayInChinese();
+                clockDateLunar.textContent = `（农历${lunarMonthStr}${lunarDayStr}）`;
+            } catch (e) {
+                console.warn('农历更新失败:', e);
+            }
+        }
     }
+    
+    // 初始化时钟
+    updateClock();
+    
+    // 每秒更新一次时钟
+    setInterval(updateClock, 1000);
 });
