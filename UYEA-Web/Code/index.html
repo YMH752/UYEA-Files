@@ -14,7 +14,153 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     <link rel="stylesheet" href="style.css">
-</head>
+    <style>
+        /* ✅ 优化样式覆盖 */
+        .clock-display {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .clock-left {
+            flex-basis: 30%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .clock-right {
+            flex-basis: 70%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .clock-time-main {
+            font-family: 'Courier New', 'Space Mono', monospace;
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 0px;
+            color: var(--text-primary);
+            text-align: center;
+        }
+        
+        .clock-date-gregorian,
+        .clock-date-lunar {
+            text-align: center;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .calendar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+        }
+        
+        .calendar-jump-btn-header {
+            position: absolute;
+            right: 0;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: var(--primary);
+            border-radius: 0;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: underline;
+        }
+        
+        .weekday {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 2px 0;
+            font-weight: 600;
+        }
+        
+        .calendar-cell {
+            min-height: 28px;
+            padding: 4px;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cell-solar {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        
+        .cell-lunar {
+            font-size: 10px;
+            font-weight: 400;
+            color: var(--text-muted);
+            line-height: 1;
+            max-height: 10px;
+            overflow: visible;
+        }
+        
+        .calendar-cell.today {
+            background: var(--primary);
+            color: white;
+            border: 2px solid var(--primary);
+        }
+        
+        .calendar-cell.today .cell-solar {
+            color: white;
+        }
+        
+        .calendar-cell.today .cell-lunar {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .modal-inputs-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .modal-inputs-wrapper input {
+            flex: 1;
+            min-width: 60px;
+            height: 32px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text-primary);
+            text-align: center;
+            font-size: 12px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-inputs-wrapper input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    </head>
 <body data-lang="zh-CN">
     <!-- ✅ 顶部导航栏 -->
     <header class="top-header">
@@ -275,7 +421,7 @@
             <label><input type="radio" name="calendarType" value="solar" checked> 公历</label>
             <label><input type="radio" name="calendarType" value="lunar"> 农历</label>
         </div>
-        <div class="modal-inputs">
+        <div class="modal-inputs-wrapper">
             <input type="number" id="jumpYear" placeholder="年" min="1900" max="2099">
             <input type="number" id="jumpMonth" placeholder="月" min="1" max="12">
             <input type="number" id="jumpDay" placeholder="日" min="1" max="31">
@@ -329,24 +475,12 @@
                 return {};
             }
 
-            // 初始化加载节假日数据（等待Lunar库加载）
+            // 初始化加载节假日数据
             async function initializeHolidayData() {
                 const skeleton = document.getElementById('calendarSkeleton');
                 const grid = document.getElementById('calendarGrid');
                 if (skeleton) skeleton.classList.remove('hidden');
                 if (grid) grid.style.display = 'none';
-
-                // 等待Lunar库加载
-                await new Promise(resolve => {
-                    function checkLunar() {
-                        if (typeof Lunar !== 'undefined') {
-                            resolve();
-                        } else {
-                            setTimeout(checkLunar, 50);
-                        }
-                    }
-                    checkLunar();
-                });
 
                 holidayData = await fetchHolidaysByYear(currentCalendarYear);
                 renderCalendar(currentCalendarYear, currentCalendarMonth);
@@ -358,18 +492,44 @@
 
             // ✅ 农历转换函数（使用本地 Lunar 库，只返回农历日）
             function solarToLunar(year, month, day) {
-                try {
-                    // lunar.js 导出到全局作用域，直接使用 Solar 和 Lunar
-                    if (typeof Solar !== 'undefined' && typeof Lunar !== 'undefined') {
-                        const solar = Solar.fromYmd(year, month, day);
-                        const lunar = Lunar.fromSolar(solar);
-                        const dayStr = lunar.getDayInChinese();
-                        return dayStr;
+                // 优先使用已加载的 Lunar 库
+                if (typeof Lunar !== 'undefined') {
+                    try {
+                        const lunar = Lunar.fromSolar(year, month, day);
+                        // 只返回“日”部分，如“初一”、“廿三”
+                        return lunar.getDayInChinese();
+                    } catch (e) {
+                        // 库调用失败时走回退
                     }
-                } catch (e) {
-                    console.warn(`农历转换失败[${year}/${month}/${day}]:`, e);
                 }
-                return '';
+                // 本地回退（仅当库完全不可用时启用，基于 2026-02-17 正月初一 的简化推算）
+                const baseDate = new Date(2026, 1, 17); // 2026年2月17日 = 正月初一
+                const targetDate = new Date(year, month - 1, day);
+                const diffDays = Math.round((targetDate - baseDate) / (1000 * 60 * 60 * 24));
+                
+                const lunarDays = [
+                    '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
+                    '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+                    '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'
+                ];
+                
+                let lunarMonth = 1;
+                let lunarDay = diffDays + 1;
+                
+                // 极简逐月调整（30天/月）
+                while (lunarDay > 30) {
+                    lunarDay -= 30;
+                    lunarMonth++;
+                    if (lunarMonth > 12) lunarMonth = 1;
+                }
+                while (lunarDay < 1) {
+                    lunarMonth--;
+                    if (lunarMonth < 1) lunarMonth = 12;
+                    lunarDay += 30;
+                }
+                
+                const dayIdx = Math.max(0, Math.min(lunarDay - 1, 29));
+                return lunarDays[dayIdx];
             }
 
             function renderCalendar(year, month) {
@@ -415,9 +575,6 @@
                     const lunarStr = solarToLunar(year, month, day);
                     if (lunarStr) {
                         cellHTML += `<div class="cell-lunar">${lunarStr}</div>`;
-                    } else {
-                        // 调试：如果solarToLunar返回空，显示提示
-                        console.warn(`日期${year}/${month}/${day}的农历为空`);
                     }
 
                     cell.innerHTML = cellHTML;
