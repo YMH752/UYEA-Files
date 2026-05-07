@@ -107,6 +107,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            height: auto;          /* 允许高度随内容自适应 */
         }
         .cell-solar {
             font-size: 16px;
@@ -119,18 +120,16 @@
             font-weight: 400;
             color: var(--text-muted);
             line-height: 1;
-            max-height: 10px;
-            overflow: visible;
+            max-height: none;      /* 允许换行，不再限高 */
         }
         .cell-holiday {
-            font-size: 10px;   /* 与农历日期一样大 */
+            font-size: 10px;       /* 与农历一样大 */
             font-weight: 600;
             color: var(--primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-            line-height: 1;
+            word-break: break-all; /* 允许任意位置换行 */
+            line-height: 1.1;
+            text-align: center;
+            /* 移除 nowrap、overflow、text-overflow */
         }
         .calendar-cell.today {
             background: var(--primary);
@@ -140,8 +139,9 @@
         .calendar-cell.today .cell-solar {
             color: white;
         }
-        .calendar-cell.today .cell-lunar {
-            color: rgba(255, 255, 255, 0.7);
+        .calendar-cell.today .cell-lunar,
+        .calendar-cell.today .cell-holiday {
+            color: rgba(255, 255, 255, 0.85);
         }
         .modal-inputs-wrapper {
             display: flex;
@@ -633,8 +633,6 @@
 
             document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
             document.getElementById('nextMonth').addEventListener('click', () => changeMonth(1));
-
-            // 移除触摸滑动切换月份
 
             const modalOverlay = document.getElementById('modalOverlay');
             const modalJump = document.getElementById('modalJump');
