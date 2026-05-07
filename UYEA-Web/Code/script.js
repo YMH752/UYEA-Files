@@ -324,20 +324,24 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 图标映射表 (domain -> 文件名)
     const iconMap = {
-        'chatgpt.com': 'chatgpt.png',
-        'gemini.google.com': 'gemini.png',
-        'claude.ai': 'claude.png',
-        'deepseek.com': 'deepseek.png',
-        'yiyan.baidu.com': 'baidu.png',
-        'qwen.aliyun.com': 'qwen.png',
-        'kimi.moonshot.cn': 'kimi.png',
-        'doubao.com': 'doubao.png',
-        'tongyi.aliyun.com': 'tongyi.png',
-        'perplexity.ai': 'perplexity.png',
-        'xiao-book.xiaohongshu.com': 'xiaohongshu.png',
-        'github.com': 'github.png',
-        'tinypng.com': 'tinypng.png',
-        'v0.dev': 'v0.png'
+        'chatgpt.com': 'chatgpt.ico',
+        'gemini.google.com': 'gemini.ico',
+        'claude.ai': 'claude.ico',
+        'deepseek.com': 'deepseek.ico',
+        'yiyan.baidu.com': 'yiyan.ico',
+        'qwen.aliyun.com': 'qianwen.ico',
+        'kimi.moonshot.cn': 'kimi.ico',
+        'doubao.com': 'doubao.ico',
+        'tongyi.aliyun.com': 'tongyi.ico',
+        'perplexity.ai': 'perplexity.ico',
+        'xiao-book.xiaohongshu.com': 'xiaohongshu.ico',
+        'github.com': 'github.ico',
+        'tinypng.com': 'tinypng.ico',
+        'v0.dev': 'v0.ico',
+        'zhihu.com': 'zhihu.ico',
+        'yuanbao.tencent.com': 'yuanbao.ico',
+        'grok.com': 'grok.ico',
+        'bilibili.com': 'bilibili.ico'
     };
     
     // emoji备选方案
@@ -349,13 +353,17 @@ document.addEventListener('DOMContentLoaded', () => {
         'yiyan.baidu.com': '🎯',
         'qwen.aliyun.com': '☁️',
         'kimi.moonshot.cn': '🌙',
-        'doubao.com': '🤖',
+        'doubao.com': '豆',
         'tongyi.aliyun.com': '🎨',
         'perplexity.ai': '🔮',
         'xiao-book.xiaohongshu.com': '📱',
         'github.com': '🐙',
         'tinypng.com': '🖼️',
-        'v0.dev': '⚡'
+        'v0.dev': '⚡',
+        'zhihu.com': '❔',
+        'yuanbao.tencent.com': '💎',
+        'grok.com': '🤖',
+        'bilibili.com': '📺'
     };
     
     
