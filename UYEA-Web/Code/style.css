@@ -151,9 +151,8 @@ body {
 }
 
 .lang-btn.active {
-    background: #000;
-    color: #fff;
-    font-weight: 600;
+    background: transparent;
+    color: white;
 }
 
 /* 搜索框 */
@@ -1805,5 +1804,44 @@ html[data-theme="dark"] .holiday-bar.filtered {
     .cell-lunar {
         font-size: 6px;
         max-height: 6px;
+    }
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   卡片图标骨架加载
+   ════════════════════════════════════════════════════════════ */
+
+.card-icon img {
+    transition: all 0.3s ease;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.card-icon img.skeleton-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+.card-icon img.icon-loaded {
+    opacity: 1;
+}
+
+.card-icon img.icon-emoji {
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
     }
 }
