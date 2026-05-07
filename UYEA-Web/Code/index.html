@@ -122,6 +122,16 @@
             max-height: 10px;
             overflow: visible;
         }
+        .cell-holiday {
+            font-size: 10px;   /* 与农历日期一样大 */
+            font-weight: 600;
+            color: var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            line-height: 1;
+        }
         .calendar-cell.today {
             background: var(--primary);
             color: white;
@@ -392,8 +402,6 @@
             let currentCalendarMonth = todayDate.getMonth() + 1;
             let selectedDate = todayDate;
             let isAnimating = false;
-            let touchStartY = 0;
-            let touchEndY = 0;
             let holidayData = {};
             let fetchLock = false;
 
@@ -452,7 +460,6 @@
                 return holidays;
             }
 
-            // 节日优先级，排前面的更重要
             function getImportantHolidayName(holidays) {
                 const priority = [
                     '春节', '元宵节', '清明节', '端午节', '七夕节',
@@ -516,12 +523,10 @@
                     if (holidays && holidays.length > 0) {
                         const holidayName = getImportantHolidayName(holidays);
                         const firstHoliday = holidays[0];
-                        // 休息日且不是连续假期首日，显示休标记
                         if (firstHoliday.isRest && !isFirstDayOfHoliday(dateStr, holidays)) {
                             cellHTML += `<div class="cell-rest">休</div>`;
                         }
                         cellHTML += `<div class="cell-holiday">${holidayName}</div>`;
-                        // 有节日就不显示农历
                     } else {
                         const lunarStr = solarToLunar(year, month, day);
                         if (lunarStr) {
@@ -629,17 +634,7 @@
             document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
             document.getElementById('nextMonth').addEventListener('click', () => changeMonth(1));
 
-            const calendarContainer = document.querySelector('.calendar-container');
-            if (calendarContainer) {
-                calendarContainer.addEventListener('touchstart', (e) => {
-                    touchStartY = e.changedTouches[0].screenY;
-                }, {passive: true});
-                calendarContainer.addEventListener('touchend', (e) => {
-                    touchEndY = e.changedTouches[0].screenY;
-                    const diff = touchStartY - touchEndY;
-                    if (Math.abs(diff) > 50) changeMonth(diff > 0 ? 1 : -1);
-                }, {passive: true});
-            }
+            // 移除触摸滑动切换月份
 
             const modalOverlay = document.getElementById('modalOverlay');
             const modalJump = document.getElementById('modalJump');
