@@ -86,7 +86,7 @@
             font-size: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
-            text-decoration: none;   /* 取消下划线 */
+            text-decoration: none;
         }
         .weekday {
             text-align: center;
@@ -107,29 +107,28 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: auto;          /* 允许高度随内容自适应 */
+            height: auto;
         }
         .cell-solar {
-            font-size: 16px;
+            font-size: clamp(12px, 2vw, 16px);
             font-weight: 600;
             color: var(--text-primary);
             line-height: 1;
         }
         .cell-lunar {
-            font-size: 10px;
+            font-size: clamp(7px, 1vw, 10px);
             font-weight: 400;
             color: var(--text-muted);
             line-height: 1;
-            max-height: none;      /* 允许换行，不再限高 */
+            white-space: nowrap;
         }
         .cell-holiday {
-            font-size: 10px;       /* 与农历一样大 */
+            font-size: clamp(7px, 1vw, 10px);
             font-weight: 600;
             color: var(--primary);
-            word-break: break-all; /* 允许任意位置换行 */
-            line-height: 1.1;
-            text-align: center;
-            /* 移除 nowrap、overflow、text-overflow */
+            line-height: 1;
+            white-space: nowrap;          /* 不换行 */
+            overflow: visible;            /* 不裁剪 */
         }
         .calendar-cell.today {
             background: var(--primary);
