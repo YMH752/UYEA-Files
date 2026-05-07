@@ -285,27 +285,177 @@ document.addEventListener('DOMContentLoaded', () => {
             setInterval(updateClock, 1000);
 
     /* ════════════════════════════════════════════════════════════
-       加载网站卡片图标
+       加载网站卡片图标 (GitHub素材 + 骨架加载)
        ════════════════════════════════════════════════════════════ */
+    
+    // 图标缓存机制 (localStorage)
+    const ICON_CACHE_KEY = 'uyea_icon_cache';
+    const ICON_CACHE_VERSION = 'v1';
+    
+    function getIconCache() {
+        try {
+            const cached = localStorage.getItem(ICON_CACHE_KEY);
+            if (cached) {
+                const data = JSON.parse(cached);
+                if (data.version === ICON_CACHE_VERSION) {
+                    return data.icons;
+                }
+            }
+        } catch (e) {}
+        return null;
+    }
+    
+    function setIconCache(icons) {
+        try {
+            localStorage.setItem(ICON_CACHE_KEY, JSON.stringify({
+                version: ICON_CACHE_VERSION,
+                icons: icons,
+                timestamp: Date.now()
+            }));
+        } catch (e) {}
+    }
+
+    const GITHUB_ICONS_BASE = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/';
+    
+    // 图标映射表 (domain -> 文件名)
+    const iconMap = {
+        'chatgpt.com': 'chatgpt.png',
+        'gemini.google.com': 'gemini.png',
+        'claude.ai': 'claude.png',
+        'deepseek.com': 'deepseek.png',
+        'yiyan.baidu.com': 'baidu.png',
+        'qwen.aliyun.com': 'qwen.png',
+        'kimi.moonshot.cn': 'kimi.png',
+        'doubao.com': 'doubao.png',
+        'tongyi.aliyun.com': 'tongyi.png',
+        'perplexity.ai': 'perplexity.png',
+        'xiao-book.xiaohongshu.com': 'xiaohongshu.png',
+        'github.com': 'github.png',
+        'tinypng.com': 'tinypng.png',
+        'v0.dev': 'v0.png'
+    };
+    
+    // emoji备选方案
+    const emojiMap = {
+        'chatgpt.com': '🤖',
+        'gemini.google.com': '✨',
+        'claude.ai': '🧠',
+        'deepseek.com': '🔍',
+        'yiyan.baidu.com': '🎯',
+        'qwen.aliyun.com': '☁️',
+        'kimi.moonshot.cn': '🌙',
+        'doubao.com': '🤖',
+        'tongyi.aliyun.com': '🎨',
+        'perplexity.ai': '🔮',
+        'xiao-book.xiaohongshu.com': '📱',
+        'github.com': '🐙',
+        'tinypng.com': '🖼️',
+        'v0.dev': '⚡'
+    };
+    
     function loadCardIcons() {
         const cardImages = document.querySelectorAll('.card-icon img');
-        cardImages.forEach(img => {
+        const imagePromises = [];
+        const loadedIcons = {};
+        
+        // 检查缓存
+        const cachedIcons = getIconCache();
+        
+        cardImages.forEach((img, index) => {
             const domain = img.dataset.domain;
             const siteName = img.dataset.siteName;
-            if (domain) {
-                // 使用Google的favicon服务
-                const iconUrl = `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
-                img.src = iconUrl;
-                img.alt = siteName || domain;
-                img.onerror = () => {
-                    // 如果加载失败，使用备选方案
-                    img.src = `https://www.google.com/s2/favicons?sz=64&domain=${domain}&t=${Date.now()}`;
-                };
+            
+            if (!domain) return;
+            
+            const iconFileName = iconMap[domain];
+            const emojiBackup = emojiMap[domain] || '🔗';
+            
+            // 添加骨架加载样式
+            img.classList.add('skeleton-loading');
+            
+            // 并行加载所有图标
+            const loadPromise = new Promise((resolve) => {
+                // 优先使用缓存
+                if (cachedIcons && cachedIcons[domain]) {
+                    img.src = cachedIcons[domain];
+                    img.classList.remove('skeleton-loading');
+                    img.classList.add('icon-loaded');
+                    img.alt = siteName || domain;
+                    loadedIcons[domain] = cachedIcons[domain];
+                    resolve();
+                    return;
+                }
+                
+                if (iconFileName) {
+                    const iconUrl = `${GITHUB_ICONS_BASE}${iconFileName}`;
+                    
+                    // 预加载图片
+                    const tempImg = new Image();
+                    tempImg.onload = () => {
+                        img.src = iconUrl;
+                        img.classList.remove('skeleton-loading');
+                        img.classList.add('icon-loaded');
+                        img.alt = siteName || domain;
+                        loadedIcons[domain] = iconUrl;
+                        resolve();
+                    };
+                    tempImg.onerror = () => {
+                        // 图标加载失败，使用emoji
+                        img.textContent = emojiBackup;
+                        img.classList.remove('skeleton-loading');
+                        img.classList.add('icon-emoji');
+                        loadedIcons[domain] = emojiBackup;
+                        resolve();
+                    };
+                    
+                    // 设置较短的超时 (500ms)
+                    const timeoutId = setTimeout(() => {
+                        tempImg.src = '';
+                        img.textContent = emojiBackup;
+                        img.classList.remove('skeleton-loading');
+                        img.classList.add('icon-emoji');
+                        loadedIcons[domain] = emojiBackup;
+                        resolve();
+                    }, 500);
+                    
+                    tempImg.onload = () => {
+                        clearTimeout(timeoutId);
+                        tempImg.onload();
+                    };
+                    tempImg.onerror = () => {
+                        clearTimeout(timeoutId);
+                        tempImg.onerror();
+                    };
+                    
+                    tempImg.src = iconUrl;
+                } else {
+                    // 没有对应的图标文件，直接使用emoji
+                    img.textContent = emojiBackup;
+                    img.classList.remove('skeleton-loading');
+                    img.classList.add('icon-emoji');
+                    loadedIcons[domain] = emojiBackup;
+                    resolve();
+                }
+            });
+            
+            imagePromises.push(loadPromise);
+        });
+        
+        // 所有图标加载完成后保存缓存
+        Promise.all(imagePromises).then(() => {
+            if (Object.keys(loadedIcons).length > 0) {
+                setIconCache(loadedIcons);
             }
+            console.log('✅ 所有卡片图标加载完成');
         });
     }
     
-    loadCardIcons();
+    // 立即启动图标加载 (使用requestIdleCallback以获得最佳性能)
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => loadCardIcons());
+    } else {
+        requestAnimationFrame(() => loadCardIcons());
+    }
         } else {
             // 如果Lunar库还未加载，继续等待
             setTimeout(initClock, 100);
