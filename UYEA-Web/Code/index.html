@@ -14,26 +14,31 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* 时钟日历改为上下布局 */
         .clock-display {
             display: flex;
+            flex-direction: column;   /* 垂直排列 */
             gap: 16px;
             padding: 16px;
             background: var(--surface);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
         }
+        
         .clock-left {
-            flex-basis: 30%;
+            width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
+        
         .clock-right {
-            flex-basis: 70%;
+            width: 100%;
             display: flex;
             flex-direction: column;
         }
+        
         .clock-time-main {
             font-family: 'Courier New', 'Space Mono', monospace;
             font-size: 48px;
@@ -46,20 +51,24 @@
             text-overflow: clip;
             width: 100%;
         }
+        
         .clock-date-gregorian,
         .clock-date-lunar {
             text-align: center;
         }
+        
         .clock-date-gregorian {
             font-size: 16px !important;
             font-weight: 500;
         }
+        
         .clock-date-lunar {
             font-size: 14px !important;
             font-weight: 400;
             white-space: nowrap;
             overflow: visible;
         }
+        
         .calendar-header {
             display: flex;
             justify-content: center;
@@ -67,12 +76,14 @@
             margin-bottom: 8px;
             position: relative;
         }
+        
         .calendar-title {
             font-size: 18px;
             font-weight: 600;
             color: var(--text-primary);
             text-align: center;
         }
+        
         .calendar-jump-btn-header {
             position: absolute;
             right: 0;
@@ -84,9 +95,9 @@
             font-size: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
-            /* 取消下划线 */
-            text-decoration: none;
+            text-decoration: none;   /* 取消下划线 */
         }
+        
         .weekday {
             text-align: center;
             font-size: 13px;
@@ -94,6 +105,7 @@
             padding: 2px 0;
             font-weight: 600;
         }
+        
         .calendar-cell {
             min-height: 28px;
             padding: 4px;
@@ -107,12 +119,14 @@
             justify-content: center;
             align-items: center;
         }
+        
         .cell-solar {
             font-size: 16px;
             font-weight: 600;
             color: var(--text-primary);
             line-height: 1;
         }
+        
         .cell-lunar {
             font-size: 10px;
             font-weight: 400;
@@ -121,23 +135,28 @@
             max-height: 10px;
             overflow: visible;
         }
+        
         .calendar-cell.today {
             background: var(--primary);
             color: white;
             border: 2px solid var(--primary);
         }
+        
         .calendar-cell.today .cell-solar {
             color: white;
         }
+        
         .calendar-cell.today .cell-lunar {
             color: rgba(255, 255, 255, 0.7);
         }
+        
         .modal-inputs-wrapper {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
             margin-bottom: 12px;
         }
+        
         .modal-inputs-wrapper input {
             flex: 1;
             min-width: 60px;
@@ -151,6 +170,7 @@
             outline: none;
             transition: all 0.2s ease;
         }
+        
         .modal-inputs-wrapper input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
@@ -418,7 +438,6 @@
 
             function buildFallbackHolidays(year) {
                 const holidays = {};
-                // 公历节日
                 for (let month = 1; month <= 12; month++) {
                     const daysInMonth = new Date(year, month, 0).getDate();
                     for (let day = 1; day <= daysInMonth; day++) {
@@ -429,7 +448,6 @@
                             if (!holidays[dateStr]) holidays[dateStr] = [];
                             holidays[dateStr].push({ name: fest, isRest: false });
                         }
-                        // 农历节日检测
                         try {
                             const solar = Solar.fromYmd(year, month, day);
                             const lunar = Lunar.fromSolar(solar);
@@ -445,15 +463,11 @@
                         } catch (e) {}
                     }
                 }
-                // 母亲节 (5月第2个周日)
                 const mayFirst = new Date(year, 4, 1);
-                const mayFirstDay = mayFirst.getDay();
-                const motherDay = 1 + (14 - mayFirstDay) % 7;
-                const motherDate = new Date(year, 4, motherDay);
+                const motherDay = 1 + (14 - mayFirst.getDay()) % 7;
                 const motherStr = `${year}-05-${String(motherDay).padStart(2,'0')}`;
                 if (!holidays[motherStr]) holidays[motherStr] = [];
                 holidays[motherStr].push({ name: '母亲节', isRest: false });
-
                 return holidays;
             }
 
