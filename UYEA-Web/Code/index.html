@@ -14,178 +14,34 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     <link rel="stylesheet" href="style.css">
     <style>
-        .clock-display {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding: 16px;
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-        }
-        .clock-left {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .clock-right {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        .clock-time-main {
-            font-family: 'Courier New', 'Space Mono', monospace;
-            font-size: 48px;
-            font-weight: 700;
-            letter-spacing: 0px;
-            color: var(--text-primary);
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: clip;
-            width: 100%;
-        }
-        .clock-date-gregorian,
-        .clock-date-lunar {
-            text-align: center;
-        }
-        .clock-date-gregorian {
-            font-size: 16px !important;
-            font-weight: 500;
-        }
-        .clock-date-lunar {
-            font-size: 14px !important;
-            font-weight: 400;
-            white-space: nowrap;
-        }
-        .calendar-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 8px;
-            position: relative;
-        }
-        .calendar-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-        }
-        .calendar-jump-btn-header {
-            position: absolute;
-            right: 0;
-            padding: 0;
-            border: none;
-            background: transparent;
-            color: var(--primary);
-            border-radius: 0;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-        }
-        .weekday {
-            text-align: center;
-            font-size: 13px;
-            color: var(--text-secondary);
-            padding: 2px 0;
-            font-weight: 600;
-        }
-        .calendar-cell {
-            min-height: 28px;
-            padding: 4px;
-            text-align: center;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: auto;
-            overflow: visible !important;
-        }
-        .cell-solar {
-            font-size: clamp(12px, 2vw, 16px);
-            font-weight: 600;
-            color: var(--text-primary);
-            line-height: 1;
-        }
-        .cell-lunar {
-            font-size: clamp(6px, 1vw, 9px);
-            font-weight: 400;
-            color: var(--text-muted);
-            line-height: 1;
-            white-space: nowrap;
-        }
-        .cell-holiday {
-            font-size: clamp(6px, 1vw, 9px);
-            font-weight: 600;
-            color: var(--primary);
-            line-height: 1;
-            white-space: nowrap;
-            overflow: visible;
-        }
-        .cell-rest {
-            position: absolute;
-            top: 0;
-            right: 0;
-            font-size: 5px;
-            font-weight: 700;
-            color: #ffffff;
-            background: var(--primary);
-            border-radius: 2px;
-            padding: 0 1px;
-            line-height: 1;
-            white-space: nowrap;
-            z-index: 1;
-        }
-        .calendar-cell.today {
-            background: var(--primary);
-            color: white;
-            border: 2px solid var(--primary);
-        }
-        .calendar-cell.today .cell-solar {
-            color: white;
-        }
-        .calendar-cell.today .cell-lunar,
-        .calendar-cell.today .cell-holiday {
-            color: rgba(255, 255, 255, 0.85);
-        }
-        .modal-inputs-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-        .modal-inputs-wrapper input {
-            flex: 1;
-            min-width: 60px;
-            height: 32px;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            background: var(--bg);
-            color: var(--text-primary);
-            text-align: center;
-            font-size: 12px;
-            outline: none;
-            transition: all 0.2s ease;
-        }
-        .modal-inputs-wrapper input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-        }
+        .clock-display { flex-direction: column; gap: 16px; padding: 16px; background: var(--surface); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
+        .clock-left { width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .clock-right { width: 100%; display: flex; flex-direction: column; }
+        .clock-time-main { font-family: 'Courier New', 'Space Mono', monospace; font-size: 48px; font-weight: 700; letter-spacing: 0px; color: var(--text-primary); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: clip; width: 100%; }
+        .clock-date-gregorian, .clock-date-lunar { text-align: center; }
+        .clock-date-gregorian { font-size: 16px !important; font-weight: 500; }
+        .clock-date-lunar { font-size: 14px !important; font-weight: 400; white-space: nowrap; }
+        .calendar-header { display: flex; justify-content: center; align-items: center; margin-bottom: 8px; position: relative; }
+        .calendar-title { font-size: 18px; font-weight: 600; color: var(--text-primary); text-align: center; }
+        .calendar-jump-btn-header { position: absolute; right: 0; padding: 0; border: none; background: transparent; color: var(--primary); border-radius: 0; font-size: 12px; cursor: pointer; transition: all 0.2s ease; text-decoration: none; }
+        .weekday { text-align: center; font-size: 13px; color: var(--text-secondary); padding: 2px 0; font-weight: 600; }
+        .calendar-cell { min-height: 28px; padding: 4px; text-align: center; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; height: auto; overflow: visible !important; }
+        .cell-solar { font-size: clamp(12px, 2vw, 16px); font-weight: 600; color: var(--text-primary); line-height: 1; }
+        .cell-lunar { font-size: clamp(6px, 1vw, 9px); font-weight: 400; color: var(--text-muted); line-height: 1; white-space: nowrap; }
+        .cell-holiday { font-size: clamp(6px, 1vw, 9px); font-weight: 600; color: var(--primary); line-height: 1; white-space: nowrap; overflow: visible; }
+        .cell-rest { position: absolute; top: 0; right: 0; font-size: 5px; font-weight: 700; color: #ffffff; background: var(--primary); border-radius: 2px; padding: 0 1px; line-height: 1; white-space: nowrap; z-index: 1; }
+        .calendar-cell.today { background: var(--primary); color: white; border: 2px solid var(--primary); }
+        .calendar-cell.today .cell-solar { color: white; }
+        .calendar-cell.today .cell-lunar, .calendar-cell.today .cell-holiday { color: rgba(255, 255, 255, 0.85); }
+        .modal-inputs-wrapper { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .modal-inputs-wrapper input { flex: 1; min-width: 60px; height: 32px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary); text-align: center; font-size: 12px; outline: none; transition: all 0.2s ease; }
+        .modal-inputs-wrapper input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body data-lang="zh-CN">
     <header class="top-header">
         <div class="header-container">
-            <div class="logo-section">
-                <a href="index.html" class="logo-text">UYEA</a>
-            </div>
+            <div class="logo-section"><a href="index.html" class="logo-text">UYEA</a></div>
             <div class="header-right">
                 <div class="lang-selector" id="langSelector">
                     <div class="lang-highlight" id="langHighlight"></div>
@@ -198,9 +54,7 @@
                     <div class="search-dropdown" id="searchDropdown">
                         <div class="search-container">
                             <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
-                                <button class="engine-trigger-btn" id="engineTriggerBtn">
-                                    <span id="engineTriggerLabel">百度</span>
-                                </button>
+                                <button class="engine-trigger-btn" id="engineTriggerBtn"><span id="engineTriggerLabel">百度</span></button>
                                 <div class="engine-dropdown-list">
                                     <div class="engine-option-item" data-value="site">站内</div>
                                     <div class="engine-option-item selected" data-value="baidu">百度</div>
@@ -212,11 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="menu-toggle" id="menuToggleBtn">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+                <button class="menu-toggle" id="menuToggleBtn"><span></span><span></span><span></span></button>
             </div>
         </div>
     </header>
@@ -251,24 +101,12 @@
                             <button class="calendar-jump-btn-header" id="jumpBtnHeader">跳转</button>
                         </div>
                         <div class="calendar-weekdays">
-                            <div class="weekday">日</div>
-                            <div class="weekday">一</div>
-                            <div class="weekday">二</div>
-                            <div class="weekday">三</div>
-                            <div class="weekday">四</div>
-                            <div class="weekday">五</div>
-                            <div class="weekday">六</div>
+                            <div class="weekday">日</div><div class="weekday">一</div><div class="weekday">二</div><div class="weekday">三</div><div class="weekday">四</div><div class="weekday">五</div><div class="weekday">六</div>
                         </div>
                         <div class="calendar-grid" id="calendarGrid"></div>
                         <div class="calendar-skeleton" id="calendarSkeleton">
                             <div class="skeleton-weekdays">
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
-                                <div class="skeleton-weekday"></div>
+                                <div class="skeleton-weekday"></div><div class="skeleton-weekday"></div><div class="skeleton-weekday"></div><div class="skeleton-weekday"></div><div class="skeleton-weekday"></div><div class="skeleton-weekday"></div><div class="skeleton-weekday"></div>
                             </div>
                             <div class="skeleton-cells">
                                 <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
@@ -287,100 +125,40 @@
 
             <!-- AI智能体分类 -->
             <div class="section-group" id="ai-section">
-                <div class="section-header">
-                    <h2 class="section-title" data-i18n="section.ai">AI 智能体</h2>
-                </div>
+                <div class="section-header"><h2 class="section-title" data-i18n="section.ai">AI 智能体</h2></div>
                 <div class="grid-container">
-                    <a href="https://chatgpt.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="chatgpt.com" data-site-name="ChatGPT" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">ChatGPT</div></div>
-                    </a>
-                    <a href="https://gemini.google.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="gemini.google.com" data-site-name="Gemini" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">Gemini</div></div>
-                    </a>
-                    <a href="https://claude.ai/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="claude.ai" data-site-name="Claude" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">Claude</div></div>
-                    </a>
-                    <a href="https://www.deepseek.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="deepseek.com" data-site-name="DeepSeek" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">DeepSeek</div></div>
-                    </a>
-                    <a href="https://yiyan.baidu.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="yiyan.baidu.com" data-site-name="文心一言" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">文心一言</div></div>
-                    </a>
-                    <a href="https://qianwen.aliyun.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="qianwen.aliyun.com" data-site-name="通义千问" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">通义千问</div></div>
-                    </a>
-                    <a href="https://www.kimi.ai/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="kimi.ai" data-site-name="Kimi" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">Kimi</div></div>
-                    </a>
-                    <a href="https://www.doubao.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="doubao.com" data-site-name="豆包" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">豆包</div></div>
-                    </a>
-                    <a href="https://yuanbao.tencent.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="yuanbao.tencent.com" data-site-name="腾讯元宝" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">腾讯元宝</div></div>
-                    </a>
-                    <a href="https://www.perplexity.ai/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="perplexity.ai" data-site-name="Perplexity" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">Perplexity</div></div>
-                    </a>
-                    <a href="https://copilot.microsoft.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="copilot.microsoft.com" data-site-name="Copilot" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">Copilot</div></div>
-                    </a>
-                    <a href="https://grok.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="grok.com" data-site-name="Grok" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">Grok</div></div>
-                    </a>
+                    <a href="https://chatgpt.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="chatgpt.com" data-site-name="ChatGPT" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">ChatGPT</div></div></a>
+                    <a href="https://gemini.google.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="gemini.google.com" data-site-name="Gemini" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">Gemini</div></div></a>
+                    <a href="https://claude.ai/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="claude.ai" data-site-name="Claude" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">Claude</div></div></a>
+                    <a href="https://www.deepseek.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="deepseek.com" data-site-name="DeepSeek" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">DeepSeek</div></div></a>
+                    <a href="https://yiyan.baidu.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="yiyan.baidu.com" data-site-name="文心一言" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">文心一言</div></div></a>
+                    <a href="https://qianwen.aliyun.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="qianwen.aliyun.com" data-site-name="通义千问" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">通义千问</div></div></a>
+                    <a href="https://www.kimi.ai/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="kimi.ai" data-site-name="Kimi" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">Kimi</div></div></a>
+                    <a href="https://www.doubao.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="doubao.com" data-site-name="豆包" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">豆包</div></div></a>
+                    <a href="https://yuanbao.tencent.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="yuanbao.tencent.com" data-site-name="腾讯元宝" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">腾讯元宝</div></div></a>
+                    <a href="https://www.perplexity.ai/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="perplexity.ai" data-site-name="Perplexity" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">Perplexity</div></div></a>
+                    <a href="https://copilot.microsoft.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="copilot.microsoft.com" data-site-name="Copilot" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">Copilot</div></div></a>
+                    <a href="https://grok.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="grok.com" data-site-name="Grok" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">Grok</div></div></a>
                 </div>
             </div>
 
             <!-- 生活分类 -->
             <div class="section-group" id="life-section">
-                <div class="section-header">
-                    <h2 class="section-title" data-i18n="section.life">生活</h2>
-                </div>
+                <div class="section-header"><h2 class="section-title" data-i18n="section.life">生活</h2></div>
                 <div class="grid-container">
-                    <a href="https://www.xiaohongshu.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="xiaohongshu.com" data-site-name="小红书" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">小红书</div></div>
-                    </a>
-                    <a href="https://www.bilibili.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="bilibili.com" data-site-name="B站" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">B站</div></div>
-                    </a>
-                    <a href="https://www.zhihu.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="zhihu.com" data-site-name="知乎" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">知乎</div></div>
-                    </a>
+                    <a href="https://www.xiaohongshu.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="xiaohongshu.com" data-site-name="小红书" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">小红书</div></div></a>
+                    <a href="https://www.bilibili.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="bilibili.com" data-site-name="B站" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">B站</div></div></a>
+                    <a href="https://www.zhihu.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="zhihu.com" data-site-name="知乎" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">知乎</div></div></a>
                 </div>
             </div>
 
             <!-- 工具分类 -->
             <div class="section-group" id="tools-section">
-                <div class="section-header">
-                    <h2 class="section-title" data-i18n="section.tools">工具</h2>
-                </div>
+                <div class="section-header"><h2 class="section-title" data-i18n="section.tools">工具</h2></div>
                 <div class="grid-container">
-                    <a href="https://github.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="github.com" data-site-name="GitHub" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">GitHub</div></div>
-                    </a>
-                    <a href="https://tinypng.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="tinypng.com" data-site-name="TinyPNG" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">TinyPNG</div></div>
-                    </a>
-                    <a href="https://v0.dev/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="v0.dev" data-site-name="v0" loading="lazy" width="48" height="48"></div>
-                        <div class="card-info"><div class="card-title">v0</div></div>
-                    </a>
+                    <a href="https://github.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="github.com" data-site-name="GitHub" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">GitHub</div></div></a>
+                    <a href="https://tinypng.com/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="tinypng.com" data-site-name="TinyPNG" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">TinyPNG</div></div></a>
+                    <a href="https://v0.dev/" target="_blank" class="card-item"><div class="card-icon"><img src="" data-domain="v0.dev" data-site-name="v0" loading="lazy" width="48" height="48"></div><div class="card-info"><div class="card-title">v0</div></div></a>
                 </div>
             </div>
         </div>
@@ -419,9 +197,22 @@
 
             const API_URL = 'https://timor.tech/api/holiday/year/';
             const MANUAL_JSON_URL = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/holidays.json';
+            const holidayCache = {}; // 按年份缓存假期数据
 
-            // 使用 lunar.js 计算指定年份某个农历节日/清明的公历正日
+            // 公历固定节日的正日映射（月-日）
+            const SOLAR_FIXED_FESTIVALS = {
+                '元旦': '1-1',
+                '劳动节': '5-1',
+                '国庆节': '10-1'
+            };
+
             function getActualFestivalDate(year, festName) {
+                // 公历固定节日直接返回
+                if (SOLAR_FIXED_FESTIVALS[festName]) {
+                    const [m, d] = SOLAR_FIXED_FESTIVALS[festName].split('-').map(Number);
+                    return { month: m, day: d };
+                }
+                // 清明、农历节日计算
                 try {
                     for (let m = 1; m <= 12; m++) {
                         const days = new Date(year, m, 0).getDate();
@@ -443,30 +234,41 @@
             }
 
             async function fetchHolidaysByYear(year) {
-                // 1. 尝试 API
+                // 检查缓存
+                if (holidayCache[year]) {
+                    return holidayCache[year];
+                }
+
+                // 1. API
                 try {
                     const apiResp = await fetch(`${API_URL}${year}`);
                     const apiResult = await apiResp.json();
                     if (apiResult && apiResult.holiday) {
-                        return buildFromApi(year, apiResult.holiday);
+                        const data = buildFromApi(year, apiResult.holiday);
+                        holidayCache[year] = data;
+                        return data;
                     }
                 } catch (e) {
                     console.warn('API 失败，尝试手动 JSON');
                 }
 
-                // 2. 尝试手动 JSON
+                // 2. 手动 JSON
                 try {
                     const jsonResp = await fetch(MANUAL_JSON_URL);
                     const remoteData = await jsonResp.json();
                     if (remoteData[year]) {
-                        return buildFromRemoteConfig(year, remoteData[year]);
+                        const data = buildFromRemoteConfig(year, remoteData[year]);
+                        holidayCache[year] = data;
+                        return data;
                     }
                 } catch (e) {
                     console.warn('手动 JSON 失败，使用本地计算');
                 }
 
                 // 3. 本地计算
-                return buildFallbackHolidays(year);
+                const data = buildFallbackHolidays(year);
+                holidayCache[year] = data;
+                return data;
             }
 
             function buildFromApi(year, holidayObj) {
@@ -493,7 +295,6 @@
                 for (const [name, info] of Object.entries(config)) {
                     const start = info.start;
                     const days = info.days;
-                    // 使用 actual 字段指定正日，若未提供则用 start
                     const actualStart = info.actual || start;
                     const [sMonth, sDay] = start.split('-').map(Number);
                     for (let i = 0; i < days; i++) {
@@ -512,18 +313,15 @@
 
             function buildFallbackHolidays(year) {
                 const holidays = {};
-                const fixedSolar = {
-                    '1-1': '元旦',
-                    '5-1': '劳动节',
-                    '10-1': '国庆节'
-                };
-                for (const [key, name] of Object.entries(fixedSolar)) {
+                // 公历固定节日（isRest: false）
+                for (const [key, name] of Object.entries(SOLAR_FIXED_FESTIVALS)) {
                     const [m, d] = key.split('-').map(Number);
                     const dateStr = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                     if (!holidays[dateStr]) holidays[dateStr] = [];
                     holidays[dateStr].push({ name, isRest: false });
                 }
 
+                // 农历及清明
                 for (let month = 1; month <= 12; month++) {
                     const daysInMonth = new Date(year, month, 0).getDate();
                     for (let day = 1; day <= daysInMonth; day++) {
@@ -661,11 +459,11 @@
                 if (isAnimating) return;
                 isAnimating = true;
                 const grid = document.getElementById('calendarGrid');
-                if (grid) {
-                    grid.style.transition = 'all 0.2s ease-out';
-                    grid.style.opacity = '0';
-                    grid.style.transform = `translateY(${delta > 0 ? '-20px' : '20px'})`;
-                }
+                const skeleton = document.getElementById('calendarSkeleton');
+                // 显示骨架屏
+                if (skeleton) skeleton.classList.remove('hidden');
+                if (grid) grid.style.display = 'none';
+
                 setTimeout(() => {
                     currentCalendarMonth += delta;
                     if (currentCalendarMonth > 12) { currentCalendarMonth = 1; currentCalendarYear++; }
@@ -674,22 +472,28 @@
                         if (fetchLock) return;
                         fetchLock = true;
                         try {
+                            // 利用缓存，年份不变不会重复请求
                             holidayData = await fetchHolidaysByYear(currentCalendarYear);
                             renderCalendar(currentCalendarYear, currentCalendarMonth);
                             renderHolidayBar(currentCalendarYear, currentCalendarMonth);
                         } finally { fetchLock = false; }
+                        renderCalendar(currentCalendarYear, currentCalendarMonth);
+                        renderHolidayBar(currentCalendarYear, currentCalendarMonth);
+                        if (skeleton) skeleton.classList.add('hidden');
+                        if (grid) {
+                            grid.style.display = 'grid';
+                            grid.style.transition = 'none';
+                            grid.style.opacity = '0';
+                            requestAnimationFrame(() => {
+                                grid.style.transition = 'all 0.2s ease-out';
+                                grid.style.opacity = '1';
+                                isAnimating = false;
+                            });
+                        } else {
+                            isAnimating = false;
+                        }
                     })();
-                    if (grid) {
-                        grid.style.transition = 'none';
-                        grid.style.transform = `translateY(${delta > 0 ? '20px' : '-20px'})`;
-                        requestAnimationFrame(() => {
-                            grid.style.transition = 'all 0.2s ease-out';
-                            grid.style.opacity = '1';
-                            grid.style.transform = 'translateY(0)';
-                            setTimeout(() => { isAnimating = false; }, 200);
-                        });
-                    } else { isAnimating = false; }
-                }, 200);
+                }, 50);
             };
 
             document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
@@ -719,25 +523,19 @@
                 if (targetDay < 1 || targetDay > maxDay) { alert(`${targetMonth}月最多有${maxDay}天`); return; }
                 currentCalendarYear = targetYear; currentCalendarMonth = targetMonth;
                 selectedDate = new Date(targetYear, targetMonth - 1, targetDay);
-                (async () => {
-                    if (fetchLock) return;
-                    fetchLock = true;
-                    try {
-                        holidayData = await fetchHolidaysByYear(currentCalendarYear);
-                        renderCalendar(currentCalendarYear, currentCalendarMonth);
-                        renderHolidayBar(currentCalendarYear, currentCalendarMonth);
-                    } finally { fetchLock = false; }
-                })();
-                setTimeout(() => {
-                    document.querySelectorAll('.calendar-cell').forEach(cell => {
-                        const solarEl = cell.querySelector('.cell-solar');
-                        if (solarEl && parseInt(solarEl.textContent) === targetDay && !cell.classList.contains('other-month')) {
-                            document.querySelectorAll('.calendar-cell.selected').forEach(el => el.classList.remove('selected'));
-                            cell.classList.add('selected');
-                        }
-                    });
-                }, 50);
                 closeModal();
+                // 跳转后重新加载
+                (async () => {
+                    const skeleton = document.getElementById('calendarSkeleton');
+                    const grid = document.getElementById('calendarGrid');
+                    if (skeleton) skeleton.classList.remove('hidden');
+                    if (grid) grid.style.display = 'none';
+                    holidayData = await fetchHolidaysByYear(currentCalendarYear);
+                    renderCalendar(currentCalendarYear, currentCalendarMonth);
+                    renderHolidayBar(currentCalendarYear, currentCalendarMonth);
+                    if (skeleton) skeleton.classList.add('hidden');
+                    if (grid) grid.style.display = 'grid';
+                })();
             });
             if (modalOverlay) modalOverlay.addEventListener('click', closeModal);
 
