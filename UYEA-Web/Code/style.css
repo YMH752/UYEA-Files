@@ -1831,10 +1831,16 @@ html[data-theme="dark"] .holiday-bar.filtered {
 
 .card-icon img.icon-emoji {
     font-size: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    line-height: 48px;
+    text-align: center;
     background: transparent;
+    border: none;
+    color: inherit;
+}
+
+/* 让emoji能显示在img标签中 */
+.card-icon img::before {
+    content: attr(data-emoji);
 }
 
 @keyframes skeleton-shimmer {
