@@ -283,163 +283,58 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof Lunar !== 'undefined') {
             updateClock();
             setInterval(updateClock, 1000);
+        } else {
+            // 如果Lunar库还未加载，继续等待
+            setTimeout(initClock, 100);
+        }
+    }
+    initClock();
 
     /* ════════════════════════════════════════════════════════════
-       加载网站卡片图标 (GitHub素材 + 骨架加载)
+       6. 图标加载（从 GitHub 仓库，失败时使用 emoji 替代）
        ════════════════════════════════════════════════════════════ */
-    
-    // 图标缓存机制 (localStorage)
-    const ICON_CACHE_KEY = 'uyea_icon_cache';
-    const ICON_CACHE_VERSION = 'v1';
-    
-    function getIconCache() {
-        try {
-            const cached = localStorage.getItem(ICON_CACHE_KEY);
-            if (cached) {
-                const data = JSON.parse(cached);
-                if (data.version === ICON_CACHE_VERSION) {
-                    return data.icons;
-                }
-            }
-        } catch (e) {}
-        return null;
-    }
-    
-    function setIconCache(icons) {
-        try {
-            localStorage.setItem(ICON_CACHE_KEY, JSON.stringify({
-                version: ICON_CACHE_VERSION,
-                icons: icons,
-                timestamp: Date.now()
-            }));
-        } catch (e) {}
-    }
+    (function loadIcons() {
+        const iconBase = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/';
+        const emojiFallback = {
+            'ChatGPT': '🤖',
+            'Gemini': '✨',
+            'Claude': '🎯',
+            'DeepSeek': '🧠',
+            '文心一言': '📝',
+            '通义千问': '💬',
+            'Kimi': '🌟',
+            '豆包': '🫘',
+            '腾讯元宝': '💰',
+            'Perplexity': '🔍',
+            'Copilot': '🧑‍✈️',
+            'Grok': '🧬',
+            '小红书': '📕',
+            'B站': '📺',
+            '知乎': '💡',
+            'GitHub': '🐙',
+            'TinyPNG': '🐼',
+            'v0': '🌀'
+        };
 
-    // 使用多个CDN源，优先级从高到低
-    const GITHUB_ICONS_SOURCES = [
-        'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/',
-        'https://cdn.jsdelivr.net/gh/YMH752/UYEA-Files@main/UYEA-Web/Code/icons/',
-        'https://ghproxy.com/https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/'
-    ];
-    
-    // 图标映射表 (domain -> 文件名)
-    const iconMap = {
-        'chatgpt.com': 'chatgpt.ico',
-        'gemini.google.com': 'gemini.ico',
-        'claude.ai': 'claude.ico',
-        'deepseek.com': 'deepseek.ico',
-        'yiyan.baidu.com': 'yiyan.ico',
-        'qwen.aliyun.com': 'qianwen.ico',
-        'kimi.moonshot.cn': 'kimi.ico',
-        'doubao.com': 'doubao.ico',
-        'tongyi.aliyun.com': 'tongyi.ico',
-        'perplexity.ai': 'perplexity.ico',
-        'xiao-book.xiaohongshu.com': 'xiaohongshu.ico',
-        'github.com': 'github.ico',
-        'tinypng.com': 'tinypng.ico',
-        'v0.dev': 'v0.ico',
-        'zhihu.com': 'zhihu.ico',
-        'yuanbao.tencent.com': 'yuanbao.ico',
-        'grok.com': 'grok.ico',
-        'bilibili.com': 'bilibili.ico'
-    };
-    
-    // emoji备选方案
-    const emojiMap = {
-        'chatgpt.com': '🤖',
-        'gemini.google.com': '✨',
-        'claude.ai': '🧠',
-        'deepseek.com': '🔍',
-        'yiyan.baidu.com': '🎯',
-        'qwen.aliyun.com': '☁️',
-        'kimi.moonshot.cn': '🌙',
-        'doubao.com': '豆',
-        'tongyi.aliyun.com': '🎨',
-        'perplexity.ai': '🔮',
-        'xiao-book.xiaohongshu.com': '📱',
-        'github.com': '🐙',
-        'tinypng.com': '🖼️',
-        'v0.dev': '⚡',
-        'zhihu.com': '❔',
-        'yuanbao.tencent.com': '💎',
-        'grok.com': '🤖',
-        'bilibili.com': '📺'
-    };
-    
-    
-    // 快速emoji降级方案 (防止加载卡顿)
-    function applyFallbackEmoji() {
-        const cardImages = document.querySelectorAll('.card-icon img');
-        cardImages.forEach(img => {
-            const domain = img.dataset.domain;
-            const emojiBackup = emojiMap[domain] || '🔗';
-            // 300ms后如果还没加载，显示emoji
-            setTimeout(() => {
-                if (!img.src || img.src === '') {
-                    img.textContent = emojiBackup;
-                    img.classList.remove('skeleton-loading');
-                    img.classList.add('icon-emoji');
-                }
-            }, 300);
+        const iconImgs = document.querySelectorAll('.card-icon img[data-site-name]');
+
+        iconImgs.forEach(img => {
+            const siteName = img.getAttribute('data-site-name');
+            if (!siteName) return;
+
+            const iconUrl = `${iconBase}${siteName}.ico`;
+            img.src = iconUrl;
+
+            img.onerror = function() {
+                const emoji = emojiFallback[siteName] || '🔗';
+                const cardIcon = img.parentElement;
+                img.remove();
+                const emojiSpan = document.createElement('span');
+                emojiSpan.className = 'icon-emoji';
+                emojiSpan.textContent = emoji;
+                emojiSpan.title = siteName;
+                cardIcon.appendChild(emojiSpan);
+            };
         });
-    }
-
-    function loadCardIcons() {
-        const cardImages = document.querySelectorAll('.card-icon img');
-        
-        cardImages.forEach(img => {
-            const domain = img.dataset.domain;
-            if (!domain) return;
-            
-            const iconFileName = iconMap[domain];
-            const emojiBackup = emojiMap[domain] || '🔗';
-            
-            // 步骤1: 显示骨架加载
-            img.classList.add('skeleton-loading');
-            
-            if (iconFileName) {
-                // 步骤2: 尝试加载GitHub图标
-                const iconUrl = `${GITHUB_ICONS_BASE}${iconFileName}`;
-                const tempImg = new Image();
-                
-                tempImg.onload = () => {
-                    // 加载成功
-                    img.src = iconUrl;
-                    img.classList.remove('skeleton-loading');
-                    img.classList.add('icon-loaded');
-                };
-                
-                tempImg.onerror = () => {
-                    // 步骤3: GitHub加载失败，用emoji
-                    img.textContent = emojiBackup;
-                    img.classList.remove('skeleton-loading');
-                    img.classList.add('icon-emoji');
-                };
-                
-                // 1秒超时
-                setTimeout(() => {
-                    if (!img.src || img.src === '' || img.classList.contains('skeleton-loading')) {
-                        img.textContent = emojiBackup;
-                        img.classList.remove('skeleton-loading');
-                        img.classList.add('icon-emoji');
-                    }
-                }, 1000);
-                
-                tempImg.src = iconUrl;
-            } else {
-                // 没有对应图标文件，直接emoji
-                img.textContent = emojiBackup;
-                img.classList.remove('skeleton-loading');
-                img.classList.add('icon-emoji');
-            }
-        });
-    }
-    
-    // 启动图标加载
-    if ('requestIdleCallback' in window) {
-        requestIdleCallback(() => loadCardIcons());
-    } else {
-        requestAnimationFrame(() => loadCardIcons());
-    }
-
+    })();
 });
