@@ -417,111 +417,99 @@
             let holidayData = {};
             let fetchLock = false;
 
+            const API_URL = 'https://timor.tech/api/holiday/year/';
+            const MANUAL_JSON_URL = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/holidays.json';
+
             async function fetchHolidaysByYear(year) {
+                // 1. 尝试自动 API
                 try {
-                    const response = await fetch(`https://www.mxnzp.com/api/holiday/list?year=${year}`);
-                    const result = await response.json();
-                    if (result.code === 0 && result.data && result.data.length > 0) {
-                        const holidays = {};
-                        result.data.forEach(holiday => {
-                            const dateKey = holiday.chineseDate;
-                            if (!holidays[dateKey]) holidays[dateKey] = [];
-                            holidays[dateKey].push({
-                                name: holiday.name,
-                                isRest: holiday.isRest === 1
-                            });
-                        });
-                        return holidays;
+                    const apiResp = await fetch(`${API_URL}${year}`);
+                    const apiResult = await apiResp.json();
+                    if (apiResult && apiResult.holiday) {
+                        return buildFromApi(apiResult.holiday);
                     }
-                } catch (e) {}
+                } catch (e) {
+                    console.warn('自动 API 获取失败，尝试手动 JSON');
+                }
+
+                // 2. 尝试手动 JSON
+                try {
+                    const jsonResp = await fetch(MANUAL_JSON_URL);
+                    const remoteData = await jsonResp.json();
+                    if (remoteData[year]) {
+                        return buildFromRemoteConfig(year, remoteData[year]);
+                    }
+                } catch (e) {
+                    console.warn('手动 JSON 读取失败，使用本地计算');
+                }
+
+                // 3. 回退到本地计算
                 return buildFallbackHolidays(year);
+            }
+
+            function buildFromApi(holidayObj) {
+                const holidays = {};
+                for (const [key, val] of Object.entries(holidayObj)) {
+                    if (val.holiday) {
+                        const dateStr = `${currentCalendarYear}-${key}`;
+                        holidays[dateStr] = [{ name: val.name, isRest: true }];
+                    }
+                }
+                return holidays;
+            }
+
+            function buildFromRemoteConfig(year, config) {
+                const holidays = {};
+                for (const [name, info] of Object.entries(config)) {
+                    const start = info.start;
+                    const days = info.days;
+                    const [sMonth, sDay] = start.split('-').map(Number);
+                    for (let i = 0; i < days; i++) {
+                        const d = new Date(year, sMonth - 1, sDay + i);
+                        const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+                        if (!holidays[dateStr]) holidays[dateStr] = [];
+                        holidays[dateStr].push({ name, isRest: true });
+                    }
+                }
+                return holidays;
             }
 
             function buildFallbackHolidays(year) {
                 const holidays = {};
-                const allowedSolarFestivals = [
-                    '元旦', '劳动节', '国庆节', '青年节', '护士节', '母亲节', '父亲节'
-                ];
-                const solarRestNames = ['元旦', '劳动节', '国庆节'];
-                const lunarRestNames = ['春节', '端午节', '中秋节'];
+                const fixedSolar = {
+                    '1-1': '元旦',
+                    '5-1': '劳动节',
+                    '10-1': '国庆节'
+                };
+                for (const [key, name] of Object.entries(fixedSolar)) {
+                    const [m, d] = key.split('-').map(Number);
+                    const dateStr = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                    if (!holidays[dateStr]) holidays[dateStr] = [];
+                    holidays[dateStr].push({ name, isRest: false });
+                }
 
                 for (let month = 1; month <= 12; month++) {
                     const daysInMonth = new Date(year, month, 0).getDate();
                     for (let day = 1; day <= daysInMonth; day++) {
                         const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-                        const key = `${month}-${day}`;
-                        const fest = SolarUtil.FESTIVAL[key];
-                        if (fest && allowedSolarFestivals.includes(fest)) {
-                            if (!holidays[dateStr]) holidays[dateStr] = [];
-                            const isRest = solarRestNames.includes(fest);
-                            holidays[dateStr].push({ name: fest, isRest });
-                        }
-
                         try {
                             const solar = Solar.fromYmd(year, month, day);
                             const lunar = Lunar.fromSolar(solar);
-                            const jq = lunar.getJieQi();
-                            if (jq === '清明') {
+                            if (lunar.getJieQi() === '清明') {
                                 if (!holidays[dateStr]) holidays[dateStr] = [];
                                 if (!holidays[dateStr].some(h => h.name === '清明节')) {
-                                    holidays[dateStr].push({ name: '清明节', isRest: true });
+                                    holidays[dateStr].push({ name: '清明节', isRest: false });
                                 }
                             }
-                            const lMonth = lunar.getMonth();
-                            const lDay = lunar.getDay();
-                            const lunarKey = `${lMonth}-${lDay}`;
+                            const lunarKey = `${lunar.getMonth()}-${lunar.getDay()}`;
                             const lunarFest = LunarUtil.FESTIVAL[lunarKey];
                             if (lunarFest) {
                                 if (!holidays[dateStr]) holidays[dateStr] = [];
-                                const isRest = lunarRestNames.includes(lunarFest);
-                                holidays[dateStr].push({ name: lunarFest, isRest });
+                                holidays[dateStr].push({ name: lunarFest, isRest: false });
                             }
                         } catch (e) {}
                     }
                 }
-
-                // 劳动节调休（5.2-5.5）：只标休，不设名称
-                const may1 = `${year}-05-01`;
-                if (holidays[may1] && holidays[may1].some(h => h.name === '劳动节')) {
-                    for (let d = 2; d <= 5; d++) {
-                        const dateStr = `${year}-05-${String(d).padStart(2,'0')}`;
-                        if (!holidays[dateStr]) holidays[dateStr] = [];
-                        if (!holidays[dateStr].some(h => h.name === '劳动节' || (h.name === '' && h.isRest))) {
-                            holidays[dateStr].push({ name: '', isRest: true });
-                        }
-                    }
-                }
-
-                // 国庆调休（10.2-10.7）
-                const oct1 = `${year}-10-01`;
-                if (holidays[oct1] && holidays[oct1].some(h => h.name === '国庆节')) {
-                    for (let d = 2; d <= 7; d++) {
-                        const dateStr = `${year}-10-${String(d).padStart(2,'0')}`;
-                        if (!holidays[dateStr]) holidays[dateStr] = [];
-                        if (!holidays[dateStr].some(h => h.name === '国庆节' || (h.name === '' && h.isRest))) {
-                            holidays[dateStr].push({ name: '', isRest: true });
-                        }
-                    }
-                }
-
-                // 母亲节
-                const mayFirst = new Date(year, 4, 1);
-                const mayFirstDay = mayFirst.getDay();
-                const firstSunday = 1 + (7 - mayFirstDay) % 7;
-                const motherDay = firstSunday + 7;
-                const motherStr = `${year}-05-${String(motherDay).padStart(2,'0')}`;
-                if (!holidays[motherStr]) holidays[motherStr] = [];
-                holidays[motherStr].push({ name: '母亲节', isRest: false });
-
-                // 父亲节
-                const junFirst = new Date(year, 5, 1);
-                const junFirstDay = junFirst.getDay();
-                const junFirstSunday = 1 + (7 - junFirstDay) % 7;
-                const fatherDay = junFirstSunday + 14;
-                const fatherStr = `${year}-06-${String(fatherDay).padStart(2,'0')}`;
-                if (!holidays[fatherStr]) holidays[fatherStr] = [];
-                holidays[fatherStr].push({ name: '父亲节', isRest: false });
-
                 return holidays;
             }
 
@@ -539,11 +527,8 @@
 
             function solarToLunar(year, month, day) {
                 try {
-                    if (typeof Solar !== 'undefined' && typeof Lunar !== 'undefined') {
-                        const solar = Solar.fromYmd(year, month, day);
-                        const lunar = Lunar.fromSolar(solar);
-                        return lunar.getDayInChinese();
-                    }
+                    const solar = Solar.fromYmd(year, month, day);
+                    return Lunar.fromSolar(solar).getDayInChinese();
                 } catch (e) {}
                 return '';
             }
@@ -582,15 +567,11 @@
                             cellHTML += `<div class="cell-holiday">${namedHoliday.name}</div>`;
                         } else {
                             const lunarStr = solarToLunar(year, month, day);
-                            if (lunarStr) {
-                                cellHTML += `<div class="cell-lunar">${lunarStr}</div>`;
-                            }
+                            if (lunarStr) cellHTML += `<div class="cell-lunar">${lunarStr}</div>`;
                         }
                     } else {
                         const lunarStr = solarToLunar(year, month, day);
-                        if (lunarStr) {
-                            cellHTML += `<div class="cell-lunar">${lunarStr}</div>`;
-                        }
+                        if (lunarStr) cellHTML += `<div class="cell-lunar">${lunarStr}</div>`;
                     }
 
                     cell.innerHTML = cellHTML;
@@ -605,11 +586,10 @@
                     grid.appendChild(cell);
                 }
                 const totalCells = grid.children.length;
-                const remainingCells = 42 - totalCells;
-                for (let day = 1; day <= remainingCells; day++) {
+                for (let day = totalCells + 1; day <= 42; day++) {
                     const cell = document.createElement('div');
                     cell.className = 'calendar-cell other-month';
-                    cell.innerHTML = `<div class="cell-solar">${day}</div>`;
+                    cell.innerHTML = `<div class="cell-solar">...</div>`;
                     grid.appendChild(cell);
                 }
                 document.getElementById('calendarTitle').textContent = `${year}年${month}月`;
@@ -625,10 +605,8 @@
                     const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                     const holidays = holidayData[dateStr];
                     if (!holidays || holidays.length === 0) continue;
-                    // 找第一个有名称的节日
                     const namedHoliday = holidays.find(h => h.name && h.name.trim() !== '');
-                    if (!namedHoliday) continue; // 纯调休日不显示
-                    if (addedNames.has(namedHoliday.name)) continue;
+                    if (!namedHoliday || addedNames.has(namedHoliday.name)) continue;
                     addedNames.add(namedHoliday.name);
                     const tag = document.createElement('div');
                     tag.className = 'holiday-tag';
