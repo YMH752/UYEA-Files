@@ -197,9 +197,9 @@
 
             const API_URL = 'https://timor.tech/api/holiday/year/';
             const MANUAL_JSON_URL = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/holidays.json';
-            const holidayCache = {}; // 按年份缓存假期数据
+            const holidayCache = {};
 
-            // 公历固定节日的正日映射（月-日）
+            // 公历固定节日的正日映射
             const SOLAR_FIXED_FESTIVALS = {
                 '元旦': '1-1',
                 '劳动节': '5-1',
@@ -212,16 +212,26 @@
                     const [m, d] = SOLAR_FIXED_FESTIVALS[festName].split('-').map(Number);
                     return { month: m, day: d };
                 }
-                // 清明、农历节日计算
+                // 兼容“清明”与“清明节”
+                if (festName === '清明' || festName === '清明节') {
+                    for (let m = 1; m <= 12; m++) {
+                        const days = new Date(year, m, 0).getDate();
+                        for (let d = 1; d <= days; d++) {
+                            const solar = Solar.fromYmd(year, m, d);
+                            const lunar = Lunar.fromSolar(solar);
+                            if (lunar.getJieQi() === '清明') {
+                                return { month: m, day: d };
+                            }
+                        }
+                    }
+                }
+                // 其他农历节日
                 try {
                     for (let m = 1; m <= 12; m++) {
                         const days = new Date(year, m, 0).getDate();
                         for (let d = 1; d <= days; d++) {
                             const solar = Solar.fromYmd(year, m, d);
                             const lunar = Lunar.fromSolar(solar);
-                            if (festName === '清明节' && lunar.getJieQi() === '清明') {
-                                return { month: m, day: d };
-                            }
                             const lunarKey = `${lunar.getMonth()}-${lunar.getDay()}`;
                             const lunarFest = LunarUtil.FESTIVAL[lunarKey];
                             if (lunarFest === festName) {
@@ -234,10 +244,7 @@
             }
 
             async function fetchHolidaysByYear(year) {
-                // 检查缓存
-                if (holidayCache[year]) {
-                    return holidayCache[year];
-                }
+                if (holidayCache[year]) return holidayCache[year];
 
                 // 1. API
                 try {
@@ -248,9 +255,7 @@
                         holidayCache[year] = data;
                         return data;
                     }
-                } catch (e) {
-                    console.warn('API 失败，尝试手动 JSON');
-                }
+                } catch (e) {}
 
                 // 2. 手动 JSON
                 try {
@@ -261,9 +266,7 @@
                         holidayCache[year] = data;
                         return data;
                     }
-                } catch (e) {
-                    console.warn('手动 JSON 失败，使用本地计算');
-                }
+                } catch (e) {}
 
                 // 3. 本地计算
                 const data = buildFallbackHolidays(year);
@@ -278,9 +281,7 @@
                     const dateStr = `${year}-${key}`;
                     const name = val.name;
                     const actual = getActualFestivalDate(year, name);
-                    const isActualDay = actual && 
-                        parseInt(key.split('-')[0]) === actual.month && 
-                        parseInt(key.split('-')[1]) === actual.day;
+                    const isActualDay = actual && parseInt(key.split('-')[0]) === actual.month && parseInt(key.split('-')[1]) === actual.day;
                     if (!holidays[dateStr]) holidays[dateStr] = [];
                     holidays[dateStr].push({
                         name: isActualDay ? name : '',
@@ -314,13 +315,12 @@
             function buildFallbackHolidays(year) {
                 const holidays = {};
                 // 公历固定节日（isRest: false）
-                for (const [key, name] of Object.entries(SOLAR_FIXED_FESTIVALS)) {
-                    const [m, d] = key.split('-').map(Number);
+                for (const [name, date] of Object.entries(SOLAR_FIXED_FESTIVALS)) {
+                    const [m, d] = date.split('-').map(Number);
                     const dateStr = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                     if (!holidays[dateStr]) holidays[dateStr] = [];
                     holidays[dateStr].push({ name, isRest: false });
                 }
-
                 // 农历及清明
                 for (let month = 1; month <= 12; month++) {
                     const daysInMonth = new Date(year, month, 0).getDate();
@@ -460,40 +460,41 @@
                 isAnimating = true;
                 const grid = document.getElementById('calendarGrid');
                 const skeleton = document.getElementById('calendarSkeleton');
+                const calendarTitle = document.getElementById('calendarTitle');
+
+                // 闭合动画：缩小并透明
+                if (grid) {
+                    grid.style.transition = 'transform 0.15s ease, opacity 0.15s ease';
+                    grid.style.transform = 'scale(0.95)';
+                    grid.style.opacity = '0';
+                }
                 // 显示骨架屏
                 if (skeleton) skeleton.classList.remove('hidden');
-                if (grid) grid.style.display = 'none';
 
                 setTimeout(() => {
                     currentCalendarMonth += delta;
                     if (currentCalendarMonth > 12) { currentCalendarMonth = 1; currentCalendarYear++; }
                     else if (currentCalendarMonth < 1) { currentCalendarMonth = 12; currentCalendarYear--; }
+
                     (async () => {
                         if (fetchLock) return;
                         fetchLock = true;
                         try {
-                            // 利用缓存，年份不变不会重复请求
                             holidayData = await fetchHolidaysByYear(currentCalendarYear);
                             renderCalendar(currentCalendarYear, currentCalendarMonth);
                             renderHolidayBar(currentCalendarYear, currentCalendarMonth);
-                        } finally { fetchLock = false; }
-                        renderCalendar(currentCalendarYear, currentCalendarMonth);
-                        renderHolidayBar(currentCalendarYear, currentCalendarMonth);
-                        if (skeleton) skeleton.classList.add('hidden');
-                        if (grid) {
-                            grid.style.display = 'grid';
-                            grid.style.transition = 'none';
-                            grid.style.opacity = '0';
-                            requestAnimationFrame(() => {
-                                grid.style.transition = 'all 0.2s ease-out';
+                            if (skeleton) skeleton.classList.add('hidden');
+                            if (grid) {
+                                grid.style.display = 'grid';
+                                grid.style.transition = 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease';
+                                grid.style.transform = 'scale(1)';
                                 grid.style.opacity = '1';
-                                isAnimating = false;
-                            });
-                        } else {
-                            isAnimating = false;
-                        }
+                            }
+                            calendarTitle.textContent = `${currentCalendarYear}年${currentCalendarMonth}月`;
+                        } finally { fetchLock = false; }
+                        setTimeout(() => { isAnimating = false; }, 250);
                     })();
-                }, 50);
+                }, 160);
             };
 
             document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
@@ -524,18 +525,27 @@
                 currentCalendarYear = targetYear; currentCalendarMonth = targetMonth;
                 selectedDate = new Date(targetYear, targetMonth - 1, targetDay);
                 closeModal();
-                // 跳转后重新加载
-                (async () => {
-                    const skeleton = document.getElementById('calendarSkeleton');
-                    const grid = document.getElementById('calendarGrid');
-                    if (skeleton) skeleton.classList.remove('hidden');
-                    if (grid) grid.style.display = 'none';
+                // 跳转后重新加载（带动画）
+                const grid = document.getElementById('calendarGrid');
+                const skeleton = document.getElementById('calendarSkeleton');
+                if (grid) {
+                    grid.style.transition = 'transform 0.15s ease, opacity 0.15s ease';
+                    grid.style.transform = 'scale(0.95)';
+                    grid.style.opacity = '0';
+                }
+                if (skeleton) skeleton.classList.remove('hidden');
+                setTimeout(async () => {
                     holidayData = await fetchHolidaysByYear(currentCalendarYear);
                     renderCalendar(currentCalendarYear, currentCalendarMonth);
                     renderHolidayBar(currentCalendarYear, currentCalendarMonth);
                     if (skeleton) skeleton.classList.add('hidden');
-                    if (grid) grid.style.display = 'grid';
-                })();
+                    if (grid) {
+                        grid.style.display = 'grid';
+                        grid.style.transition = 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease';
+                        grid.style.transform = 'scale(1)';
+                        grid.style.opacity = '1';
+                    }
+                }, 160);
             });
             if (modalOverlay) modalOverlay.addEventListener('click', closeModal);
 
