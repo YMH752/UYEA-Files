@@ -420,8 +420,30 @@
             const API_URL = 'https://timor.tech/api/holiday/year/';
             const MANUAL_JSON_URL = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/holidays.json';
 
+            // 使用 lunar.js 计算指定年份某个农历节日/清明的公历正日
+            function getActualFestivalDate(year, festName) {
+                try {
+                    for (let m = 1; m <= 12; m++) {
+                        const days = new Date(year, m, 0).getDate();
+                        for (let d = 1; d <= days; d++) {
+                            const solar = Solar.fromYmd(year, m, d);
+                            const lunar = Lunar.fromSolar(solar);
+                            if (festName === '清明节' && lunar.getJieQi() === '清明') {
+                                return { month: m, day: d };
+                            }
+                            const lunarKey = `${lunar.getMonth()}-${lunar.getDay()}`;
+                            const lunarFest = LunarUtil.FESTIVAL[lunarKey];
+                            if (lunarFest === festName) {
+                                return { month: m, day: d };
+                            }
+                        }
+                    }
+                } catch (e) {}
+                return null;
+            }
+
             async function fetchHolidaysByYear(year) {
-                // 1. 尝试自动 API
+                // 1. 尝试 API
                 try {
                     const apiResp = await fetch(`${API_URL}${year}`);
                     const apiResult = await apiResp.json();
@@ -429,7 +451,7 @@
                         return buildFromApi(year, apiResult.holiday);
                     }
                 } catch (e) {
-                    console.warn('自动 API 获取失败，尝试手动 JSON');
+                    console.warn('API 失败，尝试手动 JSON');
                 }
 
                 // 2. 尝试手动 JSON
@@ -440,31 +462,28 @@
                         return buildFromRemoteConfig(year, remoteData[year]);
                     }
                 } catch (e) {
-                    console.warn('手动 JSON 读取失败，使用本地计算');
+                    console.warn('手动 JSON 失败，使用本地计算');
                 }
 
-                // 3. 回退到本地计算
+                // 3. 本地计算
                 return buildFallbackHolidays(year);
             }
 
             function buildFromApi(year, holidayObj) {
                 const holidays = {};
-                // 用于记录每个节日名称第一次出现的日期（只在该日期保留名称）
-                const firstAppearance = {};
                 for (const [key, val] of Object.entries(holidayObj)) {
-                    if (val.holiday) {
-                        const dateStr = `${year}-${key}`;
-                        const name = val.name;
-                        // 如果该名称尚未记录过，则保留名称并标记为首日
-                        if (!(name in firstAppearance)) {
-                            firstAppearance[name] = dateStr;
-                            holidays[dateStr] = [{ name, isRest: true }];
-                        } else {
-                            // 非首日：只标记休息，名称留空
-                            if (!holidays[dateStr]) holidays[dateStr] = [];
-                            holidays[dateStr].push({ name: '', isRest: true });
-                        }
-                    }
+                    if (!val.holiday) continue;
+                    const dateStr = `${year}-${key}`;
+                    const name = val.name;
+                    const actual = getActualFestivalDate(year, name);
+                    const isActualDay = actual && 
+                        parseInt(key.split('-')[0]) === actual.month && 
+                        parseInt(key.split('-')[1]) === actual.day;
+                    if (!holidays[dateStr]) holidays[dateStr] = [];
+                    holidays[dateStr].push({
+                        name: isActualDay ? name : '',
+                        isRest: true
+                    });
                 }
                 return holidays;
             }
@@ -474,15 +493,17 @@
                 for (const [name, info] of Object.entries(config)) {
                     const start = info.start;
                     const days = info.days;
+                    // 使用 actual 字段指定正日，若未提供则用 start
+                    const actualStart = info.actual || start;
                     const [sMonth, sDay] = start.split('-').map(Number);
                     for (let i = 0; i < days; i++) {
                         const d = new Date(year, sMonth - 1, sDay + i);
                         const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
                         if (!holidays[dateStr]) holidays[dateStr] = [];
-                        // 只有第一天保留节日名称，后续天只留 isRest
-                        holidays[dateStr].push({ 
-                            name: i === 0 ? name : '', 
-                            isRest: true 
+                        const showName = (dateStr === `${year}-${actualStart}`);
+                        holidays[dateStr].push({
+                            name: showName ? name : '',
+                            isRest: true
                         });
                     }
                 }
@@ -577,7 +598,6 @@
                         if (restHoliday) {
                             cellHTML += `<div class="cell-rest">休</div>`;
                         }
-                        // 查找具有有效名称的节日
                         const namedHoliday = holidays.find(h => h.name && h.name.trim() !== '');
                         if (namedHoliday) {
                             cellHTML += `<div class="cell-holiday">${namedHoliday.name}</div>`;
