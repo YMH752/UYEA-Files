@@ -106,7 +106,7 @@
             justify-content: center;
             align-items: center;
             height: auto;
-            overflow: visible !important;  /* 确保内容不被裁剪 */
+            overflow: visible !important;
         }
         .cell-solar {
             font-size: clamp(12px, 2vw, 16px);
@@ -446,8 +446,6 @@
                     const daysInMonth = new Date(year, month, 0).getDate();
                     for (let day = 1; day <= daysInMonth; day++) {
                         const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-
-                        // 公历节日
                         const key = `${month}-${day}`;
                         const fest = SolarUtil.FESTIVAL[key];
                         if (fest) {
@@ -456,7 +454,6 @@
                             holidays[dateStr].push({ name: fest, isRest });
                         }
 
-                        // 农历节日及清明
                         try {
                             const solar = Solar.fromYmd(year, month, day);
                             const lunar = Lunar.fromSolar(solar);
@@ -480,26 +477,26 @@
                     }
                 }
 
-                // 扩展劳动节假期：5.1-5.5 均设为休息日（覆盖调休）
+                // 劳动节调休（5.2-5.5）：只标记休息，不加节日名
                 const may1 = `${year}-05-01`;
                 if (holidays[may1] && holidays[may1].some(h => h.name === '劳动节')) {
                     for (let d = 2; d <= 5; d++) {
                         const dateStr = `${year}-05-${String(d).padStart(2,'0')}`;
                         if (!holidays[dateStr]) holidays[dateStr] = [];
-                        if (!holidays[dateStr].some(h => h.name === '劳动节')) {
-                            holidays[dateStr].push({ name: '劳动节', isRest: true });
+                        if (!holidays[dateStr].some(h => h.name === '劳动节' || h.name === '')) {
+                            holidays[dateStr].push({ name: '', isRest: true });
                         }
                     }
                 }
 
-                // 扩展国庆假期：10.1-10.7 均设为休息日（覆盖调休）
+                // 国庆调休（10.2-10.7）
                 const oct1 = `${year}-10-01`;
                 if (holidays[oct1] && holidays[oct1].some(h => h.name === '国庆节')) {
                     for (let d = 2; d <= 7; d++) {
                         const dateStr = `${year}-10-${String(d).padStart(2,'0')}`;
                         if (!holidays[dateStr]) holidays[dateStr] = [];
-                        if (!holidays[dateStr].some(h => h.name === '国庆节')) {
-                            holidays[dateStr].push({ name: '国庆节', isRest: true });
+                        if (!holidays[dateStr].some(h => h.name === '国庆节' || h.name === '')) {
+                            holidays[dateStr].push({ name: '', isRest: true });
                         }
                     }
                 }
@@ -589,12 +586,22 @@
                     const dayOfWeek = d.getDay();
 
                     if (holidays && holidays.length > 0) {
-                        const holidayName = getImportantHolidayName(holidays);
-                        const firstHoliday = holidays[0];
-                        if (firstHoliday.isRest && dayOfWeek !== 0 && dayOfWeek !== 6) {
+                        // 休息日标记
+                        const hasRest = holidays.some(h => h.isRest && (dayOfWeek !== 0 && dayOfWeek !== 6));
+                        if (hasRest) {
                             cellHTML += `<div class="cell-rest">休</div>`;
                         }
-                        cellHTML += `<div class="cell-holiday">${holidayName}</div>`;
+                        // 节日名称
+                        const namedHoliday = holidays.find(h => h.name && h.name.trim() !== '');
+                        if (namedHoliday) {
+                            cellHTML += `<div class="cell-holiday">${namedHoliday.name}</div>`;
+                        } else {
+                            // 无名休息日显示农历
+                            const lunarStr = solarToLunar(year, month, day);
+                            if (lunarStr) {
+                                cellHTML += `<div class="cell-lunar">${lunarStr}</div>`;
+                            }
+                        }
                     } else {
                         const lunarStr = solarToLunar(year, month, day);
                         if (lunarStr) {
