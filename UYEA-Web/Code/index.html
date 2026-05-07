@@ -127,8 +127,8 @@
             font-weight: 600;
             color: var(--primary);
             line-height: 1;
-            white-space: nowrap;          /* 不换行 */
-            overflow: visible;            /* 不裁剪 */
+            white-space: nowrap;
+            overflow: visible;
         }
         .calendar-cell.today {
             background: var(--primary);
@@ -426,6 +426,7 @@
 
             function buildFallbackHolidays(year) {
                 const holidays = {};
+                // 公历节日
                 for (let month = 1; month <= 12; month++) {
                     const daysInMonth = new Date(year, month, 0).getDate();
                     for (let day = 1; day <= daysInMonth; day++) {
@@ -436,6 +437,7 @@
                             if (!holidays[dateStr]) holidays[dateStr] = [];
                             holidays[dateStr].push({ name: fest, isRest: false });
                         }
+                        // 农历节日
                         try {
                             const solar = Solar.fromYmd(year, month, day);
                             const lunar = Lunar.fromSolar(solar);
@@ -451,11 +453,24 @@
                         } catch (e) {}
                     }
                 }
+                // 母亲节：5月第2个周日
                 const mayFirst = new Date(year, 4, 1);
-                const motherDay = 1 + (14 - mayFirst.getDay()) % 7;
+                const mayFirstDay = mayFirst.getDay();
+                const firstSunday = 1 + (7 - mayFirstDay) % 7;
+                const motherDay = firstSunday + 7;
                 const motherStr = `${year}-05-${String(motherDay).padStart(2,'0')}`;
                 if (!holidays[motherStr]) holidays[motherStr] = [];
                 holidays[motherStr].push({ name: '母亲节', isRest: false });
+
+                // 父亲节：6月第3个周日
+                const junFirst = new Date(year, 5, 1);
+                const junFirstDay = junFirst.getDay();
+                const junFirstSunday = 1 + (7 - junFirstDay) % 7;
+                const fatherDay = junFirstSunday + 14;
+                const fatherStr = `${year}-06-${String(fatherDay).padStart(2,'0')}`;
+                if (!holidays[fatherStr]) holidays[fatherStr] = [];
+                holidays[fatherStr].push({ name: '父亲节', isRest: false });
+
                 return holidays;
             }
 
