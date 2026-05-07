@@ -14,7 +14,6 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 时钟日历改为上下布局 */
         .clock-display {
             display: flex;
             flex-direction: column;
@@ -102,7 +101,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s ease;
-            position: relative;      /* 为绝对定位的休字提供定位参考 */
+            position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -128,9 +127,7 @@
             color: var(--primary);
             line-height: 1;
             white-space: nowrap;
-            overflow: visible;
         }
-        /* 休字标签：右上角小标签 */
         .cell-rest {
             position: absolute;
             top: 0;
@@ -441,34 +438,64 @@
 
             function buildFallbackHolidays(year) {
                 const holidays = {};
-                // 公历节日
+                // 公历法定休息日名称
+                const solarRestNames = ['元旦', '劳动节', '国庆节'];
+                // 农历法定休息日名称
+                const lunarRestNames = ['春节', '端午节', '中秋节'];
+            
                 for (let month = 1; month <= 12; month++) {
                     const daysInMonth = new Date(year, month, 0).getDate();
                     for (let day = 1; day <= daysInMonth; day++) {
+                        const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            
+                        // 公历节日
                         const key = `${month}-${day}`;
                         const fest = SolarUtil.FESTIVAL[key];
                         if (fest) {
-                            const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                             if (!holidays[dateStr]) holidays[dateStr] = [];
-                            holidays[dateStr].push({ name: fest, isRest: false });
+                            const isRest = solarRestNames.includes(fest);
+                            holidays[dateStr].push({ name: fest, isRest });
                         }
-                        // 农历节日
+            
+                        // 农历节日及节气（清明）
                         try {
                             const solar = Solar.fromYmd(year, month, day);
                             const lunar = Lunar.fromSolar(solar);
-                            const lunarMonth = lunar.getMonth();
-                            const lunarDay = lunar.getDay();
-                            const lunarKey = `${lunarMonth}-${lunarDay}`;
+                            // 节气清明
+                            const jq = lunar.getJieQi();
+                            if (jq === '清明') {
+                                if (!holidays[dateStr]) holidays[dateStr] = [];
+                                if (!holidays[dateStr].some(h => h.name === '清明节')) {
+                                    holidays[dateStr].push({ name: '清明节', isRest: true });
+                                }
+                            }
+                            // 农历节日
+                            const lMonth = lunar.getMonth();
+                            const lDay = lunar.getDay();
+                            const lunarKey = `${lMonth}-${lDay}`;
                             const lunarFest = LunarUtil.FESTIVAL[lunarKey];
                             if (lunarFest) {
-                                const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                                 if (!holidays[dateStr]) holidays[dateStr] = [];
-                                holidays[dateStr].push({ name: lunarFest, isRest: false });
+                                const isRest = lunarRestNames.includes(lunarFest);
+                                holidays[dateStr].push({ name: lunarFest, isRest });
                             }
                         } catch (e) {}
                     }
                 }
-                // 母亲节：5月第2个周日
+            
+                // 手动补全国庆假期（10-2,10-3）
+                ['10-2', '10-3'].forEach(k => {
+                    const parts = k.split('-');
+                    const month = parseInt(parts[0]);
+                    const day = parseInt(parts[1]);
+                    const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                    if (!holidays[dateStr]) holidays[dateStr] = [];
+                    if (!holidays[dateStr].some(h => h.name === '国庆节')) {
+                        holidays[dateStr].push({ name: '国庆节', isRest: true });
+                    }
+                });
+            
+                // 母亲节
                 const mayFirst = new Date(year, 4, 1);
                 const mayFirstDay = mayFirst.getDay();
                 const firstSunday = 1 + (7 - mayFirstDay) % 7;
@@ -476,8 +503,8 @@
                 const motherStr = `${year}-05-${String(motherDay).padStart(2,'0')}`;
                 if (!holidays[motherStr]) holidays[motherStr] = [];
                 holidays[motherStr].push({ name: '母亲节', isRest: false });
-
-                // 父亲节：6月第3个周日
+            
+                // 父亲节
                 const junFirst = new Date(year, 5, 1);
                 const junFirstDay = junFirst.getDay();
                 const junFirstSunday = 1 + (7 - junFirstDay) % 7;
@@ -485,7 +512,7 @@
                 const fatherStr = `${year}-06-${String(fatherDay).padStart(2,'0')}`;
                 if (!holidays[fatherStr]) holidays[fatherStr] = [];
                 holidays[fatherStr].push({ name: '父亲节', isRest: false });
-
+            
                 return holidays;
             }
 
@@ -549,11 +576,14 @@
                     let cellHTML = `<div class="cell-solar">${day}</div>`;
 
                     const holidays = holidayData[dateStr];
+                    const d = new Date(year, month - 1, day);
+                    const dayOfWeek = d.getDay(); // 0=周日,6=周六
+
                     if (holidays && holidays.length > 0) {
                         const holidayName = getImportantHolidayName(holidays);
                         const firstHoliday = holidays[0];
-                        // 只要当前是休息日，就显示休字
-                        if (firstHoliday.isRest) {
+                        // 显示休：法定休息日且不是周末
+                        if (firstHoliday.isRest && dayOfWeek !== 0 && dayOfWeek !== 6) {
                             cellHTML += `<div class="cell-rest">休</div>`;
                         }
                         cellHTML += `<div class="cell-holiday">${holidayName}</div>`;
@@ -584,20 +614,6 @@
                     grid.appendChild(cell);
                 }
                 document.getElementById('calendarTitle').textContent = `${year}年${month}月`;
-            }
-
-            function isFirstDayOfHoliday(dateStr, holidays) {
-                const [year, month, day] = dateStr.split('-').map(Number);
-                let prevYear = year, prevMonth = month, prevDay = day - 1;
-                if (prevDay < 1) {
-                    prevMonth -= 1;
-                    if (prevMonth < 1) { prevMonth = 12; prevYear -= 1; }
-                    prevDay = new Date(prevYear, prevMonth, 0).getDate();
-                }
-                const prevDateStr = `${prevYear}-${String(prevMonth).padStart(2,'0')}-${String(prevDay).padStart(2,'0')}`;
-                const prevHolidays = holidayData[prevDateStr];
-                if (!prevHolidays) return true;
-                return !prevHolidays.some(h => h.name === holidays[0].name);
             }
 
             function renderHolidayBar(year, month) {
