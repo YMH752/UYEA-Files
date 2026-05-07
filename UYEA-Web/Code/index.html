@@ -102,7 +102,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s ease;
-            position: relative;
+            position: relative;      /* 为绝对定位的休字提供定位参考 */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -129,6 +129,21 @@
             line-height: 1;
             white-space: nowrap;
             overflow: visible;
+        }
+        /* 休字标签：右上角小标签 */
+        .cell-rest {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 5px;
+            font-weight: 700;
+            color: #ffffff;
+            background: var(--primary);
+            border-radius: 2px;
+            padding: 0 1px;
+            line-height: 1;
+            white-space: nowrap;
+            z-index: 1;
         }
         .calendar-cell.today {
             background: var(--primary);
@@ -537,7 +552,8 @@
                     if (holidays && holidays.length > 0) {
                         const holidayName = getImportantHolidayName(holidays);
                         const firstHoliday = holidays[0];
-                        if (firstHoliday.isRest && !isFirstDayOfHoliday(dateStr, holidays)) {
+                        // 只要当前是休息日，就显示休字
+                        if (firstHoliday.isRest) {
                             cellHTML += `<div class="cell-rest">休</div>`;
                         }
                         cellHTML += `<div class="cell-holiday">${holidayName}</div>`;
