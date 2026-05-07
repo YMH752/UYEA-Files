@@ -386,117 +386,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadCardIcons() {
         const cardImages = document.querySelectorAll('.card-icon img');
-        const imagePromises = [];
-        const loadedIcons = {};
         
-        // 检查缓存
-        const cachedIcons = getIconCache();
-        
-        cardImages.forEach((img, index) => {
+        cardImages.forEach(img => {
             const domain = img.dataset.domain;
-            const siteName = img.dataset.siteName;
-            
             if (!domain) return;
             
             const iconFileName = iconMap[domain];
             const emojiBackup = emojiMap[domain] || '🔗';
             
-            // 添加骨架加载样式
+            // 步骤1: 显示骨架加载
             img.classList.add('skeleton-loading');
             
-            // 并行加载所有图标
-            const loadPromise = new Promise((resolve) => {
-                // 优先使用缓存
-                if (cachedIcons && cachedIcons[domain]) {
-                    img.src = cachedIcons[domain];
+            if (iconFileName) {
+                // 步骤2: 尝试加载GitHub图标
+                const iconUrl = `${GITHUB_ICONS_BASE}${iconFileName}`;
+                const tempImg = new Image();
+                
+                tempImg.onload = () => {
+                    // 加载成功
+                    img.src = iconUrl;
                     img.classList.remove('skeleton-loading');
                     img.classList.add('icon-loaded');
-                    img.alt = siteName || domain;
-                    loadedIcons[domain] = cachedIcons[domain];
-                    resolve();
-                    return;
-                }
+                };
                 
-                if (iconFileName) {
-                    // 多源重试机制
-                    let sourceIndex = 0;
-                    const maxSources = GITHUB_ICONS_SOURCES.length;
-                    
-                    function tryLoadFromSource() {
-                        if (sourceIndex >= maxSources) {
-                            // 所有源都失败，使用emoji
-                            img.textContent = emojiBackup;
-                            img.classList.remove('skeleton-loading');
-                            img.classList.add('icon-emoji');
-                            loadedIcons[domain] = emojiBackup;
-                            resolve();
-                            return;
-                        }
-                        
-                        const iconUrl = `${GITHUB_ICONS_SOURCES[sourceIndex]}${iconFileName}`;
-                        const tempImg = new Image();
-                        
-                        tempImg.onload = () => {
-                            img.src = iconUrl;
-                            img.classList.remove('skeleton-loading');
-                            img.classList.add('icon-loaded');
-                            img.alt = siteName || domain;
-                            loadedIcons[domain] = iconUrl;
-                            resolve();
-                        };
-                        
-                        tempImg.onerror = () => {
-                            sourceIndex++;
-                            tryLoadFromSource(); // 尝试下一个源
-                        };
-                        
-                        // 设置超时 (800ms per source)
-                        const timeoutId = setTimeout(() => {
-                            tempImg.src = '';
-                            sourceIndex++;
-                            clearTimeout(timeoutId);
-                            tryLoadFromSource(); // 尝试下一个源
-                        }, 800);
-                        
-                        tempImg.src = iconUrl;
-                    }
-                    
-                    tryLoadFromSource();
-                } else {
-                    // 没有对应的图标文件，直接使用emoji
+                tempImg.onerror = () => {
+                    // 步骤3: GitHub加载失败，用emoji
                     img.textContent = emojiBackup;
                     img.classList.remove('skeleton-loading');
                     img.classList.add('icon-emoji');
-                    loadedIcons[domain] = emojiBackup;
-                    resolve();
-                }
-            });
-            
-            imagePromises.push(loadPromise);
-        });
-        
-        // 所有图标加载完成后保存缓存
-        Promise.all(imagePromises).then(() => {
-            if (Object.keys(loadedIcons).length > 0) {
-                setIconCache(loadedIcons);
+                };
+                
+                // 1秒超时
+                setTimeout(() => {
+                    if (!img.src || img.src === '' || img.classList.contains('skeleton-loading')) {
+                        img.textContent = emojiBackup;
+                        img.classList.remove('skeleton-loading');
+                        img.classList.add('icon-emoji');
+                    }
+                }, 1000);
+                
+                tempImg.src = iconUrl;
+            } else {
+                // 没有对应图标文件，直接emoji
+                img.textContent = emojiBackup;
+                img.classList.remove('skeleton-loading');
+                img.classList.add('icon-emoji');
             }
-            console.log('✅ 所有卡片图标加载完成');
         });
     }
     
-    // 快速显示emoji (300ms)
-    applyFallbackEmoji();
-    
-    // 同时启动图标加载 (使用requestIdleCallback以获得最佳性能)
+    // 启动图标加载
     if ('requestIdleCallback' in window) {
         requestIdleCallback(() => loadCardIcons());
     } else {
         requestAnimationFrame(() => loadCardIcons());
     }
-        } else {
-            // 如果Lunar库还未加载，继续等待
-            setTimeout(initClock, 100);
-        }
-    }
-    initClock();
+
 });
