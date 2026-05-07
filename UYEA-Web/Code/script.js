@@ -283,58 +283,33 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof Lunar !== 'undefined') {
             updateClock();
             setInterval(updateClock, 1000);
+
+    /* ════════════════════════════════════════════════════════════
+       加载网站卡片图标
+       ════════════════════════════════════════════════════════════ */
+    function loadCardIcons() {
+        const cardImages = document.querySelectorAll('.card-icon img');
+        cardImages.forEach(img => {
+            const domain = img.dataset.domain;
+            const siteName = img.dataset.siteName;
+            if (domain) {
+                // 使用Google的favicon服务
+                const iconUrl = `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
+                img.src = iconUrl;
+                img.alt = siteName || domain;
+                img.onerror = () => {
+                    // 如果加载失败，使用备选方案
+                    img.src = `https://www.google.com/s2/favicons?sz=64&domain=${domain}&t=${Date.now()}`;
+                };
+            }
+        });
+    }
+    
+    loadCardIcons();
         } else {
             // 如果Lunar库还未加载，继续等待
             setTimeout(initClock, 100);
         }
     }
     initClock();
-
-    /* ════════════════════════════════════════════════════════════
-       6. 图标加载（从 GitHub 仓库，失败时使用 emoji 替代）
-       ════════════════════════════════════════════════════════════ */
-    (function loadIcons() {
-        const iconBase = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/';
-        const emojiFallback = {
-            'ChatGPT': '🤖',
-            'Gemini': '✨',
-            'Claude': '🎯',
-            'DeepSeek': '🧠',
-            '文心一言': '📝',
-            '通义千问': '💬',
-            'Kimi': '🌟',
-            '豆包': '🫘',
-            '腾讯元宝': '💰',
-            'Perplexity': '🔍',
-            'Copilot': '🧑‍✈️',
-            'Grok': '🧬',
-            '小红书': '📕',
-            'B站': '📺',
-            '知乎': '💡',
-            'GitHub': '🐙',
-            'TinyPNG': '🐼',
-            'v0': '🌀'
-        };
-
-        const iconImgs = document.querySelectorAll('.card-icon img[data-site-name]');
-
-        iconImgs.forEach(img => {
-            const siteName = img.getAttribute('data-site-name');
-            if (!siteName) return;
-
-            const iconUrl = `${iconBase}${siteName}.ico`;
-            img.src = iconUrl;
-
-            img.onerror = function() {
-                const emoji = emojiFallback[siteName] || '🔗';
-                const cardIcon = img.parentElement;
-                img.remove();
-                const emojiSpan = document.createElement('span');
-                emojiSpan.className = 'icon-emoji';
-                emojiSpan.textContent = emoji;
-                emojiSpan.title = siteName;
-                cardIcon.appendChild(emojiSpan);
-            };
-        });
-    })();
 });
