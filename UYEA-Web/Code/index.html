@@ -426,7 +426,7 @@
                     const apiResp = await fetch(`${API_URL}${year}`);
                     const apiResult = await apiResp.json();
                     if (apiResult && apiResult.holiday) {
-                        return buildFromApi(apiResult.holiday);
+                        return buildFromApi(year, apiResult.holiday);
                     }
                 } catch (e) {
                     console.warn('自动 API 获取失败，尝试手动 JSON');
@@ -447,12 +447,23 @@
                 return buildFallbackHolidays(year);
             }
 
-            function buildFromApi(holidayObj) {
+            function buildFromApi(year, holidayObj) {
                 const holidays = {};
+                // 用于记录每个节日名称第一次出现的日期（只在该日期保留名称）
+                const firstAppearance = {};
                 for (const [key, val] of Object.entries(holidayObj)) {
                     if (val.holiday) {
-                        const dateStr = `${currentCalendarYear}-${key}`;
-                        holidays[dateStr] = [{ name: val.name, isRest: true }];
+                        const dateStr = `${year}-${key}`;
+                        const name = val.name;
+                        // 如果该名称尚未记录过，则保留名称并标记为首日
+                        if (!(name in firstAppearance)) {
+                            firstAppearance[name] = dateStr;
+                            holidays[dateStr] = [{ name, isRest: true }];
+                        } else {
+                            // 非首日：只标记休息，名称留空
+                            if (!holidays[dateStr]) holidays[dateStr] = [];
+                            holidays[dateStr].push({ name: '', isRest: true });
+                        }
                     }
                 }
                 return holidays;
@@ -468,7 +479,11 @@
                         const d = new Date(year, sMonth - 1, sDay + i);
                         const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
                         if (!holidays[dateStr]) holidays[dateStr] = [];
-                        holidays[dateStr].push({ name, isRest: true });
+                        // 只有第一天保留节日名称，后续天只留 isRest
+                        holidays[dateStr].push({ 
+                            name: i === 0 ? name : '', 
+                            isRest: true 
+                        });
                     }
                 }
                 return holidays;
@@ -540,7 +555,6 @@
                 const grid = document.getElementById('calendarGrid');
                 if (!grid) return;
                 grid.innerHTML = '';
-                // 填充上个月末尾的日期
                 for (let i = firstDay - 1; i >= 0; i--) {
                     const cell = document.createElement('div');
                     cell.className = 'calendar-cell other-month';
@@ -548,7 +562,6 @@
                     grid.appendChild(cell);
                 }
                 const today = new Date();
-                // 填充当月日期
                 for (let day = 1; day <= daysInMonth; day++) {
                     const cell = document.createElement('div');
                     cell.className = 'calendar-cell';
@@ -564,6 +577,7 @@
                         if (restHoliday) {
                             cellHTML += `<div class="cell-rest">休</div>`;
                         }
+                        // 查找具有有效名称的节日
                         const namedHoliday = holidays.find(h => h.name && h.name.trim() !== '');
                         if (namedHoliday) {
                             cellHTML += `<div class="cell-holiday">${namedHoliday.name}</div>`;
@@ -587,10 +601,9 @@
                     });
                     grid.appendChild(cell);
                 }
-                // 填充下个月开始的日期（修复此处）
-                const totalCellsSoFar = grid.children.length;
+                const totalCells = grid.children.length;
                 let nextMonthDay = 1;
-                while (totalCellsSoFar + (nextMonthDay - 1) < 42) {
+                while (totalCells + (nextMonthDay - 1) < 42) {
                     const cell = document.createElement('div');
                     cell.className = 'calendar-cell other-month';
                     cell.innerHTML = `<div class="cell-solar">${nextMonthDay}</div>`;
