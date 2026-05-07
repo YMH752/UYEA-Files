@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+    <!-- 引入大胆有棱角的字体 -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     <link rel="stylesheet" href="style.css">
@@ -379,14 +380,6 @@
                         <div class="card-icon"><img src="" data-domain="perplexity.ai" data-site-name="Perplexity"></div>
                         <div class="card-info"><div class="card-title">Perplexity</div></div>
                     </a>
-                    <a href="https://copilot.microsoft.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="copilot.microsoft.com" data-site-name="Copilot"></div>
-                        <div class="card-info"><div class="card-title">Copilot</div></div>
-                    </a>
-                    <a href="https://grok.com/" target="_blank" class="card-item">
-                        <div class="card-icon"><img src="" data-domain="grok.com" data-site-name="Grok"></div>
-                        <div class="card-info"><div class="card-title">Grok</div></div>
-                    </a>
                 </div>
             </div>
 
@@ -462,8 +455,10 @@
     <script>
         (function() {
             // 日历全局变量
-            let currentCalendarYear = 2026;
-            let currentCalendarMonth = 1;
+            // 获取当前日期，作为日历默认显示位置
+            const today = new Date();
+            let currentCalendarYear = today.getFullYear();
+            let currentCalendarMonth = today.getMonth() + 1;
             let selectedDate = new Date(2026, 0, 1);
             let isAnimating = false;
             let touchStartY = 0;
@@ -490,10 +485,11 @@
                                 isRest: holiday.isRest === 1
                             });
                         });
+                        console.log(`成功加载${year}年的${Object.keys(holidays).length}个节假日`);
                         return holidays;
                     }
                 } catch (error) {
-                    console.warn('节假日API获取失败，使用空数据');
+                    console.warn('节假日API获取失败，尝试使用备选方案');
                 }
                 return {};
             }
