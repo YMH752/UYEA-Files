@@ -315,7 +315,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {}
     }
 
-    const GITHUB_ICONS_BASE = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/';
+    // 使用多个CDN源，优先级从高到低
+    const GITHUB_ICONS_SOURCES = [
+        'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/',
+        'https://cdn.jsdelivr.net/gh/YMH752/UYEA-Files@main/UYEA-Web/Code/icons/',
+        'https://ghproxy.com/https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/'
+    ];
     
     // 图标映射表 (domain -> 文件名)
     const iconMap = {
@@ -353,6 +358,24 @@ document.addEventListener('DOMContentLoaded', () => {
         'v0.dev': '⚡'
     };
     
+    
+    // 快速emoji降级方案 (防止加载卡顿)
+    function applyFallbackEmoji() {
+        const cardImages = document.querySelectorAll('.card-icon img');
+        cardImages.forEach(img => {
+            const domain = img.dataset.domain;
+            const emojiBackup = emojiMap[domain] || '🔗';
+            // 300ms后如果还没加载，显示emoji
+            setTimeout(() => {
+                if (!img.src || img.src === '') {
+                    img.textContent = emojiBackup;
+                    img.classList.remove('skeleton-loading');
+                    img.classList.add('icon-emoji');
+                }
+            }, 300);
+        });
+    }
+
     function loadCardIcons() {
         const cardImages = document.querySelectorAll('.card-icon img');
         const imagePromises = [];
@@ -387,47 +410,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 if (iconFileName) {
-                    const iconUrl = `${GITHUB_ICONS_BASE}${iconFileName}`;
+                    // 多源重试机制
+                    let sourceIndex = 0;
+                    const maxSources = GITHUB_ICONS_SOURCES.length;
                     
-                    // 预加载图片
-                    const tempImg = new Image();
-                    tempImg.onload = () => {
-                        img.src = iconUrl;
-                        img.classList.remove('skeleton-loading');
-                        img.classList.add('icon-loaded');
-                        img.alt = siteName || domain;
-                        loadedIcons[domain] = iconUrl;
-                        resolve();
-                    };
-                    tempImg.onerror = () => {
-                        // 图标加载失败，使用emoji
-                        img.textContent = emojiBackup;
-                        img.classList.remove('skeleton-loading');
-                        img.classList.add('icon-emoji');
-                        loadedIcons[domain] = emojiBackup;
-                        resolve();
-                    };
+                    function tryLoadFromSource() {
+                        if (sourceIndex >= maxSources) {
+                            // 所有源都失败，使用emoji
+                            img.textContent = emojiBackup;
+                            img.classList.remove('skeleton-loading');
+                            img.classList.add('icon-emoji');
+                            loadedIcons[domain] = emojiBackup;
+                            resolve();
+                            return;
+                        }
+                        
+                        const iconUrl = `${GITHUB_ICONS_SOURCES[sourceIndex]}${iconFileName}`;
+                        const tempImg = new Image();
+                        
+                        tempImg.onload = () => {
+                            img.src = iconUrl;
+                            img.classList.remove('skeleton-loading');
+                            img.classList.add('icon-loaded');
+                            img.alt = siteName || domain;
+                            loadedIcons[domain] = iconUrl;
+                            resolve();
+                        };
+                        
+                        tempImg.onerror = () => {
+                            sourceIndex++;
+                            tryLoadFromSource(); // 尝试下一个源
+                        };
+                        
+                        // 设置超时 (800ms per source)
+                        const timeoutId = setTimeout(() => {
+                            tempImg.src = '';
+                            sourceIndex++;
+                            clearTimeout(timeoutId);
+                            tryLoadFromSource(); // 尝试下一个源
+                        }, 800);
+                        
+                        tempImg.src = iconUrl;
+                    }
                     
-                    // 设置较短的超时 (500ms)
-                    const timeoutId = setTimeout(() => {
-                        tempImg.src = '';
-                        img.textContent = emojiBackup;
-                        img.classList.remove('skeleton-loading');
-                        img.classList.add('icon-emoji');
-                        loadedIcons[domain] = emojiBackup;
-                        resolve();
-                    }, 500);
-                    
-                    tempImg.onload = () => {
-                        clearTimeout(timeoutId);
-                        tempImg.onload();
-                    };
-                    tempImg.onerror = () => {
-                        clearTimeout(timeoutId);
-                        tempImg.onerror();
-                    };
-                    
-                    tempImg.src = iconUrl;
+                    tryLoadFromSource();
                 } else {
                     // 没有对应的图标文件，直接使用emoji
                     img.textContent = emojiBackup;
@@ -450,7 +476,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // 立即启动图标加载 (使用requestIdleCallback以获得最佳性能)
+    // 快速显示emoji (300ms)
+    applyFallbackEmoji();
+    
+    // 同时启动图标加载 (使用requestIdleCallback以获得最佳性能)
     if ('requestIdleCallback' in window) {
         requestIdleCallback(() => loadCardIcons());
     } else {
