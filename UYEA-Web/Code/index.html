@@ -239,10 +239,20 @@
                 return null;
             }
 
-            // 统一注入所有农历节日（包括除夕、春节、清明、端午、中秋等）
+            // 统一注入所有节日（公历固定/农历/除夕）
             function addLunarHolidays(year, holidays) {
+                // 公历固定节日
+                for (const [name, date] of Object.entries(SOLAR_FIXED_FESTIVALS)) {
+                    const [m, d] = date.split('-').map(Number);
+                    const dateStr = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                    if (!holidays[dateStr]) holidays[dateStr] = [];
+                    if (!holidays[dateStr].some(h => h.name === name)) {
+                        holidays[dateStr].push({ name, isRest: true });
+                    }
+                }
+
+                // 农历节日（含清明）
                 try {
-                    // 先遍历全年每天，插入所有农历节日
                     for (let month = 1; month <= 12; month++) {
                         const daysInMonth = new Date(year, month, 0).getDate();
                         for (let day = 1; day <= daysInMonth; day++) {
@@ -250,14 +260,12 @@
                             try {
                                 const solar = Solar.fromYmd(year, month, day);
                                 const lunar = Lunar.fromSolar(solar);
-                                // 清明
                                 if (lunar.getJieQi() === '清明') {
                                     if (!holidays[dateStr]) holidays[dateStr] = [];
                                     if (!holidays[dateStr].some(h => h.name === '清明节')) {
                                         holidays[dateStr].push({ name: '清明节', isRest: false });
                                     }
                                 }
-                                // 其他农历节日
                                 const lunarKey = `${lunar.getMonth()}-${lunar.getDay()}`;
                                 const lunarFest = LunarUtil.FESTIVAL[lunarKey];
                                 if (lunarFest) {
@@ -269,21 +277,17 @@
                             } catch (e) {}
                         }
                     }
-                    // 除夕（当年正月初一的前一天）已在遍历中通过春节得到？不，遍历中的春节是正月初一，而除夕是前一天，需要单独处理
-                    // 从已插入的数据中找到正月初一，然后前一天加入除夕
-                    // 更稳健：直接用 LunarYear 找到正月初一
+
+                    // 除夕
                     const lunarYearObj = LunarYear.fromYear(year);
                     const months = lunarYearObj.getMonths();
                     for (const m of months) {
                         if (m.getYear() === year && m.getMonth() === 1 && !m.isLeap()) {
                             const firstDaySolar = Solar.fromJulianDay(m.getFirstJulianDay());
                             const firstDayDateStr = `${firstDaySolar.getYear()}-${String(firstDaySolar.getMonth()).padStart(2,'0')}-${String(firstDaySolar.getDay()).padStart(2,'0')}`;
-                            // 确保春节存在（可能上面已添加）
-                            if (!holidays[firstDayDateStr]) holidays[firstDayDateStr] = [];
                             if (!holidays[firstDayDateStr].some(h => h.name === '春节')) {
                                 holidays[firstDayDateStr].push({ name: '春节', isRest: false });
                             }
-                            // 除夕：前一天
                             const evSolar = firstDaySolar.next(-1);
                             const evDateStr = `${evSolar.getYear()}-${String(evSolar.getMonth()).padStart(2,'0')}-${String(evSolar.getDay()).padStart(2,'0')}`;
                             if (!holidays[evDateStr]) holidays[evDateStr] = [];
@@ -309,7 +313,6 @@
             }
 
             function processHolidayData(year, data) {
-                // addLunarHolidays 总能保证所有农历节日都存在
                 addLunarHolidays(year, data);
                 adjustHolidays(year, data);
                 return data;
@@ -387,15 +390,8 @@
             }
 
             function buildFallbackHolidays(year) {
-                // 仅加入公历固定节日，农历节日全交由 addLunarHolidays 注入
-                const holidays = {};
-                for (const [name, date] of Object.entries(SOLAR_FIXED_FESTIVALS)) {
-                    const [m, d] = date.split('-').map(Number);
-                    const dateStr = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                    if (!holidays[dateStr]) holidays[dateStr] = [];
-                    holidays[dateStr].push({ name, isRest: false });
-                }
-                return holidays;
+                // 所有节日都已由 addLunarHolidays 处理，此处只需返回空
+                return {};
             }
 
             async function initializeHolidayData() {
