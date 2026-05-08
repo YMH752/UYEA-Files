@@ -207,11 +207,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========== 图标加载 ==========
     const iconBase = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/ICONS/';
     const emojiFallback = {
-        'ChatGPT': '🤖','Gemini': '✨','Claude': '🎯','DeepSeek': '🧠',
-        '文心一言': '📝','通义千问': '💬','Kimi': '🌟','豆包': '🫘',
-        '腾讯元宝': '💰','Perplexity': '🔍','Copilot': '👨‍✈️','Grok': '🧬',
-        '小红书': '📕','B站': '📺','知乎': '💡','GitHub': '🐙',
-        'TinyPNG': '🐼','v0': '🌀'
+        'chatgpt': '🤖',
+        'gemini': '✨',
+        'claude': '🎯',
+        'deepseek': '🧠',
+        'yiyan': '📝',
+        'qianwen': '💬',
+        'kimi': '🌟',
+        'doubao': '🫘',
+        'yuanbao': '💰',
+        'perplexity': '🔍',
+        'copilot': '👨‍✈️',
+        'grok': '🧬',
+        'xiaohongshu': '📕',
+        'bilibili': '📺',
+        'zhihu': '💡',
+        'github': '🐙',
+        'tinypng': '🐼',
+        'v0': '🌀'
     };
 
     function loadIconImage(img) {
@@ -236,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========== 动态加载导航分类数据 ==========
     async function loadNavigation() {
         try {
-            const resp = await fetch('../../Data/JSON/navigation.json');
+            const resp = await fetch('/Data/JSON/navigation.json');
             const nav = await resp.json();
             renderSection('ai-section', nav.ai);
             renderSection('life-section', nav.life);
