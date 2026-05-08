@@ -275,10 +275,10 @@
                 } catch (e) {}
             }
 
-            // 根据年份调整 isRest：非今年则强制 false
+            // 非今年则强制 isRest = false
             function adjustHolidays(year, holidays) {
                 const nowYear = new Date().getFullYear();
-                if (year === nowYear) return; // 今年保持不变
+                if (year === nowYear) return;
                 for (const dateStr in holidays) {
                     const entries = holidays[dateStr];
                     if (Array.isArray(entries)) {
@@ -287,16 +287,25 @@
                 }
             }
 
+            // 统一处理节日数据（幂等），并确保缓存中的最终数据也是已处理的
+            function processHolidayData(year, data) {
+                addLunarHolidays(year, data);
+                adjustHolidays(year, data);
+                return data;
+            }
+
             async function fetchHolidaysByYear(year) {
-                if (holidayCache[year]) return holidayCache[year];
+                // 命中缓存时也要重新处理（兼容旧缓存）
+                if (holidayCache[year]) {
+                    return processHolidayData(year, holidayCache[year]);
+                }
 
                 try {
                     const apiResp = await fetch(`${API_URL}${year}`);
                     const apiResult = await apiResp.json();
                     if (apiResult && apiResult.holiday) {
-                        const data = buildFromApi(year, apiResult.holiday);
-                        addLunarHolidays(year, data);
-                        adjustHolidays(year, data);
+                        let data = buildFromApi(year, apiResult.holiday);
+                        data = processHolidayData(year, data);
                         holidayCache[year] = data;
                         return data;
                     }
@@ -306,17 +315,15 @@
                     const jsonResp = await fetch(MANUAL_JSON_URL);
                     const remoteData = await jsonResp.json();
                     if (remoteData[year]) {
-                        const data = buildFromRemoteConfig(year, remoteData[year]);
-                        addLunarHolidays(year, data);
-                        adjustHolidays(year, data);
+                        let data = buildFromRemoteConfig(year, remoteData[year]);
+                        data = processHolidayData(year, data);
                         holidayCache[year] = data;
                         return data;
                     }
                 } catch (e) {}
 
-                const data = buildFallbackHolidays(year);
-                addLunarHolidays(year, data);
-                adjustHolidays(year, data);
+                let data = buildFallbackHolidays(year);
+                data = processHolidayData(year, data);
                 holidayCache[year] = data;
                 return data;
             }
