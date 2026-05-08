@@ -239,6 +239,46 @@
                 return null;
             }
 
+            // 统一补齐除夕和春节（避免重复添加）
+            function addLunarHolidays(year, holidays) {
+                try {
+                    // 除夕：下一年正月初一的前一天
+                    const nextYear = year + 1;
+                    const lunarYearObj = LunarYear.fromYear(nextYear);
+                    const firstMonth = lunarYearObj.getMonth(1);
+                    if (firstMonth) {
+                        const firstDaySolar = Solar.fromJulianDay(firstMonth.getFirstJulianDay());
+                        const evSolar = firstDaySolar.next(-1);
+                        const evDateStr = `${evSolar.getYear()}-${String(evSolar.getMonth()).padStart(2,'0')}-${String(evSolar.getDay()).padStart(2,'0')}`;
+                        if (!holidays[evDateStr]) holidays[evDateStr] = [];
+                        if (!holidays[evDateStr].some(h => h.name === '除夕')) {
+                            holidays[evDateStr].push({ name: '除夕', isRest: false });
+                        }
+                    }
+                    // 春节：确保正月初一名称存在
+                    for (let m = 1; m <= 12; m++) {
+                        const daysInMonth = new Date(year, m, 0).getDate();
+                        for (let d = 1; d <= daysInMonth; d++) {
+                            const dateStr = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                            const solar = Solar.fromYmd(year, m, d);
+                            const lunar = Lunar.fromSolar(solar);
+                            if (lunar.getMonth() === 1 && lunar.getDay() === 1) {
+                                // 找到正月初一
+                                if (!holidays[dateStr]) holidays[dateStr] = [];
+                                // 如果已有春节条目但名称空了，补上
+                                const existing = holidays[dateStr].find(h => h.name === '春节');
+                                if (!existing) {
+                                    holidays[dateStr].push({ name: '春节', isRest: false });
+                                } else if (!existing.name) {
+                                    existing.name = '春节';
+                                }
+                                break; // 只处理一次
+                            }
+                        }
+                    }
+                } catch (e) {}
+            }
+
             async function fetchHolidaysByYear(year) {
                 if (holidayCache[year]) return holidayCache[year];
 
@@ -247,6 +287,7 @@
                     const apiResult = await apiResp.json();
                     if (apiResult && apiResult.holiday) {
                         const data = buildFromApi(year, apiResult.holiday);
+                        addLunarHolidays(year, data);
                         holidayCache[year] = data;
                         return data;
                     }
@@ -257,12 +298,14 @@
                     const remoteData = await jsonResp.json();
                     if (remoteData[year]) {
                         const data = buildFromRemoteConfig(year, remoteData[year]);
+                        addLunarHolidays(year, data);
                         holidayCache[year] = data;
                         return data;
                     }
                 } catch (e) {}
 
                 const data = buildFallbackHolidays(year);
+                addLunarHolidays(year, data);
                 holidayCache[year] = data;
                 return data;
             }
@@ -302,23 +345,6 @@
                         });
                     }
                 }
-
-                // 补齐除夕
-                try {
-                    const nextYear = year + 1;
-                    const lunarYearObj = LunarYear.fromYear(nextYear);
-                    const firstMonth = lunarYearObj.getMonth(1);
-                    if (firstMonth) {
-                        const firstDaySolar = Solar.fromJulianDay(firstMonth.getFirstJulianDay());
-                        const evSolar = firstDaySolar.next(-1);
-                        const evDateStr = `${evSolar.getYear()}-${String(evSolar.getMonth()).padStart(2,'0')}-${String(evSolar.getDay()).padStart(2,'0')}`;
-                        if (!holidays[evDateStr]) holidays[evDateStr] = [];
-                        if (!holidays[evDateStr].some(h => h.name === '除夕')) {
-                            holidays[evDateStr].push({ name: '除夕', isRest: false });
-                        }
-                    }
-                } catch (e) {}
-
                 return holidays;
             }
 
@@ -353,21 +379,6 @@
                         } catch (e) {}
                     }
                 }
-
-                try {
-                    const nextYear = year + 1;
-                    const lunarYearObj = LunarYear.fromYear(nextYear);
-                    const firstMonth = lunarYearObj.getMonth(1);
-                    if (firstMonth) {
-                        const firstDaySolar = Solar.fromJulianDay(firstMonth.getFirstJulianDay());
-                        const evSolar = firstDaySolar.next(-1);
-                        const evDateStr = `${evSolar.getYear()}-${String(evSolar.getMonth()).padStart(2,'0')}-${String(evSolar.getDay()).padStart(2,'0')}`;
-                        if (!holidays[evDateStr]) holidays[evDateStr] = [];
-                        if (!holidays[evDateStr].some(h => h.name === '除夕')) {
-                            holidays[evDateStr].push({ name: '除夕', isRest: false });
-                        }
-                    }
-                } catch (e) {}
 
                 return holidays;
             }
