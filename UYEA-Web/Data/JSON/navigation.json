@@ -1,26 +1,26 @@
 {
   "ai": [
-    { "title": "ChatGPT", "url": "https://chatgpt.com/", "icon": "chatgpt.com" },
-    { "title": "Gemini", "url": "https://gemini.google.com/", "icon": "gemini.google.com" },
-    { "title": "Claude", "url": "https://claude.ai/", "icon": "claude.ai" },
-    { "title": "DeepSeek", "url": "https://www.deepseek.com/", "icon": "deepseek.com" },
-    { "title": "文心一言", "url": "https://yiyan.baidu.com/", "icon": "yiyan.baidu.com" },
-    { "title": "通义千问", "url": "https://qianwen.aliyun.com/", "icon": "qianwen.aliyun.com" },
-    { "title": "Kimi", "url": "https://www.kimi.ai/", "icon": "kimi.ai" },
-    { "title": "豆包", "url": "https://www.doubao.com/", "icon": "doubao.com" },
-    { "title": "腾讯元宝", "url": "https://yuanbao.tencent.com/", "icon": "yuanbao.tencent.com" },
-    { "title": "Perplexity", "url": "https://www.perplexity.ai/", "icon": "perplexity.ai" },
-    { "title": "Copilot", "url": "https://copilot.microsoft.com/", "icon": "copilot.microsoft.com" },
-    { "title": "Grok", "url": "https://grok.com/", "icon": "grok.com" }
+    { "title": "ChatGPT", "url": "https://chatgpt.com/", "icon": "chatgpt" },
+    { "title": "Gemini", "url": "https://gemini.google.com/", "icon": "gemini" },
+    { "title": "Claude", "url": "https://claude.ai/", "icon": "claude" },
+    { "title": "DeepSeek", "url": "https://www.deepseek.com/", "icon": "deepseek" },
+    { "title": "文心一言", "url": "https://yiyan.baidu.com/", "icon": "yiyan" },
+    { "title": "通义千问", "url": "https://qianwen.aliyun.com/", "icon": "qianwen" },
+    { "title": "Kimi", "url": "https://www.kimi.ai/", "icon": "kimi" },
+    { "title": "豆包", "url": "https://www.doubao.com/", "icon": "doubao" },
+    { "title": "腾讯元宝", "url": "https://yuanbao.tencent.com/", "icon": "yuanbao" },
+    { "title": "Perplexity", "url": "https://www.perplexity.ai/", "icon": "perplexity" },
+    { "title": "Copilot", "url": "https://copilot.microsoft.com/", "icon": "copilot" },
+    { "title": "Grok", "url": "https://grok.com/", "icon": "grok" }
   ],
   "life": [
-    { "title": "小红书", "url": "https://www.xiaohongshu.com/", "icon": "xiaohongshu.com" },
-    { "title": "B站", "url": "https://www.bilibili.com/", "icon": "bilibili.com" },
-    { "title": "知乎", "url": "https://www.zhihu.com/", "icon": "zhihu.com" }
+    { "title": "小红书", "url": "https://www.xiaohongshu.com/", "icon": "xiaohongshu" },
+    { "title": "B站", "url": "https://www.bilibili.com/", "icon": "bilibili" },
+    { "title": "知乎", "url": "https://www.zhihu.com/", "icon": "zhihu" }
   ],
   "tools": [
-    { "title": "GitHub", "url": "https://github.com/", "icon": "github.com" },
-    { "title": "TinyPNG", "url": "https://tinypng.com/", "icon": "tinypng.com" },
-    { "title": "v0", "url": "https://v0.dev/", "icon": "v0.dev" }
+    { "title": "GitHub", "url": "https://github.com/", "icon": "github" },
+    { "title": "TinyPNG", "url": "https://tinypng.com/", "icon": "tinypng" },
+    { "title": "v0", "url": "https://v0.dev/", "icon": "v0" }
   ]
 }
