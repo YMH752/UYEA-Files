@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.innerHTML = items.map(item => `
             <a href="${item.url}" target="_blank" class="card-item">
                 <div class="card-icon">
-                    <img src="" data-domain="${item.icon}" data-site-name="${item.title}" loading="lazy" width="48" height="48">
+                    <img src="" data-site-name="${item.icon}" loading="lazy" width="48" height="48">
                 </div>
                 <div class="card-info">
                     <div class="card-title">${item.title}</div>
