@@ -9,7 +9,7 @@
     let fetchLock = false;
 
     const API_URL = 'https://timor.tech/api/holiday/year/';
-    const MANUAL_JSON_URL = '../../Data/JSON/holidays.json';
+    const MANUAL_JSON_URL = '/Data/JSON/holidays.json';
     const holidayCache = {};
     let fixedFestivals = { solar: {}, lunar: {}, event: {} };
 
