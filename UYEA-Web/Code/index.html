@@ -296,12 +296,13 @@
                 for (const [name, info] of Object.entries(config)) {
                     const start = info.start;
                     const days = info.days;
-                    const actualStart = info.actual || start;
+                    const actualStart = info.actual || start;    // 有 actual 则用 actual，否则回退到 start
                     const [sMonth, sDay] = start.split('-').map(Number);
                     for (let i = 0; i < days; i++) {
                         const d = new Date(year, sMonth - 1, sDay + i);
                         const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
                         if (!holidays[dateStr]) holidays[dateStr] = [];
+                        // 仅在 actual 指定的那一天显示节日名称
                         const showName = (dateStr === `${year}-${actualStart}`);
                         holidays[dateStr].push({
                             name: showName ? name : '',
@@ -314,14 +315,16 @@
 
             function buildFallbackHolidays(year) {
                 const holidays = {};
-                // 公历固定节日（isRest: false）
+
+                // 公历固定节日
                 for (const [name, date] of Object.entries(SOLAR_FIXED_FESTIVALS)) {
                     const [m, d] = date.split('-').map(Number);
                     const dateStr = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                     if (!holidays[dateStr]) holidays[dateStr] = [];
                     holidays[dateStr].push({ name, isRest: false });
                 }
-                // 农历及清明
+
+                // 农历节日（含清明）
                 for (let month = 1; month <= 12; month++) {
                     const daysInMonth = new Date(year, month, 0).getDate();
                     for (let day = 1; day <= daysInMonth; day++) {
@@ -329,12 +332,16 @@
                         try {
                             const solar = Solar.fromYmd(year, month, day);
                             const lunar = Lunar.fromSolar(solar);
+
+                            // 清明
                             if (lunar.getJieQi() === '清明') {
                                 if (!holidays[dateStr]) holidays[dateStr] = [];
                                 if (!holidays[dateStr].some(h => h.name === '清明节')) {
                                     holidays[dateStr].push({ name: '清明节', isRest: false });
                                 }
                             }
+
+                            // 其他农历节日（春节、端午、中秋等）
                             const lunarKey = `${lunar.getMonth()}-${lunar.getDay()}`;
                             const lunarFest = LunarUtil.FESTIVAL[lunarKey];
                             if (lunarFest) {
@@ -344,6 +351,23 @@
                         } catch (e) {}
                     }
                 }
+
+                // ++ 除夕：下一年正月初一的前一天
+                try {
+                    const nextYear = year + 1;
+                    const lunarYearObj = LunarYear.fromYear(nextYear);
+                    const firstMonth = lunarYearObj.getMonth(1);
+                    if (firstMonth) {
+                        const firstDaySolar = Solar.fromJulianDay(firstMonth.getFirstJulianDay());
+                        const evSolar = firstDaySolar.next(-1);
+                        const evDateStr = `${evSolar.getYear()}-${String(evSolar.getMonth()).padStart(2,'0')}-${String(evSolar.getDay()).padStart(2,'0')}`;
+                        if (!holidays[evDateStr]) holidays[evDateStr] = [];
+                        if (!holidays[evDateStr].some(h => h.name === '除夕')) {
+                            holidays[evDateStr].push({ name: '除夕', isRest: false });
+                        }
+                    }
+                } catch (e) {}
+
                 return holidays;
             }
 
