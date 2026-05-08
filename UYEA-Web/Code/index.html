@@ -205,6 +205,80 @@
                 '国庆节': '10-1'
             };
 
+            // 额外公历节日字典（全球及小众节日）
+            const EXTRA_SOLAR_FESTIVALS = {
+                '1-1':   ['元旦'],
+                '2-2':   ['世界湿地日'],
+                '2-4':   ['世界抗癌日'],
+                '2-14':  ['情人节'],
+                '2-21':  ['国际母语日'],
+                '3-1':   ['国际海豹日'],
+                '3-3':   ['世界野生动植物日','全国爱耳日'],
+                '3-8':   ['国际劳动妇女节'],
+                '3-12':  ['植树节'],
+                '3-14':  ['白色情人节'],
+                '3-15':  ['国际消费者权益日'],
+                '3-17':  ['圣帕特里克节'],
+                '3-20':  ['国际幸福日'],
+                '3-21':  ['世界睡眠日'],
+                '3-22':  ['世界水日'],
+                '3-23':  ['世界气象日'],
+                '4-1':   ['愚人节'],
+                '4-2':   ['世界自闭症日'],
+                '4-7':   ['世界卫生日'],
+                '4-22':  ['世界地球日'],
+                '4-23':  ['世界读书日'],
+                '4-25':  ['世界防治疟疾日'],
+                '5-1':   ['国际劳动节'],
+                '5-4':   ['中国青年节'],
+                '5-8':   ['世界红十字日'],
+                '5-12':  ['国际护士节'],
+                '5-15':  ['国际家庭日'],
+                '5-17':  ['世界电信日'],
+                '5-21':  ['世界文化多样性日'],
+                '5-25':  ['非洲解放日'],
+                '5-31':  ['世界无烟日'],
+                '6-1':   ['国际儿童节'],
+                '6-5':   ['世界环境日'],
+                '6-6':   ['全国爱眼日'],
+                '6-8':   ['世界海洋日'],
+                '6-14':  ['世界献血日'],
+                '6-20':  ['世界难民日'],
+                '6-21':  ['国际瑜伽日'],
+                '6-26':  ['国际禁毒日'],
+                '7-1':   ['香港回归纪念日'],
+                '7-7':   ['七七事变纪念日'],
+                '7-11':  ['世界人口日'],
+                '7-28':  ['世界肝炎日'],
+                '8-1':   ['建军节'],
+                '8-8':   ['全民健身日'],
+                '8-12':  ['国际青年日'],
+                '8-19':  ['世界人道主义日'],
+                '9-8':   ['国际扫盲日'],
+                '9-10':  ['教师节'],
+                '9-16':  ['国际臭氧层保护日'],
+                '9-21':  ['国际和平日'],
+                '9-27':  ['世界旅游日'],
+                '10-1':  ['国庆节'],
+                '10-4':  ['世界动物日'],
+                '10-10': ['辛亥革命纪念日'],
+                '10-16': ['世界粮食日'],
+                '10-24': ['联合国日'],
+                '10-31': ['万圣节前夜'],
+                '11-1':  ['万圣节'],
+                '11-9':  ['全国消防日'],
+                '11-11': ['光棍节'],
+                '11-17': ['国际大学生节'],
+                '11-25': ['国际消除对妇女暴力日'],
+                '12-1':  ['世界艾滋病日'],
+                '12-3':  ['国际残疾人日'],
+                '12-5':  ['国际志愿者日'],
+                '12-10': ['世界人权日'],
+                '12-24': ['平安夜'],
+                '12-25': ['圣诞节'],
+                '12-26': ['毛主席诞辰纪念日']
+            };
+
             function getActualFestivalDate(year, festName) {
                 if (SOLAR_FIXED_FESTIVALS[festName]) {
                     const [m, d] = SOLAR_FIXED_FESTIVALS[festName].split('-').map(Number);
@@ -239,9 +313,21 @@
                 return null;
             }
 
-            // 统一注入所有节日（公历固定/农历/除夕）
+            // 统一注入所有节日（公历固定/额外/农历/除夕）
             function addLunarHolidays(year, holidays) {
-                // 公历固定节日
+                // 1. 额外的全球/小众节日（优先，isRest: false）
+                for (const [key, names] of Object.entries(EXTRA_SOLAR_FESTIVALS)) {
+                    const [m, d] = key.split('-').map(Number);
+                    const dateStr = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                    if (!holidays[dateStr]) holidays[dateStr] = [];
+                    names.forEach(name => {
+                        if (!holidays[dateStr].some(h => h.name === name)) {
+                            holidays[dateStr].push({ name, isRest: false });
+                        }
+                    });
+                }
+
+                // 2. 原有公历固定节日（可能覆盖部分额外节日，但 isRest 保持 true 由后续 adjust 决定）
                 for (const [name, date] of Object.entries(SOLAR_FIXED_FESTIVALS)) {
                     const [m, d] = date.split('-').map(Number);
                     const dateStr = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -251,7 +337,7 @@
                     }
                 }
 
-                // 农历节日（含清明）
+                // 3. 农历节日（含清明）
                 try {
                     for (let month = 1; month <= 12; month++) {
                         const daysInMonth = new Date(year, month, 0).getDate();
@@ -285,6 +371,7 @@
                         if (m.getYear() === year && m.getMonth() === 1 && !m.isLeap()) {
                             const firstDaySolar = Solar.fromJulianDay(m.getFirstJulianDay());
                             const firstDayDateStr = `${firstDaySolar.getYear()}-${String(firstDaySolar.getMonth()).padStart(2,'0')}-${String(firstDaySolar.getDay()).padStart(2,'0')}`;
+                            if (!holidays[firstDayDateStr]) holidays[firstDayDateStr] = [];
                             if (!holidays[firstDayDateStr].some(h => h.name === '春节')) {
                                 holidays[firstDayDateStr].push({ name: '春节', isRest: false });
                             }
@@ -390,7 +477,6 @@
             }
 
             function buildFallbackHolidays(year) {
-                // 所有节日都已由 addLunarHolidays 处理，此处只需返回空
                 return {};
             }
 
@@ -488,13 +574,15 @@
                     const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                     const holidays = holidayData[dateStr];
                     if (!holidays || holidays.length === 0) continue;
-                    const namedHoliday = holidays.find(h => h.name && h.name.trim() !== '');
-                    if (!namedHoliday || addedNames.has(namedHoliday.name)) continue;
-                    addedNames.add(namedHoliday.name);
-                    const tag = document.createElement('div');
-                    tag.className = 'holiday-tag';
-                    tag.textContent = `${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')} ${namedHoliday.name}${namedHoliday.isRest ? ' · 休' : ''}`;
-                    holidayBar.appendChild(tag);
+                    holidays.forEach(h => {
+                        if (h.name && h.name.trim() !== '' && !addedNames.has(h.name)) {
+                            addedNames.add(h.name);
+                            const tag = document.createElement('div');
+                            tag.className = 'holiday-tag';
+                            tag.textContent = h.name;  // 仅名称
+                            holidayBar.appendChild(tag);
+                        }
+                    });
                 }
                 if (addedNames.size === 0) holidayBar.classList.add('empty');
                 else holidayBar.classList.remove('empty');
