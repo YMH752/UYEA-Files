@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // ========== 菜单控制 ==========
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const dropdownMenu = document.getElementById('dropdownMenu');
 
@@ -47,7 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = isOpen ? 'hidden' : '';
     }
 
-    menuToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
+    if (menuToggleBtn) {
+        menuToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
+    }
 
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', () => {
@@ -58,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('click', (e) => {
-        if (!dropdownMenu.contains(e.target) && !menuToggleBtn.contains(e.target)) {
+        if (dropdownMenu && !dropdownMenu.contains(e.target) && menuToggleBtn && !menuToggleBtn.contains(e.target)) {
             dropdownMenu.classList.remove('show');
             menuToggleBtn.classList.remove('active');
             document.body.style.overflow = '';
@@ -66,9 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && dropdownMenu.classList.contains('show')) toggleMenu();
+        if (e.key === 'Escape' && dropdownMenu && dropdownMenu.classList.contains('show')) toggleMenu();
     });
 
+    // ========== 语言切换 ==========
     const langButtons = document.querySelectorAll('.lang-btn');
     const STORAGE_KEY_LANG = 'uyea-lang';
 
@@ -104,12 +108,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     initLanguage();
 
+    // ========== 语言切换滑动高亮（通用） ==========
+    const langSelector = document.getElementById('langSelector');
+    const langHighlight = document.getElementById('langHighlight');
+
+    function moveLangHighlight(targetBtn) {
+        if (!targetBtn || !langHighlight) return;
+        const selectorRect = langSelector.getBoundingClientRect();
+        const btnRect = targetBtn.getBoundingClientRect();
+        langHighlight.style.width = `${btnRect.width}px`;
+        langHighlight.style.transform = `translateX(${btnRect.left - selectorRect.left}px)`;
+    }
+
+    const initialActiveBtn = document.querySelector('.lang-btn.active');
+    if (initialActiveBtn) {
+        moveLangHighlight(initialActiveBtn);
+    }
+
+    langButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            moveLangHighlight(this);
+        });
+    });
+
+    // ========== 搜索引擎切换 ==========
     const engineDropdownWrapper = document.getElementById('engineDropdownWrapper');
     const engineTriggerBtn = document.getElementById('engineTriggerBtn');
     const engineTriggerLabel = document.getElementById('engineTriggerLabel');
     const engineOptionItems = document.querySelectorAll('.engine-option-item');
     const searchInput = document.getElementById('searchInput');
-    const pageSearchInput = document.getElementById('pageSearchInput');
     const cardItems = document.querySelectorAll('.card-item');
     const sections = document.querySelectorAll('.section-group');
 
@@ -129,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
         engineOptionItems.forEach(item => {
             if (item.getAttribute('data-value') === currentEngine) {
                 item.classList.add('selected');
-                engineTriggerLabel.textContent = item.textContent.trim();
+                if (engineTriggerLabel) engineTriggerLabel.textContent = item.textContent.trim();
             } else { item.classList.remove('selected'); }
         });
     }
@@ -143,14 +170,16 @@ document.addEventListener('DOMContentLoaded', () => {
             currentEngine = engine;
             engineOptionItems.forEach(opt => opt.classList.remove('selected'));
             this.classList.add('selected');
-            engineTriggerLabel.textContent = this.textContent.trim();
-            engineTriggerBtn.classList.add('clicking');
-            setTimeout(() => engineTriggerBtn.classList.remove('clicking'), 200);
+            if (engineTriggerLabel) engineTriggerLabel.textContent = this.textContent.trim();
+            if (engineTriggerBtn) {
+                engineTriggerBtn.classList.add('clicking');
+                setTimeout(() => engineTriggerBtn.classList.remove('clicking'), 200);
+            }
             try { localStorage.setItem(STORAGE_KEY_ENGINE, engine); } catch (e) {}
         });
     });
 
-    [searchInput, pageSearchInput].forEach(input => {
+    [searchInput].forEach(input => {
         if (!input) return;
         input.addEventListener('input', function() {
             if (currentEngine === 'site') {
@@ -175,6 +204,71 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ========== 图标加载 ==========
+    const iconBase = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/';
+    const emojiFallback = {
+        'ChatGPT': '🤖','Gemini': '✨','Claude': '🎯','DeepSeek': '🧠',
+        '文心一言': '📝','通义千问': '💬','Kimi': '🌟','豆包': '🫘',
+        '腾讯元宝': '💰','Perplexity': '🔍','Copilot': '👨‍✈️','Grok': '🧬',
+        '小红书': '📕','B站': '📺','知乎': '💡','GitHub': '🐙',
+        'TinyPNG': '🐼','v0': '🌀'
+    };
+
+    function loadIconImage(img) {
+        const siteName = img.getAttribute('data-site-name');
+        if (!siteName) return;
+        img.src = `${iconBase}${siteName}.ico`;
+        img.onerror = function() {
+            const emoji = emojiFallback[siteName] || '🔗';
+            const cardIcon = img.parentElement;
+            img.remove();
+            const emojiSpan = document.createElement('span');
+            emojiSpan.className = 'icon-emoji';
+            emojiSpan.textContent = emoji;
+            emojiSpan.title = siteName;
+            cardIcon.appendChild(emojiSpan);
+        };
+    }
+
+    // 初始加载页面上已有的图标
+    document.querySelectorAll('.card-icon img[data-site-name]').forEach(img => loadIconImage(img));
+
+    // ========== 动态加载导航分类数据 ==========
+    async function loadNavigation() {
+        try {
+            const resp = await fetch('data/navigation.json');
+            const nav = await resp.json();
+            renderSection('ai-section', nav.ai);
+            renderSection('life-section', nav.life);
+            renderSection('tools-section', nav.tools);
+        } catch (e) {}
+    }
+
+    function renderSection(sectionId, items) {
+        const section = document.getElementById(sectionId);
+        if (!section || !items) return;
+        const grid = section.querySelector('.grid-container');
+        if (!grid) return;
+        grid.innerHTML = items.map(item => `
+            <a href="${item.url}" target="_blank" class="card-item">
+                <div class="card-icon">
+                    <img src="" data-domain="${item.icon}" data-site-name="${item.title}" loading="lazy" width="48" height="48">
+                </div>
+                <div class="card-info">
+                    <div class="card-title">${item.title}</div>
+                </div>
+            </a>
+        `).join('');
+        // 为新渲染的图标加载图片
+        grid.querySelectorAll('img[data-site-name]').forEach(img => loadIconImage(img));
+    }
+
+    // 如果当前页面有导航区域，自动加载
+    if (document.getElementById('ai-section')) {
+        loadNavigation();
+    }
+
+    // ========== 时钟更新（仅 index 页需要） ==========
     function updateClock() {
         const now = new Date();
         const year = now.getFullYear();
@@ -204,32 +298,4 @@ document.addEventListener('DOMContentLoaded', () => {
         } else setTimeout(initClock, 100);
     }
     initClock();
-
-    /* 图标加载 */
-    (function loadIcons() {
-        const iconBase = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Code/icons/';
-        const emojiFallback = {
-            'ChatGPT': '🤖','Gemini': '✨','Claude': '🎯','DeepSeek': '🧠',
-            '文心一言': '📝','通义千问': '💬','Kimi': '🌟','豆包': '🫘',
-            '腾讯元宝': '💰','Perplexity': '🔍','Copilot': '👨‍✈️','Grok': '🧬',
-            '小红书': '📕','B站': '📺','知乎': '💡','GitHub': '🐙',
-            'TinyPNG': '🐼','v0': '🌀'
-        };
-        const iconImgs = document.querySelectorAll('.card-icon img[data-site-name]');
-        iconImgs.forEach(img => {
-            const siteName = img.getAttribute('data-site-name');
-            if (!siteName) return;
-            img.src = `${iconBase}${siteName}.ico`;
-            img.onerror = function() {
-                const emoji = emojiFallback[siteName] || '🔗';
-                const cardIcon = img.parentElement;
-                img.remove();
-                const emojiSpan = document.createElement('span');
-                emojiSpan.className = 'icon-emoji';
-                emojiSpan.textContent = emoji;
-                emojiSpan.title = siteName;
-                cardIcon.appendChild(emojiSpan);
-            };
-        });
-    })();
 });
