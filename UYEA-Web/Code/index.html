@@ -242,15 +242,14 @@
             // 统一补齐除夕和春节
             function addLunarHolidays(year, holidays) {
                 try {
-                    // 1. 除夕：明年正月初一的前一天
-                    const nextYear = year + 1;
-                    const lunarYearObj = LunarYear.fromYear(nextYear);
+                    // 1. 除夕：当年正月初一的前一天
+                    const lunarYearObj = LunarYear.fromYear(year);
                     const months = lunarYearObj.getMonths();
                     for (const m of months) {
                         // 找到农历正月（month === 1 且非闰月）
-                        if (m.getYear() === nextYear && m.getMonth() === 1 && !m.isLeap()) {
+                        if (m.getYear() === year && m.getMonth() === 1 && !m.isLeap()) {
                             const firstDaySolar = Solar.fromJulianDay(m.getFirstJulianDay());
-                            const evSolar = firstDaySolar.next(-1);
+                            const evSolar = firstDaySolar.next(-1);  // 除夕
                             const evDateStr = `${evSolar.getYear()}-${String(evSolar.getMonth()).padStart(2,'0')}-${String(evSolar.getDay()).padStart(2,'0')}`;
                             if (!holidays[evDateStr]) holidays[evDateStr] = [];
                             if (!holidays[evDateStr].some(h => h.name === '除夕')) {
@@ -261,9 +260,7 @@
                     }
 
                     // 2. 春节：确保正月初一名称存在
-                    const thisYearLunar = LunarYear.fromYear(year);
-                    const thisMonths = thisYearLunar.getMonths();
-                    for (const m of thisMonths) {
+                    for (const m of months) {
                         if (m.getYear() === year && m.getMonth() === 1 && !m.isLeap()) {
                             const firstDaySolar = Solar.fromJulianDay(m.getFirstJulianDay());
                             const dateStr = `${firstDaySolar.getYear()}-${String(firstDaySolar.getMonth()).padStart(2,'0')}-${String(firstDaySolar.getDay()).padStart(2,'0')}`;
