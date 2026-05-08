@@ -242,24 +242,22 @@
             // 统一补齐除夕和春节
             function addLunarHolidays(year, holidays) {
                 try {
-                    // 1. 除夕：当年正月初一的前一天
                     const lunarYearObj = LunarYear.fromYear(year);
                     const months = lunarYearObj.getMonths();
+                    // 除夕：今年正月初一的前一天
                     for (const m of months) {
-                        // 找到农历正月（month === 1 且非闰月）
                         if (m.getYear() === year && m.getMonth() === 1 && !m.isLeap()) {
                             const firstDaySolar = Solar.fromJulianDay(m.getFirstJulianDay());
-                            const evSolar = firstDaySolar.next(-1);  // 除夕
+                            const evSolar = firstDaySolar.next(-1);
                             const evDateStr = `${evSolar.getYear()}-${String(evSolar.getMonth()).padStart(2,'0')}-${String(evSolar.getDay()).padStart(2,'0')}`;
                             if (!holidays[evDateStr]) holidays[evDateStr] = [];
                             if (!holidays[evDateStr].some(h => h.name === '除夕')) {
                                 holidays[evDateStr].push({ name: '除夕', isRest: false });
                             }
-                            break; // 只处理一次
+                            break;
                         }
                     }
-
-                    // 2. 春节：确保正月初一名称存在
+                    // 春节：确保正月初一名称存在
                     for (const m of months) {
                         if (m.getYear() === year && m.getMonth() === 1 && !m.isLeap()) {
                             const firstDaySolar = Solar.fromJulianDay(m.getFirstJulianDay());
@@ -277,6 +275,18 @@
                 } catch (e) {}
             }
 
+            // 根据年份调整 isRest：非今年则强制 false
+            function adjustHolidays(year, holidays) {
+                const nowYear = new Date().getFullYear();
+                if (year === nowYear) return; // 今年保持不变
+                for (const dateStr in holidays) {
+                    const entries = holidays[dateStr];
+                    if (Array.isArray(entries)) {
+                        entries.forEach(h => { h.isRest = false; });
+                    }
+                }
+            }
+
             async function fetchHolidaysByYear(year) {
                 if (holidayCache[year]) return holidayCache[year];
 
@@ -286,6 +296,7 @@
                     if (apiResult && apiResult.holiday) {
                         const data = buildFromApi(year, apiResult.holiday);
                         addLunarHolidays(year, data);
+                        adjustHolidays(year, data);
                         holidayCache[year] = data;
                         return data;
                     }
@@ -297,6 +308,7 @@
                     if (remoteData[year]) {
                         const data = buildFromRemoteConfig(year, remoteData[year]);
                         addLunarHolidays(year, data);
+                        adjustHolidays(year, data);
                         holidayCache[year] = data;
                         return data;
                     }
@@ -304,6 +316,7 @@
 
                 const data = buildFallbackHolidays(year);
                 addLunarHolidays(year, data);
+                adjustHolidays(year, data);
                 holidayCache[year] = data;
                 return data;
             }
