@@ -13,106 +13,27 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .category-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 32px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            scroll-behavior: smooth;
-        }
-
-        .tab-item {
-            padding: 8px 20px;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-
-        .tab-item:hover {
-            border-color: var(--accent-1);
-            color: var(--accent-1);
-        }
-
-        /* 修改位置：.tab-item:hover 颜色 */
-        /* 前后逻辑：原 hover 为霓虹青 #00D9FF，现为深灰 #333333 */
-        /* 修改目的：黑白配色 */
-
-        .tab-item.active {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* 修改位置：.tab-item.active 背景渐变 */
-        /* 前后逻辑：原为红/深红渐变，现为黑/最深黑渐变 */
-        /* 修改目的：黑白配色 */
-
-        .tool-group-title {
-            font-family: 'Outfit', sans-serif;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            padding-left: 0;
-        }
-
-        .tool-group-title span {
-            font-size: 24px;
-        }
-
-        .tool-group {
-            margin-bottom: 48px;
-        }
-
-        .tool-group.hidden {
-            display: none;
-        }
-    </style>
 </head>
 <body data-lang="zh-CN">
-    <!-- ✅ 顶部导航栏 -->
     <header class="top-header">
         <div class="header-container">
-            <!-- LOGO 左侧 -->
             <div class="logo-section">
                 <a href="index.html" class="logo-text">UYEA</a>
             </div>
-
-            <!-- 右侧功能区 -->
             <div class="header-right">
-                <!-- 语言切换 -->
                 <div class="lang-selector" id="langSelector">
                     <div class="lang-highlight" id="langHighlight"></div>
                     <button class="lang-btn active" data-lang="zh-CN">中文</button>
                     <button class="lang-btn" data-lang="zh-TW">繁中</button>
                     <button class="lang-btn" data-lang="en">English</button>
                 </div>
-
-                <!-- 修改位置：删除 .header-search-wrapper 放大镜图标区域 -->
-                <!-- 前后逻辑：原包含放大镜图标+下拉搜索，现完全移除 -->
-                <!-- 修改目的：tools页不显示放大镜搜索图标，仅index页显示 -->
-
-                <!-- 下拉菜单按钮 -->
                 <button class="menu-toggle" id="menuToggleBtn">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span></span><span></span><span></span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- ✅ 下拉菜单（响应式宽度） -->
     <div class="dropdown-menu" id="dropdownMenu">
         <nav class="menu-nav">
             <a href="index.html" class="menu-item" data-i18n="nav.home">网站导航</a>
@@ -126,15 +47,11 @@
         </div>
     </div>
 
-    <!-- ✅ 主内容区 -->
     <main class="main-content">
         <div class="content-wrapper">
-            <!-- 页面标题 -->
             <div class="section-header">
                 <h1 class="section-title" data-i18n="nav.tools">实用工具箱</h1>
             </div>
-
-            <!-- 分类标签 -->
             <div class="category-tabs" id="categoryTabs">
                 <div class="tab-item active" data-category="all">全部</div>
                 <div class="tab-item" data-category="dev">💻 开发者工具</div>
@@ -142,67 +59,36 @@
                 <div class="tab-item" data-category="office">📂 办公效率</div>
                 <div class="tab-item" data-category="media">🎥 多媒体处理</div>
             </div>
-
-            <!-- 工具分类内容 -->
             <div id="toolsContainer">
-                <!-- 开发者工具 -->
                 <div class="tool-group" data-category="dev" id="dev-tools">
                     <div class="tool-group-title"><span>💻</span> 开发者工具</div>
                     <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">JSON 格式化</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">Base64 编解码</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">正则表达式测试</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">时间戳转换</div></div>
-                        </a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">JSON 格式化</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">Base64 编解码</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">正则表达式测试</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">时间戳转换</div></div></a>
                     </div>
                 </div>
-
-                <!-- 设计美化 -->
                 <div class="tool-group" data-category="design" id="design-tools">
                     <div class="tool-group-title"><span>🎨</span> 设计美化</div>
                     <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">在线调色板</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">SVG 图标库</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">渐变颜色生成</div></div>
-                        </a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">在线调色板</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">SVG 图标库</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">渐变颜色生成</div></div></a>
                     </div>
                 </div>
-
-                <!-- 办公效率 -->
                 <div class="tool-group" data-category="office" id="office-tools">
                     <div class="tool-group-title"><span>📂</span> 办公效率</div>
                     <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">PDF 转 Word</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">流程图绘制</div></div>
-                        </a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">PDF 转 Word</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">流程图绘制</div></div></a>
                     </div>
                 </div>
-
-                <!-- 多媒体处理 -->
                 <div class="tool-group" data-category="media" id="media-tools">
                     <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
                     <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">图片压缩</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-info"><div class="card-title">视频转 GIF</div></div>
-                        </a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">图片压缩</div></div></a>
+                        <a href="#" class="card-item"><div class="card-info"><div class="card-title">视频转 GIF</div></div></a>
                     </div>
                 </div>
             </div>
@@ -211,59 +97,16 @@
 
     <script src="script.js" defer></script>
     <script>
-        // 语言切换滑动高亮
-        const langSelector = document.getElementById('langSelector');
-        const langHighlight = document.getElementById('langHighlight');
-        const langButtons = document.querySelectorAll('.lang-btn');
-        
-        function moveLangHighlight(targetBtn) {
-            if (!targetBtn || !langHighlight) return;
-            const selectorRect = langSelector.getBoundingClientRect();
-            const btnRect = targetBtn.getBoundingClientRect();
-            langHighlight.style.width = `${btnRect.width}px`;
-            langHighlight.style.transform = `translateX(${btnRect.left - selectorRect.left}px)`;
-        }
-        
-        const initialActiveBtn = document.querySelector('.lang-btn.active');
-        if (initialActiveBtn) {
-            moveLangHighlight(initialActiveBtn);
-        }
-        
-        langButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                moveLangHighlight(this);
-            });
-        });
-    </script>
-    <script>
-        // 分类标签切换功能
-        const tabItems = document.querySelectorAll('.tab-item');
-        const toolGroups = document.querySelectorAll('.tool-group');
-
-        tabItems.forEach(tab => {
+        // 分类筛选
+        document.querySelectorAll('.tab-item').forEach(tab => {
             tab.addEventListener('click', function() {
-                // 更新标签状态
-                tabItems.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-
-                // 筛选工具组
                 const category = this.getAttribute('data-category');
-                toolGroups.forEach(group => {
-                    const groupCategory = group.getAttribute('data-category');
-                    if (category === 'all' || groupCategory === category) {
-                        group.classList.remove('hidden');
-                        group.style.display = 'block';
-                    } else {
-                        group.classList.add('hidden');
-                        group.style.display = 'none';
-                    }
+                document.querySelectorAll('.tool-group').forEach(group => {
+                    group.style.display = (category === 'all' || group.getAttribute('data-category') === category) ? 'block' : 'none';
                 });
             });
-        });
-
-        // 初始化：显示所有分组
-        toolGroups.forEach(group => {
-            group.style.display = 'block';
         });
     </script>
 </body>
