@@ -1,6 +1,6 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   重构版：取消侧边栏 + 顶部导航 + 黑白配色
+   重构版：顶部导航 + 黑白配色 + 完整日历样式
    ============================================================ */
 
 :root {
@@ -50,6 +50,7 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* 顶部导航 */
 .top-header {
     width: 100%;
     height: var(--header-h);
@@ -97,7 +98,7 @@ body {
     margin-left: auto;
 }
 
-/* 语言选择器 - 黑底白字 */
+/* 语言选择器 */
 .lang-selector {
     display: flex;
     gap: 0;
@@ -139,6 +140,7 @@ body {
     font-weight: 700;
 }
 
+/* 搜索 */
 .header-search-wrapper {
     display: flex;
     align-items: center;
@@ -299,7 +301,7 @@ body {
 
 .search-dropdown .search-input { width: 100%; }
 
-/* 汉堡菜单动画优化 */
+/* 汉堡菜单 */
 .menu-toggle {
     display: flex;
     background: none;
@@ -490,8 +492,6 @@ body {
     animation: shimmer 1.4s ease-in-out infinite;
 }
 
-.card-icon.skeleton img { opacity: 0; }
-
 .card-info { flex: 1; min-width: 0; }
 
 .card-title {
@@ -504,91 +504,121 @@ body {
     text-overflow: ellipsis;
 }
 
-/* 时钟日历区域 */
+/* ========== 时钟日历区域 ========== */
 .clock-display {
     display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    background: rgba(245, 245, 245, 0.7); 
-    border: 1px solid rgba(224, 224, 224, 0.5);
-    border-radius: 24px;
-    padding: 12px;
-    gap: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
+    flex-direction: column;  /* 垂直排列：上时钟，下日历 */
+    gap: 16px;
+    padding: 16px;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
 }
 
-[data-theme="dark"] .clock-display {
-    background: rgba(26, 26, 26, 0.7);
-    border: 1px solid rgba(51, 51, 51, 0.5);
-}
-
-.clock-left { flex-basis: 30%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-
-.clock-right { flex: 1 1 auto; min-width: 160px; display: flex; flex-direction: column; position: relative; gap: 2px; overflow: hidden; }
-
-.calendar-container {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    padding: 3px;
-    position: relative;
-    overflow: hidden;
-}
-
-[data-theme="dark"] .calendar-container { background: rgba(38, 38, 38, 0.7); }
-
-.calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
-
-.calendar-title { font-size: 9px; font-weight: 700; color: var(--text-primary); text-align: left; flex: 1; }
-
-.calendar-jump-btn-header {
-    font-size: 7px;
-    padding: 1px 4px;
-    border-radius: 2px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    font-family: 'Noto Sans SC', 'Fredoka', system-ui, sans-serif;
-    text-decoration: none;   /* 取消下划线 */
-}
-
-.calendar-jump-btn-header:hover {
-    background: var(--primary-light);
-    border-color: var(--primary);
-}
-
-.calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; margin-bottom: 1px; }
-
-.weekday { text-align: center; font-size: 7px; font-weight: 600; color: var(--text-muted); padding: 1px 0; }
-
-.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
-
-.calendar-cell {
-    min-height: 14px;
-    padding: 1px;
-    border-radius: 2px;
-    background: transparent;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+.clock-left {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    position: relative;
-    overflow: hidden;
+    justify-content: center;
+    align-items: center;
 }
 
-.calendar-cell:hover { background: var(--bg); }
+.clock-right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.clock-time-main {
+    font-family: 'Courier New', 'Space Mono', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 0;
+    color: var(--text-primary);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+.clock-date-gregorian, .clock-date-lunar {
+    text-align: center;
+}
+
+.clock-date-gregorian {
+    font-size: 16px !important;
+    font-weight: 500;
+}
+
+.clock-date-lunar {
+    font-size: 14px !important;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.calendar-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.calendar-jump-btn-header {
+    position: absolute;
+    right: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--primary);
+    border-radius: 0;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.weekday {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 2px 0;
+    font-weight: 600;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+}
+
+.calendar-cell {
+    min-height: 28px;
+    padding: 4px;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    overflow: visible !important;
+    border: 1px solid transparent;
+}
+
+.calendar-cell:hover {
+    background: var(--bg);
+}
 
 .calendar-cell.selected {
     outline: 2px solid var(--primary);
@@ -596,110 +626,241 @@ body {
     background: var(--primary-light);
 }
 
-.cell-solar { font-size: 8px; font-weight: 700; color: var(--text-primary); line-height: 1; }
-
-.calendar-cell.today .cell-solar { font-weight: 800; color: var(--primary); }
-
-.cell-lunar { font-size: 10px; font-weight: 400; color: var(--text-muted); line-height: 1; max-height: 10px; overflow: visible; }
-
-.cell-holiday { font-size: 5px; font-weight: 600; color: var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; line-height: 1; max-height: 5px; }
-
-.cell-rest {
-    position: absolute;
-    top: 0; right: 0;
-    font-size: 5px;
-    font-weight: 700;
-    color: white;
-    background: var(--primary);
-    width: 8px; height: 8px;
-    border-radius: 1px;
-    display: flex; align-items: center; justify-content: center; line-height: 1;
-}
-
-.calendar-cell.other-month { opacity: 0.2; }
-
-.calendar-nav-btn { width: 100%; height: 10px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 8px; opacity: 0.6; transition: opacity 0.2s ease; padding: 0; line-height: 1; }
-
-.calendar-nav-btn:hover { opacity: 1; color: var(--primary); }
-
-.calendar-nav-up { margin-bottom: 2px; }
-
-.calendar-nav-down { margin-top: 2px; }
-
-.holiday-bar {
-    margin-top: 2px;
-    width: 100%;
-    min-height: 14px;
-    padding: 2px 4px;
-    border-radius: 7px;
-    background: rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(8px);
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    transition: all 0.3s ease;
-    transform: translateX(0);
-    opacity: 1;
-}
-
-[data-theme="dark"] .holiday-bar { background: rgba(255, 255, 255, 0.1); }
-
-.holiday-bar.empty { transform: translateX(100%); opacity: 0; min-height: 0; padding: 0; margin-top: 0; }
-
-.holiday-bar.filtered { background: rgba(26, 26, 26, 0.08); }
-
-[data-theme="dark"] .holiday-bar.filtered { background: rgba(255, 255, 255, 0.15); }
-
-.holiday-tag {
-    padding: 1px 3px;
-    border-radius: 3px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    font-size: 6px;
-    white-space: nowrap;
-    scroll-snap-align: start;
-    flex-shrink: 0;
+.cell-solar {
+    font-size: clamp(12px, 2vw, 16px);
+    font-weight: 600;
     color: var(--text-primary);
     line-height: 1;
 }
 
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 9999; }
+.calendar-cell.today .cell-solar {
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.cell-lunar {
+    font-size: clamp(6px, 1vw, 9px);
+    font-weight: 400;
+    color: var(--text-muted);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.cell-holiday {
+    font-size: clamp(6px, 1vw, 9px);
+    font-weight: 600;
+    color: var(--primary);
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.cell-rest {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 5px;
+    font-weight: 700;
+    color: #ffffff;
+    background: var(--primary);
+    border-radius: 2px;
+    padding: 0 1px;
+    line-height: 1;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.calendar-cell.today {
+    background: var(--primary);
+    color: white;
+    border: 2px solid var(--primary);
+}
+
+.calendar-cell.today .cell-lunar,
+.calendar-cell.today .cell-holiday {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.calendar-cell.other-month {
+    opacity: 0.2;
+}
+
+.calendar-nav-btn {
+    width: 100%;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.calendar-nav-btn:hover {
+    opacity: 1;
+    color: var(--primary);
+}
+
+.calendar-nav-up { margin-bottom: 4px; }
+.calendar-nav-down { margin-top: 4px; }
+
+.holiday-bar {
+    margin-top: 8px;
+    width: 100%;
+    min-height: 20px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(8px);
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .holiday-bar {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.holiday-bar.empty {
+    transform: translateX(100%);
+    opacity: 0;
+    min-height: 0;
+    padding: 0;
+    margin-top: 0;
+}
+
+.holiday-tag {
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 10px;
+    white-space: nowrap;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+/* 模态框 */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
 
 .modal-overlay.show { display: block; }
 
-.modal-jump { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 16px; border-radius: 12px; background: var(--surface); box-shadow: var(--shadow-lg); z-index: 10000; }
+.modal-jump {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow-lg);
+    z-index: 10000;
+}
 
 .modal-jump.show { display: block; animation: modalPop 0.2s ease; }
 
-.modal-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+.modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
 
-.modal-radio-group { display: flex; gap: 12px; margin-bottom: 12px; }
+.modal-radio-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
 
-.modal-radio-group label { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-secondary); cursor: pointer; }
+.modal-radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
 
-.modal-inputs-wrapper { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.modal-inputs-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
 
-.modal-inputs-wrapper input { flex: 1; min-width: 60px; height: 32px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary); text-align: center; font-size: 12px; outline: none; transition: all 0.2s ease; }
+.modal-inputs-wrapper input {
+    flex: 1;
+    min-width: 60px;
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-primary);
+    text-align: center;
+    font-size: 12px;
+    outline: none;
+    transition: all 0.2s ease;
+}
 
-.modal-inputs-wrapper input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1); }
+.modal-inputs-wrapper input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
 
-.modal-actions { display: flex; justify-content: flex-end; gap: 6px; }
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
 
-.modal-btn { padding: 6px 16px; border-radius: 4px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: 'Noto Sans SC', 'Fredoka', system-ui, sans-serif; }
+.modal-btn {
+    padding: 6px 16px;
+    border-radius: 4px;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Noto Sans SC', 'Fredoka', system-ui, sans-serif;
+}
 
-.modal-btn-cancel { background: var(--bg); color: var(--text-secondary); border: 1px solid var(--border); }
+.modal-btn-cancel {
+    background: var(--bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
 
 .modal-btn-cancel:hover { background: var(--border); }
 
-.modal-btn-confirm { background: var(--primary); color: white; }
+.modal-btn-confirm {
+    background: var(--primary);
+    color: white;
+}
 
 .modal-btn-confirm:hover { background: var(--accent-1); }
 
-.mobile-holiday-badge { display: none; margin-top: 8px; padding: 2px 10px; border-radius: 8px; background: var(--primary); color: white; font-size: 10px; font-weight: 600; }
-
-/* 省略其他已有动画和响应式代码，原样保留 */
-
+/* 图标回退 */
 .icon-emoji {
     width: 100%;
     height: 100%;
@@ -711,6 +872,7 @@ body {
     user-select: none;
 }
 
+/* 动画 */
 @keyframes buttonBounce {
     0% { transform: scale(1); }
     50% { transform: scale(0.95); }
