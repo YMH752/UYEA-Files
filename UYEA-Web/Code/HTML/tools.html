@@ -2,24 +2,15 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>实用工具箱 | UYEA | 悠野导航</title>
-    <meta name="description" content="悠野工作室(UYEA)实用工具箱，汇聚开发、设计、办公、多媒体等各类在线工具。">
-    <meta name="theme-color" content="#000000">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
-    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实用工具箱 | UYEA</title>
     <link rel="stylesheet" href="/Code/CSS/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
 </head>
 <body data-lang="zh-CN">
     <header class="top-header">
         <div class="header-container">
-            <div class="logo-section">
-                <a href="index.html" class="logo-text">UYEA</a>
-            </div>
+            <a href="index.html" class="logo-text">UYEA</a>
             <div class="header-right">
                 <div class="lang-selector" id="langSelector">
                     <div class="lang-highlight" id="langHighlight"></div>
@@ -27,13 +18,10 @@
                     <button class="lang-btn" data-lang="zh-TW">繁中</button>
                     <button class="lang-btn" data-lang="en">English</button>
                 </div>
-                <button class="menu-toggle" id="menuToggleBtn">
-                    <span></span><span></span><span></span>
-                </button>
+                <button class="menu-toggle" id="menuToggleBtn"><span></span><span></span><span></span></button>
             </div>
         </div>
     </header>
-
     <div class="dropdown-menu" id="dropdownMenu">
         <nav class="menu-nav">
             <a href="index.html" class="menu-item" data-i18n="nav.home">网站导航</a>
@@ -42,16 +30,12 @@
             <div class="menu-divider"></div>
             <a href="forum.html" class="menu-item" data-i18n="nav.forum">悠野社区</a>
         </nav>
-        <div class="menu-auth-section">
-            <button class="register-btn" onclick="alert('注册功能开发中...')"><span data-i18n="btn.register">注册</span></button>
-        </div>
+        <div class="menu-auth-section"><button class="register-btn" onclick="alert('注册功能开发中...')"><span data-i18n="btn.register">注册</span></button></div>
     </div>
 
     <main class="main-content">
         <div class="content-wrapper">
-            <div class="section-header">
-                <h1 class="section-title" data-i18n="nav.tools">实用工具箱</h1>
-            </div>
+            <div class="section-header"><h1 class="section-title" data-i18n="nav.tools">实用工具箱</h1></div>
             <div class="category-tabs" id="categoryTabs">
                 <div class="tab-item active" data-category="all">全部</div>
                 <div class="tab-item" data-category="dev">💻 开发者工具</div>
@@ -59,85 +43,49 @@
                 <div class="tab-item" data-category="office">📂 办公效率</div>
                 <div class="tab-item" data-category="media">🎥 多媒体处理</div>
             </div>
-            <div id="toolsContainer">
-                <div class="tool-group" data-category="dev" id="dev-tools">
-                    <div class="tool-group-title"><span>💻</span> 开发者工具</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">🗂️</span></div>
-                            <div class="card-info"><div class="card-title">JSON 格式化</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">🔣</span></div>
-                            <div class="card-info"><div class="card-title">Base64 编解码</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">🔍</span></div>
-                            <div class="card-info"><div class="card-title">正则表达式测试</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">⏱️</span></div>
-                            <div class="card-info"><div class="card-title">时间戳转换</div></div>
-                        </a>
-                    </div>
+
+            <div class="tool-group" data-category="dev">
+                <div class="section-header"><h2 class="section-title">💻 开发者工具</h2></div>
+                <div class="grid-container">
+                    <a href="#" class="card-item"><div class="card-icon">🗂️</div><div class="card-info"><div class="card-title">JSON 格式化</div></div></a>
+                    <a href="#" class="card-item"><div class="card-icon">🔣</div><div class="card-info"><div class="card-title">Base64 编解码</div></div></a>
+                    <a href="#" class="card-item"><div class="card-icon">🔍</div><div class="card-info"><div class="card-title">正则表达式测试</div></div></a>
+                    <a href="#" class="card-item"><div class="card-icon">⏱️</div><div class="card-info"><div class="card-title">时间戳转换</div></div></a>
                 </div>
-                <div class="tool-group" data-category="design" id="design-tools">
-                    <div class="tool-group-title"><span>🎨</span> 设计美化</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">🎨</span></div>
-                            <div class="card-info"><div class="card-title">在线调色板</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">🖼️</span></div>
-                            <div class="card-info"><div class="card-title">SVG 图标库</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">🌈</span></div>
-                            <div class="card-info"><div class="card-title">渐变颜色生成</div></div>
-                        </a>
-                    </div>
+            </div>
+            <div class="tool-group" data-category="design">
+                <div class="section-header"><h2 class="section-title">🎨 设计美化</h2></div>
+                <div class="grid-container">
+                    <a href="#" class="card-item"><div class="card-icon">🎨</div><div class="card-info"><div class="card-title">在线调色板</div></div></a>
+                    <a href="#" class="card-item"><div class="card-icon">🖼️</div><div class="card-info"><div class="card-title">SVG 图标库</div></div></a>
+                    <a href="#" class="card-item"><div class="card-icon">🌈</div><div class="card-info"><div class="card-title">渐变颜色生成</div></div></a>
                 </div>
-                <div class="tool-group" data-category="office" id="office-tools">
-                    <div class="tool-group-title"><span>📂</span> 办公效率</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">📄</span></div>
-                            <div class="card-info"><div class="card-title">PDF 转 Word</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">📊</span></div>
-                            <div class="card-info"><div class="card-title">流程图绘制</div></div>
-                        </a>
-                    </div>
+            </div>
+            <div class="tool-group" data-category="office">
+                <div class="section-header"><h2 class="section-title">📂 办公效率</h2></div>
+                <div class="grid-container">
+                    <a href="#" class="card-item"><div class="card-icon">📄</div><div class="card-info"><div class="card-title">PDF 转 Word</div></div></a>
+                    <a href="#" class="card-item"><div class="card-icon">📊</div><div class="card-info"><div class="card-title">流程图绘制</div></div></a>
                 </div>
-                <div class="tool-group" data-category="media" id="media-tools">
-                    <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
-                    <div class="grid-container">
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">🖼️</span></div>
-                            <div class="card-info"><div class="card-title">图片压缩</div></div>
-                        </a>
-                        <a href="#" class="card-item">
-                            <div class="card-icon"><span class="icon-emoji">🎞️</span></div>
-                            <div class="card-info"><div class="card-title">视频转 GIF</div></div>
-                        </a>
-                    </div>
+            </div>
+            <div class="tool-group" data-category="media">
+                <div class="section-header"><h2 class="section-title">🎥 多媒体处理</h2></div>
+                <div class="grid-container">
+                    <a href="#" class="card-item"><div class="card-icon">🖼️</div><div class="card-info"><div class="card-title">图片压缩</div></div></a>
+                    <a href="#" class="card-item"><div class="card-icon">🎞️</div><div class="card-info"><div class="card-title">视频转 GIF</div></div></a>
                 </div>
             </div>
         </div>
     </main>
-
     <script src="/Code/JS/script.js" defer></script>
     <script>
-        // 分类筛选
         document.querySelectorAll('.tab-item').forEach(tab => {
-            tab.addEventListener('click', function() {
+            tab.addEventListener('click', function(){
                 document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                const category = this.getAttribute('data-category');
-                document.querySelectorAll('.tool-group').forEach(group => {
-                    group.style.display = (category === 'all' || group.getAttribute('data-category') === category) ? 'block' : 'none';
+                const cat = this.dataset.category;
+                document.querySelectorAll('.tool-group').forEach(g => {
+                    g.style.display = (cat === 'all' || g.dataset.category === cat) ? 'block' : 'none';
                 });
             });
         });
