@@ -1,6 +1,6 @@
 /* ============================================================
-   UYEA 悠野工作室 · style.css (修改版)
-   新增：工具页卡片、分类按钮、社区页优化、图标加载状态
+   UYEA 悠野工作室 · style.css
+   重构版：顶部导航 + 黑白配色 + 完整日历样式
    ============================================================ */
 
 :root {
@@ -144,6 +144,7 @@ body {
 .header-search-wrapper {
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .search-container {
@@ -379,6 +380,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-family: 'Outfit', sans-serif;
 }
 
 .register-btn:hover {
@@ -436,7 +438,6 @@ body {
     border-radius: var(--radius-md);
     padding: 16px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 12px;
     text-decoration: none;
@@ -444,7 +445,6 @@ body {
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
     overflow: hidden;
-    text-align: center;
 }
 
 .card-item::before {
@@ -464,15 +464,10 @@ body {
 
 .card-item:hover::before { opacity: 1; }
 
-.card-item.search-highlight {
-    border-color: var(--primary);
-    background: linear-gradient(135deg, var(--surface), rgba(26, 26, 26, 0.05));
-}
-
 .card-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 12px;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
     background: linear-gradient(135deg, var(--primary-light), rgba(0, 0, 0, 0.08));
     overflow: hidden;
     display: flex;
@@ -491,22 +486,12 @@ body {
     transition: filter 0.3s ease;
 }
 
-.card-icon.icon-loading::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.4s ease-in-out infinite;
-}
-
-.card-icon.icon-loaded {
-    background: transparent;
-    border: none;
-}
-
 .card-item:hover .card-icon img { filter: grayscale(0%) opacity(1); }
+
+.card-icon .icon-emoji {
+    font-size: 24px;
+    line-height: 1;
+}
 
 .card-icon.skeleton {
     background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
@@ -526,27 +511,16 @@ body {
     text-overflow: ellipsis;
 }
 
-/* 图标 Emoji 样式 */
-.icon-emoji {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    font-weight: 600;
-    user-select: none;
-}
-
-/* ========== 时钟日历区域 ========== */
+/* ========== 时钟日历区域 - 上下布局优化 ========== */
 .clock-display {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 16px;
+    gap: 20px;
+    padding: 20px;
     background: var(--surface);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
+    margin-bottom: 40px;
 }
 
 .clock-left {
@@ -784,190 +758,6 @@ body {
     line-height: 1.2;
 }
 
-/* ========== 工具页样式优化 ========== */
-.category-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.tab-item {
-    padding: 8px 16px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: var(--text-secondary);
-}
-
-.tab-item:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.tab-item.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-}
-
-.tool-group {
-    margin-bottom: 40px;
-}
-
-.tool-group-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.tool-group-title span {
-    font-size: 18px;
-}
-
-/* ========== 社区页样式优化 ========== */
-.forum-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    gap: 16px;
-    flex-wrap: wrap;
-}
-
-.post-btn {
-    padding: 10px 20px;
-    background: linear-gradient(135deg, var(--primary), var(--accent-1));
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.post-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.forum-search {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    flex: 1;
-    min-width: 200px;
-}
-
-.forum-search input {
-    border: none;
-    background: transparent;
-    outline: none;
-    flex: 1;
-    font-size: 13px;
-    color: var(--text-primary);
-}
-
-.forum-search input::placeholder {
-    color: var(--text-muted);
-}
-
-.post-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.post-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 16px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    display: block;
-}
-
-.post-item:hover {
-    border-color: var(--primary);
-    box-shadow: var(--shadow-md);
-    transform: translateX(4px);
-}
-
-.post-item.search-highlight {
-    border-color: var(--primary);
-    background: linear-gradient(135deg, var(--surface), rgba(26, 26, 26, 0.05));
-}
-
-.post-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    font-size: 12px;
-    color: var(--text-secondary);
-}
-
-.post-tag {
-    display: inline-block;
-    padding: 3px 8px;
-    background: var(--primary);
-    color: white;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-.post-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 6px;
-}
-
-.post-excerpt {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.5;
-}
-
-.no-results {
-    display: none;
-    text-align: center;
-    padding: 60px 20px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.no-results.show {
-    display: block;
-    opacity: 1;
-}
-
-.no-results-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-}
-
-.no-results-text {
-    font-size: 14px;
-    color: var(--text-secondary);
-}
-
 /* 模态框 */
 .modal-overlay {
     display: none;
@@ -1078,6 +868,175 @@ body {
 
 .modal-btn-confirm:hover { background: var(--accent-1); }
 
+/* 图标回退 */
+.icon-emoji {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 600;
+    user-select: none;
+}
+
+/* 卡片加载占位 */
+.card-icon .icon-loading {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* 工具页标签 */
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.tab-item {
+    padding: 8px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.tab-item.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* 社区帖子列表 */
+.forum-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+    align-items: center;
+}
+
+.post-btn {
+    padding: 10px 20px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.post-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.forum-search {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 12px;
+    height: 40px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.forum-search input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.post-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.post-item:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.post-tag {
+    background: var(--primary);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.post-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.post-excerpt {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.no-results {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+}
+
+.no-results.show {
+    display: block;
+}
+
+.no-results-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
 /* 动画 */
 @keyframes buttonBounce {
     0% { transform: scale(1); }
@@ -1110,31 +1069,13 @@ body {
     to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* 响应式 */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 @media (max-width: 768px) {
-    .grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    }
-    
-    .card-item {
-        padding: 12px;
-    }
-    
-    .card-icon {
-        width: 56px;
-        height: 56px;
-    }
-    
-    .forum-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .post-btn {
-        width: 100%;
-    }
-    
-    .forum-search {
-        width: 100%;
-    }
+    .content-wrapper { padding: 24px 16px; }
+    .clock-time-main { font-size: 36px; }
+    .forum-toolbar { flex-direction: column; }
+    .forum-search { width: 100%; }
 }
