@@ -1,6 +1,6 @@
 /* ============================================================
-   UYEA 悠野工作室 · script.js (重构版)
-   功能：菜单控制、搜索、图标加载、语言切换、主题切换、日历农历
+   UYEA 悠野工作室 · script.js (修改版)
+   功能：菜单、语言、搜索增强、图标加载优化、日历农历
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -131,46 +131,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ========== 搜索引擎切换 ==========
+    // ========== 搜索引擎切换与搜索增强 ==========
     const engineDropdownWrapper = document.getElementById('engineDropdownWrapper');
     const engineTriggerBtn = document.getElementById('engineTriggerBtn');
-    const engineTriggerLabel = document.getElementById('engineTriggerLabel');
     const engineOptionItems = document.querySelectorAll('.engine-option-item');
-    const searchInput = document.getElementById('searchInput');
-    const cardItems = document.querySelectorAll('.card-item');
-    const sections = document.querySelectorAll('.section-group');
-
-    const engineUrls = {
-        site: null,
-        baidu: "https://www.baidu.com/s?wd=",
-        google: "https://www.google.com/search?q=",
-        bing: "https://cn.bing.com/search?q="
-    };
 
     const STORAGE_KEY_ENGINE = 'uyea-search-engine';
     let currentEngine = 'baidu';
 
     function initSearchEngine() {
         try { currentEngine = localStorage.getItem(STORAGE_KEY_ENGINE) || 'baidu'; } catch (e) { currentEngine = 'baidu'; }
-        if (!engineUrls.hasOwnProperty(currentEngine)) currentEngine = 'baidu';
+        
         engineOptionItems.forEach(item => {
-            if (item.getAttribute('data-value') === currentEngine) {
+            const value = item.getAttribute('data-value');
+            if (value === currentEngine) {
                 item.classList.add('selected');
-                if (engineTriggerLabel) engineTriggerLabel.textContent = item.textContent.trim();
-            } else { item.classList.remove('selected'); }
+            } else {
+                item.classList.remove('selected');
+            }
         });
+        updateEngineTriggerLabel();
     }
     initSearchEngine();
+
+    function updateEngineTriggerLabel() {
+        const selectedItem = document.querySelector('.engine-option-item.selected');
+        if (selectedItem && engineTriggerBtn) {
+            const label = selectedItem.textContent.trim();
+            const labelSpan = engineTriggerBtn.querySelector('span#engineTriggerLabel');
+            if (labelSpan) labelSpan.textContent = label;
+        }
+    }
 
     engineOptionItems.forEach(item => {
         item.addEventListener('click', function(e) {
             e.stopPropagation();
             const engine = this.getAttribute('data-value');
-            if (!engineUrls.hasOwnProperty(engine)) return;
             currentEngine = engine;
             engineOptionItems.forEach(opt => opt.classList.remove('selected'));
             this.classList.add('selected');
-            if (engineTriggerLabel) engineTriggerLabel.textContent = this.textContent.trim();
+            updateEngineTriggerLabel();
+            
             if (engineTriggerBtn) {
                 engineTriggerBtn.classList.add('clicking');
                 setTimeout(() => engineTriggerBtn.classList.remove('clicking'), 200);
@@ -179,72 +180,77 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    [searchInput].forEach(input => {
-        if (!input) return;
-        input.addEventListener('input', function() {
+    // ========== 初始化搜索增强模块 ==========
+    const searchEnhanced = window.SearchEnhanced ? new window.SearchEnhanced({}) : null;
+
+    // 仅在 search-enhanced.js 加载后使用
+    if (!searchEnhanced && document.getElementById('searchInput')) {
+        // Fallback: 如果没有加载 search-enhanced.js，使用简化版搜索
+        const searchInput = document.getElementById('searchInput');
+        
+        searchInput.addEventListener('input', function() {
+            const keyword = this.value.toLowerCase().trim();
+            
             if (currentEngine === 'site') {
-                const keyword = this.value.toLowerCase().trim();
+                const cardItems = document.querySelectorAll('.card-item');
+                const sections = document.querySelectorAll('.section-group');
+                
                 cardItems.forEach(card => {
                     const title = card.querySelector('.card-title').textContent.toLowerCase();
                     card.style.display = title.includes(keyword) ? 'flex' : 'none';
                 });
+                
                 sections.forEach(section => {
                     const hasVisible = Array.from(section.querySelectorAll('.card-item')).some(c => c.style.display !== 'none');
                     section.style.display = hasVisible ? 'block' : 'none';
                 });
             }
         });
-        input.addEventListener('keypress', function(e) {
+
+        searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const keyword = this.value.trim();
                 if (currentEngine !== 'site' && keyword !== '') {
-                    window.open(engineUrls[currentEngine] + encodeURIComponent(keyword), '_blank');
+                    const engineUrls = {
+                        baidu: "https://www.baidu.com/s?wd=",
+                        google: "https://www.google.com/search?q=",
+                        bing: "https://cn.bing.com/search?q="
+                    };
+                    if (engineUrls[currentEngine]) {
+                        window.open(engineUrls[currentEngine] + encodeURIComponent(keyword), '_blank');
+                    }
                 }
             }
         });
-    });
-
-    // ========== 图标加载 ==========
-    const iconBase = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/ICONS/';
-    const emojiFallback = {
-        'chatgpt': '🤖',
-        'gemini': '✨',
-        'claude': '🎯',
-        'deepseek': '🧠',
-        'yiyan': '📝',
-        'qianwen': '💬',
-        'kimi': '🌟',
-        'doubao': '🫘',
-        'yuanbao': '💰',
-        'perplexity': '🔍',
-        'copilot': '👨‍✈️',
-        'grok': '🧬',
-        'xiaohongshu': '📕',
-        'bilibili': '📺',
-        'zhihu': '💡',
-        'github': '🐙',
-        'tinypng': '🐼',
-        'v0': '🌀'
-    };
-
-    function loadIconImage(img) {
-        const siteName = img.getAttribute('data-site-name');
-        if (!siteName) return;
-        img.src = `${iconBase}${siteName}.ico`;
-        img.onerror = function() {
-            const emoji = emojiFallback[siteName] || '🔗';
-            const cardIcon = img.parentElement;
-            img.remove();
-            const emojiSpan = document.createElement('span');
-            emojiSpan.className = 'icon-emoji';
-            emojiSpan.textContent = emoji;
-            emojiSpan.title = siteName;
-            cardIcon.appendChild(emojiSpan);
-        };
     }
 
-    // 初始加载页面上已有的图标
-    document.querySelectorAll('.card-icon img[data-site-name]').forEach(img => loadIconImage(img));
+    // ========== 搜索下拉菜单 ==========
+    const searchIconBtn = document.getElementById('searchIconBtn');
+    const searchDropdown = document.getElementById('searchDropdown');
+
+    if (searchIconBtn) {
+        searchIconBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            searchDropdown.classList.toggle('show');
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        if (searchDropdown && !searchDropdown.contains(e.target) && !searchIconBtn?.contains(e.target)) {
+            searchDropdown.classList.remove('show');
+        }
+    });
+
+    // ========== 图标加载优化 ==========
+    const iconLoader = window.IconLoader ? new window.IconLoader({
+        iconBase: 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/ICONS/',
+        cacheExpiry: 7 * 24 * 60 * 60 * 1000
+    }) : null;
+
+    if (iconLoader) {
+        // 加载页面上已有的图标
+        iconLoader.loadAll();
+    }
 
     // ========== 动态加载导航分类数据 ==========
     async function loadNavigation() {
@@ -254,7 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
             renderSection('ai-section', nav.ai);
             renderSection('life-section', nav.life);
             renderSection('tools-section', nav.tools);
-        } catch (e) {}
+        } catch (e) {
+            console.error('Failed to load navigation:', e);
+        }
     }
 
     function renderSection(sectionId, items) {
@@ -272,8 +280,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </a>
         `).join('');
+        
         // 为新渲染的图标加载图片
-        grid.querySelectorAll('img[data-site-name]').forEach(img => loadIconImage(img));
+        if (iconLoader) {
+            grid.querySelectorAll('img[data-site-name]').forEach(img => iconLoader.loadIcon(img));
+        }
     }
 
     // 如果当前页面有导航区域，自动加载
@@ -290,10 +301,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
+        
         const clockTimeMain = document.getElementById('clockTimeMain');
         if (clockTimeMain) clockTimeMain.textContent = `${hours}:${minutes}:${seconds}`;
+        
         const clockDateGregorian = document.getElementById('clockDateGregorian');
         if (clockDateGregorian) clockDateGregorian.textContent = `${year}年${month}月${day}日`;
+        
         const clockDateLunar = document.getElementById('clockDateLunar');
         if (clockDateLunar && typeof Solar !== 'undefined' && typeof Lunar !== 'undefined') {
             try {
