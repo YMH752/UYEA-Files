@@ -6,13 +6,10 @@
     <title>UYEA | 悠野导航</title>
     <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
     <meta name="theme-color" content="#000000">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.0.2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
-    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap"></noscript>
-    <link rel="stylesheet" href="/Code/CSS/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
 </head>
 <body data-lang="zh-CN">
     <header class="top-header">
@@ -25,28 +22,25 @@
                     <button class="lang-btn" data-lang="zh-TW">CN_HK</button>
                     <button class="lang-btn" data-lang="en">EN</button>
                 </div>
-                <div class="header-search-wrapper" style="position: relative;">
-                    <button class="search-icon-btn" id="searchIconBtn">🔍</button>
-                    <div class="search-dropdown" id="searchDropdown">
-                        <div class="search-container">
-                            <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
-                                <button class="engine-trigger-btn" id="engineTriggerBtn"><span id="engineTriggerLabel">百度</span></button>
-                                <div class="engine-dropdown-list">
-                                    <div class="engine-option-item" data-value="site">站内</div>
-                                    <div class="engine-option-item selected" data-value="baidu">百度</div>
-                                    <div class="engine-option-item" data-value="google">谷歌</div>
-                                    <div class="engine-option-item" data-value="bing">必应</div>
-                                </div>
+                <button class="search-icon-btn" id="searchIconBtn">🔍</button>
+                <div class="search-dropdown" id="searchDropdown">
+                    <div class="search-container">
+                        <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
+                            <button class="engine-trigger-btn" id="engineTriggerBtn"><span id="engineTriggerLabel">百度</span></button>
+                            <div class="engine-dropdown-list">
+                                <div class="engine-option-item" data-value="site">站内</div>
+                                <div class="engine-option-item selected" data-value="baidu">百度</div>
+                                <div class="engine-option-item" data-value="google">谷歌</div>
+                                <div class="engine-option-item" data-value="bing">必应</div>
                             </div>
-                            <input type="text" id="searchInput" class="search-input" placeholder="搜索导航...">
                         </div>
+                        <input type="text" id="searchInput" class="search-input" placeholder="搜索导航...">
                     </div>
                 </div>
                 <button class="menu-toggle" id="menuToggleBtn"><span></span><span></span><span></span></button>
             </div>
         </div>
     </header>
-
     <div class="dropdown-menu" id="dropdownMenu">
         <nav class="menu-nav">
             <a href="index.html" class="menu-item active" data-i18n="nav.home">网站导航</a>
@@ -67,59 +61,36 @@
                     <div class="clock-time-main" id="clockTimeMain">00:00:00</div>
                     <div class="clock-date-gregorian" id="clockDateGregorian">2026年1月1日</div>
                     <div class="clock-date-lunar" id="clockDateLunar">（农历正月初一）</div>
-                    <div class="mobile-holiday-badge" id="mobileHolidayBadge" style="display:none;"></div>
                 </div>
                 <div class="clock-right">
-                    <button class="calendar-nav-btn calendar-nav-up" id="prevMonth">&#9650;</button>
-                    <div class="calendar-container">
-                        <div class="calendar-header">
-                            <div class="calendar-title" id="calendarTitle">2026年1月</div>
-                            <button class="calendar-jump-btn-header" id="jumpBtnHeader">跳转</button>
-                        </div>
-                        <div class="calendar-weekdays">
-                            <div class="weekday">日</div><div class="weekday">一</div><div class="weekday">二</div><div class="weekday">三</div><div class="weekday">四</div><div class="weekday">五</div><div class="weekday">六</div>
-                        </div>
-                        <div class="calendar-grid" id="calendarGrid"></div>
-                        <div class="calendar-skeleton" id="calendarSkeleton">
-                            <div class="skeleton-weekdays">
-                                <div class="skeleton-weekday"></div><div class="skeleton-weekday"></div><div class="skeleton-weekday"></div><div class="skeleton-weekday"></div><div class="skeleton-weekday"></div><div class="skeleton-weekday"></div><div class="skeleton-weekday"></div>
-                            </div>
-                            <div class="skeleton-cells">
-                                <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
-                                <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
-                            </div>
-                        </div>
-                        <div class="holiday-bar" id="holidayBar"></div>
+                    <button class="calendar-nav-btn" id="prevMonth">&#9650;</button>
+                    <div class="calendar-header">
+                        <div class="calendar-title" id="calendarTitle">2026年1月</div>
+                        <button class="calendar-jump-btn-header" id="jumpBtnHeader">跳转</button>
                     </div>
-                    <button class="calendar-nav-btn calendar-nav-down" id="nextMonth">&#9660;</button>
+                    <div class="calendar-weekdays">
+                        <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                    <div class="holiday-bar" id="holidayBar"></div>
+                    <button class="calendar-nav-btn" id="nextMonth">&#9660;</button>
                 </div>
             </div>
 
-            <!-- AI智能体分类 -->
             <div class="section-group" id="ai-section">
                 <div class="section-header"><h2 class="section-title" data-i18n="section.ai">AI 智能体</h2></div>
                 <div class="grid-container"></div>
             </div>
-
-            <!-- 生活分类 -->
             <div class="section-group" id="life-section">
                 <div class="section-header"><h2 class="section-title" data-i18n="section.life">生活</h2></div>
                 <div class="grid-container"></div>
             </div>
-
-            <!-- 工具分类 -->
             <div class="section-group" id="tools-section">
                 <div class="section-header"><h2 class="section-title" data-i18n="section.tools">工具</h2></div>
                 <div class="grid-container"></div>
             </div>
         </div>
     </main>
-
-    <script src="/Code/JS/script.js" defer></script>
 
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="modal-jump" id="modalJump">
@@ -139,7 +110,8 @@
         </div>
     </div>
 
-    <script src="/Code/JS/lunar.js"></script>
-    <script src="/Code/JS/calendar.js" defer></script>
+    <script src="/JS/lunar.js?v=0.0.2"></script>
+    <script src="/JS/calendar.js?v=0.0.2" defer></script>
+    <script src="/JS/script.js?v=0.0.2" defer></script>
 </body>
 </html>
