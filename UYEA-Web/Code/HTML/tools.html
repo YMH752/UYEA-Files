@@ -52,8 +52,6 @@
             <div class="section-header">
                 <h1 class="section-title" data-i18n="nav.tools">实用工具箱</h1>
             </div>
-            
-            <!-- 分类过滤按钮 -->
             <div class="category-tabs" id="categoryTabs">
                 <div class="tab-item active" data-category="all">全部</div>
                 <div class="tab-item" data-category="dev">💻 开发者工具</div>
@@ -61,121 +59,68 @@
                 <div class="tab-item" data-category="office">📂 办公效率</div>
                 <div class="tab-item" data-category="media">🎥 多媒体处理</div>
             </div>
-            
-            <!-- 工具容器 -->
             <div id="toolsContainer">
-                <!-- 开发者工具 -->
                 <div class="tool-group" data-category="dev" id="dev-tools">
                     <div class="tool-group-title"><span>💻</span> 开发者工具</div>
                     <div class="grid-container">
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">{ }</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">JSON 格式化</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">🗂️</span></div>
+                            <div class="card-info"><div class="card-title">JSON 格式化</div></div>
                         </a>
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">🔀</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">Base64 编解码</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">🔣</span></div>
+                            <div class="card-info"><div class="card-title">Base64 编解码</div></div>
                         </a>
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">.*</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">正则表达式测试</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">🔍</span></div>
+                            <div class="card-info"><div class="card-title">正则表达式测试</div></div>
                         </a>
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">⏱️</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">时间戳转换</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">⏱️</span></div>
+                            <div class="card-info"><div class="card-title">时间戳转换</div></div>
                         </a>
                     </div>
                 </div>
-
-                <!-- 设计美化 -->
                 <div class="tool-group" data-category="design" id="design-tools">
                     <div class="tool-group-title"><span>🎨</span> 设计美化</div>
                     <div class="grid-container">
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">🎭</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">在线调色板</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">🎨</span></div>
+                            <div class="card-info"><div class="card-title">在线调色板</div></div>
                         </a>
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">📐</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">SVG 图标库</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">🖼️</span></div>
+                            <div class="card-info"><div class="card-title">SVG 图标库</div></div>
                         </a>
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">🌈</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">渐变颜色生成</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">🌈</span></div>
+                            <div class="card-info"><div class="card-title">渐变颜色生成</div></div>
                         </a>
                     </div>
                 </div>
-
-                <!-- 办公效率 -->
                 <div class="tool-group" data-category="office" id="office-tools">
                     <div class="tool-group-title"><span>📂</span> 办公效率</div>
                     <div class="grid-container">
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">📄</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">PDF 转 Word</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">📄</span></div>
+                            <div class="card-info"><div class="card-title">PDF 转 Word</div></div>
                         </a>
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">📊</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">流程图绘制</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">📊</span></div>
+                            <div class="card-info"><div class="card-title">流程图绘制</div></div>
                         </a>
                     </div>
                 </div>
-
-                <!-- 多媒体处理 -->
                 <div class="tool-group" data-category="media" id="media-tools">
                     <div class="tool-group-title"><span>🎥</span> 多媒体处理</div>
                     <div class="grid-container">
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">🖼️</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">图片压缩</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">🖼️</span></div>
+                            <div class="card-info"><div class="card-title">图片压缩</div></div>
                         </a>
                         <a href="#" class="card-item">
-                            <div class="card-icon">
-                                <span class="icon-emoji">🎬</span>
-                            </div>
-                            <div class="card-info">
-                                <div class="card-title">视频转 GIF</div>
-                            </div>
+                            <div class="card-icon"><span class="icon-emoji">🎞️</span></div>
+                            <div class="card-info"><div class="card-title">视频转 GIF</div></div>
                         </a>
                     </div>
                 </div>
@@ -184,23 +129,15 @@
     </main>
 
     <script src="/Code/JS/script.js" defer></script>
-    <script src="/Code/JS/search-enhanced.js" defer></script>
     <script>
-        // 分类筛选功能
+        // 分类筛选
         document.querySelectorAll('.tab-item').forEach(tab => {
             tab.addEventListener('click', function() {
-                // 更新active状态
                 document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                
-                // 过滤工具分组
                 const category = this.getAttribute('data-category');
                 document.querySelectorAll('.tool-group').forEach(group => {
-                    if (category === 'all' || group.getAttribute('data-category') === category) {
-                        group.style.display = 'block';
-                    } else {
-                        group.style.display = 'none';
-                    }
+                    group.style.display = (category === 'all' || group.getAttribute('data-category') === category) ? 'block' : 'none';
                 });
             });
         });
