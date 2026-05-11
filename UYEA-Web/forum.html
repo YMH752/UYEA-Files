@@ -3,9 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="悠野社区 - 分享AI使用心得、工具作品和生活点滴">
+    <meta name="theme-color" content="#000000">
     <title>悠野社区 | UYEA</title>
-    <link rel="stylesheet" href="/CSS/style.css?v=0.0.2">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.1.0">
+    
+    <!-- 字体加载策略 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
+    
+    <style>
+        html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+    </style>
 </head>
 <body data-lang="zh-CN">
     <header class="top-header">
@@ -22,6 +33,7 @@
             </div>
         </div>
     </header>
+    
     <div class="dropdown-menu" id="dropdownMenu">
         <nav class="menu-nav">
             <a href="index.html" class="menu-item" data-i18n="nav.home">网站导航</a>
@@ -30,12 +42,18 @@
             <div class="menu-divider"></div>
             <a href="forum.html" class="menu-item active" data-i18n="nav.forum">悠野社区</a>
         </nav>
-        <div class="menu-auth-section"><button class="register-btn" onclick="alert('注册功能开发中...')"><span data-i18n="btn.register">注册</span></button></div>
+        <div class="menu-auth-section">
+            <button class="register-btn" onclick="alert('注册功能开发中...')"><span data-i18n="btn.register">注册</span></button>
+        </div>
     </div>
 
     <main class="main-content">
         <div class="content-wrapper">
-            <div class="section-header"><h1 class="section-title" data-i18n="nav.forum">悠野社区</h1></div>
+            <div class="section-header">
+                <h1 class="section-title" data-i18n="nav.forum">悠野社区</h1>
+            </div>
+            
+            <!-- 工具栏 -->
             <div class="forum-toolbar">
                 <button class="post-btn" onclick="alert('发帖功能开发中...')">＋ 发布新帖子</button>
                 <div class="forum-search">
@@ -43,22 +61,42 @@
                     <input type="text" id="forumSearchInput" placeholder="搜索帖子、话题或用户...">
                 </div>
             </div>
-            <div class="post-list" id="postList"></div>
+            
+            <!-- 帖子列表 -->
+            <div class="post-list" id="postList">
+                <div class="no-results show">
+                    <div class="no-results-icon">⏳</div>
+                    <div class="no-results-text">加载中...</div>
+                </div>
+            </div>
+            
+            <!-- 无结果提示 -->
             <div class="no-results" id="noResults">
                 <div class="no-results-icon">🔍</div>
                 <div class="no-results-text">未找到匹配的帖子</div>
             </div>
         </div>
     </main>
-    <script src="/JS/script.js?v=0.0.2" defer></script>
+
+    <script src="/JS/script.js?v=0.1.0" defer></script>
     <script>
+        // 论坛帖子加载与搜索
         async function loadPosts() {
             const list = document.getElementById('postList');
+            const noResults = document.getElementById('noResults');
+            
             try {
                 const res = await fetch('/JSON/posts.json');
-                if (!res.ok) throw new Error('加载失败');
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+                
                 const posts = await res.json();
-                if (!Array.isArray(posts) || posts.length === 0) throw new Error('无数据');
+                if (!Array.isArray(posts) || posts.length === 0) {
+                    throw new Error('无数据');
+                }
+                
+                // 渲染帖子列表
                 list.innerHTML = posts.map(p => `
                     <a href="${p.url}" class="post-item">
                         <div class="post-meta">
@@ -71,25 +109,41 @@
                     </a>
                 `).join('');
 
+                // 搜索功能
                 const searchInput = document.getElementById('forumSearchInput');
-                const noResults = document.getElementById('noResults');
                 searchInput.addEventListener('input', function() {
                     const keyword = this.value.toLowerCase().trim();
                     let hasVisible = false;
+                    
                     list.querySelectorAll('.post-item').forEach(item => {
                         const title = item.querySelector('.post-title').textContent.toLowerCase();
                         const excerpt = item.querySelector('.post-excerpt').textContent.toLowerCase();
-                        const show = title.includes(keyword) || excerpt.includes(keyword);
+                        const author = item.querySelector('.post-meta').textContent.toLowerCase();
+                        
+                        const show = title.includes(keyword) || excerpt.includes(keyword) || author.includes(keyword);
                         item.style.display = show ? 'block' : 'none';
                         if (show) hasVisible = true;
                     });
-                    noResults.classList.toggle('show', !hasVisible);
+                    
+                    noResults.classList.toggle('show', !hasVisible && keyword.length > 0);
                 });
             } catch (e) {
-                list.innerHTML = '<div class="no-results show"><div class="no-results-icon">⚠️</div><div class="no-results-text">帖子数据加载失败，请稍后重试</div></div>';
+                console.error('Posts loading failed:', e);
+                list.innerHTML = `
+                    <div class="no-results show">
+                        <div class="no-results-icon">⚠️</div>
+                        <div class="no-results-text">帖子数据加载失败，请刍后重试</div>
+                    </div>
+                `;
             }
         }
-        loadPosts();
+        
+        // DOM加载完成后加载帖子
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadPosts);
+        } else {
+            loadPosts();
+        }
     </script>
 </body>
 </html>
