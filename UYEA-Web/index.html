@@ -7,16 +7,13 @@
     <meta name="theme-color" content="#000000">
     <title>UYEA | 悠野导航</title>
     
-    <!-- 关键CSS内联加载 -->
-    <link rel="stylesheet" href="/CSS/style.css?v=0.1.0">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.2.0">
     
-    <!-- 字体加载策略优化：使用font-display: swap -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
     
-    <!-- 防止FOUC (Flash of Unstyled Content) -->
     <style>
         html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
     </style>
@@ -67,13 +64,16 @@
 
     <main class="main-content">
         <div class="content-wrapper">
-            <!-- 时钟日历区域 - 响应式自适应 -->
+            <!-- 时钟日历区域 - 上下堆叠，充满宽度 -->
             <div class="clock-display" id="clockDisplay">
+                <!-- 时钟部分 -->
                 <div class="clock-left">
                     <div class="clock-time-main" id="clockTimeMain">00:00:00</div>
                     <div class="clock-date-gregorian" id="clockDateGregorian">2026年1月1日</div>
                     <div class="clock-date-lunar" id="clockDateLunar">（农历正月初一）</div>
                 </div>
+                
+                <!-- 日历部分 -->
                 <div class="clock-right">
                     <button class="calendar-nav-btn" id="prevMonth">&#9650;</button>
                     <div class="calendar-header">
@@ -128,9 +128,9 @@
         </div>
     </div>
 
-    <!-- 脚本加载（仅index页加载农历库，降低其他页面体积） -->
-    <script src="/JS/lunar.js?v=0.1.0" defer></script>
-    <script src="/JS/calendar.js?v=0.1.0" defer></script>
-    <script src="/JS/script.js?v=0.1.0" defer></script>
+    <!-- 脚本加载 -->
+    <script src="/JS/lunar.js?v=0.2.0" defer></script>
+    <script src="/JS/calendar.js?v=0.2.0" defer></script>
+    <script src="/JS/script.js?v=0.2.0" defer></script>
 </body>
 </html>
