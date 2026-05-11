@@ -6,9 +6,8 @@
     <meta name="description" content="悠野社区 - 分享AI使用心得、工具作品和生活点滴">
     <meta name="theme-color" content="#000000">
     <title>悠野社区 | UYEA</title>
-    <link rel="stylesheet" href="/CSS/style.css?v=0.1.0">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.2.0">
     
-    <!-- 字体加载策略 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -53,7 +52,6 @@
                 <h1 class="section-title" data-i18n="nav.forum">悠野社区</h1>
             </div>
             
-            <!-- 工具栏 -->
             <div class="forum-toolbar">
                 <button class="post-btn" onclick="alert('发帖功能开发中...')">＋ 发布新帖子</button>
                 <div class="forum-search">
@@ -62,7 +60,6 @@
                 </div>
             </div>
             
-            <!-- 帖子列表 -->
             <div class="post-list" id="postList">
                 <div class="no-results show">
                     <div class="no-results-icon">⏳</div>
@@ -70,7 +67,6 @@
                 </div>
             </div>
             
-            <!-- 无结果提示 -->
             <div class="no-results" id="noResults">
                 <div class="no-results-icon">🔍</div>
                 <div class="no-results-text">未找到匹配的帖子</div>
@@ -78,37 +74,51 @@
         </div>
     </main>
 
-    <script src="/JS/script.js?v=0.1.0" defer></script>
+    <script src="/JS/script.js?v=0.2.0" defer></script>
     <script>
-        // 论坛帖子加载与搜索
+        // 论坛帖子加载与搜索（增强版，含详细调试日志）
         async function loadPosts() {
             const list = document.getElementById('postList');
             const noResults = document.getElementById('noResults');
             
+            console.log('开始加载帖子数据...');
+            
             try {
-                // 使用相对路径解决本地文件协议无法读取根目录的问题
+                // 显示加载中
+                list.innerHTML = '<div class="no-results show"><div class="no-results-icon">⏳</div><div class="no-results-text">加载中...</div></div>';
+                
                 const res = await fetch('/JSON/posts.json');
+                console.log('HTTP响应状态:', res.status, res.statusText);
+                
                 if (!res.ok) {
-                    throw new Error(`HTTP ${res.status}`);
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
                 }
                 
                 const posts = await res.json();
+                console.log('成功加载帖子数据:', posts);
+                console.log('帖子数量:', Array.isArray(posts) ? posts.length : '不是数组');
+                
                 if (!Array.isArray(posts) || posts.length === 0) {
-                    throw new Error('无数据');
+                    throw new Error('无帖子数据');
                 }
                 
                 // 渲染帖子列表
-                list.innerHTML = posts.map(p => `
-                    <a href="${p.url}" class="post-item">
-                        <div class="post-meta">
-                            <span class="post-tag">${p.tag}</span>
-                            <span>• ${p.author}</span>
-                            <span>• ${p.time}</span>
-                        </div>
-                        <div class="post-title">${p.title}</div>
-                        <div class="post-excerpt">${p.excerpt}</div>
-                    </a>
-                `).join('');
+                list.innerHTML = posts.map((p, index) => {
+                    console.log(`渲染帖子 ${index + 1}:`, p.title);
+                    return `
+                        <a href="${p.url}" class="post-item">
+                            <div class="post-meta">
+                                <span class="post-tag">${p.tag}</span>
+                                <span>• ${p.author}</span>
+                                <span>• ${p.time}</span>
+                            </div>
+                            <div class="post-title">${p.title}</div>
+                            <div class="post-excerpt">${p.excerpt}</div>
+                        </a>
+                    `;
+                }).join('');
+                
+                console.log('✅ 帖子渲染完成');
 
                 // 搜索功能
                 const searchInput = document.getElementById('forumSearchInput');
@@ -128,12 +138,19 @@
                     
                     noResults.classList.toggle('show', !hasVisible && keyword.length > 0);
                 });
+                
             } catch (e) {
-                console.error('Posts loading failed:', e);
+                console.error('❌ 帖子加载失败:', e.message);
+                console.error('完整错误:', e);
+                
                 list.innerHTML = `
                     <div class="no-results show">
                         <div class="no-results-icon">⚠️</div>
-                        <div class="no-results-text">帖子数据加载失败，请稍后重试</div>
+                        <div class="no-results-text">帖子数据加载失败: ${e.message}</div>
+                        <div style="font-size: 12px; margin-top: 10px; color: var(--text-muted); text-align: center;">
+                            请检查: /JSON/posts.json 文件是否存在<br/>
+                            错误详情请查看浏览器开发者工具 Console
+                        </div>
                     </div>
                 `;
             }
