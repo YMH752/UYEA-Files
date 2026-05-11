@@ -87,7 +87,7 @@
             
             try {
                 // 使用相对路径解决本地文件协议无法读取根目录的问题
-                const res = await fetch('JSON/posts.json');
+                const res = await fetch('/JSON/posts.json');
                 if (!res.ok) {
                     throw new Error(`HTTP ${res.status}`);
                 }
