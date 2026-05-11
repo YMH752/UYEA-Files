@@ -6,9 +6,8 @@
     <meta name="description" content="实用工具箱 - 开发者工具、设计美化、办公效率、多媒体处理">
     <meta name="theme-color" content="#000000">
     <title>实用工具箱 | UYEA</title>
-    <link rel="stylesheet" href="/CSS/style.css?v=0.1.0">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.2.0">
     
-    <!-- 字体加载策略 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -53,7 +52,7 @@
                 <h1 class="section-title" data-i18n="nav.tools">实用工具箱</h1>
             </div>
             
-            <!-- 分类标签（优化版） -->
+            <!-- 分类标签 -->
             <div class="category-tabs" id="categoryTabs">
                 <div class="tab-item active" data-category="all">全部</div>
                 <div class="tab-item" data-category="dev">💻 开发者工具</div>
@@ -166,18 +165,16 @@
         </div>
     </main>
 
-    <script src="/JS/script.js?v=0.1.0" defer></script>
+    <script src="/JS/script.js?v=0.2.0" defer></script>
     <script>
-        // 工具分类标签切换（优化版）
+        // 工具分类标签切换
         document.querySelectorAll('.tab-item').forEach(tab => {
             tab.addEventListener('click', function() {
-                // 更新活跃标签
                 document.querySelectorAll('.tab-item').forEach(t => {
                     t.classList.remove('active');
                 });
                 this.classList.add('active');
                 
-                // 显示/隐藏对应分类
                 const category = this.dataset.category;
                 document.querySelectorAll('.tool-group').forEach(group => {
                     const shouldShow = (category === 'all' || group.dataset.category === category);
@@ -186,7 +183,6 @@
             });
         });
 
-        // 页面加载完成后，确保"全部"标签显示所有工具
         window.addEventListener('load', function() {
             document.querySelectorAll('.tool-group').forEach(group => {
                 group.style.display = 'block';
