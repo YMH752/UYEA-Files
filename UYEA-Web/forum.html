@@ -86,7 +86,8 @@
             const noResults = document.getElementById('noResults');
             
             try {
-                const res = await fetch('/JSON/posts.json');
+                // 使用相对路径解决本地文件协议无法读取根目录的问题
+                const res = await fetch('JSON/posts.json');
                 if (!res.ok) {
                     throw new Error(`HTTP ${res.status}`);
                 }
@@ -132,7 +133,7 @@
                 list.innerHTML = `
                     <div class="no-results show">
                         <div class="no-results-icon">⚠️</div>
-                        <div class="no-results-text">帖子数据加载失败，请刍后重试</div>
+                        <div class="no-results-text">帖子数据加载失败，请稍后重试</div>
                     </div>
                 `;
             }
