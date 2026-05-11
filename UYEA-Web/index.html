@@ -3,13 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>UYEA | 悠野导航</title>
     <meta name="description" content="悠野工作室(UYEA)提供AI智能体导航、在线工具箱和技术社区。">
     <meta name="theme-color" content="#000000">
-    <link rel="stylesheet" href="/CSS/style.css?v=0.0.2">
+    <title>UYEA | 悠野导航</title>
+    
+    <!-- 关键CSS内联加载 -->
+    <link rel="stylesheet" href="/CSS/style.css?v=0.1.0">
+    
+    <!-- 字体加载策略优化：使用font-display: swap -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- 防止FOUC (Flash of Unstyled Content) -->
+    <style>
+        html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+    </style>
 </head>
 <body data-lang="zh-CN">
     <header class="top-header">
@@ -41,6 +51,7 @@
             </div>
         </div>
     </header>
+    
     <div class="dropdown-menu" id="dropdownMenu">
         <nav class="menu-nav">
             <a href="index.html" class="menu-item active" data-i18n="nav.home">网站导航</a>
@@ -56,6 +67,7 @@
 
     <main class="main-content">
         <div class="content-wrapper">
+            <!-- 时钟日历区域 - 响应式自适应 -->
             <div class="clock-display" id="clockDisplay">
                 <div class="clock-left">
                     <div class="clock-time-main" id="clockTimeMain">00:00:00</div>
@@ -77,14 +89,19 @@
                 </div>
             </div>
 
+            <!-- AI智能体 -->
             <div class="section-group" id="ai-section">
                 <div class="section-header"><h2 class="section-title" data-i18n="section.ai">AI 智能体</h2></div>
                 <div class="grid-container"></div>
             </div>
+            
+            <!-- 生活 -->
             <div class="section-group" id="life-section">
                 <div class="section-header"><h2 class="section-title" data-i18n="section.life">生活</h2></div>
                 <div class="grid-container"></div>
             </div>
+            
+            <!-- 工具 -->
             <div class="section-group" id="tools-section">
                 <div class="section-header"><h2 class="section-title" data-i18n="section.tools">工具</h2></div>
                 <div class="grid-container"></div>
@@ -92,6 +109,7 @@
         </div>
     </main>
 
+    <!-- 模态框 -->
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="modal-jump" id="modalJump">
         <div class="modal-title">跳转到指定日期</div>
@@ -110,8 +128,9 @@
         </div>
     </div>
 
-    <script src="/JS/lunar.js?v=0.0.2"></script>
-    <script src="/JS/calendar.js?v=0.0.2" defer></script>
-    <script src="/JS/script.js?v=0.0.2" defer></script>
+    <!-- 脚本加载（仅index页加载农历库，降低其他页面体积） -->
+    <script src="/JS/lunar.js?v=0.1.0" defer></script>
+    <script src="/JS/calendar.js?v=0.1.0" defer></script>
+    <script src="/JS/script.js?v=0.1.0" defer></script>
 </body>
 </html>
