@@ -363,13 +363,13 @@ body {
 .main-content {
     min-height: calc(100vh - var(--header-h));
     background: var(--bg);
-    padding: clamp(8px, 2vw, 16px) 0;           /* 减少上下留白 */
+    padding: clamp(8px, 2vw, 16px) 0;
 }
 
 .content-wrapper {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 clamp(8px, 2vw, 16px);           /* 减少左右留白 */
+    padding: 0 clamp(8px, 2vw, 16px);
 }
 
 /* 时钟日历区域 */
@@ -536,7 +536,7 @@ body {
     font-weight: 400;
     color: var(--text-muted);
     line-height: 1;
-    margin-top: 0;                         /* 拉近农历 */
+    margin-top: 0;
 }
 
 .calendar-cell.today .cell-lunar {
@@ -558,15 +558,15 @@ body {
     color: rgba(255, 255, 255, 0.85);
 }
 
-/* 休字样式 - 无背景黑字 */
+/* 休字 - 无背景黑字，今日显示白色 */
 .cell-rest {
     position: absolute;
     top: 2px;
     right: 2px;
     font-size: clamp(9px, 1.5vw, 12px);
     font-weight: 700;
-    color: var(--primary);                  /* 黑色文字 */
-    background: transparent;                /* 无背景 */
+    color: var(--primary);          /* 黑色文字 */
+    background: transparent;        /* 无背景 */
     border-radius: 2px;
     padding: 0 1px;
     line-height: 1;
@@ -575,7 +575,7 @@ body {
 }
 
 .calendar-cell.today .cell-rest {
-    color: white;                           /* 今日日期时显示白色 */
+    color: white;                   /* 今日时变白 */
 }
 
 .calendar-cell.other-month {
@@ -660,16 +660,20 @@ body {
     color: var(--text-primary);
 }
 
-/* 卡片网格 - 增大最小宽度，形成横向长方形 */
+/*
+  关键修改：auto-fill → auto-fit
+  auto-fit 会将剩余空间平均分配给现有列，消除右侧留白，
+  同时保持卡片最小宽度不低于 180~240px（视口自适应）。
+*/
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(clamp(180px, 28vw, 240px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(clamp(180px, 28vw, 240px), 1fr));
     gap: clamp(12px, 2vw, 20px);
 }
 
 @media (max-width: 768px) {
     .grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 28vw, 200px), 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 28vw, 200px), 1fr));
     }
 }
 
