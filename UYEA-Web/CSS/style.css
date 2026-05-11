@@ -1,6 +1,6 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   超级优化版：紧凑排版 + 内容充满 + 自适应布局
+   完全重构版：内容居中 + 水平均匀扩散 + 充满屏幕
    ============================================================ */
 
 :root {
@@ -64,8 +64,8 @@ body {
 
 .header-container {
     height: 100%;
-    max-width: 100%;
-    padding: 0 clamp(12px, 3vw, 20px);
+    width: 100%;
+    padding: 0 clamp(12px, 4vw, 40px);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -94,7 +94,7 @@ body {
 .header-right {
     display: flex;
     align-items: center;
-    gap: clamp(8px, 2vw, 16px);
+    gap: clamp(8px, 3vw, 20px);
     margin-left: auto;
 }
 
@@ -122,11 +122,11 @@ body {
 }
 
 .lang-btn {
-    padding: 6px clamp(6px, 1vw, 12px);
+    padding: 6px clamp(8px, 2vw, 14px);
     border: none;
     background: transparent;
     color: #FFFFFF;
-    font-size: clamp(10px, 1vw, 12px);
+    font-size: clamp(10px, 1.5vw, 12px);
     font-weight: 600;
     cursor: pointer;
     border-radius: 6px;
@@ -161,13 +161,13 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 0 clamp(8px, 1vw, 12px);
+    padding: 0 clamp(8px, 1.5vw, 14px);
     height: 40px;
     background: var(--accent-1);
     color: white;
     border: none;
     border-radius: 8px 0 0 8px;
-    font-size: clamp(10px, 1vw, 12px);
+    font-size: clamp(10px, 1.5vw, 12px);
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
@@ -175,11 +175,6 @@ body {
 }
 
 .engine-trigger-btn:hover { background: var(--accent-2); }
-
-.engine-trigger-btn:active,
-.engine-trigger-btn.clicking {
-    animation: buttonBounce 0.2s ease-out;
-}
 
 .engine-dropdown-list {
     display: none;
@@ -193,15 +188,14 @@ body {
     box-shadow: var(--shadow-md);
     z-index: 200;
     overflow: hidden;
-    animation: dropdownSlideIn 0.3s ease-out;
 }
 
 .engine-dropdown-wrapper:hover .engine-dropdown-list,
 .engine-dropdown-wrapper.open .engine-dropdown-list { display: block; }
 
 .engine-option-item {
-    padding: 10px clamp(8px, 1vw, 12px);
-    font-size: clamp(10px, 1vw, 12px);
+    padding: 10px clamp(8px, 1.5vw, 14px);
+    font-size: clamp(10px, 1.5vw, 12px);
     cursor: pointer;
     text-align: center;
     border-bottom: 1px solid var(--border);
@@ -224,9 +218,9 @@ body {
     border: none;
     background: transparent;
     outline: none;
-    width: clamp(100px, 30vw, 180px);
-    padding: 0 clamp(8px, 1vw, 12px);
-    font-size: clamp(11px, 1vw, 13px);
+    width: clamp(100px, 25vw, 180px);
+    padding: 0 clamp(8px, 1.5vw, 14px);
+    font-size: clamp(11px, 1.5vw, 13px);
     color: var(--text-primary);
 }
 
@@ -258,14 +252,13 @@ body {
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
-    width: clamp(280px, 90vw, 320px);
+    width: clamp(280px, 90vw, 380px);
     background: var(--surface);
     border: 2px solid var(--accent-1);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
     z-index: 300;
     padding: 16px;
-    animation: fadeUp 0.2s ease;
 }
 
 .search-dropdown.show { display: block; }
@@ -316,8 +309,6 @@ body {
     border-bottom: 2px solid var(--border);
     box-shadow: var(--shadow-md);
     z-index: 999;
-    animation: slideInRight 0.3s ease;
-    max-width: 100%;
 }
 
 .dropdown-menu.show { display: flex; flex-direction: column; }
@@ -359,32 +350,36 @@ body {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* ==================== 内容容器 - 充分扩散 ==================== */
+/* ==================== 内容容器 - 完全居中扩散 ==================== */
 .main-content {
     min-height: calc(100vh - var(--header-h));
     background: var(--bg);
-    padding: clamp(12px, 3vw, 20px) 0;
+    padding: clamp(12px, 3vw, 24px) 0;
 }
 
 .content-wrapper {
     width: 100%;
     max-width: 100%;
     margin: 0 auto;
-    padding: 0 clamp(8px, 2vw, 16px);
+    padding: 0 clamp(10px, 3vw, 30px);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
-/* ==================== 时钟日历区域 - 上下堆叠，充满宽度 ==================== */
+/* ==================== 时钟日历区域 - 充满宽度，居中 ==================== */
 .clock-display {
     display: grid;
     grid-template-columns: 1fr;
-    gap: clamp(12px, 2vw, 16px);
+    gap: clamp(10px, 2vw, 16px);
     background: var(--surface);
-    padding: clamp(14px, 3vw, 20px);
+    padding: clamp(12px, 2.5vw, 20px);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
-    margin-bottom: clamp(16px, 3vw, 24px);
+    margin-bottom: clamp(14px, 2.5vw, 24px);
     border: 1px solid var(--border);
     width: 100%;
+    align-self: center;
 }
 
 .clock-left {
@@ -392,7 +387,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: clamp(8px, 2vw, 12px);
+    padding: clamp(6px, 2vw, 12px);
+    gap: clamp(4px, 1vw, 8px);
 }
 
 .clock-right {
@@ -400,12 +396,12 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
-    padding: clamp(8px, 2vw, 12px);
+    padding: clamp(6px, 2vw, 12px);
 }
 
 .clock-time-main {
     font-family: 'Courier New', monospace;
-    font-size: clamp(36px, 10vw, 48px);
+    font-size: clamp(36px, 10vw, 52px);
     font-weight: 700;
     letter-spacing: 0;
     color: var(--text-primary);
@@ -413,19 +409,17 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: clip;
-    margin-bottom: clamp(6px, 1.5vw, 10px);
 }
 
 .clock-date-gregorian {
     text-align: center;
-    font-size: clamp(13px, 2.5vw, 15px);
+    font-size: clamp(12px, 2.5vw, 15px);
     font-weight: 500;
-    margin-bottom: clamp(3px, 1vw, 5px);
 }
 
 .clock-date-lunar {
     text-align: center;
-    font-size: clamp(11px, 2vw, 13px);
+    font-size: clamp(10px, 2vw, 13px);
     font-weight: 400;
     white-space: nowrap;
     color: var(--text-secondary);
@@ -454,7 +448,7 @@ body {
     background: transparent;
     color: var(--primary);
     border-radius: 0;
-    font-size: clamp(10px, 1.5vw, 12px);
+    font-size: clamp(9px, 1.5vw, 11px);
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: underline;
@@ -473,7 +467,7 @@ body {
 
 .calendar-weekdays div {
     text-align: center;
-    font-size: clamp(10px, 1.5vw, 12px);
+    font-size: clamp(9px, 1.5vw, 11px);
     color: var(--text-secondary);
     padding: clamp(2px, 0.8vw, 3px) 0;
     font-weight: 600;
@@ -483,12 +477,12 @@ body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 1px;
-    margin-bottom: clamp(6px, 1.5vw, 10px);
+    margin-bottom: clamp(4px, 1.2vw, 8px);
 }
 
 .calendar-cell {
-    min-height: clamp(26px, 5vw, 34px);
-    padding: clamp(2px, 0.8vw, 3px);
+    min-height: clamp(24px, 5vw, 32px);
+    padding: clamp(1px, 0.5vw, 2px);
     text-align: center;
     border-radius: 4px;
     cursor: pointer;
@@ -515,7 +509,7 @@ body {
 }
 
 .cell-solar {
-    font-size: clamp(11px, 2vw, 14px);
+    font-size: clamp(10px, 1.8vw, 13px);
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1;
@@ -527,7 +521,7 @@ body {
 }
 
 .cell-lunar {
-    font-size: clamp(8px, 1.3vw, 9px);
+    font-size: clamp(7px, 1.2vw, 9px);
     font-weight: 400;
     color: var(--text-muted);
     line-height: 1;
@@ -539,7 +533,7 @@ body {
 }
 
 .cell-holiday {
-    font-size: clamp(7px, 1.1vw, 8px);
+    font-size: clamp(6px, 1vw, 8px);
     font-weight: 600;
     color: var(--primary);
     line-height: 1;
@@ -557,11 +551,11 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    font-size: 5px;
+    font-size: 4px;
     font-weight: 700;
     color: #ffffff;
     background: var(--primary);
-    border-radius: 2px;
+    border-radius: 1px;
     padding: 0 1px;
     line-height: 1;
     white-space: nowrap;
@@ -580,7 +574,7 @@ body {
 
 .calendar-nav-btn {
     width: 100%;
-    height: 18px;
+    height: 16px;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -588,7 +582,7 @@ body {
     align-items: center;
     justify-content: center;
     color: var(--text-muted);
-    font-size: clamp(12px, 2vw, 13px);
+    font-size: clamp(10px, 1.8vw, 12px);
     opacity: 0.6;
     transition: opacity 0.2s ease;
 }
@@ -598,19 +592,19 @@ body {
     color: var(--primary);
 }
 
-.calendar-nav-up { margin-bottom: 3px; }
-.calendar-nav-down { margin-top: 3px; }
+.calendar-nav-up { margin-bottom: 2px; }
+.calendar-nav-down { margin-top: 2px; }
 
 .holiday-bar {
-    margin-top: clamp(4px, 1vw, 6px);
+    margin-top: clamp(3px, 0.8vw, 5px);
     width: 100%;
-    min-height: clamp(18px, 2.5vw, 22px);
-    padding: clamp(2px, 0.8vw, 4px) clamp(5px, 1vw, 8px);
+    min-height: clamp(16px, 2.2vw, 20px);
+    padding: clamp(2px, 0.6vw, 3px) clamp(4px, 0.8vw, 6px);
     border-radius: 6px;
     background: rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(8px);
     display: flex;
-    gap: clamp(3px, 0.8vw, 4px);
+    gap: clamp(2px, 0.6vw, 3px);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     transition: all 0.3s ease;
@@ -629,11 +623,11 @@ body {
 }
 
 .holiday-tag {
-    padding: clamp(2px, 0.7vw, 3px) clamp(6px, 1vw, 8px);
-    border-radius: 4px;
+    padding: clamp(1px, 0.5vw, 2px) clamp(4px, 0.8vw, 6px);
+    border-radius: 3px;
     background: var(--surface);
     border: 1px solid var(--border);
-    font-size: clamp(9px, 1.3vw, 10px);
+    font-size: clamp(8px, 1.2vw, 9px);
     white-space: nowrap;
     scroll-snap-align: start;
     flex-shrink: 0;
@@ -643,38 +637,41 @@ body {
 
 /* ==================== 分区 ==================== */
 .section-group {
-    margin-bottom: clamp(16px, 2.5vw, 24px);
+    margin-bottom: clamp(14px, 2.2vw, 20px);
+    width: 100%;
 }
 
 .section-header {
-    margin-bottom: clamp(10px, 2vw, 14px);
+    margin-bottom: clamp(8px, 1.8vw, 12px);
 }
 
 .section-title {
-    font-size: clamp(18px, 4vw, 24px);
+    font-size: clamp(16px, 3.5vw, 22px);
     font-weight: 700;
     color: var(--text-primary);
 }
 
-/* ==================== 卡片网格 - 长方形紧凑布局 ==================== */
+/* ==================== 卡片网格 - 水平均匀扩散 ==================== */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(clamp(110px, 17vw, 180px), 1fr));
-    gap: clamp(10px, 2vw, 14px);
+    grid-template-columns: repeat(auto-fit, minmax(clamp(90px, 14vw, 160px), 1fr));
+    gap: clamp(8px, 1.8vw, 14px);
     width: 100%;
+    justify-items: stretch;
+    align-items: start;
 }
 
 @media (max-width: 480px) {
     .grid-container {
-        grid-template-columns: repeat(auto-fit, minmax(clamp(95px, 22vw, 140px), 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(clamp(85px, 20vw, 140px), 1fr));
         gap: clamp(8px, 2vw, 12px);
     }
 }
 
 @media (min-width: 1200px) {
     .grid-container {
-        grid-template-columns: repeat(auto-fit, minmax(clamp(130px, 15vw, 200px), 1fr));
-        gap: clamp(12px, 2vw, 16px);
+        grid-template-columns: repeat(auto-fit, minmax(clamp(110px, 13vw, 180px), 1fr));
+        gap: clamp(10px, 1.6vw, 16px);
     }
 }
 
@@ -683,7 +680,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: clamp(10px, 2vw, 13px);
+    padding: clamp(8px, 1.8vw, 12px);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -692,23 +689,24 @@ body {
     transition: all 0.3s ease;
     cursor: pointer;
     box-shadow: var(--shadow-sm);
-    aspect-ratio: 1.5 / 1;
-    gap: clamp(6px, 1.5vw, 8px);
+    aspect-ratio: 1 / 1;
+    gap: clamp(4px, 1.2vw, 8px);
+    width: 100%;
 }
 
 .card-item:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-md);
     border-color: var(--accent-2);
 }
 
 .card-icon {
-    width: clamp(36px, 8vw, 54px);
-    height: clamp(36px, 8vw, 54px);
+    width: clamp(32px, 7vw, 48px);
+    height: clamp(32px, 7vw, 48px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(20px, 6vw, 32px);
+    font-size: clamp(18px, 5vw, 30px);
     border-radius: var(--radius-sm);
     background: var(--bg);
     flex-shrink: 0;
@@ -722,8 +720,8 @@ body {
 
 .icon-loading {
     position: absolute;
-    width: clamp(28px, 6vw, 40px);
-    height: clamp(28px, 6vw, 40px);
+    width: clamp(24px, 5vw, 36px);
+    height: clamp(24px, 5vw, 36px);
     border: 2px solid var(--border);
     border-top-color: var(--primary);
     border-radius: 50%;
@@ -740,7 +738,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(18px, 6vw, 32px);
+    font-size: clamp(16px, 5vw, 28px);
     font-weight: 600;
     user-select: none;
 }
@@ -755,12 +753,13 @@ body {
 }
 
 .card-title {
-    font-size: clamp(11px, 1.8vw, 13px);
+    font-size: clamp(10px, 1.6vw, 12px);
     font-weight: 600;
     text-align: center;
     color: var(--text-primary);
     line-height: 1.2;
     word-break: break-word;
+    width: 100%;
 }
 
 /* ==================== 模态框 ==================== */
@@ -773,12 +772,6 @@ body {
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     z-index: 9999;
-    animation: fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
 
 .modal-overlay.show { display: block; }
@@ -789,27 +782,27 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: clamp(260px, 90vw, 300px);
-    padding: clamp(12px, 3vw, 18px);
+    width: clamp(250px, 85vw, 300px);
+    padding: clamp(12px, 2.5vw, 18px);
     border-radius: 12px;
     background: var(--surface);
     box-shadow: var(--shadow-lg);
     z-index: 10000;
 }
 
-.modal-jump.show { display: block; animation: modalPop 0.2s ease; }
+.modal-jump.show { display: block; }
 
 .modal-title {
-    font-size: clamp(13px, 2.5vw, 15px);
+    font-size: clamp(12px, 2.2vw, 14px);
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: clamp(8px, 2vw, 12px);
+    margin-bottom: clamp(8px, 1.8vw, 12px);
 }
 
 .modal-radio-group {
     display: flex;
     gap: clamp(8px, 2vw, 12px);
-    margin-bottom: clamp(8px, 2vw, 12px);
+    margin-bottom: clamp(8px, 1.8vw, 12px);
     flex-wrap: wrap;
 }
 
@@ -817,7 +810,7 @@ body {
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: clamp(10px, 1.5vw, 12px);
+    font-size: clamp(10px, 1.4vw, 11px);
     color: var(--text-secondary);
     cursor: pointer;
 }
@@ -825,20 +818,20 @@ body {
 .modal-inputs-wrapper {
     display: flex;
     flex-wrap: wrap;
-    gap: clamp(4px, 1vw, 6px);
-    margin-bottom: clamp(8px, 2vw, 12px);
+    gap: clamp(4px, 0.8vw, 6px);
+    margin-bottom: clamp(8px, 1.8vw, 12px);
 }
 
 .modal-inputs-wrapper input {
     flex: 1;
-    min-width: clamp(50px, 20vw, 70px);
-    height: 32px;
+    min-width: clamp(50px, 18vw, 70px);
+    height: 30px;
     border-radius: 4px;
     border: 1px solid var(--border);
     background: var(--bg);
     color: var(--text-primary);
     text-align: center;
-    font-size: clamp(10px, 1.5vw, 12px);
+    font-size: clamp(10px, 1.4vw, 12px);
     outline: none;
     transition: all 0.2s ease;
 }
@@ -855,10 +848,10 @@ body {
 }
 
 .modal-btn {
-    padding: clamp(5px, 1.5vw, 7px) clamp(12px, 2vw, 16px);
+    padding: clamp(5px, 1.4vw, 7px) clamp(10px, 1.8vw, 14px);
     border-radius: 4px;
     border: none;
-    font-size: clamp(10px, 1.5vw, 12px);
+    font-size: clamp(10px, 1.4vw, 11px);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -886,17 +879,18 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: clamp(8px, 2vw, 12px);
-    margin-bottom: clamp(16px, 3vw, 20px);
+    margin-bottom: clamp(14px, 2.5vw, 20px);
     align-items: center;
+    width: 100%;
 }
 
 .post-btn {
-    padding: clamp(9px, 1.8vw, 11px) clamp(12px, 2vw, 16px);
+    padding: clamp(8px, 1.6vw, 10px) clamp(12px, 2vw, 16px);
     background: var(--primary);
     color: white;
     border: none;
     border-radius: var(--radius-md);
-    font-size: clamp(11px, 1.5vw, 13px);
+    font-size: clamp(11px, 1.4vw, 12px);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -913,11 +907,11 @@ body {
     display: flex;
     align-items: center;
     flex: 1;
-    min-width: clamp(180px, 40vw, 280px);
+    min-width: clamp(160px, 35vw, 260px);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 0 clamp(10px, 2vw, 12px);
+    padding: 0 clamp(8px, 1.6vw, 12px);
     height: 40px;
     gap: 8px;
 }
@@ -932,7 +926,7 @@ body {
     border: none;
     background: transparent;
     outline: none;
-    font-size: clamp(11px, 1.5vw, 13px);
+    font-size: clamp(11px, 1.4vw, 12px);
     color: var(--text-primary);
 }
 
@@ -943,12 +937,13 @@ body {
 .post-list {
     display: flex;
     flex-direction: column;
-    gap: clamp(8px, 2vw, 12px);
+    gap: clamp(8px, 1.8vw, 12px);
+    width: 100%;
 }
 
 .post-item {
     display: block;
-    padding: clamp(12px, 2.5vw, 16px);
+    padding: clamp(12px, 2vw, 16px);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -968,34 +963,34 @@ body {
 .post-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: clamp(6px, 1.5vw, 10px);
-    margin-bottom: clamp(6px, 1.5vw, 8px);
-    font-size: clamp(10px, 1.3vw, 11px);
+    gap: clamp(6px, 1.4vw, 10px);
+    margin-bottom: clamp(6px, 1.4vw, 8px);
+    font-size: clamp(10px, 1.2vw, 11px);
     color: var(--text-secondary);
     align-items: center;
 }
 
 .post-tag {
     display: inline-block;
-    padding: clamp(2px, 0.7vw, 4px) clamp(7px, 1.5vw, 10px);
+    padding: clamp(2px, 0.6vw, 3px) clamp(6px, 1.2vw, 9px);
     background: var(--bg);
     border-radius: 4px;
-    font-size: clamp(9px, 1.2vw, 10px);
+    font-size: clamp(9px, 1.1vw, 10px);
     font-weight: 600;
     color: var(--primary);
     white-space: nowrap;
 }
 
 .post-title {
-    font-size: clamp(13px, 2.3vw, 15px);
+    font-size: clamp(12px, 2vw, 14px);
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: clamp(4px, 1.2vw, 6px);
+    margin-bottom: clamp(4px, 1vw, 6px);
     line-height: 1.4;
 }
 
 .post-excerpt {
-    font-size: clamp(11px, 1.7vw, 13px);
+    font-size: clamp(11px, 1.6vw, 12px);
     color: var(--text-secondary);
     line-height: 1.5;
 }
@@ -1014,7 +1009,7 @@ body {
 }
 
 .no-results-text {
-    font-size: clamp(13px, 2vw, 15px);
+    font-size: clamp(12px, 2vw, 14px);
     color: var(--text-secondary);
 }
 
@@ -1023,18 +1018,19 @@ body {
 .category-tabs {
     display: flex;
     flex-wrap: wrap;
-    gap: clamp(6px, 1.5vw, 10px);
-    margin-bottom: clamp(16px, 3vw, 20px);
+    gap: clamp(6px, 1.4vw, 10px);
+    margin-bottom: clamp(14px, 2.5vw, 20px);
     border-bottom: 2px solid var(--border);
-    padding-bottom: clamp(10px, 2vw, 12px);
+    padding-bottom: clamp(8px, 1.6vw, 12px);
+    width: 100%;
 }
 
 .tab-item {
-    padding: clamp(7px, 1.8vw, 10px) clamp(10px, 1.8vw, 14px);
+    padding: clamp(6px, 1.4vw, 9px) clamp(10px, 1.6vw, 13px);
     background: transparent;
     border: none;
     border-radius: var(--radius-sm);
-    font-size: clamp(11px, 1.5vw, 13px);
+    font-size: clamp(10px, 1.4vw, 12px);
     font-weight: 600;
     color: var(--text-secondary);
     cursor: pointer;
@@ -1054,7 +1050,8 @@ body {
 }
 
 .tool-group {
-    margin-bottom: clamp(20px, 4vw, 28px);
+    margin-bottom: clamp(16px, 3vw, 22px);
+    width: 100%;
 }
 
 .tool-group[style*="display: none"] {
