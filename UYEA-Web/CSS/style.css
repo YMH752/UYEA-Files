@@ -1,6 +1,6 @@
 /* ============================================================
    UYEA 悠野工作室 · style.css
-   全宽自适应、防溢出、横版卡片
+   全宽自适应、防溢出、紧凑日历版
    ============================================================ */
 
 :root {
@@ -39,7 +39,6 @@ html[data-theme="dark"] {
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* 防止内容溢出 */
 html {
   overflow-x: hidden;
 }
@@ -340,22 +339,25 @@ img, svg { max-width: 100%; height: auto; }
     padding: 0 4px;
 }
 
-/* ========== 时钟区域 ========== */
+/* ========== 时钟＋日历区域（紧凑版） ========== */
 .clock-display {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 12px;                          /* 减小间距 */
     background: var(--surface);
-    padding: 16px 12px;
+    padding: 12px 10px;                  /* 减小内边距 */
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     border: 1px solid var(--border);
     width: 100%;
 }
 
 @media (max-width: 768px) {
-    .clock-display { grid-template-columns: 1fr; }
+    .clock-display {
+        grid-template-columns: 1fr;
+        padding: 10px 8px;
+    }
 }
 
 .clock-left {
@@ -363,29 +365,29 @@ img, svg { max-width: 100%; height: auto; }
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 8px;
+    padding: 6px;
 }
 
 .clock-right {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 8px;
+    padding: 6px;
 }
 
 .clock-time-main {
     font-family: 'Courier New', monospace;
-    font-size: clamp(32px, 10vw, 48px);
+    font-size: clamp(28px, 8vw, 42px);   /* 稍微减小 */
     font-weight: 700;
     color: var(--text-primary);
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .clock-date-gregorian {
     text-align: center;
     font-size: 14px;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .clock-date-lunar {
@@ -395,18 +397,18 @@ img, svg { max-width: 100%; height: auto; }
     white-space: nowrap;
 }
 
-/* 日历内部防溢出 */
+/* 日历头部 */
 .calendar-header {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     position: relative;
-    min-height: 24px;
+    min-height: 22px;
 }
 
 .calendar-title {
-    font-size: 16px;
+    font-size: 14px;                     /* 缩小 */
     font-weight: 600;
     text-align: center;
 }
@@ -419,26 +421,36 @@ img, svg { max-width: 100%; height: auto; }
     color: var(--primary);
     text-decoration: underline;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
 }
 
-.calendar-weekdays,
-.calendar-grid {
+/* 周标题 */
+.calendar-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 1px;
+    margin-bottom: 2px;
 }
 
 .calendar-weekdays div {
     text-align: center;
-    font-size: 12px;
+    font-size: 10px;                     /* 缩小 */
     color: var(--text-secondary);
-    padding: 2px 0;
+    padding: 1px 0;
     font-weight: 600;
 }
 
+/* 日历网格 */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    margin-bottom: 6px;
+}
+
+/* 日期单元格 */
 .calendar-cell {
-    min-height: 28px;
+    min-height: 24px;                    /* 减小高度 */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -447,30 +459,34 @@ img, svg { max-width: 100%; height: auto; }
     cursor: pointer;
     position: relative;
     border: 1px solid transparent;
-    padding: 2px;
+    padding: 1px;
     overflow: hidden;
+    font-size: 10px;                     /* 基础字号缩小 */
 }
 
 .calendar-cell:hover { background: var(--bg); border-color: var(--border); }
 
+/* 公历数字 */
 .cell-solar {
-    font-size: clamp(12px, 4vw, 16px);
+    font-size: clamp(10px, 3vw, 13px);   /* 大幅缩小 */
     font-weight: 600;
     color: var(--text-primary);
-    line-height: 1.2;
+    line-height: 1.1;
     white-space: nowrap;
 }
 
+/* 农历 */
 .cell-lunar {
-    font-size: clamp(8px, 2vw, 10px);
+    font-size: clamp(7px, 1.5vw, 9px);   /* 缩小 */
     color: var(--text-muted);
     line-height: 1;
     white-space: nowrap;
     margin-top: 0;
 }
 
+/* 节日 */
 .cell-holiday {
-    font-size: clamp(7px, 1.8vw, 9px);
+    font-size: clamp(6px, 1.2vw, 7px);   /* 缩小 */
     font-weight: 600;
     color: var(--primary);
     line-height: 1;
@@ -480,10 +496,11 @@ img, svg { max-width: 100%; height: auto; }
     max-width: 100%;
 }
 
+/* 休字 */
 .cell-rest {
     position: absolute;
     top: 1px; right: 1px;
-    font-size: clamp(8px, 2vw, 11px);
+    font-size: clamp(7px, 1.5vw, 9px);   /* 缩小 */
     font-weight: 700;
     color: var(--primary);
     background: transparent;
@@ -491,6 +508,7 @@ img, svg { max-width: 100%; height: auto; }
     line-height: 1;
 }
 
+/* 今日高亮 */
 .calendar-cell.today {
     background: var(--primary);
     border-color: var(--primary);
@@ -503,24 +521,26 @@ img, svg { max-width: 100%; height: auto; }
 
 .calendar-cell.other-month { opacity: 0.2; }
 
+/* 导航按钮 */
 .calendar-nav-btn {
     width: 100%;
-    height: 20px;
+    height: 18px;
     border: none;
     background: transparent;
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
     opacity: 0.6;
 }
 
 .calendar-nav-btn:hover { opacity: 1; color: var(--primary); }
 
+/* 假日栏 */
 .holiday-bar {
-    margin-top: 8px;
-    min-height: 22px;
-    padding: 4px 6px;
-    border-radius: 8px;
+    margin-top: 6px;
+    min-height: 20px;
+    padding: 2px 4px;
+    border-radius: 6px;
     background: rgba(0,0,0,0.05);
     display: flex;
     gap: 4px;
@@ -533,11 +553,11 @@ img, svg { max-width: 100%; height: auto; }
 }
 
 .holiday-tag {
-    padding: 2px 6px;
-    border-radius: 4px;
+    padding: 1px 6px;
+    border-radius: 3px;
     background: var(--surface);
     border: 1px solid var(--border);
-    font-size: 10px;
+    font-size: 9px;
     white-space: nowrap;
     scroll-snap-align: start;
     flex-shrink: 0;
