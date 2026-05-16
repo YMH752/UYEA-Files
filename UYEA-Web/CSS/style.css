@@ -40,7 +40,7 @@ html[data-theme="dark"] {
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html {
-  overflow-x: hidden;
+    overflow-x: hidden;
 }
 
 body {
@@ -73,6 +73,10 @@ img, svg { max-width: 100%; height: auto; }
     align-items: center;
     justify-content: space-between;
     width: 100%;
+}
+
+.logo-section {
+    display: flex;
 }
 
 .logo-text {
@@ -138,7 +142,7 @@ img, svg { max-width: 100%; height: auto; }
 
 .lang-btn.active { font-weight: 700; }
 
-/* ---------- 搜索 (防溢出) ---------- */
+/* ---------- 搜索 ---------- */
 .search-icon-btn {
     display: flex;
     align-items: center;
@@ -234,7 +238,6 @@ img, svg { max-width: 100%; height: auto; }
 .engine-option-item:hover { background: var(--bg); color: var(--primary); }
 .engine-option-item.selected { color: var(--primary); font-weight: 700; }
 
-/* 输入框弹性填充，防止溢出 */
 .search-input {
     border: none;
     background: transparent;
@@ -326,7 +329,7 @@ img, svg { max-width: 100%; height: auto; }
 
 .register-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
 
-/* ========== 主内容区（全宽自适应） ========== */
+/* ========== 主内容区 ========== */
 .main-content {
     width: 100%;
     padding: 8px 10px;
@@ -339,13 +342,13 @@ img, svg { max-width: 100%; height: auto; }
     padding: 0 4px;
 }
 
-/* ========== 时钟＋日历区域（紧凑版） ========== */
+/* ========== 时钟＋日历区域 ========== */
 .clock-display {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;                          /* 减小间距 */
+    gap: 12px;
     background: var(--surface);
-    padding: 12px 10px;                  /* 减小内边距 */
+    padding: 12px 10px;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
     margin-bottom: 20px;
@@ -377,7 +380,7 @@ img, svg { max-width: 100%; height: auto; }
 
 .clock-time-main {
     font-family: 'Courier New', monospace;
-    font-size: clamp(28px, 8vw, 42px);   /* 稍微减小 */
+    font-size: clamp(28px, 8vw, 42px);
     font-weight: 700;
     color: var(--text-primary);
     text-align: center;
@@ -408,7 +411,7 @@ img, svg { max-width: 100%; height: auto; }
 }
 
 .calendar-title {
-    font-size: 14px;                     /* 缩小 */
+    font-size: 14px;
     font-weight: 600;
     text-align: center;
 }
@@ -434,7 +437,7 @@ img, svg { max-width: 100%; height: auto; }
 
 .calendar-weekdays div {
     text-align: center;
-    font-size: 10px;                     /* 缩小 */
+    font-size: 10px;
     color: var(--text-secondary);
     padding: 1px 0;
     font-weight: 600;
@@ -450,7 +453,7 @@ img, svg { max-width: 100%; height: auto; }
 
 /* 日期单元格 */
 .calendar-cell {
-    min-height: 24px;                    /* 减小高度 */
+    min-height: 24px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -461,32 +464,29 @@ img, svg { max-width: 100%; height: auto; }
     border: 1px solid transparent;
     padding: 1px;
     overflow: hidden;
-    font-size: 10px;                     /* 基础字号缩小 */
+    font-size: 10px;
 }
 
 .calendar-cell:hover { background: var(--bg); border-color: var(--border); }
 
-/* 公历数字 */
 .cell-solar {
-    font-size: clamp(10px, 3vw, 13px);   /* 大幅缩小 */
+    font-size: clamp(10px, 3vw, 13px);
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1.1;
     white-space: nowrap;
 }
 
-/* 农历 */
 .cell-lunar {
-    font-size: clamp(7px, 1.5vw, 9px);   /* 缩小 */
+    font-size: clamp(7px, 1.5vw, 9px);
     color: var(--text-muted);
     line-height: 1;
     white-space: nowrap;
     margin-top: 0;
 }
 
-/* 节日 */
 .cell-holiday {
-    font-size: clamp(6px, 1.2vw, 7px);   /* 缩小 */
+    font-size: clamp(6px, 1.2vw, 7px);
     font-weight: 600;
     color: var(--primary);
     line-height: 1;
@@ -496,11 +496,10 @@ img, svg { max-width: 100%; height: auto; }
     max-width: 100%;
 }
 
-/* 休字 */
 .cell-rest {
     position: absolute;
     top: 1px; right: 1px;
-    font-size: clamp(7px, 1.5vw, 9px);   /* 缩小 */
+    font-size: clamp(7px, 1.5vw, 9px);
     font-weight: 700;
     color: var(--primary);
     background: transparent;
@@ -508,7 +507,6 @@ img, svg { max-width: 100%; height: auto; }
     line-height: 1;
 }
 
-/* 今日高亮 */
 .calendar-cell.today {
     background: var(--primary);
     border-color: var(--primary);
@@ -520,6 +518,11 @@ img, svg { max-width: 100%; height: auto; }
 .calendar-cell.today .cell-holiday { color: rgba(255,255,255,0.85); }
 
 .calendar-cell.other-month { opacity: 0.2; }
+
+.calendar-cell.selected {
+    border-color: var(--primary);
+    background: rgba(26, 26, 26, 0.08);
+}
 
 /* 导航按钮 */
 .calendar-nav-btn {
@@ -577,14 +580,13 @@ img, svg { max-width: 100%; height: auto; }
     font-weight: 700;
 }
 
-/* 横向长方形卡片网格 */
+/* 卡片网格 */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 12px;
 }
 
-/* 卡片防止内容溢出 */
 .card-item {
     display: flex;
     flex-direction: row;
@@ -907,29 +909,27 @@ img, svg { max-width: 100%; height: auto; }
 }
 
 /* ========== 动画 ========== */
-@keyframes buttonBounce {
-    0% { transform: scale(1); }
-    50% { transform: scale(0.95); }
-    100% { transform: scale(1); }
-}
-@keyframes dropdownSlideIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
 @keyframes slideInRight {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
+
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 @keyframes modalPop {
     from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
     to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* ========== 响应式微调 ========== */
+/* ========== 响应式 ========== */
 @media (max-width: 600px) {
     .lang-selector { display: none; }
     .search-input { font-size: 12px; }
