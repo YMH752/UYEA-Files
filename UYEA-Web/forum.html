@@ -61,10 +61,6 @@
             </div>
             
             <div class="post-list" id="postList">
-                <div class="no-results show">
-                    <div class="no-results-icon">⏳</div>
-                    <div class="no-results-text">加载中...</div>
-                </div>
             </div>
             
             <div class="no-results" id="noResults">
@@ -74,37 +70,32 @@
         </div>
     </main>
 
-    <script src="/JS/script.js?v=0.2.0" defer></script>
+    <script src="/JS/config.js"></script>
+    <script src="/JS/script.js"></script>
     <script>
-        // 论坛帖子加载与搜索（增强版，含详细调试日志）
+        // 论坛帖子加载与搜索
         async function loadPosts() {
             const list = document.getElementById('postList');
             const noResults = document.getElementById('noResults');
             
-            console.log('开始加载帖子数据...');
+            // 显示加载中
+            list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:#999;"><div style="font-size:24px;margin-bottom:12px;">⏳</div><div>加载中...</div></div>';
             
             try {
-                // 显示加载中
-                list.innerHTML = '<div class="no-results show"><div class="no-results-icon">⏳</div><div class="no-results-text">加载中...</div></div>';
-                
-                const res = await fetch('/JSON/posts.json');
-                console.log('HTTP响应状态:', res.status, res.statusText);
+                const res = await fetch(UYEA_CONFIG.dataFiles.posts);
                 
                 if (!res.ok) {
-                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                    throw new Error(`HTTP ${res.status}: 帖子数据加载失败`);
                 }
                 
                 const posts = await res.json();
-                console.log('成功加载帖子数据:', posts);
-                console.log('帖子数量:', Array.isArray(posts) ? posts.length : '不是数组');
                 
                 if (!Array.isArray(posts) || posts.length === 0) {
                     throw new Error('无帖子数据');
                 }
                 
                 // 渲染帖子列表
-                list.innerHTML = posts.map((p, index) => {
-                    console.log(`渲染帖子 ${index + 1}:`, p.title);
+                list.innerHTML = posts.map((p) => {
                     return `
                         <a href="${p.url}" class="post-item">
                             <div class="post-meta">
@@ -118,7 +109,7 @@
                     `;
                 }).join('');
                 
-                console.log('✅ 帖子渲染完成');
+                console.log('✓ 帖子加载完成');
 
                 // 搜索功能
                 const searchInput = document.getElementById('forumSearchInput');
@@ -140,23 +131,22 @@
                 });
                 
             } catch (e) {
-                console.error('❌ 帖子加载失败:', e.message);
-                console.error('完整错误:', e);
-                
+                console.error('帖子加载失败:', e.message);
                 list.innerHTML = `
-                    <div class="no-results show">
-                        <div class="no-results-icon">⚠️</div>
-                        <div class="no-results-text">帖子数据加载失败: ${e.message}</div>
-                        <div style="font-size: 12px; margin-top: 10px; color: var(--text-muted); text-align: center;">
-                            请检查: /JSON/posts.json 文件是否存在<br/>
-                            错误详情请查看浏览器开发者工具 Console
+                    <div style="text-align:center;padding:40px 20px;">
+                        <div style="font-size:40px;margin-bottom:12px;">⚠️</div>
+                        <div style="color:#666;font-size:14px;margin-bottom:12px;">帖子数据加载失败</div>
+                        <div style="font-size:12px;color:#999;line-height:1.6;">
+                            错误: ${e.message}<br/>
+                            请检查网络连接或稍后重试<br/>
+                            <button onclick="location.reload()" style="margin-top:12px;padding:8px 16px;background:#1a1a1a;color:#fff;border:none;border-radius:6px;cursor:pointer;">刷新页面</button>
                         </div>
                     </div>
                 `;
             }
         }
         
-        // DOM加载完成后加载帖子
+        // 页面加载完成后加载帖子
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', loadPosts);
         } else {
