@@ -64,7 +64,7 @@
 
     <main class="main-content">
         <div class="content-wrapper">
-            <!-- 时钟日历区域 - 上下堆叠，充满宽度 -->
+            <!-- 时钟日历区域 -->
             <div class="clock-display" id="clockDisplay">
                 <!-- 时钟部分 -->
                 <div class="clock-left">
@@ -128,9 +128,10 @@
         </div>
     </div>
 
-    <!-- 脚本加载 -->
+    <!-- 脚本加载顺序：配置 → 农历库 → 通用脚本 → 日历脚本 -->
+    <script src="/JS/config.js?v=0.2.0"></script>
     <script src="/JS/lunar.js?v=0.2.0" defer></script>
-    <script src="/JS/calendar.js?v=0.2.0" defer></script>
     <script src="/JS/script.js?v=0.2.0" defer></script>
+    <script src="/JS/calendar.js?v=0.2.0" defer></script>
 </body>
 </html>
