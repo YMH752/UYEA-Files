@@ -10,8 +10,8 @@ const UYEA_CONFIG = {
     css: '/CSS/',
     js: '/JS/',
     json: '/JSON/',
-    icons: '/Image/Icons/',
-    images: '/Image/',
+    ico: '/IMAGE/ICO/',
+    images: '/IMAGE/',
   },
 
   // 远程资源
