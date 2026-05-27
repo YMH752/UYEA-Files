@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="悠野工作室(UYEA) - 开始探索，分享AI使用心得、工具作品和生活点滴">
+    <meta name="theme-color" content="#000000">
+    <title>开始探索 | UYEA</title>
+    
+    <link rel="stylesheet" href="/CSS/style.css?v=0.2.0">
+    <link rel="stylesheet" href="/CSS/landing.css?v=0.1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
+    
+    <style>
+        html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+    </style>
+</head>
+<body data-lang="zh-CN">
+    <header class="top-header">
+        <div class="header-container">
+            <div class="logo-section"><a href="index.html" class="logo-text">UYEA</a></div>
+            <div class="header-right">
+                <div class="lang-selector" id="langSelector">
+                    <div class="lang-highlight" id="langHighlight"></div>
+                    <button class="lang-btn active" data-lang="zh-CN">CN</button>
+                    <button class="lang-btn" data-lang="zh-TW">CN_HK</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+                <button class="search-icon-btn" id="searchIconBtn">🔍</button>
+                <div class="search-dropdown" id="searchDropdown">
+                    <div class="search-container">
+                        <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
+                            <button class="engine-trigger-btn" id="engineTriggerBtn"><span id="engineTriggerLabel">百度</span></button>
+                            <div class="engine-dropdown-list">
+                                <div class="engine-option-item" data-value="site">站内</div>
+                                <div class="engine-option-item selected" data-value="baidu">百度</div>
+                                <div class="engine-option-item" data-value="google">谷歌</div>
+                                <div class="engine-option-item" data-value="bing">必应</div>
+                            </div>
+                        </div>
+                        <input type="text" id="searchInput" class="search-input" placeholder="搜索导航...">
+                    </div>
+                </div>
+                <button class="menu-toggle" id="menuToggleBtn"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="dropdown-menu" id="dropdownMenu">
+        <nav class="menu-nav">
+            <a href="landing.html" class="menu-item active" data-i18n="nav.explore">开始探索</a>
+            <div class="menu-divider"></div>
+            <a href="index.html" class="menu-item" data-i18n="nav.home">网站导航</a>
+            <div class="menu-divider"></div>
+            <a href="tools.html" class="menu-item" data-i18n="nav.tools">线上工具</a>
+            <div class="menu-divider"></div>
+            <a href="forum.html" class="menu-item" data-i18n="nav.forum">悠野社区</a>
+        </nav>
+        <div class="menu-auth-section">
+            <button class="register-btn" onclick="alert('登录/注册功能开发中...')"><span data-i18n="btn.auth">登录/注册</span></button>
+        </div>
+    </div>
+
+    <main class="landing-main">
+        <div class="landing-hero">
+            <div class="hero-content">
+                <h1 class="hero-title" data-i18n="landing.title">开始探索</h1>
+            </div>
+        </div>
+
+        <div class="landing-blocks-container">
+            <div class="blocks-grid" id="blocksGrid">
+                <!-- 网站导航 -->
+                <a href="index.html" class="landing-block landing-block-enabled" data-block="navigation">
+                    <div class="block-inner">
+                        <div class="block-title" data-i18n="landing.nav_title">网站导航</div>
+                        <div class="block-subtitle" data-i18n="landing.nav_desc">分享实用网站</div>
+                        <div class="block-arrow">→</div>
+                    </div>
+                </a>
+
+                <!-- 线上工具 -->
+                <a href="tools.html" class="landing-block landing-block-enabled" data-block="tools">
+                    <div class="block-inner">
+                        <div class="block-title" data-i18n="landing.tools_title">线上工具</div>
+                        <div class="block-subtitle" data-i18n="landing.tools_desc">在线工具，提高效率</div>
+                        <div class="block-arrow">→</div>
+                    </div>
+                </a>
+
+                <!-- 社区论坛 -->
+                <a href="forum.html" class="landing-block landing-block-enabled" data-block="forum">
+                    <div class="block-inner">
+                        <div class="block-title" data-i18n="landing.forum_title">社区论坛</div>
+                        <div class="block-subtitle" data-i18n="landing.forum_desc">解答疑问，分享经验</div>
+                        <div class="block-arrow">→</div>
+                    </div>
+                </a>
+
+                <!-- 桌面宠物 -->
+                <button class="landing-block landing-block-disabled" data-block="pet" id="petBlock">
+                    <div class="block-inner">
+                        <div class="block-title" data-i18n="landing.pet_title">桌面宠物</div>
+                        <div class="block-subtitle" data-i18n="landing.pet_desc">增添趣味，放松身心</div>
+                        <div class="block-arrow">→</div>
+                    </div>
+                </button>
+
+                <!-- 实时聊天 -->
+                <button class="landing-block landing-block-disabled" data-block="chat" id="chatBlock">
+                    <div class="block-inner">
+                        <div class="block-title" data-i18n="landing.chat_title">实时聊天</div>
+                        <div class="block-subtitle" data-i18n="landing.chat_desc">随时随地，在线交流</div>
+                        <div class="block-arrow">→</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 开发中弹窗 -->
+    <div class="modal-overlay" id="devModalOverlay"></div>
+    <div class="modal-dev" id="devModal">
+        <div class="modal-dev-icon">🚀</div>
+        <div class="modal-dev-title" id="devModalTitle">功能开发中</div>
+        <div class="modal-dev-text" id="devModalText">敬请期待更新！</div>
+        <button class="modal-dev-btn" id="devModalCloseBtn">关闭</button>
+    </div>
+
+    <script src="/JS/config.js?v=0.2.0"></script>
+    <script src="/JS/script.js?v=0.2.0"></script>
+    <script src="/JS/landing.js?v=0.1.0"></script>
+</body>
+</html>
