@@ -1,0 +1,402 @@
+/* ============================================================
+   UYEA Landing Page · landing.css
+   响应式块卡片、动画过渡、背景图自适应
+   ============================================================ */
+
+/* ========== 页面容器 ========== */
+.landing-main {
+    width: 100%;
+    min-height: calc(100vh - var(--header-h));
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    animation: pageLoadFadeIn 0.6s ease-out;
+}
+
+/* 背景图自适应过渡 */
+@media (max-width: 1024px) {
+    .landing-main {
+        background-image: url('https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/JPG/Peter_Thomas(2-1).jpg');
+        background-position: center center;
+    }
+}
+
+@media (min-width: 1025px) {
+    .landing-main {
+        background-image: url('https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/JPG/Peter_Thomas(2-2).jpg');
+        background-position: center center;
+    }
+}
+
+/* ========== 英雄区域 ========== */
+.landing-hero {
+    position: relative;
+    height: 18vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    animation: slideDown 0.8s ease-out;
+}
+
+.hero-content {
+    text-align: center;
+    z-index: 3;
+}
+
+.hero-title {
+    font-size: clamp(28px, 8vw, 64px);
+    font-weight: 800;
+    color: white;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    letter-spacing: 0.05em;
+    margin: 0;
+    line-height: 1.2;
+    word-spacing: 0.2em;
+}
+
+/* ========== 块容器 ========== */
+.landing-blocks-container {
+    position: relative;
+    z-index: 3;
+    padding: clamp(20px, 5vw, 40px) clamp(10px, 3vw, 30px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+}
+
+.blocks-grid {
+    display: grid;
+    width: 100%;
+    max-width: 1400px;
+    gap: clamp(12px, 2vw, 24px);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* ========== 响应式断点 ========== */
+/* 移动端: <640px - 1列 */
+@media (max-width: 639px) {
+    .blocks-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 平板: 640px-1024px - 2列，最后一个占满 */
+@media (min-width: 640px) and (max-width: 1024px) {
+    .blocks-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .blocks-grid > :nth-last-child(1):nth-child(odd) {
+        grid-column: 1 / -1;
+    }
+}
+
+/* 桌面: >1024px - 5列 */
+@media (min-width: 1025px) {
+    .blocks-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* ========== 块卡片基础样式 ========== */
+.landing-block {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    padding: clamp(12px, 3vw, 24px);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: clamp(8px, 2vw, 16px);
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-align: left;
+}
+
+.landing-block:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.landing-block:active {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 启用状态 */
+.landing-block-enabled {
+    cursor: pointer;
+}
+
+.landing-block-enabled:active .block-inner {
+    animation: clickPulse 0.3s ease-out;
+}
+
+/* 禁用状态 */
+.landing-block-disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    border: none;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.landing-block-disabled:hover {
+    transform: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.landing-block-disabled:active {
+    transform: none;
+}
+
+/* ========== 块内容 ========== */
+.block-inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6px, 1.5vw, 12px);
+    position: relative;
+    z-index: 2;
+}
+
+.block-title {
+    font-size: clamp(16px, 3.5vw, 24px);
+    font-weight: 700;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.block-subtitle {
+    font-size: clamp(12px, 2.5vw, 16px);
+    font-weight: 500;
+    opacity: 0.85;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+.block-arrow {
+    margin-top: auto;
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 600;
+    opacity: 0.8;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.landing-block:hover .block-arrow {
+    transform: translateX(4px);
+    opacity: 1;
+}
+
+.landing-block-disabled .block-arrow {
+    opacity: 0.5;
+}
+
+/* ========== 页面加载动画 ========== */
+@keyframes pageLoadFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes blockStaggerIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes clickPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.98);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 块卡片级联加载 */
+.blocks-grid > :nth-child(1) {
+    animation: blockStaggerIn 0.5s ease-out 0.1s both;
+}
+
+.blocks-grid > :nth-child(2) {
+    animation: blockStaggerIn 0.5s ease-out 0.2s both;
+}
+
+.blocks-grid > :nth-child(3) {
+    animation: blockStaggerIn 0.5s ease-out 0.3s both;
+}
+
+.blocks-grid > :nth-child(4) {
+    animation: blockStaggerIn 0.5s ease-out 0.4s both;
+}
+
+.blocks-grid > :nth-child(5) {
+    animation: blockStaggerIn 0.5s ease-out 0.5s both;
+}
+
+/* ========== 开发中模态框 ========== */
+.modal-dev {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: min(90vw, 320px);
+    padding: 32px 24px;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    z-index: 10001;
+    text-align: center;
+    animation: modalPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid var(--border);
+}
+
+.modal-dev.show {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-dev-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    animation: rocketFloat 2s ease-in-out infinite;
+}
+
+.modal-dev-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.modal-dev-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.modal-dev-btn {
+    padding: 10px 24px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.modal-dev-btn:hover {
+    background: var(--accent-1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.modal-dev-btn:active {
+    transform: translateY(0);
+}
+
+/* ========== 模态框背景 ========== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.show {
+    display: block;
+}
+
+/* ========== 模态框动画 ========== */
+@keyframes modalPopIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes rocketFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ========== 背景过渡 ========== */
+.landing-main {
+    transition: background-image 0.6s ease-in-out;
+}
+
+/* ========== 打印与可访问性 ========== */
+@media print {
+    .landing-main { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
