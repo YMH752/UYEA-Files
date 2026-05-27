@@ -11,6 +11,7 @@ const UYEA_CONFIG = {
     js: '/JS/',
     json: '/JSON/',
     icons: '/Image/Icons/',
+    images: '/Image/',
   },
 
   // 远程资源
@@ -19,6 +20,8 @@ const UYEA_CONFIG = {
     iconBase: 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/Icons/',
     // 本地图标库备用（相对路径）
     iconBaseFallback: '/Image/Icons/',
+    // 背景图库
+    backgroundBase: 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/JPG/',
   },
 
   // API 配置
@@ -82,31 +85,67 @@ const UYEA_CONFIG = {
       'nav.home': '网站导航',
       'nav.tools': '线上工具',
       'nav.forum': '悠野社区',
+      'nav.explore': '开始探索',
       'btn.register': '注册',
       'btn.auth': '登录/注册',
       'section.ai': 'AI 智能体',
       'section.life': '生活',
-      'section.tools': '工具'
+      'section.tools': '工具',
+      'landing.title': '开始探索',
+      'landing.nav_title': '网站导航',
+      'landing.nav_desc': '分享实用网站',
+      'landing.tools_title': '线上工具',
+      'landing.tools_desc': '在线工具，提高效率',
+      'landing.forum_title': '社区论坛',
+      'landing.forum_desc': '解答疑问，分享经验',
+      'landing.pet_title': '桌面宠物',
+      'landing.pet_desc': '增添趣味，放松身心',
+      'landing.chat_title': '实时聊天',
+      'landing.chat_desc': '随时随地，在线交流'
     },
     'zh-TW': {
       'nav.home': '網站導航',
       'nav.tools': '線上工具',
       'nav.forum': '悠野社區',
+      'nav.explore': '開始探索',
       'btn.register': '註冊',
       'btn.auth': '登入/註冊',
       'section.ai': 'AI 智能體',
       'section.life': '生活',
-      'section.tools': '工具'
+      'section.tools': '工具',
+      'landing.title': '開始探索',
+      'landing.nav_title': '網站導航',
+      'landing.nav_desc': '分享實用網站',
+      'landing.tools_title': '線上工具',
+      'landing.tools_desc': '線上工具，提高效率',
+      'landing.forum_title': '社區論壇',
+      'landing.forum_desc': '解答疑問，分享經驗',
+      'landing.pet_title': '桌面寵物',
+      'landing.pet_desc': '增添趣味，放鬆身心',
+      'landing.chat_title': '實時聊天',
+      'landing.chat_desc': '隨時隨地，在線交流'
     },
     'en': {
       'nav.home': 'Navigation',
       'nav.tools': 'Tools',
       'nav.forum': 'Community',
+      'nav.explore': 'Explore',
       'btn.register': 'Register',
       'btn.auth': 'Sign In / Sign Up',
       'section.ai': 'AI Assistants',
       'section.life': 'Lifestyle',
-      'section.tools': 'Tools'
+      'section.tools': 'Tools',
+      'landing.title': 'Begin Exploring',
+      'landing.nav_title': 'Navigation',
+      'landing.nav_desc': 'Share useful websites',
+      'landing.tools_title': 'Online Tools',
+      'landing.tools_desc': 'Tools to boost productivity',
+      'landing.forum_title': 'Community Forum',
+      'landing.forum_desc': 'Q&A and experience sharing',
+      'landing.pet_title': 'Desktop Pet',
+      'landing.pet_desc': 'Add fun and relax',
+      'landing.chat_title': 'Live Chat',
+      'landing.chat_desc': 'Anytime, anywhere communication'
     }
   },
 
