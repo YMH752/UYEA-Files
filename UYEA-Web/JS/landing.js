@@ -156,8 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const mobileImg = new Image();
         const desktopImg = new Image();
 
-        mobileImg.src = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/JPG/Peter_Thomas(2-1).jpg';
-        desktopImg.src = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/JPG/Peter_Thomas(2-2).jpg';
+        mobileImg.src = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/IMAGE/JPG/Peter_Thomas(2-1).jpg';
+        desktopImg.src = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/IMAGE/JPG/Peter_Thomas(2-2).jpg';
 
         // 静默加载，不阻塞页面
         mobileImg.onerror = () => console.warn('移动端背景图加载失败');
