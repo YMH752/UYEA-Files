@@ -16,7 +16,7 @@
     <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
     
     <style>
-        html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+        html { font-family: 'Alibaba Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
     </style>
 </head>
 <body data-lang="zh-CN">
@@ -31,20 +31,6 @@
                     <button class="lang-btn" data-lang="en">EN</button>
                 </div>
                 <button class="search-icon-btn" id="searchIconBtn">🔍</button>
-                <div class="search-dropdown" id="searchDropdown">
-                    <div class="search-container">
-                        <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
-                            <button class="engine-trigger-btn" id="engineTriggerBtn"><span id="engineTriggerLabel">百度</span></button>
-                            <div class="engine-dropdown-list">
-                                <div class="engine-option-item" data-value="site">站内</div>
-                                <div class="engine-option-item selected" data-value="baidu">百度</div>
-                                <div class="engine-option-item" data-value="google">谷歌</div>
-                                <div class="engine-option-item" data-value="bing">必应</div>
-                            </div>
-                        </div>
-                        <input type="text" id="searchInput" class="search-input" placeholder="搜索导航...">
-                    </div>
-                </div>
                 <button class="menu-toggle" id="menuToggleBtn"><span></span><span></span><span></span></button>
             </div>
         </div>
@@ -85,23 +71,23 @@
                     </div>
                 </a>
 
-                <!-- 线上工具 -->
-                <a href="tools.html" class="landing-block landing-block-enabled" data-block="tools">
-                    <div class="block-inner">
-                        <div>
-                            <div class="block-title" data-i18n="landing.tools_title">线上工具</div>
-                            <div class="block-subtitle" data-i18n="landing.tools_desc">在线工具，提高效率</div>
-                        </div>
-                        <div class="block-arrow">→</div>
-                    </div>
-                </a>
-
                 <!-- 社区论坛 -->
                 <a href="forum.html" class="landing-block landing-block-enabled" data-block="forum">
                     <div class="block-inner">
                         <div>
                             <div class="block-title" data-i18n="landing.forum_title">社区论坛</div>
                             <div class="block-subtitle" data-i18n="landing.forum_desc">解答疑问，分享经验</div>
+                        </div>
+                        <div class="block-arrow">→</div>
+                    </div>
+                </a>
+
+                <!-- 线上工具 -->
+                <a href="tools.html" class="landing-block landing-block-enabled" data-block="tools">
+                    <div class="block-inner">
+                        <div>
+                            <div class="block-title" data-i18n="landing.tools_title">线上工具</div>
+                            <div class="block-subtitle" data-i18n="landing.tools_desc">在线工具，提高效率</div>
                         </div>
                         <div class="block-arrow">→</div>
                     </div>
