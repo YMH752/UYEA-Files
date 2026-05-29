@@ -1,50 +1,65 @@
 /* ============================================================
-   UYEA Landing Page · landing.css
-   响应式块卡片、动画过渡、背景图自适应
+   UYEA Landing Page · landing.css v0.2.0
+   PC 端 5 列横向 + 移动端 1 列竖向
+   字体：阿里巴巴普惠体
+   色彩：黑 #000000 + 橙红 #E69200 + 白 #FFFFFF
    ============================================================ */
 
+/* ========== CSS 变量定义 ========== */
+:root {
+    --color-black: #000000;
+    --color-orange: #E69200;
+    --color-white: #FFFFFF;
+    --color-text-dark: #212121;
+    --color-bg-light: #F5F5F5;
+    
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+    --spacing-2xl: 32px;
+    
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    
+    --header-h: 60px;
+    --transition-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 /* ========== 字体导入 ========== */
 @font-face {
     font-family: 'Alibaba Sans';
+    font-weight: 400;
     src: url('https://cdn.jsdelivr.net/gh/alibaba/AlibabaPuhuiTi@0/dist/AlibabaPuhuiTi-3-45-Regular.woff2') format('woff2');
-    font-weight: 400;
-}
-
-@font-face {
-    font-family: 'Alibaba Sans';
-    src: url('https://cdn.jsdelivr.net/gh/alibaba/AlibabaPuhuiTi@0/dist/AlibabaPuhuiTi-3-65-Bold.woff2') format('woff2');
-    font-weight: 700;
-}
-
-@font-face {
-    font-family: 'Alibaba Sans';
-    src: url('https://cdn.jsdelivr.net/gh/alibaba/AlibabaPuhuiTi@0/dist/AlibabaPuhuiTi-3-75-ExtraBold.woff2') format('woff2');
-    font-weight: 800;
-}
-
-/* ========== 字体导入 ========== */
-@font-face {
-    font-family: 'Alibaba Sans';
-    font-weight: 400;
-    src: url('https://fonts.alibabausercontent.com/AlibabaSans-Regular.woff2') format('woff2');
 }
 
 @font-face {
     font-family: 'Alibaba Sans';
     font-weight: 500;
-    src: url('https://fonts.alibabausercontent.com/AlibabaSans-Medium.woff2') format('woff2');
+    src: url('https://cdn.jsdelivr.net/gh/alibaba/AlibabaPuhuiTi@0/dist/AlibabaPuhuiTi-3-55-Medium.woff2') format('woff2');
 }
 
 @font-face {
     font-family: 'Alibaba Sans';
     font-weight: 700;
-    src: url('https://fonts.alibabausercontent.com/AlibabaSans-Bold.woff2') format('woff2');
+    src: url('https://cdn.jsdelivr.net/gh/alibaba/AlibabaPuhuiTi@0/dist/AlibabaPuhuiTi-3-65-Bold.woff2') format('woff2');
 }
 
 @font-face {
     font-family: 'Alibaba Sans';
     font-weight: 800;
-    src: url('https://fonts.alibabausercontent.com/AlibabaSans-ExtraBold.woff2') format('woff2');
+    src: url('https://cdn.jsdelivr.net/gh/alibaba/AlibabaPuhuiTi@0/dist/AlibabaPuhuiTi-3-75-ExtraBold.woff2') format('woff2');
+}
+
+/* ========== 全局样式 ========== */
+body {
+    font-family: 'Alibaba Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+    background-color: var(--color-bg-light);
+    color: var(--color-text-dark);
+    overflow-x: hidden;
+    line-height: 1.6;
 }
 
 /* ========== 页面容器 ========== */
@@ -58,10 +73,9 @@
     position: relative;
     overflow: hidden;
     animation: pageLoadFadeIn 0.6s ease-out;
-    font-family: 'Alibaba Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
-/* 背景图自适应过渡 */
+/* 背景图自适应 */
 @media (max-width: 1024px) {
     .landing-main {
         background-image: url('https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/IMAGE/JPG/Peter_Thomas(2-1).jpg');
@@ -79,13 +93,13 @@
 /* ========== 英雄区域 ========== */
 .landing-hero {
     position: relative;
-    height: 20vh;
+    padding: 40px 20px 20px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     z-index: 2;
     animation: slideDown 0.8s ease-out;
-    padding: 0 clamp(10px, 5vw, 40px);
+    min-height: 120px;
 }
 
 .hero-content {
@@ -95,9 +109,9 @@
 }
 
 .hero-title {
-    font-size: clamp(52px, 12vw, 72px);
+    font-size: clamp(40px, 8vw, 80px);
     font-weight: 800;
-    color: white;
+    color: var(--color-white);
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     letter-spacing: 0.05em;
     margin: 0;
@@ -111,72 +125,98 @@
 .landing-blocks-container {
     position: relative;
     z-index: 3;
-    padding: 40px 16px;
+    padding: 40px 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 70vh;
+    min-height: 60vh;
 }
 
 .blocks-grid {
     display: grid;
     width: 100%;
-    max-width: 90vw;
-    gap: 26px;
-    grid-template-columns: 1fr;
+    max-width: 100%;
+    gap: 16px;
+    grid-template-columns: repeat(5, 1fr);
 }
 
-/* ========== 响应式断点 - 所有断点都是1列 ========== */
-@media (max-width: 639px) {
+/* ========== 响应式断点 ========== */
+/* 移动端：≤768px - 1 列竖向 */
+@media (max-width: 768px) {
     .blocks-grid {
         grid-template-columns: 1fr;
-        gap: 26px;
+        gap: 20px;
+        max-width: 90vw;
+        margin: 0 auto;
     }
 }
 
-@media (min-width: 640px) and (max-width: 1024px) {
+/* 平板：769px-1024px - 2 列 */
+@media (min-width: 769px) and (max-width: 1024px) {
     .blocks-grid {
-        grid-template-columns: 1fr;
-        gap: 26px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        max-width: 95vw;
+        margin: 0 auto;
     }
 }
 
+/* PC 端：>1024px - 5 列 */
 @media (min-width: 1025px) {
     .blocks-grid {
-        grid-template-columns: 1fr;
-        gap: 26px;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+        max-width: 100%;
     }
 }
 
 /* ========== 块卡片基础样式 ========== */
 .landing-block {
     position: relative;
-    aspect-ratio: 5 / 1;
-    padding: 20px 32px;
+    aspect-ratio: auto;
+    min-height: 120px;
+    padding: 20px;
     background: rgba(0, 0, 0, 0.50);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
+    border-radius: 12px;
     color: white;
     text-decoration: none;
     cursor: pointer;
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: space-between;
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.3s var(--transition-easing);
     text-align: left;
 }
 
+/* PC 端卡片尺寸 */
+@media (min-width: 1025px) {
+    .landing-block {
+        min-height: 140px;
+        padding: 20px 18px;
+    }
+}
+
+/* 移动端卡片尺寸 */
+@media (max-width: 768px) {
+    .landing-block {
+        min-height: 110px;
+        padding: 16px;
+    }
+}
+
 .landing-block:hover {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
     border-color: rgba(255, 255, 255, 0.3);
     background: rgba(0, 0, 0, 0.6);
 }
 
 .landing-block:active {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -207,46 +247,40 @@
     transform: none;
 }
 
-/* ========== 块内容 ========== */
+/* ========== 块内容布局 ========== */
 .block-inner {
     width: 100%;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    flex-direction: column;
+    gap: 6px;
     position: relative;
     z-index: 2;
 }
 
-.block-inner > :first-child {
-    flex: 1;
-    min-width: 0;
-}
-
 .block-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.3;
     word-break: break-word;
+    margin: 0;
 }
 
 .block-subtitle {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     opacity: 0.85;
     line-height: 1.3;
     word-break: break-word;
-    margin-top: 4px;
+    margin: 0;
 }
 
 .block-arrow {
-    margin-top: 0;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
     opacity: 0.9;
     transition: transform 0.3s ease, opacity 0.3s ease;
-    flex-shrink: 0;
+    align-self: flex-end;
+    margin-top: auto;
 }
 
 .landing-block:hover .block-arrow {
@@ -258,7 +292,7 @@
     opacity: 0.5;
 }
 
-/* ========== 页面加载动画 ========== */
+/* ========== 动画定义 ========== */
 @keyframes pageLoadFadeIn {
     from {
         opacity: 0;
@@ -302,113 +336,6 @@
     }
 }
 
-/* 块卡片级联加载 */
-.blocks-grid > :nth-child(1) {
-    animation: blockStaggerIn 0.5s ease-out 0.1s both;
-}
-
-.blocks-grid > :nth-child(2) {
-    animation: blockStaggerIn 0.5s ease-out 0.2s both;
-}
-
-.blocks-grid > :nth-child(3) {
-    animation: blockStaggerIn 0.5s ease-out 0.3s both;
-}
-
-.blocks-grid > :nth-child(4) {
-    animation: blockStaggerIn 0.5s ease-out 0.4s both;
-}
-
-.blocks-grid > :nth-child(5) {
-    animation: blockStaggerIn 0.5s ease-out 0.5s both;
-}
-
-/* ========== 开发中模态框 ========== */
-.modal-dev {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.95);
-    width: min(90vw, 320px);
-    padding: 32px 24px;
-    background: var(--surface);
-    border-radius: 16px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    z-index: 10001;
-    text-align: center;
-    animation: modalPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    border: 1px solid var(--border);
-}
-
-.modal-dev.show {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-dev-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-    animation: rocketFloat 2s ease-in-out infinite;
-}
-
-.modal-dev-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-}
-
-.modal-dev-text {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: 24px;
-    line-height: 1.5;
-}
-
-.modal-dev-btn {
-    padding: 10px 24px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-}
-
-.modal-dev-btn:hover {
-    background: var(--accent-1);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.modal-dev-btn:active {
-    transform: translateY(0);
-}
-
-/* ========== 模态框背景 ========== */
-.modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 10000;
-    animation: fadeIn 0.3s ease;
-}
-
-.modal-overlay.show {
-    display: block;
-}
-
-/* ========== 模态框动画 ========== */
 @keyframes modalPopIn {
     from {
         opacity: 0;
@@ -447,6 +374,112 @@
     }
 }
 
+/* 块卡片级联加载 */
+.blocks-grid > :nth-child(1) {
+    animation: blockStaggerIn 0.5s ease-out 0.1s both;
+}
+
+.blocks-grid > :nth-child(2) {
+    animation: blockStaggerIn 0.5s ease-out 0.2s both;
+}
+
+.blocks-grid > :nth-child(3) {
+    animation: blockStaggerIn 0.5s ease-out 0.3s both;
+}
+
+.blocks-grid > :nth-child(4) {
+    animation: blockStaggerIn 0.5s ease-out 0.4s both;
+}
+
+.blocks-grid > :nth-child(5) {
+    animation: blockStaggerIn 0.5s ease-out 0.5s both;
+}
+
+/* ========== 开发中模态框 ========== */
+.modal-dev {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: min(90vw, 320px);
+    padding: 32px 24px;
+    background: var(--color-white);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    z-index: 10001;
+    text-align: center;
+    animation: modalPopIn 0.4s var(--transition-easing);
+    border: 1px solid #E0E0E0;
+}
+
+.modal-dev.show {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-dev-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    animation: rocketFloat 2s ease-in-out infinite;
+}
+
+.modal-dev-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 8px;
+}
+
+.modal-dev-text {
+    font-size: 14px;
+    color: var(--color-text-dark);
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.modal-dev-btn {
+    padding: 10px 24px;
+    background: var(--color-orange);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.modal-dev-btn:hover {
+    background: #D47F00;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(230, 146, 0, 0.3);
+}
+
+.modal-dev-btn:active {
+    transform: translateY(0);
+}
+
+/* ========== 模态框背景 ========== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.show {
+    display: block;
+}
+
 /* ========== 背景过渡 ========== */
 .landing-main {
     transition: background-image 0.6s ease-in-out;
@@ -454,7 +487,9 @@
 
 /* ========== 打印与可访问性 ========== */
 @media print {
-    .landing-main { display: none !important; }
+    .landing-main {
+        display: none !important;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
