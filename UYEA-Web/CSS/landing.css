@@ -109,7 +109,7 @@ body {
     display: flex;
     align-items: center;
     background: var(--color-orange);
-    border-radius: 48px;
+    border-radius: 28px;
     padding: 6px;
     gap: 0;
     position: relative;
@@ -141,7 +141,7 @@ body {
     opacity: 0.9;
 }
 
-/* 搜索和用户按钮 - 放大 */
+/* 搜索和用户按钮 - 放大并增加视觉重量 */
 .landing-search-btn,
 .landing-user-btn {
     width: 44px;
@@ -149,12 +149,15 @@ body {
     border: none;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 8px;
-    font-size: 22px;
+    font-size: 28px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: 900;
+    line-height: 1;
+    padding: 0;
 }
 
 .landing-search-btn:hover,
@@ -544,9 +547,9 @@ body {
     
     .landing-search-btn,
     .landing-user-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 18px;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
     }
 }
 
