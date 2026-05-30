@@ -69,7 +69,7 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 70px;
+    height: 60px;
     background: transparent;
     backdrop-filter: none;
     border-bottom: none;
@@ -83,19 +83,18 @@ body {
     width: 100%;
     max-width: 100%;
     height: 100%;
-    padding: 0 30px;
+    padding: 0 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-/* LOGO - 放大 */
+/* LOGO - 精确复刻 */
 .landing-logo {
-    font-size: 36px;
-    font-weight: 800;
+    font-size: 32px;
+    font-weight: 600;
     color: var(--color-white);
-    letter-spacing: 3px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
 }
 
 .landing-header-right {
@@ -104,28 +103,28 @@ body {
     gap: 24px;
 }
 
-/* 语言选择器 - 橙色胶囊容器 */
+/* 语言选择器 - 橙色胶囊容器（精确复刻） */
 .landing-lang-selector {
     display: flex;
     align-items: center;
     background: var(--color-orange);
-    border-radius: 28px;
-    padding: 6px;
+    border-radius: 20px;
+    padding: 4px;
     gap: 0;
     position: relative;
     width: auto;
 }
 
 .landing-lang-item {
-    padding: 10px 20px;
+    padding: 8px 16px;
     border: none;
     background: transparent;
     color: var(--color-white);
-    font-weight: 700;
-    font-size: 14px;
+    font-weight: 600;
+    font-size: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
-    border-radius: 20px;
+    border-radius: 16px;
     position: relative;
     z-index: 2;
 }
@@ -141,28 +140,28 @@ body {
     opacity: 0.9;
 }
 
-/* 搜索和用户按钮 - 放大并增加视觉重量 */
+/* 搜索和用户按钮 - 精确复刻 */
 .landing-search-btn,
 .landing-user-btn {
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
     border: none;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--color-white);
     border-radius: 8px;
-    font-size: 28px;
+    font-size: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 900;
+    font-weight: 600;
     line-height: 1;
     padding: 0;
 }
 
 .landing-search-btn:hover,
 .landing-user-btn:hover {
-    background: var(--color-white);
+    background: rgba(255, 255, 255, 0.95);
 }
 
 /* ========== 主页面容器 ========== */
@@ -175,7 +174,7 @@ body {
     background-repeat: no-repeat;
     position: relative;
     overflow: hidden;
-    padding-top: 70px;
+    padding-top: 60px;
 }
 
 /* 背景图自适应 - 纪念碑谷高对比 */
@@ -195,14 +194,14 @@ body {
     }
 }
 
-/* ========== 时钟/日期区域 - 深灰字体、放大 ========== */
+/* ========== 时钟/日期区域 - 深灰字体、精确复刻 ========== */
 .landing-clock-section {
-    padding-top: 80px;
-    padding-bottom: 40px;
+    padding-top: 60px;
+    padding-bottom: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 280px;
+    min-height: 220px;
 }
 
 .landing-clock-display {
@@ -211,37 +210,37 @@ body {
 }
 
 .landing-time {
-    font-size: 160px;
+    font-size: 120px;
     font-weight: 800;
     color: var(--color-dark-gray);
     line-height: 1;
     margin: 0;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    text-shadow: none;
     letter-spacing: 2px;
 }
 
 .landing-date {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--color-medium-gray);
-    margin-top: 12px;
+    margin-top: 8px;
     letter-spacing: 0.5px;
 }
 
 /* 移动端时钟调整 */
 @media (max-width: 768px) {
     .landing-clock-section {
-        min-height: 200px;
-        padding-top: 60px;
-        padding-bottom: 30px;
+        min-height: 180px;
+        padding-top: 50px;
+        padding-bottom: 25px;
     }
     
     .landing-time {
-        font-size: 100px;
+        font-size: 80px;
     }
     
     .landing-date {
-        font-size: 16px;
+        font-size: 14px;
     }
 }
 
@@ -249,7 +248,7 @@ body {
 .landing-cards-container {
     position: relative;
     z-index: 3;
-    padding: 0 30px 80px;
+    padding: 0 24px 60px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -535,21 +534,21 @@ body {
     }
     
     .landing-lang-selector {
-        border-radius: 24px;
-        padding: 4px;
+        border-radius: 18px;
+        padding: 3px;
     }
     
     .landing-lang-item {
-        padding: 8px 14px;
-        font-size: 12px;
-        border-radius: 18px;
+        padding: 6px 12px;
+        font-size: 11px;
+        border-radius: 14px;
     }
     
     .landing-search-btn,
     .landing-user-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 24px;
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
     }
 }
 
