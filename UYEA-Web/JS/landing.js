@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * 监听语言切换，更新日期显示
      */
-    const langButtons = document.querySelectorAll('.landing-lang-btn');
+    const langButtons = document.querySelectorAll('.landing-lang-item');
     
     langButtons.forEach(btn => {
         btn.addEventListener('click', () => {
