@@ -104,34 +104,41 @@ body {
     gap: 24px;
 }
 
-/* 语言选择器 - 放大 */
-.landing-lang-group {
+/* 语言选择器 - 橙色胶囊容器 */
+.landing-lang-selector {
     display: flex;
+    align-items: center;
+    background: var(--color-orange);
+    border-radius: 28px;
+    padding: 6px;
     gap: 0;
-    background: transparent;
-    border-radius: 8px;
-    border: none;
-    overflow: hidden;
+    position: relative;
+    width: auto;
 }
 
-.landing-lang-btn {
-    padding: 10px 18px;
+.landing-lang-item {
+    padding: 10px 20px;
     border: none;
-    background: var(--color-white);
-    color: var(--color-black);
+    background: transparent;
+    color: var(--color-white);
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
+    border-radius: 20px;
+    position: relative;
+    z-index: 2;
 }
 
-.landing-lang-btn.active {
-    background: var(--color-orange);
-    color: var(--color-white);
+/* 活跃状态 - 白色圆角矩形背景 */
+.landing-lang-item.active {
+    background: var(--color-white);
+    color: var(--color-black);
+    box-shadow: none;
 }
 
-.landing-lang-btn:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.95);
+.landing-lang-item:hover:not(.active) {
+    opacity: 0.9;
 }
 
 /* 搜索和用户按钮 - 放大 */
@@ -522,6 +529,17 @@ body {
     .landing-lang-btn {
         padding: 8px 12px;
         font-size: 12px;
+    }
+    
+    .landing-lang-selector {
+        border-radius: 24px;
+        padding: 4px;
+    }
+    
+    .landing-lang-item {
+        padding: 8px 14px;
+        font-size: 12px;
+        border-radius: 18px;
     }
     
     .landing-search-btn,
