@@ -92,9 +92,11 @@ body {
 /* LOGO - 精确复刻 */
 .landing-logo {
     font-size: 32px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--color-white);
     letter-spacing: 2px;
+    font-family: 'Alibaba Sans', inherit;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .landing-header-right {
@@ -248,7 +250,7 @@ body {
 .landing-cards-container {
     position: relative;
     z-index: 3;
-    padding: 0 24px 60px;
+    padding: 40px 24px 60px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -349,7 +351,7 @@ body {
 }
 
 .landing-card-title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
     line-height: 1.3;
     margin: 0;
@@ -357,7 +359,7 @@ body {
 }
 
 .landing-card-desc {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     opacity: 0.85;
     line-height: 1.3;
