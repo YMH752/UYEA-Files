@@ -218,7 +218,7 @@ body {
     position: relative;
 }
 
-/* ========== 液态玻璃数字时钟 - 极简版 ========== */
+/* ========== iOS 26 液态玻璃数字时钟 ========== */
 
 .landing-time {
     font-size: 120px;
@@ -227,15 +227,14 @@ body {
     margin: 0;
     letter-spacing: 2px;
     
-    /* 核心：半透明白色，背景风景自然透过数字 */
-    color: rgba(255, 255, 255, 0.82);
+    /* 半透明白色填充：背景风景自然透过数字笔画 */
+    color: rgba(255, 255, 255, 0.78);
     
-    /* 轻微背景模糊，让透过的背景柔和 */
-    backdrop-filter: blur(4px) saturate(120%);
-    -webkit-backdrop-filter: blur(4px) saturate(120%);
+    /* 整体体积投影：基于文字 alpha 形状的柔和阴影，模拟玻璃厚度 */
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.22));
     
-    /* 极简阴影：仅一层，模拟玻璃厚度与主光源 */
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    /* 顶部内高光：模拟玻璃表面主光源反射（菲涅尔效应） */
+    text-shadow: 0 -2px 3px rgba(255, 255, 255, 0.5);
 }
 
 /* 日期 - 同风格，比例缩小 */
@@ -245,10 +244,9 @@ body {
     margin-top: 12px;
     letter-spacing: 0.5px;
     
-    color: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(3px) saturate(110%);
-    -webkit-backdrop-filter: blur(3px) saturate(110%);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    color: rgba(255, 255, 255, 0.72);
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.18));
+    text-shadow: 0 -1px 2px rgba(255, 255, 255, 0.4);
 }
 
 /* 移动端时钟调整 */
@@ -261,16 +259,14 @@ body {
     
     .landing-time {
         font-size: 80px;
-        backdrop-filter: blur(3px) saturate(110%);
-        -webkit-backdrop-filter: blur(3px) saturate(110%);
-        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+        filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.2));
+        text-shadow: 0 -1px 2px rgba(255, 255, 255, 0.45);
     }
     
     .landing-date {
         font-size: 14px;
-        backdrop-filter: blur(2px) saturate(100%);
-        -webkit-backdrop-filter: blur(2px) saturate(100%);
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+        text-shadow: 0 -1px 1px rgba(255, 255, 255, 0.35);
     }
 }
 
