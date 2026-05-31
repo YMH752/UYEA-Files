@@ -625,3 +625,36 @@ body {
         transition-duration: 0.01ms !important;
     }
 }
+
+
+/* ===== SVG Icons ===== */
+
+.landing-search-icon{
+    width:20px;
+    height:20px;
+    display:block;
+}
+
+.landing-search-icon circle,
+.landing-search-icon line{
+    stroke:rgba(255,255,255,.95);
+    stroke-width:2.5;
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.landing-user-icon{
+    width:24px;
+    height:24px;
+    display:block;
+}
+
+.landing-user-icon circle,
+.landing-user-icon path{
+    stroke:rgba(255,255,255,.95);
+    stroke-width:2.8;
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
