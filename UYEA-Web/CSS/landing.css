@@ -332,9 +332,9 @@ body {
     
     /* 高级毛玻璃效果 */
     background: linear-gradient(
-      180deg,
-      rgba(35,35,35,0.30),
-      rgba(20,20,20,0.18)
+        180deg,
+        rgba(35, 35, 35, 0.30),
+        rgba(20, 20, 20, 0.18)
     );
     backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
@@ -375,14 +375,15 @@ body {
 
 /* 禁用状态 - 更明显的禁用表现 */
 .landing-card-disabled {
-    opacity: 1;
+    opacity: 0.45;
     cursor: not-allowed;
     background: linear-gradient(
         180deg,
-        rgba(35, 35, 35, 0.30),
-        rgba(20, 20, 20, 0.18)
+        rgba(255, 255, 255, 0.06),
+        rgba(255, 255, 255, 0.01)
     );
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+}
 
 .landing-card-disabled:hover {
     transform: none;
