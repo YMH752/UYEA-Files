@@ -216,6 +216,13 @@ body {
     text-align: center;
     z-index: 2;
     position: relative;
+    background: rgba(0, 0, 0, 0.50);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 30px 60px;
+    border-radius: 16px;
+    display: inline-block;
+    margin: 0 auto;
 }
 
 .landing-time {
@@ -238,14 +245,6 @@ body {
         inset -1px -1px 4px rgba(255, 255, 255, 0.3),
         /* 内阴影：轻微深度 */
         inset 0 -4px 8px rgba(0, 0, 0, 0.08);
-    
-    /* 背景穿透 + 烟灰色调 */
-    backdrop-filter: blur(2.5px);
-    -webkit-backdrop-filter: blur(2.5px);
-    background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.06) 0%,
-        rgba(200, 200, 210, 0.03) 50%,
-        rgba(100, 100, 110, 0.04) 100%);
     
     /* 应用高级玻璃滤镜 */
     filter: url(#premiumGlass);
@@ -273,14 +272,6 @@ body {
         /* 内阴影 */
         inset 0 -2px 4px rgba(0, 0, 0, 0.06);
     
-    /* 背景穿透 */
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    background: linear-gradient(135deg,
-        rgba(255, 255, 255, 0.05) 0%,
-        rgba(200, 200, 210, 0.02) 50%,
-        rgba(100, 100, 110, 0.03) 100%);
-    
     /* 应用玻璃滤镜 */
     filter: url(#premiumGlass);
     
@@ -296,16 +287,20 @@ body {
         padding-bottom: 25px;
     }
     
+    .landing-clock-display {
+        background: rgba(0, 0, 0, 0.50);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 20px 40px;
+        border-radius: 12px;
+    }
+    
     .landing-time {
         font-size: 80px;
-        backdrop-filter: blur(1.8px);
-        -webkit-backdrop-filter: blur(1.8px);
     }
     
     .landing-date {
         font-size: 14px;
-        backdrop-filter: blur(1.5px);
-        -webkit-backdrop-filter: blur(1.5px);
     }
 }
 
