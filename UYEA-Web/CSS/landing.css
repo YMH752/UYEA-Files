@@ -218,7 +218,7 @@ body {
     position: relative;
 }
 
-/* ========== 液态玻璃数字时钟 - 微调厚度反光 ========== */
+/* ========== 液态玻璃数字时钟 - 极淡厚度阴影 ========== */
 
 .landing-time {
     font-size: 120px;
@@ -229,10 +229,10 @@ body {
     
     color: rgba(255, 255, 255, 0.72);
     
-    /* 阴影调小：更微妙的玻璃厚度感 */
+    /* 极淡厚度光影：白色迎光面 + 几乎不可见的深色背光面 */
     text-shadow:
-        -2px -1px 4px rgba(255, 255, 255, 0.25),
-        2px 2px 5px rgba(0, 10, 30, 0.18);
+        -1px -1px 3px rgba(255, 255, 255, 0.28),
+        1px 1px 4px rgba(0, 10, 30, 0.12);
     
     filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
 }
@@ -246,8 +246,8 @@ body {
     
     color: rgba(255, 255, 255, 0.78);
     text-shadow:
-        -1px -1px 3px rgba(255, 255, 255, 0.22),
-        1px 1px 3px rgba(0, 10, 30, 0.15);
+        -1px 0 2px rgba(255, 255, 255, 0.25),
+        1px 1px 3px rgba(0, 10, 30, 0.1);
     filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
 }
 
@@ -263,8 +263,8 @@ body {
         font-size: 80px;
         color: rgba(255, 255, 255, 0.75);
         text-shadow:
-            -1px -1px 3px rgba(255, 255, 255, 0.22),
-            1px 1px 4px rgba(0, 10, 30, 0.15);
+            -1px 0 2px rgba(255, 255, 255, 0.25),
+            1px 1px 3px rgba(0, 10, 30, 0.1);
         filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4));
     }
     
@@ -272,8 +272,8 @@ body {
         font-size: 14px;
         color: rgba(255, 255, 255, 0.8);
         text-shadow:
-            -1px 0 2px rgba(255, 255, 255, 0.2),
-            1px 1px 2px rgba(0, 10, 30, 0.12);
+            0 0 2px rgba(255, 255, 255, 0.2),
+            1px 1px 2px rgba(0, 10, 30, 0.08);
         filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
     }
 }
