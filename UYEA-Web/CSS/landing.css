@@ -95,7 +95,7 @@ body {
     justify-content: space-between;
 }
 
-/* LOGO - 最粗字重，移动端与PC一致 */
+/* LOGO - 900字重 + 双重加粗 */
 .landing-logo {
     font-size: 32px;
     font-weight: 900;
@@ -103,6 +103,7 @@ body {
     letter-spacing: 2px;
     font-family: 'Alibaba Sans', inherit;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
 }
 
 .landing-header-right {
