@@ -1,6 +1,6 @@
 /* ============================================================
-   UYEA Landing Page · landing.css v0.3.0
-   严格按参考图复刻：顶部透明 + 元素放大 + 卡片厚重 + 时间深灰
+   UYEA Landing Page · landing.css v0.4.0
+   完整版：所有卡片 + 语言切换 + 时钟 + 导航
    ============================================================ */
 
 /* ========== CSS 变量定义 ========== */
@@ -45,6 +45,12 @@
     src: url('https://cdn.jsdelivr.net/gh/alibaba/AlibabaPuhuiTi@0/dist/AlibabaPuhuiTi-3-75-ExtraBold.woff2') format('woff2');
 }
 
+@font-face {
+    font-family: 'Alibaba Sans';
+    font-weight: 900;
+    src: url('https://cdn.jsdelivr.net/gh/alibaba/AlibabaPuhuiTi@0/dist/AlibabaPuhuiTi-3-75-ExtraBold.woff2') format('woff2');
+}
+
 /* ========== 全局样式 ========== */
 * {
     font-family: 'Alibaba Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -63,7 +69,7 @@ body {
     overflow-x: hidden;
 }
 
-/* ========== 顶部导航栏 - 完全透明 ========== */
+/* ========== 顶部导航栏 ========== */
 .landing-header {
     position: fixed;
     top: 0;
@@ -89,7 +95,7 @@ body {
     justify-content: space-between;
 }
 
-/* LOGO - 精确复刻 */
+/* LOGO */
 .landing-logo {
     font-size: 32px;
     font-weight: 700;
@@ -102,12 +108,12 @@ body {
 .landing-header-right {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 16px;
 }
 
-/* 语言选择器 - 橙色胶囊容器（精确复刻） */
+/* ========== 语言选择器 - 橙色胶囊 ========== */
 .landing-lang-selector {
-    display: flex !important;
+    display: flex;
     align-items: center;
     background: var(--color-orange);
     border-radius: 20px;
@@ -115,8 +121,6 @@ body {
     gap: 0;
     position: relative;
     width: auto;
-    z-index: 100;
-    visibility: visible;
 }
 
 .landing-lang-item {
@@ -144,7 +148,7 @@ body {
     opacity: 0.9;
 }
 
-/* 搜索和用户按钮 - 精确复刻 */
+/* 搜索和用户按钮 */
 .landing-search-btn,
 .landing-user-btn {
     width: 36px;
@@ -181,7 +185,7 @@ body {
     padding-top: 60px;
 }
 
-/* 背景图自适应 - 纪念碑谷高对比 */
+/* 背景图自适应 */
 @media (max-width: 1024px) {
     .landing-main {
         background-image: url('https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/IMAGE/JPG/Peter_Thomas(2-1).jpg');
@@ -198,7 +202,7 @@ body {
     }
 }
 
-/* ========== 时钟/日期区域 - 深灰字体、精确复刻 ========== */
+/* ========== 时钟/日期区域 ========== */
 .landing-clock-section {
     padding-top: 60px;
     padding-bottom: 30px;
@@ -216,19 +220,29 @@ body {
 .landing-time {
     font-size: 120px;
     font-weight: 800;
-    color: var(--color-dark-gray);
+    color: #333333;
     line-height: 1;
     margin: 0;
     text-shadow: none;
     letter-spacing: 2px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 20px 40px;
+    border-radius: 16px;
+    display: inline-block;
 }
 
 .landing-date {
     font-size: 18px;
     font-weight: 600;
-    color: var(--color-medium-gray);
-    margin-top: 8px;
+    color: #555555;
+    margin-top: 12px;
     letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(8px);
+    padding: 8px 20px;
+    border-radius: 12px;
+    display: inline-block;
 }
 
 /* 移动端时钟调整 */
@@ -241,10 +255,14 @@ body {
     
     .landing-time {
         font-size: 80px;
+        padding: 15px 30px;
+        border-radius: 12px;
     }
     
     .landing-date {
         font-size: 14px;
+        padding: 6px 16px;
+        border-radius: 10px;
     }
 }
 
@@ -266,7 +284,7 @@ body {
     max-width: 1360px;
 }
 
-/* ========== 响应式断点 ========== */
+/* 响应式断点 */
 @media (max-width: 768px) {
     .landing-cards-grid {
         grid-template-columns: 1fr;
@@ -285,7 +303,7 @@ body {
     }
 }
 
-/* ========== 卡片 - 厚重半透明黑色背景、低毛玻璃 ========== */
+/* ========== 卡片基础样式 ========== */
 .landing-card {
     position: relative;
     aspect-ratio: 1 / 1;
@@ -344,7 +362,7 @@ body {
     }
 }
 
-/* ========== 卡片内容 ========== */
+/* ========== 卡片内容 - 大字体 ========== */
 .landing-card-content {
     flex: 1;
     display: flex;
@@ -532,11 +550,6 @@ body {
     
     .landing-header-right {
         gap: 12px;
-    }
-    
-    .landing-lang-btn {
-        padding: 8px 12px;
-        font-size: 12px;
     }
     
     .landing-lang-selector {
