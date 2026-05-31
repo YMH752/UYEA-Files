@@ -20,35 +20,47 @@
     </style>
 </head>
 <body data-lang="zh-CN">
-    <!-- Advanced Glassmorphism Filter (Apple VisionOS Inspired) -->
+    <!-- 液态玻璃滤镜定义 -->
     <svg style="display: none; position: absolute;">
         <defs>
-            <!-- 玻璃数字滤镜 - 仅作用于数字形状内部 -->
-            <filter id="glassDigits">
-                <!-- 柔和的背景模糊 -->
-                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+            <!-- 液态玻璃滤镜：折射扭曲 + 高光 + 边缘光 -->
+            <filter id="liquidGlass" x="-30%" y="-30%" width="160%" height="160%">
+                <!-- 1. 提取文字形状 -->
+                <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="alphaBlur"/>
                 
-                <!-- 亮度和对比度调整 -->
-                <feComponentTransfer in="blur">
-                    <feFuncR type="linear" slope="0.95" intercept="0.05" />
-                    <feFuncG type="linear" slope="0.95" intercept="0.05" />
-                    <feFuncB type="linear" slope="0.95" intercept="0.05" />
-                    <feFuncA type="linear" slope="1" />
-                </feComponentTransfer>
+                <!-- 2. 液态扭曲：噪声位移模拟玻璃表面不平整 -->
+                <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" seed="5" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
                 
-                <!-- 高光效果 -->
-                <feSpecularLighting surfaceScale="4" specularConstant="0.3" lighting-color="#ffffff" in="SourceAlpha" result="spec">
-                    <fePointLight x="-5000" y="-10000" z="10000" />
+                <!-- 3. 玻璃色调：冷白偏蓝，提升亮度与透明度 -->
+                <feColorMatrix in="displaced" type="matrix"
+                    values="1.08 0 0 0 0.06
+                            0 1.08 0 0 0.06
+                            0 0 1.12 0 0.09
+                            0 0 0 0.82 0" result="tinted"/>
+                
+                <!-- 4. 顶部高光：模拟主光源 -->
+                <feSpecularLighting in="alphaBlur" surfaceScale="3" specularConstant="1.2" 
+                    specularExponent="35" lighting-color="#ffffff" result="specular">
+                    <fePointLight x="-250" y="-350" z="450"/>
                 </feSpecularLighting>
+                <feComposite in="specular" in2="alphaBlur" operator="in" result="specularMask"/>
                 
-                <!-- 混合高光 -->
-                <feComposite in="SourceGraphic" in2="spec" operator="arithmetic" k1="0" k2="0.5" k3="0.3" k4="0" />
+                <!-- 5. 边缘发光：玻璃厚度边缘的散射光 -->
+                <feGaussianBlur in="alphaBlur" stdDeviation="5" result="edgeBlur"/>
+                <feComposite in="edgeBlur" in2="alphaBlur" operator="out" result="edgeRing"/>
+                <feColorMatrix in="edgeRing" type="matrix"
+                    values="0 0 0 0 1
+                            0 0 0 0 1
+                            0 0 0 0 1
+                            0 0 0 0.55 0" result="edgeGlow"/>
+                
+                <!-- 6. 合成：玻璃底色 + 高光 + 边缘光 -->
+                <feComposite in="specularMask" in2="tinted" operator="arithmetic" 
+                    k1="0" k2="0.35" k3="0.9" k4="0" result="layer1"/>
+                <feComposite in="edgeGlow" in2="layer1" operator="arithmetic"
+                    k1="0" k2="0.25" k3="1" k4="0" result="final"/>
             </filter>
-            
-            <!-- 文字遮罩 - 仅在数字形状内显示 -->
-            <mask id="digitMask">
-                <rect width="100%" height="100%" fill="white" />
-            </mask>
         </defs>
     </svg>
     <!-- 顶部导航栏 -->
