@@ -1,13 +1,14 @@
 /**
- * UYEA Landing Page - landing.js v0.2.0
+ * UYEA Landing Page - landing.js v0.3.0（优化版）
  * 时钟/日期实时显示 + 卡片交互 + 开发中弹窗
+ * Apple + Nothing + Linear 风格
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     // ==================== 时钟/日期实时显示 ====================
     
     /**
-     * 周数映射（中文）
+     * 周数映射（多语言）
      */
     const weekdaysCN = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
     const weekdaysTW = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
@@ -138,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // 延迟导航以展示动画
                     setTimeout(() => {
                         window.location.href = card.href;
-                    }, 300);
+                    }, 200);
                     
                     e.preventDefault();
                 }
@@ -233,8 +234,29 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 更新时钟显示
             updateClock();
+            
+            // 保存语言偏好到 localStorage
+            try {
+                localStorage.setItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language), lang);
+            } catch (e) {
+                console.warn('localStorage unavailable:', e.message);
+            }
         });
     });
+    
+    // 恢复上次选择的语言
+    try {
+        const savedLang = localStorage.getItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language)) || UYEA_CONFIG.defaultLanguage;
+        const savedBtn = document.querySelector(`.landing-lang-item[data-lang="${savedLang}"]`);
+        if (savedBtn) {
+            langButtons.forEach(b => b.classList.remove('active'));
+            savedBtn.classList.add('active');
+            document.body.setAttribute('data-lang', savedLang);
+            updateClock();
+        }
+    } catch (e) {
+        console.warn('Failed to restore language preference:', e.message);
+    }
     
     // ==================== 背景图预加载 ====================
     
