@@ -218,68 +218,45 @@ body {
     position: relative;
 }
 
-/* ========== iOS 26 液态玻璃数字时钟 ========== */
+/* ========== 液态玻璃数字时钟 - 参考图升级版 ========== */
 
-/* 基础回退：不支持高级特性时显示纯白 */
 .landing-time {
     font-size: 120px;
     font-weight: 800;
     line-height: 1;
     margin: 0;
     letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.92);
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    
+    /* 主体：半透明冷白色，背景清晰透过 */
+    color: rgba(255, 255, 255, 0.40);
+    
+    /* 整体玻璃体积投影：模拟玻璃片浮于背景之上 */
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
+    
+    /* 边缘厚度光影：模拟光源从左上方照射，无描边 */
+    text-shadow:
+        /* 左上方主光源（强白光，玻璃迎光面反光） */
+        -4px -2px 10px rgba(255, 255, 255, 0.95),
+        -2px -1px 4px rgba(255, 255, 255, 0.7),
+        /* 右下方背光阴影（玻璃厚度暗部） */
+        5px 4px 14px rgba(0, 15, 40, 0.55),
+        2px 2px 5px rgba(0, 15, 40, 0.35);
 }
 
+/* 日期 - 同风格，比例缩小 */
 .landing-date {
     font-size: 18px;
     font-weight: 600;
     margin-top: 12px;
     letter-spacing: 0.5px;
-    color: rgba(255, 255, 255, 0.85);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-}
-
-/* 高级液态玻璃效果（仅支持 background-clip 的浏览器） */
-@supports (-webkit-background-clip: text) or (background-clip: text) {
-    .landing-time {
-        color: transparent;
-        
-        /* 玻璃内部纵向渐变：顶部高亮 → 中部半透明 → 底部偏蓝微透 */
-        background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.95) 0%,
-            rgba(255, 255, 255, 0.72) 30%,
-            rgba(230, 242, 255, 0.55) 60%,
-            rgba(200, 225, 255, 0.38) 100%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        
-        /* 玻璃边缘白色高光描边 */
-        -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.55);
-        
-        /* 体积投影：模拟玻璃浮起 */
-        filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4));
-        text-shadow: none;
-    }
     
-    .landing-date {
-        color: transparent;
-        
-        background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.88) 0%,
-            rgba(255, 255, 255, 0.55) 50%,
-            rgba(220, 240, 255, 0.4) 100%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        
-        -webkit-text-stroke: 0.8px rgba(255, 255, 255, 0.45);
-        filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
-        text-shadow: none;
-    }
+    /* 稍高透明度保证小字号可读性 */
+    color: rgba(255, 255, 255, 0.65);
+    
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+    text-shadow:
+        -2px 0 6px rgba(255, 255, 255, 0.9),
+        2px 2px 8px rgba(0, 15, 40, 0.5);
 }
 
 /* 移动端时钟调整 */
@@ -292,18 +269,20 @@ body {
     
     .landing-time {
         font-size: 80px;
+        filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.4));
+        text-shadow:
+            -3px -1px 6px rgba(255, 255, 255, 0.9),
+            -1px -1px 3px rgba(255, 255, 255, 0.65),
+            3px 2px 8px rgba(0, 15, 40, 0.5),
+            1px 1px 3px rgba(0, 15, 40, 0.3);
     }
     
-    @supports (-webkit-background-clip: text) or (background-clip: text) {
-        .landing-time {
-            -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.5);
-            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
-        }
-        
-        .landing-date {
-            -webkit-text-stroke: 0.6px rgba(255, 255, 255, 0.4);
-            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
-        }
+    .landing-date {
+        font-size: 14px;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+        text-shadow:
+            -1px 0 4px rgba(255, 255, 255, 0.85),
+            1px 1px 4px rgba(0, 15, 40, 0.45);
     }
 }
 
