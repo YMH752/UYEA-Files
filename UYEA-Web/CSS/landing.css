@@ -95,7 +95,7 @@ body {
     justify-content: space-between;
 }
 
-/* LOGO */
+/* LOGO - 最粗字重，移动端与PC一致 */
 .landing-logo {
     font-size: 32px;
     font-weight: 900;
@@ -218,7 +218,7 @@ body {
     position: relative;
 }
 
-/* ========== 液态玻璃数字时钟 ========== */
+/* ========== 液态玻璃数字时钟 - 阴影进一步缩小 ========== */
 
 .landing-time {
     font-size: 120px;
@@ -229,13 +229,13 @@ body {
     
     color: rgba(255, 255, 255, 0.72);
     
-    /* 极微妙的厚度感：小范围、低透明、适中模糊 */
+    /* 厚度光影：范围更小、更淡 */
     text-shadow:
-        -1px -1px 2px rgba(255, 255, 255, 0.18),
-        1px 1px 3px rgba(0, 10, 30, 0.06);
+        -1px 0 1px rgba(255, 255, 255, 0.15),
+        1px 1px 2px rgba(0, 10, 30, 0.05);
     
-    /* 整体投影：轻、淡、范围小 */
-    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+    /* 整体投影：更轻、更集中 */
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.18));
 }
 
 /* 日期 - 同风格，比例缩小 */
@@ -247,9 +247,9 @@ body {
     
     color: rgba(255, 255, 255, 0.78);
     text-shadow:
-        -1px 0 2px rgba(255, 255, 255, 0.15),
-        1px 1px 2px rgba(0, 10, 30, 0.05);
-    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.18));
+        0 0 1px rgba(255, 255, 255, 0.12),
+        1px 1px 2px rgba(0, 10, 30, 0.04);
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.15));
 }
 
 /* 移动端时钟调整 */
@@ -264,18 +264,18 @@ body {
         font-size: 80px;
         color: rgba(255, 255, 255, 0.75);
         text-shadow:
-            -1px 0 2px rgba(255, 255, 255, 0.15),
-            1px 1px 2px rgba(0, 10, 30, 0.05);
-        filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.22));
+            0 0 1px rgba(255, 255, 255, 0.12),
+            1px 1px 2px rgba(0, 10, 30, 0.04);
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
     }
     
     .landing-date {
         font-size: 14px;
         color: rgba(255, 255, 255, 0.8);
         text-shadow:
-            0 0 2px rgba(255, 255, 255, 0.12),
-            1px 1px 2px rgba(0, 10, 30, 0.04);
-        filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.15));
+            0 0 1px rgba(255, 255, 255, 0.1),
+            1px 1px 1px rgba(0, 10, 30, 0.03);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
     }
 }
 
@@ -556,8 +556,9 @@ body {
         padding: 0 16px;
     }
     
+    /* 移动端 LOGO 与 PC 一致：32px + 900 字重 */
     .landing-logo {
-        font-size: 24px;
+        font-size: 32px;
         letter-spacing: 2px;
     }
     
