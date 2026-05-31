@@ -20,49 +20,6 @@
     </style>
 </head>
 <body data-lang="zh-CN">
-    <!-- 液态玻璃滤镜定义 -->
-    <svg style="display: none; position: absolute;">
-        <defs>
-            <!-- 液态玻璃滤镜：折射扭曲 + 高光 + 边缘光 -->
-            <filter id="liquidGlass" x="-30%" y="-30%" width="160%" height="160%">
-                <!-- 1. 提取文字形状 -->
-                <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="alphaBlur"/>
-                
-                <!-- 2. 液态扭曲：噪声位移模拟玻璃表面不平整 -->
-                <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" seed="5" result="noise"/>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
-                
-                <!-- 3. 玻璃色调：冷白偏蓝，提升亮度与透明度 -->
-                <feColorMatrix in="displaced" type="matrix"
-                    values="1.08 0 0 0 0.06
-                            0 1.08 0 0 0.06
-                            0 0 1.12 0 0.09
-                            0 0 0 0.82 0" result="tinted"/>
-                
-                <!-- 4. 顶部高光：模拟主光源 -->
-                <feSpecularLighting in="alphaBlur" surfaceScale="3" specularConstant="1.2" 
-                    specularExponent="35" lighting-color="#ffffff" result="specular">
-                    <fePointLight x="-250" y="-350" z="450"/>
-                </feSpecularLighting>
-                <feComposite in="specular" in2="alphaBlur" operator="in" result="specularMask"/>
-                
-                <!-- 5. 边缘发光：玻璃厚度边缘的散射光 -->
-                <feGaussianBlur in="alphaBlur" stdDeviation="5" result="edgeBlur"/>
-                <feComposite in="edgeBlur" in2="alphaBlur" operator="out" result="edgeRing"/>
-                <feColorMatrix in="edgeRing" type="matrix"
-                    values="0 0 0 0 1
-                            0 0 0 0 1
-                            0 0 0 0 1
-                            0 0 0 0.55 0" result="edgeGlow"/>
-                
-                <!-- 6. 合成：玻璃底色 + 高光 + 边缘光 -->
-                <feComposite in="specularMask" in2="tinted" operator="arithmetic" 
-                    k1="0" k2="0.35" k3="0.9" k4="0" result="layer1"/>
-                <feComposite in="edgeGlow" in2="layer1" operator="arithmetic"
-                    k1="0" k2="0.25" k3="1" k4="0" result="final"/>
-            </filter>
-        </defs>
-    </svg>
     <!-- 顶部导航栏 -->
     <header class="landing-header">
         <div class="landing-header-container">
