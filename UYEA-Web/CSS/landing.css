@@ -374,11 +374,11 @@ body {
 /* 移动端字号 */
 @media (max-width: 768px) {
     .landing-card-title {
-        font-size: 20px;
+        font-size: 40px;
     }
     
     .landing-card-desc {
-        font-size: 13px;
+        font-size: 30px;
     }
 }
 
