@@ -95,14 +95,14 @@ body {
     justify-content: space-between;
 }
 
-/* LOGO - 最粗字重 */
+/* LOGO - 最粗字重 + 同风格阴影 */
 .landing-logo {
     font-size: 32px;
     font-weight: 900;
     color: var(--color-white);
     letter-spacing: 2px;
     font-family: 'Alibaba Sans', inherit;
-    text-shadow: none;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.18);
 }
 
 .landing-header-right {
@@ -218,7 +218,7 @@ body {
     position: relative;
 }
 
-/* ========== 液态玻璃数字时钟 - 最小扩散中等模糊 ========== */
+/* ========== 液态玻璃数字时钟 - 高模糊无黑线 ========== */
 
 .landing-time {
     font-size: 120px;
@@ -229,8 +229,8 @@ body {
     
     color: rgba(255, 255, 255, 0.72);
     
-    /* 最小扩散（偏移1px），中等模糊（4px），低透明度 */
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    /* 最小扩散，高模糊，消除黑线感 */
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* 日期 - 同风格，比例缩小 */
@@ -241,7 +241,7 @@ body {
     letter-spacing: 0.5px;
     
     color: rgba(255, 255, 255, 0.78);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
 }
 
 /* 移动端时钟调整 */
@@ -255,13 +255,13 @@ body {
     .landing-time {
         font-size: 80px;
         color: rgba(255, 255, 255, 0.75);
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
     }
     
     .landing-date {
         font-size: 14px;
         color: rgba(255, 255, 255, 0.8);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     }
 }
 
