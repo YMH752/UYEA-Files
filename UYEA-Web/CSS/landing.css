@@ -215,6 +215,10 @@ body {
 .landing-clock-display {
     text-align: center;
     z-index: 2;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 30px 60px;
+    border-radius: 20px;
 }
 
 .landing-time {
@@ -225,8 +229,7 @@ body {
     margin: 0;
     text-shadow: none;
     letter-spacing: 2px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    mix-blend-mode: multiply;
 }
 
 .landing-date {
@@ -235,8 +238,7 @@ body {
     color: #555555;
     margin-top: 12px;
     letter-spacing: 0.5px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    mix-blend-mode: multiply;
 }
 
 /* 移动端时钟调整 */
