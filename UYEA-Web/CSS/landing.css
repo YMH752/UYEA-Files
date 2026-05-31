@@ -176,37 +176,29 @@ body {
 .landing-main {
     margin-top: 0;
     min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     position: relative;
     overflow: hidden;
     padding-top: 60px;
 }
 
-/* 固定背景层：替代 background-attachment: fixed，解决移动端重绘问题 */
-.landing-main::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -1;
-    filter: contrast(1.1) brightness(1.05);
-}
-
-/* 移动端背景图 */
+/* 背景图自适应 */
 @media (max-width: 1024px) {
-    .landing-main::before {
+    .landing-main {
         background-image: url('https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/IMAGE/JPG/Peter_Thomas(2-1).jpg');
+        background-position: center center;
+        filter: contrast(1.1) brightness(1.05);
     }
 }
 
-/* 桌面端背景图 */
 @media (min-width: 1025px) {
-    .landing-main::before {
+    .landing-main {
         background-image: url('https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/IMAGE/JPG/Peter_Thomas(2-2).jpg');
+        background-position: center center;
+        filter: contrast(1.1) brightness(1.05);
     }
 }
 
@@ -242,4 +234,352 @@ body {
 }
 
 /* 日期 - 同风格，比例缩小 */
-.l
+.landing-date {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 12px;
+    letter-spacing: 0.5px;
+    
+    color: rgba(255, 255, 255, 0.78);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* 移动端时钟调整 */
+@media (max-width: 768px) {
+    .landing-clock-section {
+        min-height: 180px;
+        padding-top: 50px;
+        padding-bottom: 25px;
+    }
+    
+    .landing-time {
+        font-size: 80px;
+        color: rgba(255, 255, 255, 0.75);
+        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+    }
+    
+    .landing-date {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* ========== 卡片区域 ========== */
+.landing-cards-container {
+    position: relative;
+    z-index: 3;
+    padding: 40px 24px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.landing-cards-grid {
+    display: grid;
+    width: 100%;
+    gap: 16px;
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 1360px;
+}
+
+/* 响应式断点 */
+@media (max-width: 768px) {
+    .landing-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        max-width: 90vw;
+        margin: 0 auto;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .landing-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        max-width: 90vw;
+        margin: 0 auto;
+    }
+}
+
+/* ========== 卡片基础样式 ========== */
+.landing-card {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.50);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    overflow: hidden;
+    transition: all 0.3s var(--transition-easing);
+    text-align: left;
+}
+
+.landing-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.landing-card:active {
+    transform: translateY(-2px);
+}
+
+/* 启用状态 */
+.landing-card-enabled {
+    cursor: pointer;
+}
+
+/* 禁用状态 */
+.landing-card-disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    border: none;
+    background: rgba(0, 0, 0, 0.40);
+}
+
+.landing-card-disabled:hover {
+    transform: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.40);
+}
+
+/* 移动端卡片 */
+@media (max-width: 768px) {
+    .landing-card {
+        aspect-ratio: auto;
+        min-height: 110px;
+    }
+}
+
+/* ========== 卡片内容 - 大字体 ========== */
+.landing-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.landing-card-title {
+    font-size: 33px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin: 0;
+    word-break: break-word;
+    color: #FFFFFF;
+}
+
+.landing-card-desc {
+    font-size: 16px;
+    font-weight: 600;
+    opacity: 0.75;
+    line-height: 1.4;
+    margin: 0;
+    word-break: break-word;
+    color: #FFFFFF;
+}
+
+/* 移动端字号 */
+@media (max-width: 768px) {
+    .landing-card-title {
+        font-size: 33px;
+    }
+    
+    .landing-card-desc {
+        font-size: 12px;
+    }
+}
+
+/* ========== 卡片箭头 - 右下角 ========== */
+.landing-card-arrow {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    opacity: 0.9;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.landing-card:hover .landing-card-arrow {
+    transform: translateX(4px);
+    opacity: 1;
+}
+
+.landing-card-disabled .landing-card-arrow {
+    opacity: 0.5;
+}
+
+/* ========== 动画 ========== */
+@keyframes staggerIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalPopIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* 卡片级联加载 */
+.landing-cards-grid > :nth-child(1) { animation: staggerIn 0.5s ease-out 0.1s both; }
+.landing-cards-grid > :nth-child(2) { animation: staggerIn 0.5s ease-out 0.2s both; }
+.landing-cards-grid > :nth-child(3) { animation: staggerIn 0.5s ease-out 0.3s both; }
+.landing-cards-grid > :nth-child(4) { animation: staggerIn 0.5s ease-out 0.4s both; }
+.landing-cards-grid > :nth-child(5) { animation: staggerIn 0.5s ease-out 0.5s both; }
+
+/* ========== 模态框 ========== */
+.landing-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: min(90vw, 320px);
+    padding: 32px 24px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    z-index: 10001;
+    text-align: center;
+    border: 1px solid #E0E0E0;
+}
+
+.landing-modal.show {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: modalPopIn 0.4s var(--transition-easing);
+}
+
+.landing-modal-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.landing-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 8px;
+}
+
+.landing-modal-text {
+    font-size: 14px;
+    color: var(--color-medium-gray);
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.landing-modal-btn {
+    padding: 10px 24px;
+    background: var(--color-orange);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.landing-modal-btn:hover {
+    background: #D47F00;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(230, 146, 0, 0.3);
+}
+
+/* ========== 模态框背景 ========== */
+.landing-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+}
+
+.landing-modal-overlay.show {
+    display: block;
+}
+
+/* ========== 响应式头部调整 ========== */
+@media (max-width: 768px) {
+    .landing-header {
+        height: 60px;
+    }
+    
+    .landing-main {
+        padding-top: 60px;
+    }
+    
+    .landing-header-container {
+        padding: 0 16px;
+    }
+    
+    .landing-logo {
+        font-size: 32px;
+        letter-spacing: 2px;
+    }
+    
+    .landing-header-right {
+        gap: 12px;
+    }
+    
+    .landing-lang-selector {
+        border-radius: 18px;
+        padding: 3px;
+    }
+    
+    .landing-lang-item {
+        padding: 6px 12px;
+        font-size: 11px;
+        border-radius: 14px;
+    }
+    
+    .landing-search-btn,
+    .landing-user-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+    }
+}
+
+/* ========== 打印与可访问性 ========== */
+@media print {
+    .landing-main {
+        display: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
