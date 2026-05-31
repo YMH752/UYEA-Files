@@ -645,15 +645,15 @@ body {
 }
 
 .landing-user-icon{
-    width:24px;
-    height:24px;
+    width:30px;
+    height:30px;
     display:block;
 }
 
 .landing-user-icon circle,
 .landing-user-icon path{
     stroke:rgba(255,255,255,.95);
-    stroke-width:2.8;
+    stroke-width:3.2;
     fill:none;
     stroke-linecap:round;
     stroke-linejoin:round;
