@@ -50,17 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const clockDateEl = document.getElementById('clockDate');
         
         if (clockTimeEl) {
-            const timeStr = formatTime(now);
-            clockTimeEl.textContent = timeStr;
-            clockTimeEl.setAttribute('data-time', timeStr);
+            clockTimeEl.textContent = formatTime(now);
         }
         
         if (clockDateEl) {
             const lang = document.body.getAttribute('data-lang') || 'zh-CN';
             const langCode = lang === 'en' ? 'en' : 'zh-CN';
-            const dateStr = formatDate(now, langCode);
-            clockDateEl.textContent = dateStr;
-            clockDateEl.setAttribute('data-date', dateStr);
+            clockDateEl.textContent = formatDate(now, langCode);
         }
     }
     
