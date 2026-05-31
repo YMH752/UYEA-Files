@@ -375,15 +375,14 @@ body {
 
 /* 禁用状态 - 更明显的禁用表现 */
 .landing-card-disabled {
-    opacity: 0.45;
+    opacity: 1;
     cursor: not-allowed;
     background: linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.06),
-        rgba(255, 255, 255, 0.01)
+        rgba(35, 35, 35, 0.30),
+        rgba(20, 20, 20, 0.18)
     );
-    border: 1px solid rgba(255, 255, 255, 0.10);
-}
+    border: 1px solid var(--glass-border);
 
 .landing-card-disabled:hover {
     transform: none;
