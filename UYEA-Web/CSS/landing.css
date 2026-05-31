@@ -333,8 +333,8 @@ body {
     /* 高级毛玻璃效果 */
     background: linear-gradient(
       180deg,
-      rgba(40,40,40,0.35),
-      rgba(20,20,20,0.25)
+      rgba(35,35,35,0.30),
+      rgba(20,20,20,0.18)
     );
     backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
