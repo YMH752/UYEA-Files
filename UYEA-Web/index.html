@@ -20,18 +20,36 @@
     </style>
 </head>
 <body data-lang="zh-CN">
-    <!-- SVG Filter for Glassmorphism -->
+    <!-- Advanced Glassmorphism Filter (Apple VisionOS Inspired) -->
     <svg style="display: none;">
         <defs>
-            <filter id="glassEffect">
-                <!-- 创建磨砂玻璃效果 -->
-                <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
-                <feColorMatrix type="saturate" values="1.2" />
-                <!-- 添加高光 -->
-                <feSpecularLighting surfaceScale="5" specularConstant="0.5" lighting-color="#ffffff" in="SourceAlpha">
-                    <fePointLight x="-5000" y="-10000" z="20000" />
+            <filter id="premiumGlass">
+                <!-- 柔和的背景模糊 -->
+                <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+                
+                <!-- 颜色矩阵：保持清晰、增加透明度、添加烟灰色调 -->
+                <feColorMatrix in="blur" type="matrix" values="
+                    1 0 0 0 -0.08
+                    0 1 0 0 -0.08
+                    0 0 1 0 -0.05
+                    0 0 0 0.85 0" result="tinted" />
+                
+                <!-- 微妙的对比度提升 -->
+                <feComponentTransfer in="tinted">
+                    <feFuncA type="linear" slope="0.88" />
+                </feComponentTransfer>
+                
+                <!-- 高光和反射 -->
+                <feSpecularLighting surfaceScale="3" specularConstant="0.4" lighting-color="#ffffff" in="SourceAlpha" result="spec">
+                    <fePointLight x="-5000" y="-8000" z="15000" />
                 </feSpecularLighting>
-                <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+                
+                <!-- 混合高光 -->
+                <feComposite in="SourceGraphic" in2="spec" operator="arithmetic" k1="0" k2="0.6" k3="0.4" k4="0" result="litPaint" />
+                
+                <!-- 添加细微的内部纹理 -->
+                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" result="noise" seed="2" />
+                <feDisplacementMap in="litPaint" in2="noise" scale="0.8" />
             </filter>
         </defs>
     </svg>
