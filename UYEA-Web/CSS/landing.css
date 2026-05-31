@@ -630,15 +630,15 @@ body {
 /* ===== SVG Icons ===== */
 
 .landing-search-icon{
-    width:20px;
-    height:20px;
+    width:26px;
+    height:26px;
     display:block;
 }
 
 .landing-search-icon circle,
 .landing-search-icon line{
     stroke:rgba(255,255,255,.95);
-    stroke-width:2.5;
+    stroke-width:3.2;
     fill:none;
     stroke-linecap:round;
     stroke-linejoin:round;
