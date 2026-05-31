@@ -221,39 +221,70 @@ body {
 .landing-time {
     font-size: 120px;
     font-weight: 800;
-    color: rgba(51, 51, 51, 0.6);
+    /* 超透明、带烟灰色调的半透明黑灰 */
+    color: rgba(40, 40, 45, 0.45);
     line-height: 1;
     margin: 0;
-    text-shadow: 
-        0 8px 32px rgba(31, 38, 135, 0.37),
-        inset -1px -1px 8px rgba(255, 255, 255, 0.5),
-        inset 1px 1px 8px rgba(0, 0, 0, 0.1);
     letter-spacing: 2px;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    background: rgba(255, 255, 255, 0.08);
-    -webkit-background-clip: text;
-    background-clip: text;
-    filter: url(#glassEffect);
+    
+    /* 玻璃效果：柔和阴影、细腻高光、深度感 */
+    text-shadow: 
+        /* 外层阴影：柔和深度 */
+        0 20px 40px rgba(0, 0, 0, 0.08),
+        0 8px 20px rgba(0, 0, 0, 0.06),
+        /* 内高光1：顶部边缘亮度 */
+        inset 0 2px 6px rgba(255, 255, 255, 0.6),
+        /* 内高光2：细腻高光 */
+        inset -1px -1px 4px rgba(255, 255, 255, 0.3),
+        /* 内阴影：轻微深度 */
+        inset 0 -4px 8px rgba(0, 0, 0, 0.06);
+    
+    /* 背景穿透 + 烟灰色调 */
+    backdrop-filter: blur(2.5px);
+    -webkit-backdrop-filter: blur(2.5px);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(200, 200, 210, 0.02) 50%,
+        rgba(100, 100, 110, 0.03) 100%);
+    
+    /* 应用高级玻璃滤镜 */
+    filter: url(#premiumGlass);
+    
+    /* 混合模式：屏幕混合实现透光感 */
     mix-blend-mode: screen;
 }
 
 .landing-date {
     font-size: 18px;
     font-weight: 600;
-    color: rgba(85, 85, 85, 0.65);
+    /* 超透明、带烟灰色调的浅色 */
+    color: rgba(70, 70, 80, 0.48);
     margin-top: 12px;
     letter-spacing: 0.5px;
+    
+    /* 精致的玻璃高光和反射 */
     text-shadow:
-        0 4px 16px rgba(31, 38, 135, 0.2),
-        inset -0.5px -0.5px 4px rgba(255, 255, 255, 0.4),
-        inset 0.5px 0.5px 4px rgba(0, 0, 0, 0.08);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
-    background: rgba(255, 255, 255, 0.06);
-    -webkit-background-clip: text;
-    background-clip: text;
-    filter: url(#glassEffect);
+        /* 外层阴影 */
+        0 10px 24px rgba(0, 0, 0, 0.06),
+        0 4px 12px rgba(0, 0, 0, 0.04),
+        /* 内高光 */
+        inset 0 1px 3px rgba(255, 255, 255, 0.5),
+        inset -0.5px -0.5px 2px rgba(255, 255, 255, 0.25),
+        /* 内阴影 */
+        inset 0 -2px 4px rgba(0, 0, 0, 0.04);
+    
+    /* 背景穿透 */
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(200, 200, 210, 0.015) 50%,
+        rgba(100, 100, 110, 0.02) 100%);
+    
+    /* 应用玻璃滤镜 */
+    filter: url(#premiumGlass);
+    
+    /* 叠加混合 */
     mix-blend-mode: overlay;
 }
 
@@ -267,14 +298,14 @@ body {
     
     .landing-time {
         font-size: 80px;
-        backdrop-filter: blur(3px);
-        -webkit-backdrop-filter: blur(3px);
+        backdrop-filter: blur(1.8px);
+        -webkit-backdrop-filter: blur(1.8px);
     }
     
     .landing-date {
         font-size: 14px;
-        backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(1.5px);
+        -webkit-backdrop-filter: blur(1.5px);
     }
 }
 
