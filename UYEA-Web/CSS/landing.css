@@ -353,7 +353,7 @@ body {
 }
 
 .landing-card-title {
-    font-size: 26px;
+    font-size: 38px;
     font-weight: 900;
     line-height: 1.2;
     margin: 0;
@@ -362,7 +362,7 @@ body {
 }
 
 .landing-card-desc {
-    font-size: 14px;
+    font-size: 26px;
     font-weight: 600;
     opacity: 0.75;
     line-height: 1.4;
