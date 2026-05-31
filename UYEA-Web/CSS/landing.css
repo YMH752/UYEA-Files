@@ -218,7 +218,7 @@ body {
     position: relative;
 }
 
-/* ========== 液态玻璃数字时钟 - 实体感版 ========== */
+/* ========== 液态玻璃数字时钟 - 厚度反光版 ========== */
 
 .landing-time {
     font-size: 120px;
@@ -227,13 +227,17 @@ body {
     margin: 0;
     letter-spacing: 2px;
     
-    /* 颜色更重：透明度提高，实体感增强，背景仍部分透过 */
+    /* 主体：半透明但实体感强 */
     color: rgba(255, 255, 255, 0.72);
     
-    /* 去掉发光感：无白色光晕，仅保留底部投影 */
-    text-shadow: none;
+    /* 玻璃厚度反光：左上方微亮（迎光面），右下方微暗（背光面） */
+    text-shadow:
+        /* 左上迎光面：极淡白色反光，模拟玻璃边缘折射 */
+        -3px -2px 6px rgba(255, 255, 255, 0.35),
+        /* 右下背光面：极淡深色，模拟玻璃厚度阴影 */
+        3px 3px 8px rgba(0, 10, 30, 0.25);
     
-    /* 整体体积投影：玻璃片浮于背景 */
+    /* 整体体积投影 */
     filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
 }
 
@@ -244,9 +248,10 @@ body {
     margin-top: 12px;
     letter-spacing: 0.5px;
     
-    /* 字号小，透明度稍低保证可读 */
     color: rgba(255, 255, 255, 0.78);
-    text-shadow: none;
+    text-shadow:
+        -1px -1px 3px rgba(255, 255, 255, 0.3),
+        1px 2px 4px rgba(0, 10, 30, 0.2);
     filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
 }
 
@@ -261,14 +266,18 @@ body {
     .landing-time {
         font-size: 80px;
         color: rgba(255, 255, 255, 0.75);
-        text-shadow: none;
+        text-shadow:
+            -2px -1px 4px rgba(255, 255, 255, 0.3),
+            2px 2px 5px rgba(0, 10, 30, 0.2);
         filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4));
     }
     
     .landing-date {
         font-size: 14px;
         color: rgba(255, 255, 255, 0.8);
-        text-shadow: none;
+        text-shadow:
+            -1px 0 2px rgba(255, 255, 255, 0.25),
+            1px 1px 3px rgba(0, 10, 30, 0.18);
         filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
     }
 }
