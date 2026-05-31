@@ -362,7 +362,7 @@ body {
 }
 
 .landing-card-desc {
-    font-size: 12px;
+    font-size: 18px;
     font-weight: 600;
     opacity: 0.75;
     line-height: 1.4;
@@ -374,11 +374,11 @@ body {
 /* 移动端字号 */
 @media (max-width: 768px) {
     .landing-card-title {
-        font-size: 40px;
+        font-size: 33px;
     }
     
     .landing-card-desc {
-        font-size: 30px;
+        font-size: 18px;
     }
 }
 
