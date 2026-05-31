@@ -13,10 +13,10 @@
     
     --transition-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
     
-    /* 毛玻璃颜色变量 */
-    --glass-bg: rgba(255, 255, 255, 0.10);
-    --glass-bg-hover: rgba(255, 255, 255, 0.12);
-    --glass-border: rgba(255, 255, 255, 0.25);
+    /* 毛玻璃颜色变量 - 黑灰方案（可读性优先） */
+    --glass-bg: rgba(50, 50, 50, 0.4);
+    --glass-bg-hover: rgba(50, 50, 50, 0.5);
+    --glass-border: rgba(200, 200, 200, 0.3);
     --glass-blur: 24px;
 }
 
@@ -152,11 +152,11 @@ body {
     z-index: 2;
 }
 
-/* 活跃状态 - 白色半透明背景 */
+/* 活跃状态 - 深灰色背景，增强可读性 */
 .landing-lang-item.active {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(100, 100, 100, 0.5);
     color: var(--color-white);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .landing-lang-item:hover:not(.active) {
@@ -373,25 +373,25 @@ body {
     cursor: pointer;
 }
 
-/* 禁用状态 */
+/* 禁用状态 - 更明显的禁用表现 */
 .landing-card-disabled {
-    opacity: 0.60;
+    opacity: 0.45;
     cursor: not-allowed;
     background: linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.08),
-        rgba(255, 255, 255, 0.02)
+        rgba(255, 255, 255, 0.06),
+        rgba(255, 255, 255, 0.01)
     );
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .landing-card-disabled:hover {
     transform: none;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     background: linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.08),
-        rgba(255, 255, 255, 0.02)
+        rgba(255, 255, 255, 0.06),
+        rgba(255, 255, 255, 0.01)
     );
 }
 
@@ -423,7 +423,7 @@ body {
 .landing-card-desc {
     font-size: 16px;
     font-weight: 600;
-    opacity: 0.80;
+    opacity: 0.85;
     line-height: 1.4;
     margin: 0;
     word-break: break-word;
@@ -459,7 +459,7 @@ body {
 }
 
 .landing-card-disabled .landing-card-arrow {
-    opacity: 0.40;
+    opacity: 0.25;
 }
 
 /* ========== 动画 ========== */
