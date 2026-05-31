@@ -218,7 +218,7 @@ body {
     position: relative;
 }
 
-/* ========== 液态玻璃数字时钟 - 无阴影 ========== */
+/* ========== 液态玻璃数字时钟 - 最小扩散中等模糊 ========== */
 
 .landing-time {
     font-size: 120px;
@@ -229,11 +229,11 @@ body {
     
     color: rgba(255, 255, 255, 0.72);
     
-    text-shadow: none;
-    filter: none;
+    /* 最小扩散（偏移1px），中等模糊（4px），低透明度 */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
-/* 日期 - 无阴影 */
+/* 日期 - 同风格，比例缩小 */
 .landing-date {
     font-size: 18px;
     font-weight: 600;
@@ -241,8 +241,7 @@ body {
     letter-spacing: 0.5px;
     
     color: rgba(255, 255, 255, 0.78);
-    text-shadow: none;
-    filter: none;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 /* 移动端时钟调整 */
@@ -256,15 +255,13 @@ body {
     .landing-time {
         font-size: 80px;
         color: rgba(255, 255, 255, 0.75);
-        text-shadow: none;
-        filter: none;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     }
     
     .landing-date {
         font-size: 14px;
         color: rgba(255, 255, 255, 0.8);
-        text-shadow: none;
-        filter: none;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 }
 
