@@ -218,104 +218,37 @@ body {
     position: relative;
 }
 
-/* ========== 液态玻璃数字时钟效果 ========== */
+/* ========== 液态玻璃数字时钟 - 极简版 ========== */
 
 .landing-time {
-    position: relative;
-    isolation: isolate;
     font-size: 120px;
     font-weight: 800;
     line-height: 1;
     margin: 0;
     letter-spacing: 2px;
     
-    /* 玻璃基底：极半透明，让 backdrop-filter 主导视觉效果 */
-    color: rgba(255, 255, 255, 0.12);
+    /* 核心：半透明白色，背景风景自然透过数字 */
+    color: rgba(255, 255, 255, 0.82);
     
-    /* 核心：强背景模糊 + 饱和度提升 + 亮度补偿 */
-    /* 背景风景会透过数字显示，但被模糊、调色、折射 */
-    backdrop-filter: blur(20px) saturate(170%) brightness(1.2);
-    -webkit-backdrop-filter: blur(20px) saturate(170%) brightness(1.2);
+    /* 轻微背景模糊，让透过的背景柔和 */
+    backdrop-filter: blur(4px) saturate(120%);
+    -webkit-backdrop-filter: blur(4px) saturate(120%);
     
-    /* 将背景（含 backdrop-filter 结果）裁剪到文字形状 */
-    -webkit-background-clip: text;
-    background-clip: text;
-    
-    /* 玻璃边缘厚度：白色半透明描边 */
-    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.72);
-    
-    /* 多层 text-shadow 模拟玻璃物理效果 */
-    text-shadow:
-        /* 顶部强内高光 - 模拟主光源从上方照射 */
-        0 -4px 10px rgba(255, 255, 255, 0.85),
-        /* 底部内阴影 - 模拟玻璃厚度产生的暗部 */
-        0 4px 12px rgba(0, 0, 0, 0.4),
-        /* 侧面环境反射 */
-        -2px 0 8px rgba(255, 255, 255, 0.15),
-        2px 0 8px rgba(255, 255, 255, 0.15),
-        /* 外边缘光晕 */
-        0 0 30px rgba(255, 255, 255, 0.2),
-        0 0 60px rgba(255, 255, 255, 0.08);
-    
-    /* 液态玻璃滤镜：添加扭曲和高光 */
-    filter: url(#liquidGlass);
+    /* 极简阴影：仅一层，模拟玻璃厚度与主光源 */
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* 玻璃厚度层：偏移1.5px模拟立体厚度 */
-.landing-time::before {
-    content: attr(data-time);
-    position: absolute;
-    left: 1.5px;
-    top: 1.5px;
-    width: 100%;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
-    pointer-events: none;
-    z-index: -1;
-}
-
-/* 日期 - 同样的液态玻璃效果，比例缩小 */
+/* 日期 - 同风格，比例缩小 */
 .landing-date {
-    position: relative;
-    isolation: isolate;
     font-size: 18px;
     font-weight: 600;
     margin-top: 12px;
     letter-spacing: 0.5px;
     
-    /* 玻璃基底：半透明白色 */
-    color: rgba(255, 255, 255, 0.18);
-    
-    /* 背景模糊（比时间稍弱，形成层次） */
-    backdrop-filter: blur(14px) saturate(160%) brightness(1.15);
-    -webkit-backdrop-filter: blur(14px) saturate(160%) brightness(1.15);
-    
-    -webkit-background-clip: text;
-    background-clip: text;
-    
-    /* 玻璃边缘 */
-    -webkit-text-stroke: 0.8px rgba(255, 255, 255, 0.55);
-    
-    /* 玻璃物理阴影 */
-    text-shadow:
-        0 -2px 6px rgba(255, 255, 255, 0.7),
-        0 2px 8px rgba(0, 0, 0, 0.35),
-        0 0 20px rgba(255, 255, 255, 0.12);
-    
-    filter: url(#liquidGlass);
-}
-
-.landing-date::before {
-    content: attr(data-date);
-    position: absolute;
-    left: 1px;
-    top: 1px;
-    width: 100%;
-    color: transparent;
-    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.2);
-    pointer-events: none;
-    z-index: -1;
+    color: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(3px) saturate(110%);
+    -webkit-backdrop-filter: blur(3px) saturate(110%);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
 }
 
 /* 移动端时钟调整 */
@@ -328,24 +261,16 @@ body {
     
     .landing-time {
         font-size: 80px;
-        backdrop-filter: blur(14px) saturate(160%) brightness(1.15);
-        -webkit-backdrop-filter: blur(14px) saturate(160%) brightness(1.15);
-        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.65);
-        text-shadow:
-            0 -3px 6px rgba(255, 255, 255, 0.8),
-            0 3px 8px rgba(0, 0, 0, 0.35),
-            0 0 20px rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(3px) saturate(110%);
+        -webkit-backdrop-filter: blur(3px) saturate(110%);
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
     }
     
     .landing-date {
         font-size: 14px;
-        backdrop-filter: blur(10px) saturate(150%) brightness(1.1);
-        -webkit-backdrop-filter: blur(10px) saturate(150%) brightness(1.1);
-        -webkit-text-stroke: 0.6px rgba(255, 255, 255, 0.5);
-        text-shadow:
-            0 -2px 4px rgba(255, 255, 255, 0.65),
-            0 2px 6px rgba(0, 0, 0, 0.3),
-            0 0 12px rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(2px) saturate(100%);
+        -webkit-backdrop-filter: blur(2px) saturate(100%);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     }
 }
 
