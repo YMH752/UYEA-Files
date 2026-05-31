@@ -216,13 +216,6 @@ body {
     text-align: center;
     z-index: 2;
     position: relative;
-    background: rgba(0, 0, 0, 0.50);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 30px 60px;
-    border-radius: 16px;
-    display: inline-block;
-    margin: 0 auto;
 }
 
 .landing-time {
@@ -234,23 +227,23 @@ body {
     margin: 0;
     letter-spacing: 2px;
     
-    /* 玻璃效果：柔和阴影、细腻高光、深度感 */
+    /* 玻璃效果：背景穿透 + 柔和模糊仅在数字内部 */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    
+    /* 文字遮罩：仅在数字形状内显示效果 */
+    -webkit-background-clip: text;
+    background-clip: text;
+    
+    /* 高光和反射 */
     text-shadow: 
-        /* 外层阴影：柔和深度 */
-        0 20px 40px rgba(0, 0, 0, 0.12),
-        0 8px 20px rgba(0, 0, 0, 0.08),
-        /* 内高光1：顶部边缘亮度 */
-        inset 0 2px 6px rgba(255, 255, 255, 0.6),
-        /* 内高光2：细腻高光 */
-        inset -1px -1px 4px rgba(255, 255, 255, 0.3),
-        /* 内阴影：轻微深度 */
-        inset 0 -4px 8px rgba(0, 0, 0, 0.08);
+        /* 上方高光 */
+        inset 0 2px 4px rgba(255, 255, 255, 0.4),
+        /* 边缘光 */
+        0 0 20px rgba(255, 255, 255, 0.1);
     
-    /* 应用高级玻璃滤镜 */
-    filter: url(#premiumGlass);
-    
-    /* 混合模式：屏幕混合实现透光感 */
-    mix-blend-mode: screen;
+    /* 应用玻璃数字滤镜 */
+    filter: url(#glassDigits);
 }
 
 .landing-date {
@@ -261,22 +254,21 @@ body {
     margin-top: 12px;
     letter-spacing: 0.5px;
     
-    /* 精致的玻璃高光和反射 */
+    /* 玻璃效果：背景穿透 + 柔和模糊 */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    
+    /* 文字遮罩 */
+    -webkit-background-clip: text;
+    background-clip: text;
+    
+    /* 精致高光 */
     text-shadow:
-        /* 外层阴影 */
-        0 10px 24px rgba(0, 0, 0, 0.08),
-        0 4px 12px rgba(0, 0, 0, 0.06),
-        /* 内高光 */
-        inset 0 1px 3px rgba(255, 255, 255, 0.5),
-        inset -0.5px -0.5px 2px rgba(255, 255, 255, 0.25),
-        /* 内阴影 */
-        inset 0 -2px 4px rgba(0, 0, 0, 0.06);
+        inset 0 1px 2px rgba(255, 255, 255, 0.3),
+        0 0 12px rgba(255, 255, 255, 0.08);
     
     /* 应用玻璃滤镜 */
-    filter: url(#premiumGlass);
-    
-    /* 叠加混合 */
-    mix-blend-mode: overlay;
+    filter: url(#glassDigits);
 }
 
 /* 移动端时钟调整 */
@@ -287,20 +279,16 @@ body {
         padding-bottom: 25px;
     }
     
-    .landing-clock-display {
-        background: rgba(0, 0, 0, 0.50);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        padding: 20px 40px;
-        border-radius: 12px;
-    }
-    
     .landing-time {
         font-size: 80px;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
     }
     
     .landing-date {
         font-size: 14px;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
     }
 }
 
