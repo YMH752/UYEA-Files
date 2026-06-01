@@ -105,7 +105,7 @@ body {
 .landing-logo {
     font-size: 32px;
     font-weight: 900;
-    color: #000000;
+    color: rgba(255,255,255,0.92);
     letter-spacing: 2px;
     font-family: 'Alibaba Sans', inherit;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.18);
