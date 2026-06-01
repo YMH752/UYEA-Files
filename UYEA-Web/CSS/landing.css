@@ -144,7 +144,7 @@ body {
     background: transparent;
     color: var(--color-white);
     font-weight: 600;
-    font-size: 28px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 12px;
@@ -157,7 +157,7 @@ body {
     background: rgba(100, 100, 100, 0.5);
     color: #2997FF;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .landing-lang-item:hover:not(.active) {
@@ -601,7 +601,7 @@ body {
 
     .landing-lang-item {
         padding: 6px 12px;
-        font-size: 10px;
+        font-size: 14px;
         border-radius: 14px;
     }
 
