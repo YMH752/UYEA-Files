@@ -144,7 +144,7 @@ body {
     background: transparent;
     color: var(--color-white);
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 12px;
