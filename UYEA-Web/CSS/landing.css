@@ -125,7 +125,7 @@ body {
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
-    border-radius: 14px;
+    border-radius: 28px;
     padding: 4px;
     gap: 0;
     position: relative;
