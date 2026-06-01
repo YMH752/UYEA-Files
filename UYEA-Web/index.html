@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="悠野工作室(UYEA) - 开始探索，分享AI使用心得、工具作品和生活点滴">
+    <meta name="theme-color" content="#000000">
+    <title>UYEA | 开始探索</title>
+
+    <link rel="stylesheet" href="/CSS/style.css?v=0.2.0">
+    <link rel="stylesheet" href="/CSS/landing.css?v=0.2.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
+
+    <style>
+        html { font-family: 'Alibaba Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+    </style>
+</head>
+<body data-lang="zh-CN">
+    <!-- 顶部导航栏 -->
+    <header class="landing-header">
+        <div class="landing-header-container">
+            <div class="landing-logo">UYEA</div>
+            <div class="landing-header-right">
+            <div class="landing-lang-selector">
+                <button class="landing-lang-item active" data-lang="zh-CN">CN</button>
+                <button class="landing-lang-item" data-lang="zh-TW">CN-HK</button>
+                <button class="landing-lang-item" data-lang="en">EN</button>
+            </div>
+                <button class="landing-search-btn" aria-label="搜索">
+                    <svg class="landing-search-icon" viewBox="0 0 24 24" fill="none">
+                        <circle cx="11" cy="11" r="6"></circle>
+                        <line x1="16" y1="16" x2="21" y2="21"></line>
+                    </svg>
+                </button>
+
+                <button class="landing-user-btn" aria-label="用户中心">
+                    <svg class="landing-user-icon" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="8" r="6"></circle>
+                        <path d="M4 29 C4 20 9 18 16 18 C23 18 28 20 28 29"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主页面 -->
+    <main class="landing-main">
+        <!-- 时钟/日期区域 -->
+        <div class="landing-clock-section">
+            <div class="landing-clock-display" id="clockDisplay">
+                <div class="landing-time" id="clockTime">00:00</div>
+                <div class="landing-date" id="clockDate">2026-1-1 星期一</div>
+            </div>
+        </div>
+
+        <!-- 卡片区域 -->
+        <div class="landing-cards-container">
+            <div class="landing-cards-grid" id="cardsGrid">
+                <!-- 网站导航 -->
+                <a href="navigation.html" class="landing-card landing-card-enabled" data-card="nav">
+                    <div class="landing-card-content">
+                        <div class="landing-card-title">网站导航</div>
+                        <div class="landing-card-desc">分享实用网站</div>
+                    </div>
+                    <div class="landing-card-arrow">→</div>
+                </a>
+
+                <!-- 线上工具 -->
+                <a href="tools.html" class="landing-card landing-card-enabled" data-card="tools">
+                    <div class="landing-card-content">
+                        <div class="landing-card-title">线上工具</div>
+                        <div class="landing-card-desc">在线工具，提高效率</div>
+                    </div>
+                    <div class="landing-card-arrow">→</div>
+                </a>
+
+                <!-- 社区论坛 -->
+                <a href="forum.html" class="landing-card landing-card-enabled" data-card="forum">
+                    <div class="landing-card-content">
+                        <div class="landing-card-title">社区论坛</div>
+                        <div class="landing-card-desc">解答疑问，分享经验</div>
+                    </div>
+                    <div class="landing-card-arrow">→</div>
+                </a>
+
+                <!-- 桌面宠物 -->
+                <button class="landing-card landing-card-disabled" data-card="pet" id="petCard">
+                    <div class="landing-card-content">
+                        <div class="landing-card-title">桌面宠物</div>
+                        <div class="landing-card-desc">增添趣味，放松身心</div>
+                    </div>
+                    <div class="landing-card-arrow">→</div>
+                </button>
+
+                <!-- 实时聊天 -->
+                <button class="landing-card landing-card-disabled" data-card="chat" id="chatCard">
+                    <div class="landing-card-content">
+                        <div class="landing-card-title">实时聊天</div>
+                        <div class="landing-card-desc">随时随地，在线交流</div>
+                    </div>
+                    <div class="landing-card-arrow">→</div>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 开发中模态框 -->
+    <div class="landing-modal-overlay" id="devModalOverlay"></div>
+    <div class="landing-modal" id="devModal">
+        <div class="landing-modal-icon">🚀</div>
+        <div class="landing-modal-title" id="devModalTitle">功能开发中</div>
+        <div class="landing-modal-text" id="devModalText">敬请期待更新！</div>
+        <button class="landing-modal-btn" id="devModalCloseBtn">关闭</button>
+    </div>
+
+    <script src="/JS/config.js?v=0.2.0"></script>
+    <script src="/JS/script.js?v=0.2.0"></script>
+    <script src="/JS/landing.js?v=0.2.0"></script>
+</body>
+</html>
