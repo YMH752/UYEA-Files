@@ -1,8 +1,8 @@
-# 覆盖 Clean URLs：允许 .html 后缀直接访问，避免 308 重定向
-/forum.html /forum 200
-/navigation.html /navigation 200
-/tools.html /tools 200
-/index.html / 200
+# 覆盖 Clean URLs：将 .html 后缀 301 重定向到 clean URL
+/forum.html /forum 301
+/navigation.html /navigation 301
+/tools.html /tools 301
+/index.html / 301
 
 # 旧路径兼容：将 /UYEA-Web/* 重定向到 /*
 /UYEA-Web/* /:splat 301
