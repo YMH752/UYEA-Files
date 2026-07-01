@@ -1,0 +1,33 @@
+# UYEA 悠野工作室 - Cloudflare Pages 自定义头部
+
+# 静态资源长期缓存（版本号控制缓存失效）
+/CSS/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/JS/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/IMAGE/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/FONT/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML 短期缓存
+/*.html
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# JSON 数据短期缓存
+/JSON/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# Service Worker 不缓存
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# 安全与性能头部
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
