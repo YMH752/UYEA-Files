@@ -5,21 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="悠野工作室(UYEA) - 开始探索，分享AI使用心得、工具作品和生活点滴">
     <meta name="theme-color" content="#000000">
+    <meta name="color-scheme" content="light dark">
     <title>UYEA | 开始探索</title>
+
+    <link rel="canonical" href="https://uyea-files.pages.dev/">
+    <link rel="icon" href="/IMAGE/ICO/zhihu.png" type="image/png">
+    <link rel="apple-touch-icon" href="/IMAGE/ICO/zhihu.png">
+
+    <meta property="og:title" content="UYEA | 开始探索">
+    <meta property="og:description" content="悠野工作室(UYEA) - 开始探索，分享AI使用心得、工具作品和生活点滴">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://uyea-files.pages.dev/">
+    <meta property="og:image" content="https://uyea-files.pages.dev/IMAGE/JPG/Peter_Thomas(2-2).webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="UYEA">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="/CSS/landing.css?v=0.2.0" as="style">
+    <link rel="preload" href="/JS/config.js?v=0.2.0" as="script">
+    <link rel="preload" href="/JS/landing.js?v=0.2.0" as="script">
 
     <link rel="stylesheet" href="/CSS/style.css?v=0.2.0">
     <link rel="stylesheet" href="/CSS/landing.css?v=0.2.0">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
 
     <style>
         html { font-family: 'Alibaba Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
     </style>
 </head>
 <body data-lang="zh-CN">
+    <h1 class="sr-only">UYEA 悠野工作室 - 开始探索</h1>
     <!-- 顶部导航栏 -->
     <header class="landing-header">
         <div class="landing-header-container">
@@ -117,8 +138,15 @@
         <button class="landing-modal-btn" id="devModalCloseBtn">关闭</button>
     </div>
 
-    <script src="/JS/config.js?v=0.2.0"></script>
-    <script src="/JS/script.js?v=0.2.0"></script>
-    <script src="/JS/landing.js?v=0.2.0"></script>
+    <script src="/JS/config.js?v=0.2.0" defer></script>
+    <script src="/JS/script.js?v=0.2.0" defer></script>
+    <script src="/JS/landing.js?v=0.2.0" defer></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
+        }
+    </script>
 </body>
 </html>

@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (current === 'site') {
                     // 站内搜索提示
-                    alert('站内搜索功能开发中，敬请期待！');
+                    showComingSoon('站内搜索');
                     searchInput.value = '';
                 } else {
                     const engineUrl = UYEA_CONFIG.getSearchEngineUrl(current);
@@ -137,6 +137,39 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // ==================== 开发中提示模态框 ====================
+    const comingSoonModal = document.getElementById('comingSoonModal');
+    const comingSoonOverlay = document.getElementById('comingSoonOverlay');
+
+    function showComingSoon(title = '功能开发中', text = '该功能正在开发中，敬请期待！') {
+        const titleEl = document.getElementById('comingSoonTitle');
+        const textEl = document.getElementById('comingSoonText');
+        if (titleEl) titleEl.textContent = title;
+        if (textEl) textEl.textContent = text;
+        if (comingSoonModal) comingSoonModal.classList.add('show');
+        if (comingSoonOverlay) comingSoonOverlay.classList.add('show');
+    }
+
+    function hideComingSoon() {
+        if (comingSoonModal) comingSoonModal.classList.remove('show');
+        if (comingSoonOverlay) comingSoonOverlay.classList.remove('show');
+    }
+
+    const comingSoonClose = document.getElementById('comingSoonClose');
+    if (comingSoonClose) comingSoonClose.addEventListener('click', hideComingSoon);
+    if (comingSoonOverlay) comingSoonOverlay.addEventListener('click', hideComingSoon);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') hideComingSoon();
+    });
+
+    document.querySelectorAll('[data-coming-soon]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const title = btn.dataset.comingSoon || '功能开发中';
+            showComingSoon(title);
+        });
+    });
 
     // ==================== 图标加载系统 ====================
     /**
@@ -149,14 +182,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const parent = img.parentElement;
         if (!parent) return;
 
+        // 避免重复加载
+        if (img.dataset.iconLoaded === 'true' || img.dataset.iconLoading === 'true') return;
+        img.dataset.iconLoading = 'true';
+
         const loader = document.createElement('div');
         loader.className = 'icon-loading';
         parent.appendChild(loader);
 
-        // 优先使用本地图标，失败则用GitHub源
+        // 优先使用同域图标
         const sources = [
-            UYEA_CONFIG.resources.iconBaseFallback + name + '.ico', // 本地备用
-            UYEA_CONFIG.resources.iconBase + name + '.ico' // GitHub源
+            UYEA_CONFIG.resources.iconBaseFallback + name + '.png',
+            UYEA_CONFIG.resources.iconBase + name + '.png'
         ];
         let sourceIndex = 0;
 
@@ -180,6 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
             img.onload = () => {
                 if (loader.parentElement) loader.remove();
                 img.style.display = '';
+                img.dataset.iconLoaded = 'true';
+                delete img.dataset.iconLoading;
             };
 
             // 失败重试
@@ -191,25 +230,26 @@ document.addEventListener('DOMContentLoaded', () => {
         tryNextSource();
     }
 
+    function loadIconsIn(container) {
+        if (!container) return;
+        container.querySelectorAll('img[data-site-name]').forEach(loadIcon);
+    }
+
     document.querySelectorAll('img[data-site-name]').forEach(loadIcon);
 
-    // 使用防抖监听DOM插入新图标，避免性能问题
-    let mutationTimer;
+    // 使用 MutationObserver 监听动态插入的图标
     new MutationObserver(mutations => {
-        clearTimeout(mutationTimer);
-        mutationTimer = setTimeout(() => {
-            mutations.forEach(m => {
-                m.addedNodes.forEach(n => {
-                    if (n.nodeType === 1) {
-                        if (n.matches && n.matches('img[data-site-name]')) {
-                            loadIcon(n);
-                        } else if (n.querySelectorAll) {
-                            n.querySelectorAll('img[data-site-name]').forEach(loadIcon);
-                        }
+        mutations.forEach(m => {
+            m.addedNodes.forEach(n => {
+                if (n.nodeType === 1) {
+                    if (n.matches && n.matches('img[data-site-name]')) {
+                        loadIcon(n);
+                    } else if (n.querySelectorAll) {
+                        n.querySelectorAll('img[data-site-name]').forEach(loadIcon);
                     }
-                });
+                }
             });
-        }, 50);
+        });
     }).observe(document.body, { childList: true, subtree: true });
 
     // ==================== 导航数据加载 (仅index页) ====================
@@ -234,6 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </div>
                                 </a>
                             `).join('');
+                        loadIconsIn(section.querySelector('.grid-container'));
                     }
                 });
             })

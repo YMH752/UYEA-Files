@@ -136,10 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
         enabledCards.forEach(card => {
             card.addEventListener('click', (e) => {
                 if (card.tagName === 'A' && card.href) {
-                    // 延迟导航以展示动画
+                    // 延迟导航以展示动画（保持100ms以内，避免影响Core Web Vitals）
                     setTimeout(() => {
                         window.location.href = card.href;
-                    }, 200);
+                    }, 80);
 
                     e.preventDefault();
                 }
@@ -264,14 +264,11 @@ document.addEventListener('DOMContentLoaded', () => {
      * 预加载背景图，确保丝滑过渡
      */
     function preloadBackgroundImages() {
-        const mobileImg = new Image();
-        const desktopImg = new Image();
-
-        mobileImg.src = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/IMAGE/JPG/Peter_Thomas(2-1).jpg';
-        desktopImg.src = 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/IMAGE/JPG/Peter_Thomas(2-2).jpg';
-
-        mobileImg.onerror = () => console.warn('移动端背景图加载失败');
-        desktopImg.onerror = () => console.warn('桌面端背景图加载失败');
+        const img = new Image();
+        img.src = window.innerWidth > 1024
+            ? '/IMAGE/JPG/Peter_Thomas(2-2).webp'
+            : '/IMAGE/JPG/Peter_Thomas(2-1).webp';
+        img.onerror = () => console.warn('背景图预加载失败');
     }
 
     preloadBackgroundImages();

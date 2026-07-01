@@ -10,18 +10,18 @@ const UYEA_CONFIG = {
     css: '/CSS/',
     js: '/JS/',
     json: '/JSON/',
-    icons: '/Image/Icons/',
-    images: '/Image/',
+    icons: '/IMAGE/ICO/',
+    images: '/IMAGE/',
   },
 
-  // 远程资源
+  // 远程资源（优先使用同域资源，避免跨域与 GitHub Raw 慢速）
   resources: {
-    // GitHub 图标库（主源）
-    iconBase: 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/Icons/',
-    // 本地图标库备用（相对路径）
-    iconBaseFallback: '/Image/Icons/',
+    // 同域图标库（主源）
+    iconBase: '/IMAGE/ICO/',
+    // 备用图标库（相对路径）
+    iconBaseFallback: '/IMAGE/ICO/',
     // 背景图库
-    backgroundBase: 'https://raw.githubusercontent.com/YMH752/UYEA-Files/main/UYEA-Web/Image/JPG/',
+    backgroundBase: '/IMAGE/JPG/',
   },
 
   // API 配置

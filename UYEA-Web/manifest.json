@@ -1,0 +1,17 @@
+{
+  "name": "UYEA 悠野工作室",
+  "short_name": "UYEA",
+  "description": "悠野工作室 - 开始探索，分享AI使用心得、工具作品和生活点滴",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F5F5",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/IMAGE/ICO/zhihu.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ]
+}
