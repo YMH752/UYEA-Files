@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="悠野工作室(UYEA) - 开始探索，分享AI使用心得、工具作品和生活点滴">
-    <meta name="theme-color" content="#000000">
+    <meta name="description" content="悠野社区(UYEA) - 以论坛为主页，分享AI使用心得、工具作品和生活点滴">
+    <meta name="theme-color" content="#2563EB">
     <meta name="color-scheme" content="light dark">
-    <title>UYEA | 开始探索</title>
+    <title>悠野社区 | UYEA</title>
 
     <link rel="canonical" href="https://uyea-files.pages.dev/">
     <link rel="icon" href="/IMAGE/ICO/zhihu.png" type="image/png">
     <link rel="apple-touch-icon" href="/IMAGE/ICO/zhihu.png">
 
-    <meta property="og:title" content="UYEA | 开始探索">
-    <meta property="og:description" content="悠野工作室(UYEA) - 开始探索，分享AI使用心得、工具作品和生活点滴">
+    <meta property="og:title" content="悠野社区 | UYEA">
+    <meta property="og:description" content="悠野社区 - 以论坛为主页，分享AI使用心得、工具作品和生活点滴">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://uyea-files.pages.dev/">
     <meta property="og:image" content="https://uyea-files.pages.dev/IMAGE/JPG/Peter_Thomas(2-2).webp">
@@ -25,122 +25,156 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/landing.css?v=0.2.0" as="style">
-    <link rel="preload" href="/JS/config.js?v=0.2.0" as="script">
-    <link rel="preload" href="/JS/landing.js?v=0.2.0" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.3.0" as="style">
+    <link rel="preload" href="/JS/config.js?v=0.3.0" as="script">
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.2.0">
-    <link rel="stylesheet" href="/CSS/landing.css?v=0.2.0">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.3.0">
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
 
     <style>
-        html { font-family: 'Alibaba Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+        html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', system-ui, sans-serif; }
     </style>
 </head>
 <body data-lang="zh-CN">
-    <h1 class="sr-only">UYEA 悠野工作室 - 开始探索</h1>
-    <!-- 顶部导航栏 -->
-    <header class="landing-header">
-        <div class="landing-header-container">
-            <div class="landing-logo">UYEA</div>
-            <div class="landing-header-right">
-            <div class="landing-lang-selector">
-                <button class="landing-lang-item active" data-lang="zh-CN">CN</button>
-                <button class="landing-lang-item" data-lang="zh-TW">CN-HK</button>
-                <button class="landing-lang-item" data-lang="en">EN</button>
-            </div>
-                <button class="landing-search-btn" aria-label="搜索">
-                    <svg class="landing-search-icon" viewBox="0 0 24 24" fill="none">
-                        <circle cx="11" cy="11" r="6"></circle>
-                        <line x1="16" y1="16" x2="21" y2="21"></line>
-                    </svg>
-                </button>
+    <h1 class="sr-only">UYEA 悠野社区 - 论坛主页</h1>
 
-                <button class="landing-user-btn" aria-label="用户中心">
-                    <svg class="landing-user-icon" viewBox="0 0 32 32" fill="none">
-                        <circle cx="16" cy="8" r="6"></circle>
-                        <path d="M4 29 C4 20 9 18 16 18 C23 18 28 20 28 29"></path>
+    <!-- 顶部导航栏 -->
+    <header class="top-header">
+        <div class="header-container">
+            <a href="/" class="logo-text">UYEA</a>
+            <div class="header-right">
+                <nav class="nav-links">
+                    <a href="/" class="nav-link active" data-i18n="nav.forum">悠野社区</a>
+                    <a href="navigation" class="nav-link" data-i18n="nav.home">网站导航</a>
+                    <a href="tools" class="nav-link" data-i18n="nav.tools">线上工具</a>
+                </nav>
+                <div class="lang-selector" id="langSelector">
+                    <div class="lang-highlight" id="langHighlight"></div>
+                    <button class="lang-btn active" data-lang="zh-CN">中文</button>
+                    <button class="lang-btn" data-lang="zh-TW">繁中</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+                <button class="search-icon-btn" id="searchIconBtn" aria-label="搜索">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </button>
+                <button class="user-btn" aria-label="用户中心" data-coming-soon="用户中心">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+                <button class="menu-toggle" id="menuToggleBtn"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+
+        <!-- 搜索下拉 -->
+        <div class="search-dropdown" id="searchDropdown" style="position:absolute;">
+            <div class="search-container">
+                <div class="engine-dropdown-wrapper" id="engineDropdownWrapper">
+                    <button class="engine-trigger-btn" id="engineTriggerBtn">
+                        <span id="engineTriggerLabel">百度</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="engine-dropdown-list">
+                        <div class="engine-option-item" data-value="baidu">百度</div>
+                        <div class="engine-option-item" data-value="google">Google</div>
+                        <div class="engine-option-item" data-value="bing">Bing</div>
+                        <div class="engine-option-item" data-value="site">站内</div>
+                    </div>
+                </div>
+                <input type="text" class="search-input" id="searchInput" placeholder="输入关键词搜索...">
             </div>
         </div>
     </header>
 
-    <!-- 主页面 -->
-    <main class="landing-main">
-        <!-- 时钟/日期区域 -->
-        <div class="landing-clock-section">
-            <div class="landing-clock-display" id="clockDisplay">
-                <div class="landing-time" id="clockTime">00:00</div>
-                <div class="landing-date" id="clockDate">2026-1-1 星期一</div>
-            </div>
+    <!-- 移动端下拉菜单 -->
+    <div class="dropdown-menu" id="dropdownMenu">
+        <nav class="menu-nav">
+            <a href="/" class="menu-item active" data-i18n="nav.forum">悠野社区</a>
+            <a href="navigation" class="menu-item" data-i18n="nav.home">网站导航</a>
+            <a href="tools" class="menu-item" data-i18n="nav.tools">线上工具</a>
+        </nav>
+        <div class="menu-auth-section">
+            <button class="register-btn" data-coming-soon="注册"><span data-i18n="btn.register">注册</span></button>
         </div>
+    </div>
 
-        <!-- 卡片区域 -->
-        <div class="landing-cards-container">
-            <div class="landing-cards-grid" id="cardsGrid">
-                <!-- 网站导航 -->
-                <a href="navigation" class="landing-card landing-card-enabled" data-card="nav">
-                    <div class="landing-card-content">
-                        <div class="landing-card-title">网站导航</div>
-                        <div class="landing-card-desc">分享实用网站</div>
+    <!-- 主内容：论坛布局 -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <div class="forum-layout">
+                <!-- 侧栏 -->
+                <aside class="forum-sidebar">
+                    <div class="sidebar-card">
+                        <h3>社区统计</h3>
+                        <div class="sidebar-stat"><span>主题数</span><span>128</span></div>
+                        <div class="sidebar-stat"><span>回复数</span><span>1,024</span></div>
+                        <div class="sidebar-stat"><span>成员数</span><span>356</span></div>
+                        <div class="sidebar-stat"><span>在线</span><span>23</span></div>
                     </div>
-                    <div class="landing-card-arrow">→</div>
-                </a>
+                    <div class="sidebar-card">
+                        <h3>分类</h3>
+                        <div class="category-list">
+                            <button class="category-item active" data-cat="all">全部主题<span class="count">128</span></button>
+                            <button class="category-item" data-cat="公告">公告<span class="count">8</span></button>
+                            <button class="category-item" data-cat="AI 探讨">AI 探讨<span class="count">42</span></button>
+                            <button class="category-item" data-cat="工具">工具<span class="count">35</span></button>
+                            <button class="category-item" data-cat="生活">生活<span class="count">28</span></button>
+                            <button class="category-item" data-cat="反馈">反馈<span class="count">15</span></button>
+                        </div>
+                    </div>
+                </aside>
 
-                <!-- 线上工具 -->
-                <a href="tools" class="landing-card landing-card-enabled" data-card="tools">
-                    <div class="landing-card-content">
-                        <div class="landing-card-title">线上工具</div>
-                        <div class="landing-card-desc">在线工具，提高效率</div>
+                <!-- 论坛主体 -->
+                <div class="forum-main">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title" data-i18n="nav.forum">悠野社区</div>
+                            <div class="section-subtitle">分享 AI 心得、工具作品与生活点滴</div>
+                        </div>
                     </div>
-                    <div class="landing-card-arrow">→</div>
-                </a>
 
-                <!-- 社区论坛 -->
-                <a href="forum" class="landing-card landing-card-enabled" data-card="forum">
-                    <div class="landing-card-content">
-                        <div class="landing-card-title">社区论坛</div>
-                        <div class="landing-card-desc">解答疑问，分享经验</div>
+                    <div class="forum-toolbar">
+                        <button class="post-btn" data-coming-soon="发布新帖子">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>发布新帖</span>
+                        </button>
+                        <div class="forum-search">
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            </span>
+                            <input type="text" id="forumSearchInput" placeholder="搜索帖子、话题或用户...">
+                        </div>
                     </div>
-                    <div class="landing-card-arrow">→</div>
-                </a>
 
-                <!-- 桌面宠物 -->
-                <button class="landing-card landing-card-disabled" data-card="pet" id="petCard">
-                    <div class="landing-card-content">
-                        <div class="landing-card-title">桌面宠物</div>
-                        <div class="landing-card-desc">增添趣味，放松身心</div>
-                    </div>
-                    <div class="landing-card-arrow">→</div>
-                </button>
+                    <div class="post-list" id="postList"></div>
 
-                <!-- 实时聊天 -->
-                <button class="landing-card landing-card-disabled" data-card="chat" id="chatCard">
-                    <div class="landing-card-content">
-                        <div class="landing-card-title">实时聊天</div>
-                        <div class="landing-card-desc">随时随地，在线交流</div>
+                    <div class="no-results" id="noResults">
+                        <div class="no-results-icon">🔍</div>
+                        <div class="no-results-text">未找到匹配的帖子</div>
                     </div>
-                    <div class="landing-card-arrow">→</div>
-                </button>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- 开发中模态框 -->
-    <div class="landing-modal-overlay" id="devModalOverlay"></div>
-    <div class="landing-modal" id="devModal">
-        <div class="landing-modal-icon">🚀</div>
-        <div class="landing-modal-title" id="devModalTitle">功能开发中</div>
-        <div class="landing-modal-text" id="devModalText">敬请期待更新！</div>
-        <button class="landing-modal-btn" id="devModalCloseBtn">关闭</button>
+    <!-- 开发中提示模态框 -->
+    <div class="modal-overlay" id="comingSoonOverlay"></div>
+    <div class="coming-soon-modal" id="comingSoonModal">
+        <div class="coming-soon-icon">🚀</div>
+        <div class="coming-soon-title" id="comingSoonTitle">功能开发中</div>
+        <div class="coming-soon-text" id="comingSoonText">敬请期待更新！</div>
+        <button class="coming-soon-btn" id="comingSoonClose">知道了</button>
     </div>
 
-    <script src="/JS/config.js?v=0.2.0" defer></script>
-    <script src="/JS/script.js?v=0.2.0" defer></script>
-    <script src="/JS/landing.js?v=0.2.0" defer></script>
+    <script src="/JS/config.js?v=0.3.0" defer></script>
+    <script src="/JS/script.js?v=0.3.0" defer></script>
+    <script src="/JS/forum.js?v=0.3.0" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

@@ -4,5 +4,8 @@
 /tools.html /tools 301
 /index.html / 301
 
+# 论坛已合并为首页：/forum 重定向到首页
+/forum / 301
+
 # 旧路径兼容：将 /UYEA-Web/* 重定向到 /*
 /UYEA-Web/* /:splat 301
