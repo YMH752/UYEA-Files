@@ -1,5 +1,5 @@
 ﻿/* ============================================================
-   UYEA 悠野社区 · style.css v0.6.11
+   UYEA 悠野社区 · style.css v0.6.12
    复古×现代 · 墨绿琥珀 · 液态玻璃 · 纸张质感
    ============================================================ */
 
@@ -107,7 +107,7 @@ html[data-theme="dark"] {
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { overflow-x: hidden; scroll-behavior: smooth; }
+html { overflow-x: hidden; overflow-y: scroll; scroll-behavior: smooth; scrollbar-gutter: stable; }
 
 /* iOS安全区域适配（刘海屏/Home Indicator） */
 @supports (padding: env(safe-area-inset-top)) {
