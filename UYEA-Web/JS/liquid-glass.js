@@ -1,5 +1,5 @@
 /**
- * UYEA 液态玻璃效果模块 v0.6.19
+ * UYEA 液态玻璃效果模块 v0.6.20
  * 基于 SVG feDisplacementMap + Canvas 位移贴图实现真实玻璃折射
  * 参考: https://github.com/shuding/liquid-glass
  *       https://github.com/childrentime/liquid-glass
@@ -251,7 +251,7 @@
             glassBlur = rootStyle.getPropertyValue('--glass-blur').trim();
         }
         if (!glassBlur) {
-            glassBlur = 'blur(14px) saturate(140%)';
+            glassBlur = 'blur(20px) saturate(180%)';
         }
 
         // 组合：SVG 位移滤镜 + 模糊 + 色彩增强

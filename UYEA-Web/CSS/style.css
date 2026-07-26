@@ -33,14 +33,14 @@
     --border:           #E7DFD3;
     --border-warm:      #DDD3C2;
 
-    /* 液态玻璃效果参数 */
-    --glass-bg:         rgba(255, 251, 245, 0.3);
-    --glass-bg-strong:  rgba(255, 251, 245, 0.35);
-    --glass-border:     rgba(255, 255, 255, 0.6);
-    --glass-highlight:  rgba(255, 255, 255, 0.9);
-    --glass-blur:       blur(14px) saturate(140%);
+    /* 液态玻璃效果参数（对齐 Apple Liquid Glass 规范） */
+    --glass-bg:         rgba(255, 251, 245, 0.18);
+    --glass-bg-strong:  rgba(255, 251, 245, 0.25);
+    --glass-border:     rgba(255, 255, 255, 0.25);
+    --glass-highlight:  rgba(255, 255, 255, 0.8);
+    --glass-blur:       blur(20px) saturate(180%);
     /* 文字阴影：在透明玻璃上增强文字可读性 */
-    --text-shadow-glass: 0 1px 2px rgba(255,255,255,0.5), 0 0 8px rgba(255,251,245,0.3);
+    --text-shadow-glass: 0 1px 2px rgba(255,255,255,0.6), 0 0 8px rgba(255,251,245,0.4);
 
     --text-primary:     #292524;
     --text-secondary:   #57534E;
@@ -92,13 +92,13 @@ html[data-theme="dark"] {
     --border:           #44403C;
     --border-warm:      #57534E;
 
-    --glass-bg:         rgba(41, 37, 36, 0.3);
-    --glass-bg-strong:  rgba(41, 37, 36, 0.35);
-    --glass-border:     rgba(255, 255, 255, 0.08);
-    --glass-highlight:  rgba(255, 255, 255, 0.15);
-    --glass-blur:       blur(14px) saturate(130%);
+    --glass-bg:         rgba(41, 37, 36, 0.18);
+    --glass-bg-strong:  rgba(41, 37, 36, 0.25);
+    --glass-border:     rgba(255, 255, 255, 0.06);
+    --glass-highlight:  rgba(255, 255, 255, 0.12);
+    --glass-blur:       blur(20px) saturate(160%);
     /* 暗色模式文字阴影：深色阴影增强浅色文字对比 */
-    --text-shadow-glass: 0 1px 3px rgba(0,0,0,0.4), 0 0 8px rgba(41,37,36,0.3);
+    --text-shadow-glass: 0 1px 3px rgba(0,0,0,0.5), 0 0 8px rgba(41,37,36,0.4);
 
     --text-primary:     #F5F5F4;
     --text-secondary:   #D6D3D1;
