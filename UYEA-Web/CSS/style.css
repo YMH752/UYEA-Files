@@ -1,5 +1,5 @@
 /* ============================================================
-   UYEA 悠野社区 · style.css v0.6.39
+   UYEA 悠野社区 · style.css v0.6.40
    复古×现代 · 墨绿琥珀 · 液态玻璃 · 纸张质感
    ============================================================ */
 
@@ -981,37 +981,23 @@ html[data-theme="coffee"] .section-title {
 
 .card-item:hover .card-icon { transform: scale(1.1); }
 
-.card-icon img {
-    width: 100%; height: 100%;
-    object-fit: contain;
-    visibility: hidden;
-    transition: filter var(--duration) ease;
-}
-
-/* 暗色主题：深色背景上的深色图标需要提亮 */
-html[data-theme="dark"] .card-icon img,
-html[data-theme="coffee"] .card-icon img {
-    filter: brightness(1.15) contrast(1.05);
-}
-
-/* 极客主题：黑底荧光绿，图标需要反转颜色确保可见 */
-html[data-theme="geek"] .card-icon img {
-    filter: invert(1) hue-rotate(80deg) brightness(1.2);
-}
-
-.icon-loading {
-    position: absolute;
-    width: 36px; height: 36px;
-    border: 2px solid var(--border);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
-
-.icon-emoji {
+/* 图标占位符：底色+边框+首字母（待后续替换为真实图标） */
+.icon-placeholder {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 24px; font-weight: 600;
+    background: var(--primary-lighter);
+    border: 1.5px solid var(--primary-light);
+    border-radius: var(--radius-sm);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    transition: all var(--duration) ease;
+}
+
+.card-item:hover .icon-placeholder {
+    background: var(--primary-light);
+    border-color: var(--primary);
 }
 
 .card-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }

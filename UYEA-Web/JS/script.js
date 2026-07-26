@@ -200,73 +200,8 @@
         });
     });
 
-    // ==================== 图标加载系统（本地高清PNG → emoji降级） ====================
-    /**
-     * 加载站点图标（所有高清图标已保存在GitHub仓库）
-     * @param {HTMLImageElement} img 图片元素
-     */
-    function loadIcon(img) {
-        const name = img.dataset.siteName;
-        if (!name) return;
-        const parent = img.parentElement;
-        if (!parent) return;
-
-        // 避免重复加载
-        if (img.dataset.iconLoaded === 'true' || img.dataset.iconLoading === 'true') return;
-        img.dataset.iconLoading = 'true';
-        img.decoding = 'async';
-
-        const loader = document.createElement('div');
-        loader.className = 'icon-loading';
-        parent.appendChild(loader);
-
-        img.onload = () => {
-            if (loader.parentElement) loader.remove();
-            img.style.visibility = 'visible';
-            img.dataset.iconLoaded = 'true';
-            delete img.dataset.iconLoading;
-        };
-
-        img.onerror = () => {
-            // 本地图标加载失败，降级到 emoji
-            if (loader.parentElement) loader.remove();
-            img.remove();
-            const span = document.createElement('span');
-            span.className = 'icon-emoji';
-            span.textContent = UYEA_CONFIG.emojiMap[name] || '🔗';
-            parent.appendChild(span);
-            delete img.dataset.iconLoading;
-        };
-
-        img.src = UYEA_CONFIG.iconBase + name + '.png';
-    }
-
-    // 直接加载容器内所有图标（不使用IntersectionObserver，避免与display:none冲突）
-    function loadIconsIn(container) {
-        if (!container) return;
-        container.querySelectorAll('img[data-site-name]').forEach(loadIcon);
-    }
-
-    // 加载页面中已有的图标
-    document.querySelectorAll('img[data-site-name]').forEach(loadIcon);
-
-    // 使用 MutationObserver 监听动态插入的图标（仅在动态加载图标的页面启动）
-    const mainContent = document.querySelector('.main-content');
-    if (mainContent && document.getElementById('ai-section')) {
-        new MutationObserver(mutations => {
-            for (const m of mutations) {
-                for (const n of m.addedNodes) {
-                    if (n.nodeType === 1) {
-                        if (n.matches && n.matches('img[data-site-name]')) {
-                            loadIcon(n);
-                        } else if (n.querySelectorAll && n.querySelectorAll('img[data-site-name]').length) {
-                            n.querySelectorAll('img[data-site-name]').forEach(loadIcon);
-                        }
-                    }
-                }
-            }
-        }).observe(mainContent, { childList: true, subtree: true });
-    }
+    // ==================== 图标占位符系统（底色+边框，待后续替换为真实图标） ====================
+    // 卡片图标使用首字母占位符，由 navCardHtml 内联生成，无需异步加载
 
     // ==================== 导航数据加载 + 分类筛选/搜索 (仅navigation页) ====================
     if (document.getElementById('ai-section')) {
@@ -279,11 +214,12 @@
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
-        // 生成单张卡片 HTML
+        // 生成单张卡片 HTML（图标用首字母占位符，底色+边框）
         function navCardHtml(item) {
+            const firstChar = (item.title || '?').charAt(0).toUpperCase();
             return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" title="${navEsc(item.title)}">
                 <div class="card-icon">
-                    <img src="" data-site-name="${navEsc(item.icon)}" data-site-url="${navEsc(item.url)}" alt="${navEsc(item.title)}" loading="lazy" decoding="async">
+                    <span class="icon-placeholder">${navEsc(firstChar)}</span>
                 </div>
                 <div class="card-info">
                     <div class="card-title">${navEsc(item.title)}</div>
@@ -359,7 +295,6 @@
                     if (section && nav[cat]) {
                         section.querySelector('.grid-container').innerHTML = nav[cat]
                             .map(navCardHtml).join('');
-                        loadIconsIn(section.querySelector('.grid-container'));
                     }
                 });
                 // 卡片渲染完成后应用2行限制
