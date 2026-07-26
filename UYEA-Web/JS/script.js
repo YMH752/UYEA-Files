@@ -291,6 +291,12 @@
             });
 
             if (noResults) noResults.classList.toggle('show', visibleCount === 0);
+
+            // "更多"按钮只在"全部"视图且无搜索时显示，切到具体分类或搜索时隐藏
+            const showMoreBtns = (currentCategory === 'all' && !keyword);
+            document.querySelectorAll('.more-btn[data-target-category]').forEach(btn => {
+                btn.style.display = showMoreBtns ? '' : 'none';
+            });
         }
 
         fetch(UYEA_CONFIG.dataFiles.navigation)

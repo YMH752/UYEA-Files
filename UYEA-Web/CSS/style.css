@@ -1,5 +1,5 @@
 /* ============================================================
-   UYEA 悠野社区 · style.css v0.6.42
+   UYEA 悠野社区 · style.css v0.6.43
    复古×现代 · 墨绿琥珀 · 液态玻璃 · 纸张质感
    ============================================================ */
 
@@ -915,10 +915,11 @@ html[data-theme="coffee"] .section-title {
 
 /* 2行限制由JS精确控制（根据实际列数计算），无需CSS max-height */
 
+/* O+ 双列下划线布局：类字典目录，密度高，干净有序 */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 5px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 20px;
 }
 
 .card-item {
@@ -926,11 +927,12 @@ html[data-theme="coffee"] .section-title {
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    gap: 7px;
-    padding: 5px 7px;
+    gap: 8px;
+    padding: 8px 4px;
     background: transparent;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
     text-decoration: none;
     color: var(--text-primary);
     transition: all var(--duration) var(--ease-smooth);
@@ -943,15 +945,13 @@ html[data-theme="coffee"] .section-title {
 .card-item::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    border-radius: var(--radius-md);
+    bottom: -1px; left: 0; right: 0;
+    height: 2px;
     background: var(--primary-gradient);
-    opacity: 0;
-    z-index: -1;
-    transition: opacity 0.3s ease;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease-smooth);
 }
-
-.card-item:hover::before { opacity: 0.05; }
 
 .card-item:nth-child(1) { animation-delay: 0.05s; }
 .card-item:nth-child(2) { animation-delay: 0.1s; }
@@ -962,18 +962,20 @@ html[data-theme="coffee"] .section-title {
 .card-item:nth-child(n+7) { animation-delay: 0.35s; }
 
 .card-item:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary);
+    transform: none;
+    box-shadow: none;
+    border-color: transparent;
 }
 
+.card-item:hover::before { transform: scaleX(1); }
+
 .card-icon {
-    width: 40px; height: 40px;
+    width: 28px; height: 28px;
     display: flex; align-items: center; justify-content: center;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-full);
     background: transparent;
     flex-shrink: 0;
-    font-size: 24px;
+    font-size: 16px;
     transition: transform var(--duration) var(--ease-bounce);
     position: relative;
     overflow: hidden;
@@ -981,14 +983,14 @@ html[data-theme="coffee"] .section-title {
 
 .card-item:hover .card-icon { transform: scale(1.1); }
 
-/* 图标占位符：底色+边框+首字母（待后续替换为真实图标） */
+/* 图标占位符：圆形底色+首字母（待后续替换为真实图标） */
 .icon-placeholder {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
     background: var(--primary-lighter);
     border: 1.5px solid var(--primary-light);
-    border-radius: var(--radius-sm);
-    font-size: 18px;
+    border-radius: var(--radius-full);
+    font-size: 14px;
     font-weight: 700;
     color: var(--primary);
     text-transform: uppercase;
@@ -1003,7 +1005,7 @@ html[data-theme="coffee"] .section-title {
 .card-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
 
 .card-title {
-    font-size: clamp(12px, 3vw, 14px);
+    font-size: clamp(12px, 2.5vw, 14px);
     font-weight: 600;
     line-height: 1.3;
     overflow: hidden;
@@ -1491,7 +1493,6 @@ html[data-theme="coffee"] .bottom-nav-item.active {
 /* 平板横屏/小桌面（1024px）：优化内容密度 */
 @media (max-width: 1024px) {
     .header-container, .content-wrapper { max-width: 960px; }
-    .grid-container { grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); }
 }
 
 /* 平板竖屏（900px）：导航栏切换为汉堡菜单 */
@@ -1513,7 +1514,6 @@ html[data-theme="coffee"] .bottom-nav-item.active {
     .post-item { padding: 14px 16px; }
     .post-title { font-size: 15px; }
     .back-to-top { width: 44px; height: 44px; bottom: 120px; right: 16px; }
-    .grid-container { grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); gap: 5px; }
     .search-dropdown { width: calc(100vw - 24px); right: 12px; }
     .search-submit-btn { width: 44px; height: 44px; }
 }
@@ -1529,9 +1529,10 @@ html[data-theme="coffee"] .bottom-nav-item.active {
     /* 底部导航保持可读性，最小11px */
     .bottom-nav-item { padding: 6px 12px; font-size: 11px; }
     .bottom-nav { gap: 2px; padding: 5px; }
-    .grid-container { grid-template-columns: repeat(2, 1fr); gap: 5px; }
-    .card-item { padding: 5px 8px; }
-    .card-icon { width: 38px; height: 38px; font-size: 22px; }
+    /* 窄屏降为单列下划线，标题完整显示 */
+    .grid-container { grid-template-columns: 1fr; gap: 0; }
+    .card-item { padding: 6px 4px; }
+    .card-icon { width: 26px; height: 26px; font-size: 14px; }
 }
 
 /* 超小屏（380px）：隐藏非核心元素 */
@@ -1548,7 +1549,6 @@ html[data-theme="coffee"] .bottom-nav-item.active {
     .main-content { padding: 10px 8px 100px; }
     .header-container { padding: 0 10px; }
     .logo-text { font-size: 20px; letter-spacing: 1px; }
-    .grid-container { grid-template-columns: 1fr; gap: 5px; }
     .post-item { padding: 10px 12px; }
     .post-title { font-size: 13px; }
     .bottom-nav { padding: 4px; gap: 1px; max-width: calc(100vw - 16px); }
@@ -1565,8 +1565,7 @@ html[data-theme="coffee"] .bottom-nav-item.active {
     .bottom-nav-item { padding: 4px 12px; font-size: 10px; }
     .back-to-top { bottom: 70px; width: 44px; height: 44px; }
     .section-group { margin-bottom: 16px; }
-    .grid-container { gap: 5px; }
-    .card-item { padding: 5px 10px; }
+    .card-item { padding: 5px 4px; }
     .search-dropdown { top: calc(100% + 4px); max-height: 60vh; overflow-y: auto; }
 }
 
@@ -1574,16 +1573,15 @@ html[data-theme="coffee"] .bottom-nav-item.active {
 @media (min-width: 769px) and (max-width: 1024px) {
     .header-container { padding: 0 20px; }
     .main-content { padding: 24px 20px 130px; }
-    .grid-container { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
-    .card-item { padding: 6px 10px; }
+    .card-item { padding: 7px 4px; }
 }
 
-/* 超大屏幕优化（>1400px）：充分利用空间 */
+/* 超大屏幕优化（>1400px）：充分利用空间，3列提升密度 */
 @media (min-width: 1401px) {
     .header-container { max-width: 1600px; padding: 0 32px; }
     .content-wrapper { max-width: 1600px; }
     .main-content { padding: 32px 32px 150px; }
-    .grid-container { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+    .grid-container { grid-template-columns: repeat(3, 1fr); gap: 0 28px; }
     .post-item { padding: 20px 24px; }
     .section-group { margin-bottom: 36px; }
 }
