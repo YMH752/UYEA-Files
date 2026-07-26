@@ -24,8 +24,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.23" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.23" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.24" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.24" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -64,7 +64,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.23" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.24" media="all">
 
     <!-- 工具页面专属样式 -->
     <style>
@@ -143,7 +143,7 @@
             background: var(--bg);
             color: var(--text-primary);
             font-family: 'Courier New', 'Consolas', monospace;
-            font-size: 13px;
+            font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
             line-height: 1.5;
             resize: vertical;
             outline: none;
@@ -161,7 +161,7 @@
             border-radius: var(--radius-sm);
             background: var(--bg);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
             font-family: inherit;
             outline: none;
             transition: border-color var(--duration) ease, box-shadow var(--duration) ease;
@@ -177,7 +177,7 @@
             border-radius: var(--radius-sm);
             background: var(--bg);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
             font-family: inherit;
             outline: none;
             cursor: pointer;
@@ -320,9 +320,9 @@
             .tool-modal-body { padding: 16px; }
             .tool-modal-header { padding: 14px 16px; }
             .tool-modal-title { font-size: 16px; }
-            .tool-textarea { min-height: 100px; font-size: 12px; }
-            .tool-input { height: 38px; font-size: 13px; }
-            .tool-select { height: 38px; font-size: 13px; }
+            .tool-textarea { min-height: 100px; }
+            .tool-input { height: 38px; }
+            .tool-select { height: 38px; }
             .tool-actions { gap: 6px; }
             .tool-actions .post-btn { padding: 8px 14px; font-size: 13px; }
         }
@@ -550,10 +550,10 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
-    <script src="/JS/liquid-glass.js?v=0.6.23" defer></script>
-    <script src="/JS/config.js?v=0.6.23" defer></script>
-    <script src="/JS/script.js?v=0.6.23" defer></script>
-    <script src="/JS/tools.js?v=0.6.23" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.24" defer></script>
+    <script src="/JS/config.js?v=0.6.24" defer></script>
+    <script src="/JS/script.js?v=0.6.24" defer></script>
+    <script src="/JS/tools.js?v=0.6.24" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

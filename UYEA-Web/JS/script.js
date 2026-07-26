@@ -9,6 +9,25 @@ document.addEventListener('DOMContentLoaded', () => {
         catch (e) { /* 静默忽略 */ }
     }
 
+    // ==================== 下拉菜单互斥机制 ====================
+    // 打开任一下拉菜单时，自动关闭其他所有下拉菜单，防止重叠
+    const DROPDOWN_PAIRS = [
+        { btnId: 'langIconBtn', menuId: 'langDropdown' },
+        { btnId: 'searchIconBtn', menuId: 'searchDropdown' },
+        { btnId: 'themeIconBtn', menuId: 'themeDropdown' },
+        { btnId: 'menuToggleBtn', menuId: 'dropdownMenu' }
+    ];
+
+    function closeAllDropdowns(exceptBtnId) {
+        DROPDOWN_PAIRS.forEach(({ btnId, menuId }) => {
+            if (btnId === exceptBtnId) return;
+            const btn = document.getElementById(btnId);
+            const menu = document.getElementById(menuId);
+            if (menu) menu.classList.remove('show');
+            if (btn) btn.classList.remove('active');
+        });
+    }
+
     // ==================== 多语言系统 ====================
     let currentLang = UYEA_CONFIG.defaultLanguage;
 
@@ -44,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (langIconBtn && langDropdown) {
         langIconBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            closeAllDropdowns('langIconBtn');
             const open = langDropdown.classList.toggle('show');
             langIconBtn.classList.toggle('active', open);
         });
@@ -79,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (menuToggle && dropdown) {
         menuToggle.addEventListener('click', (e) => {
             e.stopPropagation();
+            closeAllDropdowns('menuToggleBtn');
             const open = dropdown.classList.toggle('show');
             menuToggle.classList.toggle('active', open);
         });
@@ -126,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchIcon && searchDropdown) {
         searchIcon.addEventListener('click', (e) => {
             e.stopPropagation();
+            closeAllDropdowns('searchIconBtn');
             searchDropdown.classList.toggle('show');
             if (searchDropdown.classList.contains('show') && searchInput) {
                 searchInput.focus();
@@ -350,6 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (themeIconBtn && themeDropdown) {
         themeIconBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            closeAllDropdowns('themeIconBtn');
             const open = themeDropdown.classList.toggle('show');
             themeIconBtn.classList.toggle('active', open);
         });

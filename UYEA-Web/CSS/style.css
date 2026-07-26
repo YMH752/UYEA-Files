@@ -563,7 +563,7 @@ a { color: var(--primary); text-decoration: none; }
     border: none; background: transparent; outline: none;
     width: 100%; min-width: 0;
     padding: 0 10px;
-    font-size: 13px;
+    font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
     color: var(--text-primary);
     flex: 1;
 }
@@ -771,7 +771,7 @@ html[data-theme="coffee"] .section-title {
 .forum-search input {
     flex: 1; min-width: 0;
     border: none; background: transparent; outline: none;
-    font-size: 14px;
+    font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
     color: var(--text-primary);
     width: 100%;
 }
@@ -1433,12 +1433,12 @@ html[data-theme="coffee"] .section-title {
 
 .modal-inputs-wrapper input {
     flex: 1; min-width: 60px;
-    height: 34px;
+    height: 38px;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: var(--bg);
     text-align: center;
-    font-size: 12px;
+    font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
     outline: none;
     color: var(--text-primary);
     transition: border-color var(--duration) ease;
