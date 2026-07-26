@@ -34,11 +34,13 @@
     --border-warm:      #DDD3C2;
 
     /* 液态玻璃效果参数 */
-    --glass-bg:         rgba(255, 251, 245, 0.35);
-    --glass-bg-strong:  rgba(255, 251, 245, 0.5);
+    --glass-bg:         rgba(255, 251, 245, 0.3);
+    --glass-bg-strong:  rgba(255, 251, 245, 0.45);
     --glass-border:     rgba(255, 255, 255, 0.6);
     --glass-highlight:  rgba(255, 255, 255, 0.9);
     --glass-blur:       blur(14px) saturate(140%);
+    /* 文字阴影：在透明玻璃上增强文字可读性 */
+    --text-shadow-glass: 0 1px 2px rgba(255,255,255,0.5), 0 0 8px rgba(255,251,245,0.3);
 
     --text-primary:     #292524;
     --text-secondary:   #57534E;
@@ -90,11 +92,13 @@ html[data-theme="dark"] {
     --border:           #44403C;
     --border-warm:      #57534E;
 
-    --glass-bg:         rgba(41, 37, 36, 0.35);
-    --glass-bg-strong:  rgba(41, 37, 36, 0.5);
+    --glass-bg:         rgba(41, 37, 36, 0.3);
+    --glass-bg-strong:  rgba(41, 37, 36, 0.45);
     --glass-border:     rgba(255, 255, 255, 0.08);
     --glass-highlight:  rgba(255, 255, 255, 0.15);
     --glass-blur:       blur(14px) saturate(130%);
+    /* 暗色模式文字阴影：深色阴影增强浅色文字对比 */
+    --text-shadow-glass: 0 1px 3px rgba(0,0,0,0.4), 0 0 8px rgba(41,37,36,0.3);
 
     --text-primary:     #F5F5F4;
     --text-secondary:   #D6D3D1;
@@ -186,6 +190,7 @@ a { color: var(--primary); text-decoration: none; }
     letter-spacing: clamp(1px, 0.4vw, 2px);
     transition: opacity 0.2s ease;
     white-space: nowrap;
+    filter: drop-shadow(0 1px 2px rgba(255,255,255,0.4));
 }
 
 .logo-text:hover { opacity: 0.85; }
@@ -199,11 +204,12 @@ a { color: var(--primary); text-decoration: none; }
     color: var(--text-secondary);
     text-decoration: none;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     border-radius: var(--radius-sm);
     transition: all var(--duration) var(--ease-smooth);
     white-space: nowrap;
     position: relative;
+    text-shadow: var(--text-shadow-glass);
 }
 
 .nav-link:hover { color: var(--primary); background: var(--primary-lighter); }
@@ -257,7 +263,7 @@ a { color: var(--primary); text-decoration: none; }
     background: transparent;
     color: var(--text-secondary);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     border-radius: 8px;
     position: relative;
@@ -266,6 +272,7 @@ a { color: var(--primary); text-decoration: none; }
     transition: color 0.3s ease;
     min-width: 48px;
     text-align: center;
+    text-shadow: var(--text-shadow-glass);
 }
 
 .lang-btn.active { color: #fff; }
@@ -1625,12 +1632,13 @@ html[data-theme="dark"] .bg-orb { opacity: 0.25; }
     background: transparent;
     color: var(--text-muted);
     font-size: 11px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     border-radius: 20px;
     transition: all 0.3s var(--ease-bounce);
     position: relative;
     white-space: nowrap;
+    text-shadow: var(--text-shadow-glass);
 }
 
 .bottom-nav-item.active {
