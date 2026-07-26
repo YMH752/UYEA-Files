@@ -1,11 +1,11 @@
 ﻿/*
- * UYEA 悠野社区 - Service Worker v0.6.27
+ * UYEA 悠野社区 - Service Worker v0.6.28
  * 缓存优先策略，支持离线访问
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
 
-const CACHE_NAME = 'uyea-v0.6.27';
-const V = 'v=0.6.27';
+const CACHE_NAME = 'uyea-v0.6.28';
+const V = 'v=0.6.28';
 
 // 核心静态资源（安装时预缓存）
 const CORE_ASSETS = [
@@ -18,12 +18,10 @@ const CORE_ASSETS = [
   `/JS/liquid-glass.js?${V}`,
   `/JS/config.js?${V}`,
   `/JS/script.js?${V}`,
-  `/JS/calendar.js?${V}`,
   `/JS/tools.js?${V}`,
   `/JS/forum.js?${V}`,
   '/JSON/navigation.json',
   '/JSON/posts.json',
-  '/JSON/holidays.json',
   '/manifest.json',
   '/IMAGE/ICO/zhihu.png'
 ];
@@ -31,7 +29,6 @@ const CORE_ASSETS = [
 // 可延迟缓存的资源（运行时按需缓存）
 const RUNTIME_CACHE_PATTERN = [
   /\/IMAGE\//,
-  /\/JS\/lunar\.js/,
   /\/FONT\//
 ];
 
@@ -79,22 +76,6 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => caches.match(request).then(cached => cached || caches.match('/index.html')))
-    );
-    return;
-  }
-
-  // lunar.js 等大文件：网络优先（避免缓存过期的大文件）
-  if (request.url.includes('/JS/lunar.js')) {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          if (response && response.ok) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
-          }
-          return response;
-        })
-        .catch(() => caches.match(request))
     );
     return;
   }

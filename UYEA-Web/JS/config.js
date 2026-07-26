@@ -33,7 +33,6 @@ const UYEA_CONFIG = {
   dataFiles: {
     navigation: '/JSON/navigation.json',
     posts: '/JSON/posts.json',
-    holidays: '/JSON/holidays.json',
   },
 
   // 超时配置（毫秒）
@@ -143,7 +142,7 @@ const UYEA_CONFIG = {
       'section.life': 'Lifestyle',
       'section.tools': 'Tools',
       'forum.subtitle': 'Share AI insights, tool creations & life moments',
-      'nav.subtitle': 'AI assistants, lifestyle & tools directory with clock and calendar',
+      'nav.subtitle': 'AI assistants, lifestyle & tools directory',
       'tools.subtitle': 'Pure front-end online tools, ready to use, data stays local',
       'forum.cat.announcement': 'Announcements',
       'forum.cat.ai': 'AI Discussion',
