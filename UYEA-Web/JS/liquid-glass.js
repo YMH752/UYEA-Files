@@ -1,5 +1,5 @@
 ﻿/**
- * UYEA 液态玻璃效果模块 v0.6.31
+ * UYEA 液态玻璃效果模块 v0.6.32
  * 基于 SVG feDisplacementMap + Canvas 位移贴图实现真实玻璃折射
  * 参考: https://github.com/shuding/liquid-glass
  *       https://github.com/childrentime/liquid-glass

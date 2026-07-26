@@ -303,6 +303,10 @@
                     return;
                 }
 
+                // "全部"视图下限制每个分类只显示2行；有搜索时取消限制显示全部匹配
+                const isLimited = (currentCategory === 'all' && !keyword);
+                section.classList.toggle('limited', isLimited);
+
                 // 搜索过滤：隐藏不匹配的卡片
                 const cards = section.querySelectorAll('.card-item');
                 let sectionVisible = 0;
@@ -327,8 +331,8 @@
                 return r.json();
             })
             .then(nav => {
-                // 渲染分组视图
-                ['ai', 'life', 'tools'].forEach(cat => {
+                // 渲染分组视图（5个分类）
+                ['ai', 'social', 'tools', 'shopping', 'news'].forEach(cat => {
                     const section = document.getElementById(cat + '-section');
                     if (section && nav[cat]) {
                         section.querySelector('.grid-container').innerHTML = nav[cat]
@@ -344,22 +348,30 @@
                 });
             });
 
-        // 底部导航栏分类切换（支持再次点击取消回到全部）
+        // 底部导航栏分类切换
         document.querySelectorAll('.bottom-nav-item[data-category]').forEach(item => {
             item.addEventListener('click', () => {
-                if (item.classList.contains('active')) {
-                    // 再次点击已激活按钮：取消选择，回到全部
-                    item.classList.remove('active');
-                    currentCategory = 'all';
-                } else {
-                    document.querySelectorAll('.bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
-                    item.classList.add('active');
-                    currentCategory = item.dataset.category;
-                }
+                document.querySelectorAll('.bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
+                item.classList.add('active');
+                currentCategory = item.dataset.category;
                 // 清空搜索框
                 const searchInput = document.getElementById('navSearchInput');
                 if (searchInput) searchInput.value = '';
                 applyNavFilter();
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // "更多"按钮：点击后切换到对应分类
+        document.querySelectorAll('.more-btn[data-target-category]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetCat = btn.dataset.targetCategory;
+                // 模拟点击底部导航对应的分类按钮
+                const targetNavBtn = document.querySelector(`.bottom-nav-item[data-category="${targetCat}"]`);
+                if (targetNavBtn) {
+                    targetNavBtn.click();
+                }
             });
         });
 

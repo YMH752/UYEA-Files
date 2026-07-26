@@ -13,14 +13,32 @@
     { "title": "Copilot", "url": "https://copilot.microsoft.com/", "icon": "copilot" },
     { "title": "Grok", "url": "https://grok.com/", "icon": "grok" }
   ],
-  "life": [
+  "social": [
     { "title": "小红书", "url": "https://www.xiaohongshu.com/", "icon": "xiaohongshu" },
     { "title": "B站", "url": "https://www.bilibili.com/", "icon": "bilibili" },
-    { "title": "知乎", "url": "https://www.zhihu.com/", "icon": "zhihu" }
+    { "title": "知乎", "url": "https://www.zhihu.com/", "icon": "zhihu" },
+    { "title": "微博", "url": "https://weibo.com/", "icon": "weibo" },
+    { "title": "豆瓣", "url": "https://www.douban.com/", "icon": "douban" }
   ],
   "tools": [
     { "title": "GitHub", "url": "https://github.com/", "icon": "github" },
+    { "title": "v0", "url": "https://v0.dev/", "icon": "v0" },
+    { "title": "Figma", "url": "https://www.figma.com/", "icon": "figma" },
+    { "title": "Canva", "url": "https://www.canva.com/", "icon": "canva" },
     { "title": "TinyPNG", "url": "https://tinypng.com/", "icon": "tinypng" },
-    { "title": "v0", "url": "https://v0.dev/", "icon": "v0" }
+    { "title": "Stack Overflow", "url": "https://stackoverflow.com/", "icon": "stackoverflow" }
+  ],
+  "shopping": [
+    { "title": "淘宝", "url": "https://www.taobao.com/", "icon": "taobao" },
+    { "title": "京东", "url": "https://www.jd.com/", "icon": "jd" },
+    { "title": "美团", "url": "https://www.meituan.com/", "icon": "meituan" },
+    { "title": "大众点评", "url": "https://www.dianping.com/", "icon": "dianping" },
+    { "title": "饿了么", "url": "https://www.ele.me/", "icon": "eleme" }
+  ],
+  "news": [
+    { "title": "36氪", "url": "https://36kr.com/", "icon": "36kr" },
+    { "title": "虎嗅", "url": "https://www.huxiu.com/", "icon": "huxiu" },
+    { "title": "少数派", "url": "https://sspai.com/", "icon": "sspai" },
+    { "title": "IT之家", "url": "https://www.ithome.com/", "icon": "ithome" }
   ]
 }

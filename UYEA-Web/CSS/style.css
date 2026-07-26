@@ -664,6 +664,26 @@ a { color: var(--primary); text-decoration: none; }
     gap: 12px;
 }
 
+/* "更多"按钮 */
+.more-btn {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 10px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color var(--duration) ease;
+}
+.more-btn:hover { color: var(--primary); }
+.more-btn svg { transition: transform var(--duration) ease; }
+.more-btn:hover svg { transform: translateX(2px); }
+
 .section-title {
     font-family: var(--font-serif);
     font-size: clamp(24px, 4vw, 32px);
@@ -893,10 +913,16 @@ html[data-theme="coffee"] .section-title {
 /* ========== 分区（卡片网格 - 导航页） ========== */
 .section-group { margin-bottom: 28px; }
 
+/* 全部视图下每个分类最多显示2行卡片 */
+.section-group.limited .grid-container {
+    max-height: calc(var(--card-row-height, 48px) * 2 + var(--card-gap, 10px));
+    overflow: hidden;
+}
+
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
 }
 
 .card-item {
@@ -904,15 +930,15 @@ html[data-theme="coffee"] .section-title {
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    gap: 10px;
-    padding: 12px 14px;
+    gap: 8px;
+    padding: 8px 10px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     text-decoration: none;
     color: var(--text-primary);
     transition: all var(--duration) var(--ease-smooth);
-    aspect-ratio: 2 / 1;
+    aspect-ratio: 2.5 / 1;
     overflow: hidden;
     min-width: 0;
     position: relative;
@@ -947,12 +973,12 @@ html[data-theme="coffee"] .section-title {
 }
 
 .card-icon {
-    width: 36px; height: 36px;
+    width: 28px; height: 28px;
     display: flex; align-items: center; justify-content: center;
     border-radius: var(--radius-sm);
     background: var(--primary-lighter);
     flex-shrink: 0;
-    font-size: 24px;
+    font-size: 18px;
     transition: transform var(--duration) var(--ease-bounce);
 }
 
