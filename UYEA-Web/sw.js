@@ -1,11 +1,11 @@
 ﻿/*
- * UYEA 悠野社区 - Service Worker v0.6.46
+ * UYEA 悠野社区 - Service Worker v0.6.47
  * 缓存优先策略，支持离线访问
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
 
-const CACHE_NAME = 'uyea-v0.6.46';
-const V = 'v=0.6.46';
+const CACHE_NAME = 'uyea-v0.6.47';
+const V = 'v=0.6.47';
 
 // 核心静态资源（安装时预缓存）
 const CORE_ASSETS = [
@@ -54,7 +54,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// 拦截请求：HTML 网络优先 / 其他缓存优先
+// 拦截请求：HTML 和 JSON 网络优先 / 其他缓存优先
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
@@ -75,6 +75,22 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => caches.match(request).then(cached => cached || caches.match('/index.html')))
+    );
+    return;
+  }
+
+  // JSON 数据文件：网络优先（确保导航数据等即时更新）
+  if (request.destination === '' && request.url.includes('/JSON/')) {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response && response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request).then(cached => cached || Response.error()))
     );
     return;
   }

@@ -247,8 +247,8 @@
             const gridWidth = grid.clientWidth;
             const cardWidth = cards[0].getBoundingClientRect().width;
             if (cardWidth <= 0) return 1;
-            const gap = 5;
-            return Math.max(1, Math.round((gridWidth + gap) / (cardWidth + gap)));
+            const gap = 16; // 与 CSS gap: 0 16px 一致
+            return Math.max(1, Math.floor((gridWidth + gap) / (cardWidth + gap)));
         }
 
         // 分类筛选 + 搜索过滤 + 2行限制
@@ -310,6 +310,12 @@
             const showMoreBtns = (currentCategory === 'all' && !keyword);
             document.querySelectorAll('.more-btn[data-target-category]').forEach(btn => {
                 btn.style.display = showMoreBtns ? '' : 'none';
+            });
+
+            // 加号按钮只在具体分类视图显示，"全部"视图隐藏
+            const showAddCards = (currentCategory !== 'all');
+            document.querySelectorAll('.add-card').forEach(btn => {
+                btn.style.display = showAddCards ? '' : 'none';
             });
         }
 
