@@ -393,8 +393,8 @@
                 return r.json();
             })
             .then(nav => {
-                // 渲染分组视图（5个分类）
-                ['ai', 'social', 'tools', 'shopping', 'news'].forEach(cat => {
+                // 渲染分组视图（6个分类）
+                ['ai', 'social', 'tools', 'shopping', 'news', 'life'].forEach(cat => {
                     const section = document.getElementById(cat + '-section');
                     if (section && nav[cat]) {
                         section.querySelector('.grid-container').innerHTML = nav[cat]

@@ -61,10 +61,17 @@ const UYEA_CONFIG = {
     chatgpt: '🤖', gemini: '✨', claude: '🎯', deepseek: '🧠',
     yiyan: '📝', qianwen: '💬', kimi: '🌟', doubao: '🫘',
     yuanbao: '💰', perplexity: '🔍', copilot: '👨‍✈️', grok: '🧬',
+    chatglm: '🔮', llama: '🦙',
     xiaohongshu: '📕', bilibili: '📺', zhihu: '💡', weibo: '🌐', douban: '🎭',
+    douyin: '🎵', kuaishou: '⚡', tieba: '💬',
     github: '🐙', v0: '🌀', figma: '🎨', canva: '🖼️', tinypng: '🐼', stackoverflow: '📚',
+    codepen: '✏️', notion: '📝', excalidraw: '✍️',
     taobao: '🛒', jd: '📦', meituan: '🍜', dianping: '⭐', eleme: '🛵',
-    '36kr': '📰', huxiu: '🐯', sspai: '⚡', ithome: '💻'
+    pinduoduo: '🍉', tmall: '🐱', suning: '🏪',
+    '36kr': '📰', huxiu: '🐯', sspai: '⚡', ithome: '💻',
+    thepaper: '📄', geekpark: '🛴',
+    amap: '🗺️', baidumap: '📍', '12306': '🚄', ctrip: '✈️', fliggy: '🐷', moji: '🌤️',
+    kuaidi100: '📦', xiachufang: '🍳'
   },
 
   // 搜索引擎URL
