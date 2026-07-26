@@ -217,7 +217,7 @@
         // 生成单张卡片 HTML（图标用首字母占位符，底色+边框）
         function navCardHtml(item) {
             const firstChar = (item.title || '?').charAt(0).toUpperCase();
-            return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" title="${navEsc(item.title)}">
+            return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" data-title="${navEsc(item.title)}" title="${navEsc(item.title)}">
                 <div class="card-icon">
                     <span class="icon-placeholder">${navEsc(firstChar)}</span>
                 </div>
@@ -255,8 +255,14 @@
                     return;
                 }
 
+                // 先显示 section，修复切换分类后 display:none 导致 grid.clientWidth=0 的 BUG
+                section.style.display = '';
+
                 const cards = section.querySelectorAll('.card-item');
                 const grid = section.querySelector('.grid-container');
+
+                // 先显示所有卡片，修复上一轮筛选隐藏 cards[0] 导致 getBoundingClientRect().width=0 的 BUG
+                cards.forEach(c => { c.style.display = ''; });
 
                 // 2行限制：计算当前列数，最多显示 columns*2 张卡片
                 let maxVisible = Infinity;
@@ -277,6 +283,10 @@
                 });
 
                 section.style.display = (sectionVisible > 0) ? '' : 'none';
+                // 强制添加 revealed 类，避免 reveal 动画导致切换分类时内容不可见
+                if (sectionVisible > 0) {
+                    section.classList.add('revealed');
+                }
                 visibleCount += sectionVisible;
             });
 
