@@ -200,10 +200,10 @@
         });
     });
 
-    // ==================== 图标加载系统（优化版：异步解码 + 三级降级 + 懒加载） ====================
+    // ==================== 图标加载系统（直接加载 + 三级降级） ====================
     /**
      * 加载站点图标
-     * 降级链：本地PNG → Google favicon API → emoji
+     * 降级链：本地PNG → DuckDuckGo favicon → emoji
      * @param {HTMLImageElement} img 图片元素
      */
     function loadIcon(img) {
@@ -220,23 +220,30 @@
         const loader = document.createElement('div');
         loader.className = 'icon-loading';
         parent.appendChild(loader);
-        img.style.display = 'none';
 
         const localUrl = UYEA_CONFIG.iconBase + name + '.png';
+
+        // 从完整URL提取域名，用于favicon降级服务
+        let ddgUrl = null;
         const siteUrl = img.dataset.siteUrl;
-        const googleUrl = siteUrl ? 'https://www.google.com/s2/favicons?domain=' + siteUrl + '&sz=64' : null;
+        if (siteUrl) {
+            try {
+                const hostname = new URL(siteUrl).hostname;
+                ddgUrl = 'https://icons.duckduckgo.com/ip3/' + hostname + '.ico';
+            } catch(e) {}
+        }
 
         function tryLoad(url, isFallback) {
             img.onload = () => {
                 if (loader.parentElement) loader.remove();
-                img.style.display = '';
+                img.style.visibility = 'visible';
                 img.dataset.iconLoaded = 'true';
                 delete img.dataset.iconLoading;
             };
             img.onerror = () => {
-                if (!isFallback && googleUrl) {
-                    // 本地失败，降级 Google favicon API
-                    tryLoad(googleUrl, true);
+                if (!isFallback && ddgUrl) {
+                    // 本地失败，降级 DuckDuckGo favicon（中国可访问）
+                    tryLoad(ddgUrl, true);
                 } else {
                     // 最终降级到 emoji
                     if (loader.parentElement) loader.remove();
@@ -254,37 +261,14 @@
         tryLoad(localUrl, false);
     }
 
-    // IntersectionObserver 懒加载：视口外图标延迟加载，提升首屏性能
-    let iconObserver = null;
-    if ('IntersectionObserver' in window) {
-        iconObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    loadIcon(entry.target);
-                    iconObserver.unobserve(entry.target);
-                }
-            });
-        }, { rootMargin: '80px' });
-    }
-
+    // 直接加载容器内所有图标（不使用IntersectionObserver，避免与display:none冲突）
     function loadIconsIn(container) {
         if (!container) return;
-        container.querySelectorAll('img[data-site-name]').forEach(img => {
-            if (iconObserver) {
-                iconObserver.observe(img);
-            } else {
-                loadIcon(img);
-            }
-        });
+        container.querySelectorAll('img[data-site-name]').forEach(loadIcon);
     }
 
-    document.querySelectorAll('img[data-site-name]').forEach(img => {
-        if (iconObserver) {
-            iconObserver.observe(img);
-        } else {
-            loadIcon(img);
-        }
-    });
+    // 加载页面中已有的图标
+    document.querySelectorAll('img[data-site-name]').forEach(loadIcon);
 
     // 使用 MutationObserver 监听动态插入的图标（仅在动态加载图标的页面启动）
     const mainContent = document.querySelector('.main-content');
@@ -294,13 +278,9 @@
                 for (const n of m.addedNodes) {
                     if (n.nodeType === 1) {
                         if (n.matches && n.matches('img[data-site-name]')) {
-                            if (iconObserver) iconObserver.observe(n);
-                            else loadIcon(n);
+                            loadIcon(n);
                         } else if (n.querySelectorAll && n.querySelectorAll('img[data-site-name]').length) {
-                            n.querySelectorAll('img[data-site-name]').forEach(img => {
-                                if (iconObserver) iconObserver.observe(img);
-                                else loadIcon(img);
-                            });
+                            n.querySelectorAll('img[data-site-name]').forEach(loadIcon);
                         }
                     }
                 }
@@ -323,7 +303,7 @@
         function navCardHtml(item) {
             return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" title="${navEsc(item.title)}">
                 <div class="card-icon">
-                    <img src="" data-site-name="${navEsc(item.icon)}" data-site-url="${navEsc(item.url)}" style="display:none" alt="${navEsc(item.title)}" loading="lazy" decoding="async">
+                    <img src="" data-site-name="${navEsc(item.icon)}" data-site-url="${navEsc(item.url)}" alt="${navEsc(item.title)}" loading="lazy" decoding="async">
                 </div>
                 <div class="card-info">
                     <div class="card-title">${navEsc(item.title)}</div>
