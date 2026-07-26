@@ -109,6 +109,50 @@ html[data-theme="dark"] {
     --shadow-lg:        0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
+/* 极客主题：黑底荧光绿，终端风格 */
+html[data-theme="geek"] {
+    --primary:          #00FF41;
+    --primary-dark:     #00CC33;
+    --primary-darker:   #009926;
+    --primary-light:    #0D1A0D;
+    --primary-lighter:  #1A2E1A;
+    --primary-gradient: linear-gradient(135deg, #00FF41 0%, #00CC33 100%);
+
+    --accent:           #00FFFF;
+    --accent-dark:      #00CCCC;
+    --accent-light:     #001A1A;
+    --accent-lighter:   #0A1A1A;
+
+    --ink:              #00FF41;
+    --accent-1:         #00FF41;
+    --accent-2:         #00CC33;
+    --accent-3:         #009926;
+    --accent-4:         #446644;
+    --accent-5:         #223322;
+
+    --bg:               #000000;
+    --surface:          #0A0A0A;
+    --surface-warm:     #0D0D0D;
+    --border:           #1A3A1A;
+    --border-warm:      #225522;
+
+    --glass-bg:         rgba(0, 20, 0, 0.18);
+    --glass-bg-strong:  rgba(0, 20, 0, 0.25);
+    --glass-border:     rgba(0, 255, 65, 0.15);
+    --glass-highlight:  rgba(0, 255, 65, 0.1);
+    --glass-blur:       blur(20px) saturate(120%);
+    --text-shadow-glass: 0 0 4px rgba(0,255,65,0.4), 0 0 8px rgba(0,255,65,0.2);
+
+    --text-primary:     #00FF41;
+    --text-secondary:   #00CC33;
+    --text-muted:       #446644;
+
+    --header-h:         64px;
+    --shadow-sm:        0 1px 3px rgba(0, 255, 65, 0.1);
+    --shadow-md:        0 4px 16px rgba(0, 255, 65, 0.08);
+    --shadow-lg:        0 12px 32px rgba(0, 255, 65, 0.06);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { overflow-x: hidden; overflow-y: scroll; scroll-behavior: smooth; scrollbar-gutter: stable; }
@@ -212,7 +256,7 @@ a { color: var(--primary); text-decoration: none; }
     text-shadow: var(--text-shadow-glass);
 }
 
-.nav-link:hover { color: var(--primary); background: var(--primary-lighter); }
+.nav-link:hover { color: var(--primary); }
 .nav-link.active { color: var(--primary); font-weight: 600; }
 
 .nav-link::after {
@@ -255,8 +299,7 @@ a { color: var(--primary); text-decoration: none; }
 }
 
 .lang-icon-btn:hover {
-    background: var(--primary-light);
-    transform: translateY(-1px);
+    background: var(--glass-bg);
 }
 
 .lang-icon-btn.active {
@@ -344,10 +387,7 @@ a { color: var(--primary); text-decoration: none; }
 .search-icon-btn { border-radius: 10px; font-size: 15px; }
 
 .user-btn:hover, .search-icon-btn:hover {
-    background: var(--primary-light);
-    border-color: var(--primary);
-    transform: scale(1.05);
-    box-shadow: inset 0 1px 0 var(--glass-highlight), var(--shadow-md);
+    background: var(--glass-bg);
 }
 
 /* 头部操作按钮组 */
@@ -1442,7 +1482,13 @@ html[data-theme="dark"] .section-title {
 }
 
 /* ========== 暗色模式切换按钮 ========== */
-.theme-toggle {
+/* 主题选择器（简约图标版） */
+.theme-selector {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.theme-icon-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1455,27 +1501,79 @@ html[data-theme="dark"] .section-title {
     cursor: pointer;
     color: var(--primary);
     flex-shrink: 0;
-    transition: all var(--duration) var(--ease-smooth);
+    transition: background var(--duration) var(--ease-smooth);
     position: relative;
     overflow: hidden;
     box-shadow: inset 0 1px 0 var(--glass-highlight);
+    text-shadow: var(--text-shadow-glass);
 }
 
-.theme-toggle:hover {
-    background: var(--primary-light);
+.theme-icon-btn:hover { background: var(--glass-bg); }
+
+.theme-icon-btn.active {
     border-color: var(--primary);
-    transform: scale(1.05) rotate(15deg);
+    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 0 0 2px var(--primary-lighter);
 }
 
-.theme-toggle svg {
-    width: 18px; height: 18px;
-    transition: transform 0.4s var(--ease-bounce);
+.theme-icon-btn svg { transition: opacity 0.3s ease; }
+
+/* 图标显示控制 */
+.theme-icon-light { display: block; }
+.theme-icon-dark { display: none; }
+.theme-icon-geek { display: none; }
+html[data-theme="dark"] .theme-icon-light { display: none; }
+html[data-theme="dark"] .theme-icon-dark { display: block; }
+html[data-theme="geek"] .theme-icon-light { display: none; }
+html[data-theme="geek"] .theme-icon-geek { display: block; }
+
+/* 主题下拉菜单 */
+.theme-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 120px;
+    padding: 6px;
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md), inset 0 1px 0 var(--glass-highlight);
+    z-index: 1001;
+    animation: themeDropIn 0.2s var(--ease-bounce);
 }
 
-.theme-toggle .sun-icon { display: none; }
-.theme-toggle .moon-icon { display: block; }
-html[data-theme="dark"] .theme-toggle .sun-icon { display: block; }
-html[data-theme="dark"] .theme-toggle .moon-icon { display: none; }
+.theme-dropdown.show { display: block; }
+
+@keyframes themeDropIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.theme-option {
+    display: block;
+    width: 100%;
+    padding: 8px 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    text-align: left;
+    transition: background var(--duration) ease;
+    text-shadow: var(--text-shadow-glass);
+}
+
+.theme-option:hover { background: var(--primary-lighter); }
+
+.theme-option.active {
+    color: var(--primary);
+    font-weight: 700;
+    background: var(--primary-lighter);
+}
 
 /* ========== 论坛骨架屏 ========== */
 .skeleton-post {
@@ -1697,9 +1795,6 @@ html[data-theme="dark"] .bg-orb { opacity: 0.25; }
 
 .bottom-nav-item:hover:not(.active) {
     color: var(--text-secondary);
-    background: rgba(255,255,255,0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
 }
 
 /* 暗色模式：液体玻璃选中态 */
@@ -1739,7 +1834,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     .header-right { gap: 8px; }
     .header-actions { gap: 6px; padding-left: 8px; }
     /* 保持44px最小触摸目标，不缩小 */
-    .theme-toggle { width: 44px; height: 44px; }
+    .theme-icon-btn { width: 44px; height: 44px; }
     .user-btn, .search-icon-btn { width: 44px; height: 44px; }
     .forum-toolbar { flex-direction: column; }
     .forum-search { width: 100%; }

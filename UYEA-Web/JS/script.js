@@ -323,28 +323,59 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(err => console.warn('字体预加载失败:', err));
     }
 
-    // ==================== 暗色模式切换 ====================
-    const themeToggle = document.querySelector('.theme-toggle');
+    // ==================== 主题切换（三主题：浅色/深色/极客） ====================
+    const themeIconBtn = document.getElementById('themeIconBtn');
+    const themeDropdown = document.getElementById('themeDropdown');
     const savedTheme = safeGetItem('uyea_theme') ||
                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
+
+    function applyTheme(theme) {
+        if (theme === 'light') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+        // 更新下拉菜单选中状态
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.theme === theme);
+        });
+        // 通知液态玻璃模块重新应用
+        document.dispatchEvent(new CustomEvent('uyea:themeChanged'));
     }
 
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            if (isDark) {
-                document.documentElement.removeAttribute('data-theme');
-                safeSetItem('uyea_theme', 'light');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                safeSetItem('uyea_theme', 'dark');
+    // 初始化主题
+    applyTheme(savedTheme);
+
+    // 主题图标按钮：点击切换下拉菜单
+    if (themeIconBtn && themeDropdown) {
+        themeIconBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const open = themeDropdown.classList.toggle('show');
+            themeIconBtn.classList.toggle('active', open);
+        });
+        // 点击外部关闭下拉
+        document.addEventListener('click', (e) => {
+            if (!themeDropdown.contains(e.target) && e.target !== themeIconBtn && !themeIconBtn.contains(e.target)) {
+                themeDropdown.classList.remove('show');
+                themeIconBtn.classList.remove('active');
             }
-            // 通知液态玻璃模块重新应用（blur 值随主题切换变化）
-            document.dispatchEvent(new CustomEvent('uyea:themeChanged'));
         });
     }
+
+    // 主题选项点击事件
+    const themeOptions = document.querySelectorAll('.theme-option');
+    themeOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+            const theme = opt.dataset.theme;
+            themeOptions.forEach(x => x.classList.remove('active'));
+            opt.classList.add('active');
+            applyTheme(theme);
+            safeSetItem('uyea_theme', theme);
+            // 关闭下拉菜单
+            if (themeDropdown) themeDropdown.classList.remove('show');
+            if (themeIconBtn) themeIconBtn.classList.remove('active');
+        });
+    });
 
     // ==================== 统一滚动处理（rAF节流） ====================
     const scrollProgress = document.querySelector('.scroll-progress');
