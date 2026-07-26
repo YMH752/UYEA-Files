@@ -1,0 +1,269 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "UYEA Design System Tokens v0.5.0 - 蓝白黑简约风 · 玻璃拟态增强",
+  "color": {
+    "primary": {
+      "value": "#2563EB",
+      "type": "color",
+      "description": "主色 - 蓝色"
+    },
+    "primary-dark": {
+      "value": "#1D4ED8",
+      "type": "color",
+      "description": "主色深"
+    },
+    "primary-darker": {
+      "value": "#1E40AF",
+      "type": "color",
+      "description": "主色更深"
+    },
+    "primary-light": {
+      "value": "#DBEAFE",
+      "type": "color",
+      "description": "主色浅"
+    },
+    "primary-lighter": {
+      "value": "#EFF6FF",
+      "type": "color",
+      "description": "主色更浅"
+    },
+    "ink": {
+      "value": "#0F172A",
+      "type": "color",
+      "description": "墨黑 - 主文字色"
+    },
+    "accent-2": {
+      "value": "#334155",
+      "type": "color",
+      "description": "深灰"
+    },
+    "accent-3": {
+      "value": "#64748B",
+      "type": "color",
+      "description": "中灰"
+    },
+    "accent-4": {
+      "value": "#CBD5E1",
+      "type": "color",
+      "description": "浅灰"
+    },
+    "accent-5": {
+      "value": "#E2E8F0",
+      "type": "color",
+      "description": "边框灰"
+    },
+    "bg": {
+      "value": "#F8FAFC",
+      "type": "color",
+      "description": "背景色"
+    },
+    "surface": {
+      "value": "#FFFFFF",
+      "type": "color",
+      "description": "表面色 - 卡片背景"
+    },
+    "border": {
+      "value": "#E2E8F0",
+      "type": "color",
+      "description": "边框色"
+    },
+    "glass-bg": {
+      "value": "rgba(255, 255, 255, 0.72)",
+      "type": "color",
+      "description": "玻璃拟态背景"
+    },
+    "glass-border": {
+      "value": "rgba(255, 255, 255, 0.18)",
+      "type": "color",
+      "description": "玻璃拟态边框"
+    },
+    "text-primary": {
+      "value": "#0F172A",
+      "type": "color",
+      "description": "主文字"
+    },
+    "text-secondary": {
+      "value": "#475569",
+      "type": "color",
+      "description": "次要文字"
+    },
+    "text-muted": {
+      "value": "#94A3B8",
+      "type": "color",
+      "description": "弱化文字"
+    },
+    "success": {
+      "value": "#10B981",
+      "type": "color",
+      "description": "成功绿"
+    },
+    "error": {
+      "value": "#EF4444",
+      "type": "color",
+      "description": "错误红"
+    },
+    "warning": {
+      "value": "#F59E0B",
+      "type": "color",
+      "description": "警告黄"
+    }
+  },
+  "gradient": {
+    "primary": {
+      "value": "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
+      "type": "gradient",
+      "description": "主色渐变"
+    }
+  },
+  "typography": {
+    "font-family": {
+      "value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', system-ui, sans-serif",
+      "type": "fontFamily",
+      "description": "正文字体栈"
+    },
+    "mono-font": {
+      "value": "'Courier New', 'Consolas', monospace",
+      "type": "fontFamily",
+      "description": "等宽字体"
+    },
+    "h1": {
+      "value": {
+        "fontSize": "28px",
+        "fontWeight": 800,
+        "letterSpacing": "-0.5px",
+        "lineHeight": 1.4
+      },
+      "type": "typography",
+      "description": "H1 标题"
+    },
+    "h2": {
+      "value": {
+        "fontSize": "22px",
+        "fontWeight": 800,
+        "letterSpacing": "-0.5px",
+        "lineHeight": 1.4
+      },
+      "type": "typography",
+      "description": "H2 标题"
+    },
+    "body": {
+      "value": {
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.6
+      },
+      "type": "typography",
+      "description": "正文"
+    },
+    "small": {
+      "value": {
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.5
+      },
+      "type": "typography",
+      "description": "小号文本"
+    },
+    "caption": {
+      "value": {
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.4
+      },
+      "type": "typography",
+      "description": "说明文本"
+    },
+    "logo": {
+      "value": {
+        "fontSize": "28px",
+        "fontWeight": 800,
+        "letterSpacing": "2px"
+      },
+      "type": "typography",
+      "description": "Logo 文字"
+    }
+  },
+  "radius": {
+    "sm": {
+      "value": "8px",
+      "type": "borderRadius",
+      "description": "小圆角"
+    },
+    "md": {
+      "value": "12px",
+      "type": "borderRadius",
+      "description": "中圆角"
+    },
+    "lg": {
+      "value": "16px",
+      "type": "borderRadius",
+      "description": "大圆角"
+    },
+    "xl": {
+      "value": "20px",
+      "type": "borderRadius",
+      "description": "超大圆角"
+    },
+    "circle": {
+      "value": "50%",
+      "type": "borderRadius",
+      "description": "圆形"
+    }
+  },
+  "spacing": {
+    "xs": { "value": "4px", "type": "spacing" },
+    "sm": { "value": "8px", "type": "spacing" },
+    "md": { "value": "12px", "type": "spacing" },
+    "lg": { "value": "16px", "type": "spacing" },
+    "xl": { "value": "24px", "type": "spacing" },
+    "2xl": { "value": "32px", "type": "spacing" },
+    "3xl": { "value": "48px", "type": "spacing" }
+  },
+  "shadow": {
+    "sm": {
+      "value": "0 1px 3px rgba(15, 23, 42, 0.06)",
+      "type": "boxShadow",
+      "description": "小阴影"
+    },
+    "md": {
+      "value": "0 4px 16px rgba(37, 99, 235, 0.10)",
+      "type": "boxShadow",
+      "description": "中阴影 - 带主色调"
+    },
+    "lg": {
+      "value": "0 12px 32px rgba(15, 23, 42, 0.12)",
+      "type": "boxShadow",
+      "description": "大阴影"
+    },
+    "glow": {
+      "value": "0 0 24px rgba(37, 99, 235, 0.15)",
+      "type": "boxShadow",
+      "description": "发光阴影"
+    }
+  },
+  "duration": {
+    "fast": { "value": "0.25s", "type": "duration" },
+    "slow": { "value": "0.4s", "type": "duration" }
+  },
+  "easing": {
+    "smooth": {
+      "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "type": "cubicBezier",
+      "description": "平滑缓动"
+    },
+    "bounce": {
+      "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+      "type": "cubicBezier",
+      "description": "弹性缓动"
+    }
+  },
+  "darkMode": {
+    "primary": { "value": "#3B82F6", "type": "color" },
+    "bg": { "value": "#0B1120", "type": "color" },
+    "surface": { "value": "#131C31", "type": "color" },
+    "border": { "value": "#1E293B", "type": "color" },
+    "text-primary": { "value": "#F1F5F9", "type": "color" },
+    "text-secondary": { "value": "#CBD5E1", "type": "color" },
+    "glass-bg": { "value": "rgba(19, 28, 49, 0.72)", "type": "color" }
+  }
+}

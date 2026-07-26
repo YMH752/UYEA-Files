@@ -1,6 +1,6 @@
 /**
  * UYEA Forum - forum.js
- * 论坛帖子加载、搜索、分类筛选与开发中提示
+ * 论坛帖子加载、搜索、feed分类筛选
  * 适用于论坛主页（index.html）
  */
 
@@ -8,178 +8,158 @@ document.addEventListener('DOMContentLoaded', () => {
     const list = document.getElementById('postList');
     const noResults = document.getElementById('noResults');
 
-    // 存储全部帖子，便于分类筛选
     let allPosts = [];
-    let currentCategory = 'all';
+    let currentFeed = 'recommend';
+    let searchTimer = null;
+    let cachedLang = null; // 缓存语言值，避免每次翻译都读取 localStorage
+
+    // 帖子标签中文 → i18n 键映射
+    const TAG_I18N_MAP = {
+        '公告': 'forum.cat.announcement',
+        'AI 探讨': 'forum.cat.ai',
+        '工具': 'forum.cat.tools',
+        '生活': 'forum.cat.life',
+        '反馈': 'forum.cat.feedback'
+    };
+
+    function t(key) {
+        if (typeof UYEA_CONFIG === 'undefined') return key;
+        if (cachedLang === null) {
+            cachedLang = UYEA_CONFIG.defaultLanguage;
+            try {
+                cachedLang = localStorage.getItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language)) || UYEA_CONFIG.defaultLanguage;
+            } catch (e) { /* 隐私模式下使用默认语言 */ }
+        }
+        const msgs = UYEA_CONFIG.i18n[cachedLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+        return msgs[key] || key;
+    }
+
+    function translateTag(tag) {
+        const key = TAG_I18N_MAP[tag];
+        return key ? t(key) : tag;
+    }
+
+    // HTML 转义，防止 XSS
+    function esc(str) {
+        if (str == null) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
 
     async function loadPosts() {
         if (!list) return;
 
-        // 显示加载中
-        list.innerHTML = `
-            <div style="text-align:center;padding:40px 20px;color:var(--text-muted);">
-                <div style="font-size:24px;margin-bottom:12px;">⏳</div>
-                <div style="font-size:14px;">加载中...</div>
+        // 骨架屏
+        list.innerHTML = Array(5).fill(0).map(() => `
+            <div class="skeleton-post">
+                <div class="skeleton-meta">
+                    <div class="skeleton-line tag"></div>
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line short"></div>
+                </div>
+                <div class="skeleton-line long skeleton-title"></div>
+                <div class="skeleton-line long skeleton-excerpt"></div>
+                <div class="skeleton-line medium skeleton-excerpt"></div>
             </div>
-        `;
+        `).join('');
 
         try {
             const res = await fetch(UYEA_CONFIG.dataFiles.posts);
-
-            if (!res.ok) {
-                throw new Error(`HTTP ${res.status}: 帖子数据加载失败`);
-            }
-
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const posts = await res.json();
-
-            if (!Array.isArray(posts) || posts.length === 0) {
-                throw new Error('无帖子数据');
-            }
+            if (!Array.isArray(posts) || posts.length === 0) throw new Error('无帖子数据');
 
             allPosts = posts;
-            renderPosts(posts);
             bindSearch();
-            bindCategories();
-            updateStats(posts);
+            filterPosts();
 
         } catch (e) {
             console.error('帖子加载失败:', e.message);
             list.innerHTML = `
                 <div style="text-align:center;padding:40px 20px;">
-                    <div style="font-size:40px;margin-bottom:12px;">⚠️</div>
-                    <div style="color:var(--text-secondary);font-size:14px;margin-bottom:12px;">帖子数据加载失败</div>
-                    <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">
-                        错误: ${e.message}<br/>
-                        请检查网络连接或稍后重试<br/>
-                        <button onclick="location.reload()" style="margin-top:12px;padding:8px 16px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">刷新页面</button>
-                    </div>
+                    <div style="color:var(--text-secondary);font-size:14px;margin-bottom:12px;">${esc(t('forum.failed'))}</div>
+                    <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">${esc(e.message)}</div>
                 </div>
             `;
         }
     }
 
-    /**
-     * 渲染帖子列表
-     * @param {Array} posts 帖子数组
-     */
     function renderPosts(posts) {
         if (posts.length === 0) {
             list.innerHTML = '';
-            if (noResults) noResults.classList.add('show');
             return;
         }
 
-        if (noResults) noResults.classList.remove('show');
-
-        list.innerHTML = posts.map((p, idx) => {
-            const replies = (idx * 7 + 3) % 48;
-            const views = (idx * 53 + 120) % 999;
-            return `
-                <a href="${p.url}" class="post-item">
-                    <div class="post-meta">
-                        <span class="post-tag">${p.tag}</span>
-                        <span class="dot">•</span>
-                        <span>${p.author}</span>
-                        <span class="dot">•</span>
-                        <span>${p.time}</span>
-                    </div>
-                    <div class="post-title">${p.title}</div>
-                    <div class="post-excerpt">${p.excerpt}</div>
-                    <div class="post-stats">
-                        <span>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                            ${replies}
-                        </span>
-                        <span>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                            ${views}
-                        </span>
-                    </div>
-                </a>
-            `;
+        list.innerHTML = posts.map(p => {
+            const tagHtml = `<span class="post-tag">${esc(translateTag(p.tag))}</span>`;
+            // "#" 或空 URL 视为无链接，避免页面跳转和空白标签页
+            const hasUrl = p.url && p.url !== '#';
+            const href = hasUrl ? esc(p.url) : 'javascript:void(0)';
+            const targetAttr = hasUrl ? ' target="_blank" rel="noopener"' : '';
+            return `<a href="${href}" class="post-item"${targetAttr}>
+                <div class="post-meta">
+                    ${tagHtml}
+                    <span class="dot">•</span>
+                    <span>${esc(p.author)}</span>
+                    <span class="dot">•</span>
+                    <span>${esc(p.time)}</span>
+                </div>
+                <div class="post-title">${esc(p.title)}</div>
+                <div class="post-excerpt">${esc(p.excerpt)}</div>
+            </a>`;
         }).join('');
     }
 
-    /**
-     * 绑定搜索功能
-     */
-    function bindSearch() {
-        const searchInput = document.getElementById('forumSearchInput');
-        if (!searchInput) return;
-
-        searchInput.addEventListener('input', function() {
-            const keyword = this.value.toLowerCase().trim();
-            filterPosts();
-        });
-    }
-
-    /**
-     * 绑定分类筛选
-     */
-    function bindCategories() {
-        const items = document.querySelectorAll('.category-item');
-        items.forEach(item => {
-            item.addEventListener('click', () => {
-                items.forEach(x => x.classList.remove('active'));
-                item.classList.add('active');
-                currentCategory = item.dataset.cat;
-                filterPosts();
-            });
-        });
-    }
-
-    /**
-     * 综合筛选（分类 + 关键词）
-     */
     function filterPosts() {
         const searchInput = document.getElementById('forumSearchInput');
         const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
         const filtered = allPosts.filter(p => {
-            // 分类过滤
-            const catMatch = currentCategory === 'all' || p.tag === currentCategory;
-            if (!catMatch) return false;
-
-            // 关键词过滤
+            if ((p.feed || 'recommend') !== currentFeed) return false;
             if (!keyword) return true;
-            const inTitle = p.title.toLowerCase().includes(keyword);
-            const inExcerpt = p.excerpt.toLowerCase().includes(keyword);
-            const inAuthor = p.author.toLowerCase().includes(keyword);
-            const inTag = p.tag.toLowerCase().includes(keyword);
-            return inTitle || inExcerpt || inAuthor || inTag;
+            return (p.title || '').toLowerCase().includes(keyword) ||
+                   (p.excerpt || '').toLowerCase().includes(keyword) ||
+                   (p.author || '').toLowerCase().includes(keyword) ||
+                   (p.tag || '').toLowerCase().includes(keyword);
         });
 
         renderPosts(filtered);
-
-        if (filtered.length === 0 && (keyword || currentCategory !== 'all')) {
-            if (noResults) noResults.classList.add('show');
-        } else {
-            if (noResults) noResults.classList.remove('show');
-        }
+        if (noResults) noResults.classList.toggle('show', filtered.length === 0);
     }
 
-    /**
-     * 更新侧栏统计（基于实际帖子数）
-     */
-    function updateStats(posts) {
-        const statEls = document.querySelectorAll('.sidebar-stat span:last-child');
-        if (statEls.length >= 4) {
-            statEls[0].textContent = posts.length;
-        }
-
-        // 更新分类计数
-        const catItems = document.querySelectorAll('.category-item');
-        catItems.forEach(item => {
-            const cat = item.dataset.cat;
-            const countEl = item.querySelector('.count');
-            if (!countEl) return;
-            if (cat === 'all') {
-                countEl.textContent = posts.length;
-            } else {
-                countEl.textContent = posts.filter(p => p.tag === cat).length;
-            }
+    function bindSearch() {
+        const searchInput = document.getElementById('forumSearchInput');
+        if (!searchInput) return;
+        // 防抖：输入停止 200ms 后才过滤
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(filterPosts, 200);
         });
     }
 
     loadPosts();
+
+    // ==================== 底部导航栏 tab 切换 ====================
+    const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+    bottomNavItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (item.classList.contains('active')) return; // 已选中则跳过
+            bottomNavItems.forEach(x => x.classList.remove('active'));
+            item.classList.add('active');
+            currentFeed = item.dataset.tab;
+            const searchInput = document.getElementById('forumSearchInput');
+            if (searchInput) searchInput.value = '';
+            filterPosts();
+        });
+    });
+
+    // 语言切换时重新渲染帖子（翻译标签）
+    window.addEventListener('languagechange', () => {
+        cachedLang = null; // 重置语言缓存
+        if (allPosts.length > 0) filterPosts();
+    });
 });

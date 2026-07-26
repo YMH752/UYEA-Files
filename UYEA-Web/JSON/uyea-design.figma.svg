@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  UYEA 悠野社区 · UI Design Mockup v0.5.0
+  蓝白黑简约风 · 玻璃拟态增强 · 论坛为主页
+  可直接导入 Figma (File > Place Embedded / Import)
+  设计令牌见 JSON/design-tokens.json
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 3200" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', system-ui, sans-serif">
+
+  <!-- ========== 定义：渐变、滤镜、符号 ========== -->
+  <defs>
+    <!-- 主色渐变 -->
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="primaryGradH" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <!-- 文字渐变 -->
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#475569"/>
+    </linearGradient>
+    <!-- 背景光球 -->
+    <radialGradient id="orbBlue1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2563EB" stop-opacity="0.15"/>
+      <stop offset="70%" stop-color="#2563EB" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orbBlue2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1D4ED8" stop-opacity="0.10"/>
+      <stop offset="70%" stop-color="#1D4ED8" stop-opacity="0"/>
+    </radialGradient>
+    <!-- 玻璃模糊 -->
+    <filter id="glassBlur" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <filter id="orbBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+    <!-- 卡片阴影 -->
+    <filter id="shadowSm" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0F172A" flood-opacity="0.06"/>
+    </filter>
+    <filter id="shadowMd" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#2563EB" flood-opacity="0.10"/>
+    </filter>
+    <filter id="shadowLg" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0F172A" flood-opacity="0.12"/>
+    </filter>
+
+    <!-- 可复用：导航栏 -->
+    <symbol id="navbar" viewBox="0 0 1200 64">
+      <!-- 玻璃背景 -->
+      <rect width="1200" height="64" fill="#FFFFFF" fill-opacity="0.72"/>
+      <rect width="1200" height="64" fill="none" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1"/>
+      <!-- Logo -->
+      <text x="20" y="42" font-size="24" font-weight="800" fill="url(#primaryGradH)" letter-spacing="1.5">UYEA</text>
+      <!-- 导航链接 -->
+      <text x="180" y="40" font-size="14" font-weight="600" fill="#2563EB">悠野社区</text>
+      <line x1="175" y1="50" x2="235" y2="50" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+      <text x="260" y="40" font-size="14" font-weight="500" fill="#475569">网站导航</text>
+      <text x="350" y="40" font-size="14" font-weight="500" fill="#475569">线上工具</text>
+      <!-- 语言选择器 -->
+      <rect x="900" y="16" width="120" height="32" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+      <rect x="903" y="19" width="36" height="26" rx="4" fill="url(#primaryGradH)"/>
+      <text x="909" y="37" font-size="12" font-weight="600" fill="#FFFFFF">中文</text>
+      <text x="948" y="37" font-size="12" font-weight="600" fill="#475569">繁中</text>
+      <text x="983" y="37" font-size="12" font-weight="600" fill="#475569">EN</text>
+      <!-- 搜索按钮 -->
+      <circle cx="1040" cy="32" r="16" fill="#EFF6FF" stroke="#E2E8F0" stroke-width="1"/>
+      <circle cx="1038" cy="30" r="6" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+      <line x1="1042" y1="34" x2="1046" y2="38" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- 用户按钮 -->
+      <circle cx="1080" cy="32" r="16" fill="#EFF6FF" stroke="#E2E8F0" stroke-width="1"/>
+      <circle cx="1080" cy="28" r="4" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+      <path d="M1073 40 Q1073 34 1080 34 Q1087 34 1087 40" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+      <!-- 主题切换 -->
+      <circle cx="1120" cy="32" r="16" fill="#EFF6FF" stroke="#E2E8F0" stroke-width="1"/>
+      <path d="M1126 30 A6 6 0 1 1 1118 28 A5 5 0 0 0 1126 30" fill="#2563EB"/>
+      <!-- 汉堡菜单（隐藏在桌面端） -->
+    </symbol>
+
+    <!-- 可复用：帖子卡片 -->
+    <symbol id="postCard" viewBox="0 0 900 100">
+      <rect width="900" height="100" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+      <rect width="3" height="100" rx="1.5" fill="url(#primaryGradV)"/>
+      <linearGradient id="primaryGradV" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#2563EB"/>
+        <stop offset="100%" stop-color="#1D4ED8"/>
+      </linearGradient>
+      <!-- 标签 -->
+      <rect x="20" y="16" width="50" height="22" rx="11" fill="#EFF6FF" stroke="#DBEAFE" stroke-width="1"/>
+      <text x="30" y="31" font-size="11" font-weight="600" fill="#2563EB">公告</text>
+      <text x="80" y="31" font-size="12" fill="#94A3B8">•</text>
+      <text x="90" y="31" font-size="12" fill="#94A3B8">悠野管理员</text>
+      <text x="168" y="31" font-size="12" fill="#94A3B8">•</text>
+      <text x="178" y="31" font-size="12" fill="#94A3B8">1小时前</text>
+      <!-- 标题 -->
+      <text x="20" y="58" font-size="16" font-weight="700" fill="#0F172A">欢迎来到悠野工作室(UYEA) 2.0 版本社区！</text>
+      <!-- 摘要 -->
+      <text x="20" y="80" font-size="13" fill="#475569">我们致力于打造一个纯粹的技术与生活分享平台。在这里，你可以分享 AI 使用心得...</text>
+      <!-- 统计 -->
+      <text x="20" y="95" font-size="12" fill="#94A3B8">💬 24</text>
+      <text x="80" y="95" font-size="12" fill="#94A3B8">👁 356</text>
+    </symbol>
+
+    <!-- 可复用：侧栏卡片 -->
+    <symbol id="sidebarCard" viewBox="0 0 240 200">
+      <rect width="240" height="200" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+      <text x="18" y="32" font-size="13" font-weight="700" fill="#94A3B8" letter-spacing="0.5">社区统计</text>
+      <line x1="18" y1="46" x2="222" y2="46" stroke="#E2E8F0" stroke-width="1"/>
+      <text x="18" y="68" font-size="13" fill="#475569">主题数</text>
+      <text x="222" y="68" font-size="13" font-weight="700" fill="#2563EB" text-anchor="end">13</text>
+      <line x1="18" y1="80" x2="222" y2="80" stroke="#E2E8F0" stroke-width="1"/>
+      <text x="18" y="100" font-size="13" fill="#475569">回复数</text>
+      <text x="222" y="100" font-size="13" font-weight="700" fill="#2563EB" text-anchor="end">86</text>
+      <line x1="18" y1="112" x2="222" y2="112" stroke="#E2E8F0" stroke-width="1"/>
+      <text x="18" y="132" font-size="13" fill="#475569">成员数</text>
+      <text x="222" y="132" font-size="13" font-weight="700" fill="#2563EB" text-anchor="end">42</text>
+      <line x1="18" y1="144" x2="222" y2="144" stroke="#E2E8F0" stroke-width="1"/>
+      <text x="18" y="164" font-size="13" fill="#475569">在线</text>
+      <text x="222" y="164" font-size="13" font-weight="700" fill="#2563EB" text-anchor="end">7</text>
+    </symbol>
+
+    <!-- 可复用：导航卡片 -->
+    <symbol id="navCard" viewBox="0 0 170 85">
+      <rect width="170" height="85" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+      <rect x="12" y="24" width="36" height="36" rx="8" fill="#EFF6FF"/>
+      <text x="30" y="48" font-size="20" text-anchor="middle">🤖</text>
+      <text x="56" y="48" font-size="14" font-weight="600" fill="#0F172A">ChatGPT</text>
+    </symbol>
+
+    <!-- 可复用：工具卡片 -->
+    <symbol id="toolCard" viewBox="0 0 170 85">
+      <rect width="170" height="85" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+      <rect x="12" y="24" width="36" height="36" rx="8" fill="#EFF6FF"/>
+      <text x="30" y="48" font-size="20" text-anchor="middle">📋</text>
+      <text x="56" y="48" font-size="14" font-weight="600" fill="#0F172A">JSON 格式化</text>
+    </symbol>
+  </defs>
+
+  <!-- ========== 全局背景 ========== -->
+  <rect width="3840" height="3200" fill="#F8FAFC"/>
+
+  <!-- 背景光球 -->
+  <circle cx="200" cy="100" r="400" fill="url(#orbBlue1)" filter="url(#orbBlur)"/>
+  <circle cx="3640" cy="200" r="350" fill="url(#orbBlue2)" filter="url(#orbBlur)"/>
+
+  <!-- ========== 设计系统标题 ========== -->
+  <text x="1920" y="60" font-size="36" font-weight="800" fill="url(#primaryGradH)" text-anchor="middle">UYEA 悠野社区 · UI Design System v0.5.0</text>
+  <text x="1920" y="90" font-size="16" fill="#475569" text-anchor="middle">蓝白黑简约风 · 玻璃拟态增强 · 论坛为主页 · 三页完整设计稿</text>
+  <rect x="1820" y="100" width="200" height="3" rx="1.5" fill="url(#primaryGradH)"/>
+
+  <!-- ================================================================
+       页面 1：论坛主页 (index.html)
+       位置: x=120, y=140, 宽度=1200
+       ================================================================ -->
+  <g transform="translate(120, 140)">
+    <!-- 页面标签 -->
+    <rect x="0" y="-20" width="180" height="28" rx="14" fill="#DBEAFE"/>
+    <text x="90" y="-1" font-size="13" font-weight="700" fill="#2563EB" text-anchor="middle">📄 论坛主页 index</text>
+
+    <!-- 页面容器 -->
+    <rect width="1200" height="1400" rx="16" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1" filter="url(#shadowLg)"/>
+
+    <!-- 导航栏 -->
+    <use href="#navbar" width="1200" height="64"/>
+
+    <!-- 内容区域 -->
+    <g transform="translate(20, 88)">
+      <!-- 侧栏 -->
+      <g transform="translate(0, 0)">
+        <use href="#sidebarCard" width="240" height="200"/>
+        <!-- 分类卡片 -->
+        <g transform="translate(0, 216)">
+          <rect width="240" height="240" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+          <text x="18" y="32" font-size="13" font-weight="700" fill="#94A3B8" letter-spacing="0.5">分类</text>
+          <line x1="18" y1="46" x2="222" y2="46" stroke="#E2E8F0" stroke-width="1"/>
+          <!-- 全部主题（激活） -->
+          <rect x="10" y="56" width="220" height="32" rx="8" fill="#DBEAFE"/>
+          <text x="20" y="76" font-size="13" font-weight="600" fill="#2563EB">全部主题</text>
+          <text x="212" y="76" font-size="11" fill="#2563EB" text-anchor="end">13</text>
+          <!-- 其他分类 -->
+          <text x="20" y="106" font-size="13" font-weight="500" fill="#475569">公告</text>
+          <text x="212" y="106" font-size="11" fill="#94A3B8" text-anchor="end">2</text>
+          <text x="20" y="134" font-size="13" font-weight="500" fill="#475569">AI 探讨</text>
+          <text x="212" y="134" font-size="11" fill="#94A3B8" text-anchor="end">3</text>
+          <text x="20" y="162" font-size="13" font-weight="500" fill="#475569">工具</text>
+          <text x="212" y="162" font-size="11" fill="#94A3B8" text-anchor="end">3</text>
+          <text x="20" y="190" font-size="13" font-weight="500" fill="#475569">生活</text>
+          <text x="212" y="190" font-size="11" fill="#94A3B8" text-anchor="end">3</text>
+          <text x="20" y="218" font-size="13" font-weight="500" fill="#475569">反馈</text>
+          <text x="212" y="218" font-size="11" fill="#94A3B8" text-anchor="end">2</text>
+        </g>
+      </g>
+
+      <!-- 主内容 -->
+      <g transform="translate(264, 0)">
+        <!-- 标题 -->
+        <text x="0" y="20" font-size="28" font-weight="800" fill="url(#textGrad)" letter-spacing="-0.5">悠野社区</text>
+        <text x="0" y="42" font-size="13" fill="#94A3B8">分享 AI 心得、工具作品与生活点滴</text>
+
+        <!-- 工具栏 -->
+        <g transform="translate(0, 56)">
+          <!-- 发布按钮 -->
+          <rect width="120" height="42" rx="12" fill="url(#primaryGradH)" filter="url(#shadowMd)"/>
+          <text x="16" y="27" font-size="14" font-weight="600" fill="#FFFFFF">+</text>
+          <text x="32" y="27" font-size="14" font-weight="600" fill="#FFFFFF">发布新帖</text>
+          <!-- 搜索框 -->
+          <rect x="132" y="0" width="600" height="42" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+          <circle cx="152" cy="21" r="6" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+          <line x1="156" y1="25" x2="160" y2="29" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+          <text x="170" y="26" font-size="14" fill="#94A3B8">搜索帖子、话题或用户...</text>
+        </g>
+
+        <!-- 帖子列表 -->
+        <g transform="translate(0, 114)">
+          <use href="#postCard" width="900" height="100"/>
+          <use href="#postCard" width="900" height="100" y="110"/>
+          <use href="#postCard" width="900" height="100" y="220"/>
+          <use href="#postCard" width="900" height="100" y="330"/>
+          <use href="#postCard" width="900" height="100" y="440"/>
+          <use href="#postCard" width="900" height="100" y="550"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- 尺寸标注 -->
+    <text x="1200" y="1420" font-size="11" fill="#94A3B8" text-anchor="end">1200 × 1400px · max-width: 1200px · gap: 24px</text>
+  </g>
+
+  <!-- ================================================================
+       页面 2：导航页 (navigation.html)
+       位置: x=1320, y=140, 宽度=1200
+       ================================================================ -->
+  <g transform="translate(1320, 140)">
+    <!-- 页面标签 -->
+    <rect x="0" y="-20" width="180" height="28" rx="14" fill="#DBEAFE"/>
+    <text x="90" y="-1" font-size="13" font-weight="700" fill="#2563EB" text-anchor="middle">🧭 导航页 navigation</text>
+
+    <!-- 页面容器 -->
+    <rect width="1200" height="1400" rx="16" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1" filter="url(#shadowLg)"/>
+
+    <!-- 导航栏 -->
+    <use href="#navbar" width="1200" height="64"/>
+
+    <!-- 内容区域 -->
+    <g transform="translate(20, 88)">
+      <!-- 时钟日历区域 -->
+      <g transform="translate(0, 0)">
+        <rect width="1160" height="180" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+        <!-- 时钟 -->
+        <g transform="translate(40, 30)">
+          <text x="500" y="40" font-size="44" font-weight="700" fill="url(#primaryGradH)" text-anchor="middle" font-family="'Courier New', monospace">14:32:08</text>
+          <text x="500" y="68" font-size="14" fill="#475569" text-anchor="middle">2026年7月25日</text>
+          <text x="500" y="88" font-size="12" fill="#94A3B8" text-anchor="middle">（农历六月十一）</text>
+        </g>
+        <!-- 日历 -->
+        <g transform="translate(580, 20)">
+          <text x="270" y="16" font-size="14" font-weight="600" fill="#0F172A" text-anchor="middle">2026年7月</text>
+          <text x="500" y="16" font-size="11" fill="#2563EB" text-anchor="end">跳转</text>
+          <!-- 星期 -->
+          <g font-size="10" fill="#94A3B8" text-anchor="middle">
+            <text x="40" y="40">日</text><text x="110" y="40">一</text><text x="180" y="40">二</text>
+            <text x="250" y="40">三</text><text x="320" y="40">四</text><text x="390" y="40">五</text><text x="460" y="40">六</text>
+          </g>
+          <!-- 日期格 (7x5 grid, 70px each) -->
+          <g font-size="11" text-anchor="middle">
+            <!-- Week 1 -->
+            <rect x="5" y="48" width="66" height="24" rx="4" fill="#F8FAFC"/>
+            <text x="38" y="64" fill="#CBD5E1">28</text>
+            <text x="108" y="64" fill="#0F172A">29</text>
+            <text x="178" y="64" fill="#0F172A">30</text>
+            <text x="248" y="64" fill="#0F172A">1</text>
+            <text x="318" y="64" fill="#0F172A">2</text>
+            <text x="388" y="64" fill="#0F172A">3</text>
+            <text x="458" y="64" fill="#0F172A">4</text>
+            <!-- Week 2 -->
+            <text x="38" y="94" fill="#0F172A">5</text>
+            <text x="108" y="94" fill="#0F172A">6</text>
+            <text x="178" y="94" fill="#0F172A">7</text>
+            <text x="248" y="94" fill="#0F172A">8</text>
+            <text x="318" y="94" fill="#0F172A">9</text>
+            <text x="388" y="94" fill="#0F172A">10</text>
+            <text x="458" y="94" fill="#0F172A">11</text>
+            <!-- Week 3 - 今天 -->
+            <rect x="5" y="104" width="66" height="24" rx="4" fill="url(#primaryGradH)"/>
+            <text x="38" y="120" fill="#FFFFFF" font-weight="600">12</text>
+            <text x="108" y="120" fill="#0F172A">13</text>
+            <text x="178" y="120" fill="#0F172A">14</text>
+            <text x="248" y="120" fill="#0F172A">15</text>
+            <text x="318" y="120" fill="#0F172A">16</text>
+            <text x="388" y="120" fill="#0F172A">17</text>
+            <text x="458" y="120" fill="#0F172A">18</text>
+            <!-- Week 4 -->
+            <text x="38" y="146" fill="#0F172A">19</text>
+            <text x="108" y="146" fill="#0F172A">20</text>
+            <text x="178" y="146" fill="#0F172A">21</text>
+            <text x="248" y="146" fill="#0F172A">22</text>
+            <text x="318" y="146" fill="#0F172A">23</text>
+            <text x="388" y="146" fill="#0F172A">24</text>
+            <!-- Today 25 -->
+            <rect x="425" y="134" width="66" height="24" rx="4" fill="url(#primaryGradH)"/>
+            <text x="458" y="150" fill="#FFFFFF" font-weight="600">25</text>
+          </g>
+        </g>
+      </g>
+
+      <!-- AI 智能体 -->
+      <g transform="translate(0, 200)">
+        <text x="0" y="20" font-size="22" font-weight="800" fill="url(#textGrad)">AI 智能体</text>
+        <g transform="translate(0, 32)">
+          <use href="#navCard" width="170" height="85"/>
+          <use href="#navCard" width="170" height="85" x="182"/>
+          <use href="#navCard" width="170" height="85" x="364"/>
+          <use href="#navCard" width="170" height="85" x="546"/>
+          <use href="#navCard" width="170" height="85" x="728"/>
+          <use href="#navCard" width="170" height="85" x="910"/>
+        </g>
+      </g>
+
+      <!-- 生活 -->
+      <g transform="translate(0, 340)">
+        <text x="0" y="20" font-size="22" font-weight="800" fill="url(#textGrad)">生活</text>
+        <g transform="translate(0, 32)">
+          <use href="#navCard" width="170" height="85"/>
+          <use href="#navCard" width="170" height="85" x="182"/>
+          <use href="#navCard" width="170" height="85" x="364"/>
+          <use href="#navCard" width="170" height="85" x="546"/>
+          <use href="#navCard" width="170" height="85" x="728"/>
+        </g>
+      </g>
+
+      <!-- 工具 -->
+      <g transform="translate(0, 480)">
+        <text x="0" y="20" font-size="22" font-weight="800" fill="url(#textGrad)">工具</text>
+        <g transform="translate(0, 32)">
+          <use href="#navCard" width="170" height="85"/>
+          <use href="#navCard" width="170" height="85" x="182"/>
+          <use href="#navCard" width="170" height="85" x="364"/>
+          <use href="#navCard" width="170" height="85" x="546"/>
+        </g>
+      </g>
+    </g>
+
+    <text x="1200" y="1420" font-size="11" fill="#94A3B8" text-anchor="end">1200 × 1400px · grid: repeat(auto-fill, minmax(170px, 1fr))</text>
+  </g>
+
+  <!-- ================================================================
+       页面 3：工具页 (tools.html)
+       位置: x=2520, y=140, 宽度=1200
+       ================================================================ -->
+  <g transform="translate(2520, 140)">
+    <!-- 页面标签 -->
+    <rect x="0" y="-20" width="160" height="28" rx="14" fill="#DBEAFE"/>
+    <text x="80" y="-1" font-size="13" font-weight="700" fill="#2563EB" text-anchor="middle">🛠 工具页 tools</text>
+
+    <!-- 页面容器 -->
+    <rect width="1200" height="1400" rx="16" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1" filter="url(#shadowLg)"/>
+
+    <!-- 导航栏 -->
+    <use href="#navbar" width="1200" height="64"/>
+
+    <!-- 内容区域 -->
+    <g transform="translate(20, 88)">
+      <!-- 标题 -->
+      <text x="0" y="20" font-size="28" font-weight="800" fill="url(#textGrad)">实用工具箱</text>
+      <text x="0" y="42" font-size="13" fill="#94A3B8">纯前端在线工具 · 开箱即用 · 数据不出浏览器</text>
+
+      <!-- 分类标签 -->
+      <g transform="translate(0, 60)">
+        <rect width="70" height="36" rx="8" fill="#DBEAFE" stroke="#2563EB" stroke-width="0"/>
+        <rect x="0" y="30" width="70" height="2" fill="#2563EB"/>
+        <text x="35" y="23" font-size="14" font-weight="600" fill="#2563EB" text-anchor="middle">全部</text>
+
+        <rect x="80" y="0" width="70" height="36" rx="8" fill="none" stroke="none"/>
+        <text x="115" y="23" font-size="14" font-weight="500" fill="#475569" text-anchor="middle">格式化</text>
+
+        <rect x="160" y="0" width="70" height="36" rx="8" fill="none" stroke="none"/>
+        <text x="195" y="23" font-size="14" font-weight="500" fill="#475569" text-anchor="middle">编码</text>
+
+        <rect x="240" y="0" width="80" height="36" rx="8" fill="none" stroke="none"/>
+        <text x="280" y="23" font-size="14" font-weight="500" fill="#475569" text-anchor="middle">开发</text>
+
+        <rect x="330" y="0" width="80" height="36" rx="8" fill="none" stroke="none"/>
+        <text x="370" y="23" font-size="14" font-weight="500" fill="#475569" text-anchor="middle">设计</text>
+      </g>
+
+      <!-- 工具卡片网格 -->
+      <g transform="translate(0, 116)">
+        <!-- Row 1 -->
+        <use href="#toolCard" width="170" height="85"/>
+        <text x="30" y="48" font-size="20" text-anchor="middle">📋</text>
+        <text x="56" y="48" font-size="13" font-weight="600" fill="#0F172A">JSON 格式化</text>
+
+        <use href="#toolCard" width="170" height="85" x="182"/>
+        <text x="212" y="48" font-size="20" text-anchor="middle">🔐</text>
+        <text x="238" y="48" font-size="13" font-weight="600" fill="#0F172A">Base64 编解码</text>
+
+        <use href="#toolCard" width="170" height="85" x="364"/>
+        <text x="394" y="48" font-size="20" text-anchor="middle">🔬</text>
+        <text x="420" y="48" font-size="13" font-weight="600" fill="#0F172A">正则表达式测试</text>
+
+        <use href="#toolCard" width="170" height="85" x="546"/>
+        <text x="576" y="48" font-size="20" text-anchor="middle">🕐</text>
+        <text x="602" y="48" font-size="13" font-weight="600" fill="#0F172A">时间戳转换</text>
+
+        <use href="#toolCard" width="170" height="85" x="728"/>
+        <text x="758" y="48" font-size="20" text-anchor="middle">🎨</text>
+        <text x="784" y="48" font-size="13" font-weight="600" fill="#0F172A">颜色选择器</text>
+
+        <use href="#toolCard" width="170" height="85" x="910"/>
+        <text x="940" y="48" font-size="20" text-anchor="middle">🔑</text>
+        <text x="966" y="48" font-size="13" font-weight="600" fill="#0F172A">UUID 生成器</text>
+      </g>
+
+      <!-- 工具模态框预览 -->
+      <g transform="translate(60, 260)">
+        <rect width="960" height="580" rx="16" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" filter="url(#shadowLg)"/>
+        <!-- 模态框头部 -->
+        <rect width="960" height="56" rx="16" fill="#F8FAFC"/>
+        <rect y="40" width="960" height="16" fill="#F8FAFC"/>
+        <line x1="0" y1="56" x2="960" y2="56" stroke="#E2E8F0" stroke-width="1"/>
+        <text x="20" y="35" font-size="18" font-weight="700" fill="#0F172A">JSON 格式化</text>
+        <circle cx="930" cy="28" r="14" fill="#F8FAFC"/>
+        <text x="930" y="34" font-size="18" fill="#475569" text-anchor="middle">×</text>
+
+        <!-- 模态框内容 -->
+        <g transform="translate(24, 80)">
+          <text x="0" y="14" font-size="13" font-weight="600" fill="#0F172A">输入 JSON</text>
+          <rect x="0" y="24" width="912" height="120" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+          <text x="12" y="44" font-size="12" fill="#94A3B8" font-family="'Courier New', monospace">{"name":"UYEA","version":"0.5.0","tools":["json","base64"]}</text>
+
+          <!-- 按钮组 -->
+          <rect x="0" y="156" width="120" height="40" rx="10" fill="url(#primaryGradH)"/>
+          <text x="60" y="181" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">格式化（美化）</text>
+          <rect x="132" y="156" width="120" height="40" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="1"/>
+          <text x="192" y="181" font-size="14" font-weight="600" fill="#2563EB" text-anchor="middle">压缩（一行）</text>
+          <rect x="264" y="156" width="80" height="40" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+          <text x="304" y="181" font-size="14" font-weight="500" fill="#475569" text-anchor="middle">清空</text>
+
+          <text x="0" y="224" font-size="13" font-weight="600" fill="#0F172A">输出结果</text>
+          <rect x="0" y="234" width="912" height="140" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+          <text x="12" y="258" font-size="12" fill="#0F172A" font-family="'Courier New', monospace">{</text>
+          <text x="24" y="276" font-size="12" fill="#0F172A" font-family="'Courier New', monospace">"name": "UYEA",</text>
+          <text x="24" y="294" font-size="12" fill="#0F172A" font-family="'Courier New', monospace">"version": "0.5.0",</text>
+          <text x="24" y="312" font-size="12" fill="#0F172A" font-family="'Courier New', monospace">"tools": [</text>
+          <text x="36" y="330" font-size="12" fill="#0F172A" font-family="'Courier New', monospace">"json",</text>
+          <text x="36" y="348" font-size="12" fill="#0F172A" font-family="'Courier New', monospace">"base64"</text>
+          <text x="24" y="366" font-size="12" fill="#0F172A" font-family="'Courier New', monospace">]</text>
+          <text x="12" y="384" font-size="12" fill="#0F172A" font-family="'Courier New', monospace">}</text>
+
+          <rect x="0" y="384" width="120" height="40" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="1"/>
+          <text x="60" y="409" font-size="14" font-weight="600" fill="#2563EB" text-anchor="middle">复制结果</text>
+        </g>
+      </g>
+    </g>
+
+    <text x="1200" y="1420" font-size="11" fill="#94A3B8" text-anchor="end">1200 × 1400px · 6 tools · modal: 700px max-width</text>
+  </g>
+
+  <!-- ================================================================
+       设计系统面板
+       位置: x=120, y=1600
+       ================================================================ -->
+  <g transform="translate(120, 1600)">
+    <text x="0" y="0" font-size="28" font-weight="800" fill="url(#textGrad)">🎨 Design Tokens & Components</text>
+    <line x1="0" y1="16" x2="3600" y2="16" stroke="#E2E8F0" stroke-width="1"/>
+
+    <!-- 色彩系统 -->
+    <g transform="translate(0, 40)">
+      <text x="0" y="20" font-size="18" font-weight="700" fill="#0F172A">色彩系统 Color System</text>
+      <g transform="translate(0, 36)">
+        <!-- Primary colors -->
+        <g transform="translate(0, 0)">
+          <rect width="120" height="60" rx="8" fill="#2563EB"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Primary</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#2563EB</text>
+        </g>
+        <g transform="translate(132, 0)">
+          <rect width="120" height="60" rx="8" fill="#1D4ED8"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Primary Dark</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#1D4ED8</text>
+        </g>
+        <g transform="translate(264, 0)">
+          <rect width="120" height="60" rx="8" fill="#1E40AF"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Primary Darker</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#1E40AF</text>
+        </g>
+        <g transform="translate(396, 0)">
+          <rect width="120" height="60" rx="8" fill="#DBEAFE"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Primary Light</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#DBEAFE</text>
+        </g>
+        <g transform="translate(528, 0)">
+          <rect width="120" height="60" rx="8" fill="#EFF6FF"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Primary Lighter</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#EFF6FF</text>
+        </g>
+        <g transform="translate(660, 0)">
+          <rect width="120" height="60" rx="8" fill="url(#primaryGradH)"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Gradient</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">135deg</text>
+        </g>
+        <!-- Ink & Grays -->
+        <g transform="translate(0, 110)">
+          <rect width="120" height="60" rx="8" fill="#0F172A"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Ink</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#0F172A</text>
+        </g>
+        <g transform="translate(132, 110)">
+          <rect width="120" height="60" rx="8" fill="#334155"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Accent 2</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#334155</text>
+        </g>
+        <g transform="translate(264, 110)">
+          <rect width="120" height="60" rx="8" fill="#64748B"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Accent 3</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#64748B</text>
+        </g>
+        <g transform="translate(396, 110)">
+          <rect width="120" height="60" rx="8" fill="#CBD5E1"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Accent 4</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#CBD5E1</text>
+        </g>
+        <g transform="translate(528, 110)">
+          <rect width="120" height="60" rx="8" fill="#E2E8F0"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Border</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#E2E8F0</text>
+        </g>
+        <g transform="translate(660, 110)">
+          <rect width="120" height="60" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Background</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#F8FAFC</text>
+        </g>
+        <!-- Semantic -->
+        <g transform="translate(0, 220)">
+          <rect width="120" height="60" rx="8" fill="#10B981"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Success</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#10B981</text>
+        </g>
+        <g transform="translate(132, 220)">
+          <rect width="120" height="60" rx="8" fill="#EF4444"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Error</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#EF4444</text>
+        </g>
+        <g transform="translate(264, 220)">
+          <rect width="120" height="60" rx="8" fill="#F59E0B"/>
+          <text x="60" y="80" font-size="11" fill="#475569" text-anchor="middle">Warning</text>
+          <text x="60" y="94" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">#F59E0B</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- 排版系统 -->
+    <g transform="translate(900, 40)">
+      <text x="0" y="20" font-size="18" font-weight="700" fill="#0F172A">排版系统 Typography</text>
+      <g transform="translate(0, 36)">
+        <text x="0" y="20" font-size="28" font-weight="800" fill="#0F172A">悠野社区 H1</text>
+        <text x="300" y="20" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">28px / 800 / -0.5px</text>
+        <line x1="0" y1="32" x2="800" y2="32" stroke="#E2E8F0"/>
+
+        <text x="0" y="58" font-size="22" font-weight="800" fill="#0F172A">分享 AI 心得 H2</text>
+        <text x="300" y="58" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">22px / 800 / -0.5px</text>
+        <line x1="0" y1="70" x2="800" y2="70" stroke="#E2E8F0"/>
+
+        <text x="0" y="96" font-size="16" font-weight="700" fill="#0F172A">帖子标题 H3</text>
+        <text x="300" y="96" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">16px / 700</text>
+        <line x1="0" y1="108" x2="800" y2="108" stroke="#E2E8F0"/>
+
+        <text x="0" y="134" font-size="14" fill="#475569">这是正文文本 Body</text>
+        <text x="300" y="134" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">14px / 400 / 1.6</text>
+        <line x1="0" y1="146" x2="800" y2="146" stroke="#E2E8F0"/>
+
+        <text x="0" y="172" font-size="13" fill="#475569">小号文本 Small</text>
+        <text x="300" y="172" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">13px / 400</text>
+        <line x1="0" y1="184" x2="800" y2="184" stroke="#E2E8F0"/>
+
+        <text x="0" y="210" font-size="12" fill="#94A3B8">说明文本 Caption</text>
+        <text x="300" y="210" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">12px / 400</text>
+        <line x1="0" y1="222" x2="800" y2="222" stroke="#E2E8F0"/>
+
+        <text x="0" y="248" font-size="13" fill="#2563EB" font-family="'Courier New', monospace">00:00:00 · #2563EB</text>
+        <text x="300" y="248" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">13px / Courier New</text>
+      </g>
+    </g>
+
+    <!-- 间距 & 圆角 -->
+    <g transform="translate(1800, 40)">
+      <text x="0" y="20" font-size="18" font-weight="700" fill="#0F172A">间距 & 圆角 Spacing & Radius</text>
+      <g transform="translate(0, 40)">
+        <text x="0" y="0" font-size="13" font-weight="600" fill="#475569">Spacing Scale</text>
+        <g transform="translate(0, 12)">
+          <rect width="4" height="40" rx="2" fill="#DBEAFE"/>
+          <text x="14" y="24" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">4px</text>
+          <rect x="60" width="8" height="40" rx="2" fill="#DBEAFE"/>
+          <text x="74" y="24" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">8px</text>
+          <rect x="120" width="12" height="40" rx="2" fill="#DBEAFE"/>
+          <text x="138" y="24" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">12px</text>
+          <rect x="190" width="16" height="40" rx="2" fill="#DBEAFE"/>
+          <text x="212" y="24" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">16px</text>
+          <rect x="270" width="24" height="40" rx="2" fill="#DBEAFE"/>
+          <text x="300" y="24" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">24px</text>
+          <rect x="360" width="32" height="40" rx="2" fill="#DBEAFE"/>
+          <text x="400" y="24" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">32px</text>
+          <rect x="460" width="48" height="40" rx="2" fill="#DBEAFE"/>
+          <text x="514" y="24" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">48px</text>
+        </g>
+      </g>
+      <g transform="translate(0, 110)">
+        <text x="0" y="0" font-size="13" font-weight="600" fill="#475569">Border Radius</text>
+        <g transform="translate(0, 12)">
+          <rect width="48" height="48" rx="8" fill="url(#primaryGradH)"/>
+          <text x="24" y="64" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">sm 8</text>
+          <rect x="80" width="48" height="48" rx="12" fill="url(#primaryGradH)"/>
+          <text x="104" y="64" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">md 12</text>
+          <rect x="160" width="48" height="48" rx="16" fill="url(#primaryGradH)"/>
+          <text x="184" y="64" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">lg 16</text>
+          <rect x="240" width="48" height="48" rx="20" fill="url(#primaryGradH)"/>
+          <text x="264" y="64" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">xl 20</text>
+          <circle cx="344" cy="24" r="24" fill="url(#primaryGradH)"/>
+          <text x="344" y="64" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">circle</text>
+        </g>
+      </g>
+      <g transform="translate(0, 200)">
+        <text x="0" y="0" font-size="13" font-weight="600" fill="#475569">Shadows</text>
+        <g transform="translate(0, 12)">
+          <rect width="60" height="60" rx="12" fill="#FFFFFF" stroke="#E2E8F0" filter="url(#shadowSm)"/>
+          <text x="30" y="78" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">sm</text>
+          <rect x="100" width="60" height="60" rx="12" fill="#FFFFFF" stroke="#E2E8F0" filter="url(#shadowMd)"/>
+          <text x="130" y="78" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">md</text>
+          <rect x="200" width="60" height="60" rx="12" fill="#FFFFFF" stroke="#E2E8F0" filter="url(#shadowLg)"/>
+          <text x="230" y="78" font-size="10" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">lg</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- 按钮组件 -->
+    <g transform="translate(2700, 40)">
+      <text x="0" y="20" font-size="18" font-weight="700" fill="#0F172A">按钮组件 Buttons</text>
+      <g transform="translate(0, 40)">
+        <rect width="140" height="42" rx="12" fill="url(#primaryGradH)" filter="url(#shadowMd)"/>
+        <text x="70" y="27" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">主要按钮</text>
+
+        <rect x="0" y="56" width="140" height="42" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="1"/>
+        <text x="70" y="83" font-size="14" font-weight="600" fill="#2563EB" text-anchor="middle">次要按钮</text>
+
+        <rect x="0" y="112" width="140" height="42" rx="12" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+        <text x="70" y="139" font-size="14" font-weight="500" fill="#475569" text-anchor="middle">幽灵按钮</text>
+
+        <!-- 圆形按钮 -->
+        <circle cx="30" cy="180" r="19" fill="#EFF6FF" stroke="#E2E8F0"/>
+        <circle cx="26" cy="176" r="6" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+        <line x1="30" y1="180" x2="34" y2="184" stroke="#2563EB" stroke-width="1.5"/>
+
+        <circle cx="80" cy="180" r="19" fill="#EFF6FF" stroke="#E2E8F0"/>
+        <circle cx="80" cy="175" r="4" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+        <path d="M73 188 Q73 182 80 182 Q87 182 87 188" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+
+        <circle cx="130" cy="180" r="19" fill="#EFF6FF" stroke="#E2E8F0"/>
+        <path d="M136 178 A6 6 0 1 1 128 176 A5 5 0 0 0 136 178" fill="#2563EB"/>
+
+        <!-- 标签 -->
+        <rect x="0" y="216" width="50" height="22" rx="11" fill="#EFF6FF" stroke="#DBEAFE"/>
+        <text x="25" y="231" font-size="11" font-weight="600" fill="#2563EB" text-anchor="middle">公告</text>
+        <rect x="58" y="216" width="60" height="22" rx="11" fill="#EFF6FF" stroke="#DBEAFE"/>
+        <text x="88" y="231" font-size="11" font-weight="600" fill="#2563EB" text-anchor="middle">AI 探讨</text>
+        <rect x="126" y="216" width="40" height="22" rx="11" fill="#EFF6FF" stroke="#DBEAFE"/>
+        <text x="146" y="231" font-size="11" font-weight="600" fill="#2563EB" text-anchor="middle">工具</text>
+      </g>
+    </g>
+
+    <!-- 动画 & 效果 -->
+    <g transform="translate(0, 420)">
+      <text x="0" y="0" font-size="18" font-weight="700" fill="#0F172A">动画系统 Animations</text>
+      <g transform="translate(0, 20)">
+        <rect width="150" height="80" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+        <rect x="50" y="15" width="48" height="36" rx="8" fill="url(#primaryGradH)"/>
+        <text x="75" y="68" font-size="11" font-weight="600" fill="#0F172A" text-anchor="middle">fadeInUp</text>
+
+        <rect x="162" width="150" height="80" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+        <rect x="212" y="15" width="48" height="36" rx="8" fill="url(#primaryGradH)"/>
+        <text x="237" y="68" font-size="11" font-weight="600" fill="#0F172A" text-anchor="middle">bounceIn</text>
+
+        <rect x="324" width="150" height="80" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+        <rect x="374" y="15" width="48" height="36" rx="8" fill="url(#primaryGradH)"/>
+        <text x="399" y="68" font-size="11" font-weight="600" fill="#0F172A" text-anchor="middle">modalPop</text>
+
+        <rect x="486" width="150" height="80" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+        <rect x="536" y="15" width="48" height="36" rx="8" fill="url(#primaryGradH)"/>
+        <text x="561" y="68" font-size="11" font-weight="600" fill="#0F172A" text-anchor="middle">pageIn</text>
+
+        <rect x="648" width="150" height="80" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+        <rect x="698" y="15" width="48" height="36" rx="8" fill="url(#primaryGradH)"/>
+        <text x="723" y="68" font-size="11" font-weight="600" fill="#0F172A" text-anchor="middle">shimmer</text>
+
+        <rect x="810" width="150" height="80" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+        <rect x="860" y="15" width="48" height="36" rx="8" fill="url(#primaryGradH)"/>
+        <text x="885" y="68" font-size="11" font-weight="600" fill="#0F172A" text-anchor="middle">orbFloat</text>
+
+        <rect x="972" width="150" height="80" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+        <rect x="1022" y="15" width="48" height="36" rx="8" fill="url(#primaryGradH)"/>
+        <text x="1047" y="68" font-size="11" font-weight="600" fill="#0F172A" text-anchor="middle">reveal</text>
+      </g>
+      <g transform="translate(0, 120)">
+        <text x="0" y="0" font-size="13" font-weight="600" fill="#475569">缓动函数 Easing</text>
+        <text x="0" y="20" font-size="12" fill="#94A3B8" font-family="'Courier New', monospace">smooth: cubic-bezier(0.4, 0, 0.2, 1) · 0.25s</text>
+        <text x="0" y="40" font-size="12" fill="#94A3B8" font-family="'Courier New', monospace">bounce: cubic-bezier(0.34, 1.56, 0.64, 1) · 弹性</text>
+        <text x="0" y="60" font-size="12" fill="#94A3B8" font-family="'Courier New', monospace">slow: 0.4s · glow: 0 0 24px rgba(37,99,235,0.15)</text>
+      </g>
+    </g>
+
+    <!-- 玻璃拟态效果 -->
+    <g transform="translate(1300, 420)">
+      <text x="0" y="0" font-size="18" font-weight="700" fill="#0F172A">玻璃拟态 Glass Morphism</text>
+      <g transform="translate(0, 20)">
+        <rect width="300" height="120" rx="12" fill="url(#primaryGradH)"/>
+        <rect x="20" y="20" width="260" height="80" rx="12" fill="#FFFFFF" fill-opacity="0.72" stroke="#FFFFFF" stroke-opacity="0.18"/>
+        <text x="40" y="50" font-size="14" font-weight="600" fill="#0F172A">玻璃拟态效果</text>
+        <text x="40" y="70" font-size="12" fill="#475569">backdrop-filter: blur(12px) saturate(180%)</text>
+        <text x="40" y="88" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">--glass-bg: rgba(255,255,255,0.72)</text>
+      </g>
+      <g transform="translate(330, 20)">
+        <text x="0" y="0" font-size="13" font-weight="600" fill="#475569">动态背景光球</text>
+        <rect width="260" height="120" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+        <circle cx="60" cy="50" r="40" fill="url(#orbBlue1)" filter="url(#orbBlur)"/>
+        <circle cx="180" cy="70" r="35" fill="url(#orbBlue2)" filter="url(#orbBlur)"/>
+        <text x="130" y="110" font-size="11" fill="#94A3B8" text-anchor="middle" font-family="'Courier New', monospace">3 orbs · 20s float · blur(80px)</text>
+      </g>
+    </g>
+
+    <!-- 暗色模式预览 -->
+    <g transform="translate(2700, 420)">
+      <text x="0" y="0" font-size="18" font-weight="700" fill="#0F172A">暗色模式 Dark Mode</text>
+      <g transform="translate(0, 20)">
+        <rect width="200" height="140" rx="12" fill="#0B1120"/>
+        <rect x="16" y="16" width="168" height="40" rx="8" fill="#131C31" fill-opacity="0.72" stroke="#FFFFFF" stroke-opacity="0.06"/>
+        <text x="28" y="40" font-size="14" font-weight="800" fill="#3B82F6">UYEA</text>
+        <text x="90" y="40" font-size="12" font-weight="600" fill="#3B82F6">社区</text>
+        <text x="130" y="40" font-size="12" fill="#CBD5E1">导航</text>
+
+        <rect x="16" y="66" width="168" height="58" rx="8" fill="#131C31" stroke="#1E293B"/>
+        <rect x="16" y="66" width="3" height="58" rx="1.5" fill="#3B82F6"/>
+        <rect x="28" y="76" width="40" height="16" rx="8" fill="#0F1B2E"/>
+        <text x="38" y="87" font-size="9" font-weight="600" fill="#3B82F6">公告</text>
+        <text x="28" y="104" font-size="11" font-weight="700" fill="#F1F5F9">帖子标题示例</text>
+        <text x="28" y="118" font-size="10" fill="#94A3B8">摘要文本内容...</text>
+      </g>
+      <g transform="translate(220, 20)">
+        <text x="0" y="0" font-size="13" font-weight="600" fill="#475569">暗色令牌</text>
+        <text x="0" y="20" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">primary: #3B82F6</text>
+        <text x="0" y="36" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">bg: #0B1120</text>
+        <text x="0" y="52" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">surface: #131C31</text>
+        <text x="0" y="68" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">text: #F1F5F9</text>
+        <text x="0" y="84" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">border: #1E293B</text>
+        <text x="0" y="100" font-size="11" fill="#94A3B8" font-family="'Courier New', monospace">glass: rgba(19,28,49,.72)</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- 底部信息 -->
+  <g transform="translate(1920, 3100)">
+    <text x="0" y="0" font-size="14" fill="#94A3B8" text-anchor="middle">UYEA Design System v0.5.0 · Blue/White/Black Minimalist · Glass Morphism Enhanced · 3 Pages · Import to Figma</text>
+    <text x="0" y="22" font-size="12" fill="#CBD5E1" text-anchor="middle">Generated 2026-07-25 · design-tokens.json · style.css · design-spec.html</text>
+  </g>
+
+</svg>

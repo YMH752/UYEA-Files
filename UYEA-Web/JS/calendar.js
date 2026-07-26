@@ -383,15 +383,16 @@
     // ==================== 模态框处理 ====================
     const modalOverlay = document.getElementById('modalOverlay');
     const modalJump = document.getElementById('modalJump');
-    const jumpBtnHeader = document.getElementById('jumpBtnHeader');
+    const calendarTitleEl = document.getElementById('calendarTitle');
     const modalCancel = document.getElementById('modalCancel');
     const modalConfirm = document.getElementById('modalConfirm');
     const jumpYear = document.getElementById('jumpYear');
     const jumpMonth = document.getElementById('jumpMonth');
     const jumpDay = document.getElementById('jumpDay');
 
-    if (jumpBtnHeader) {
-        jumpBtnHeader.addEventListener('click', () => {
+    // 点击月份标题打开跳转模态框（替代旧的跳转按钮）
+    if (calendarTitleEl) {
+        calendarTitleEl.addEventListener('click', () => {
             if (modalOverlay) modalOverlay.classList.add('show');
             if (modalJump) modalJump.classList.add('show');
         });
@@ -419,7 +420,6 @@
             const d = parseInt(jumpDay.value, 10);
 
             if (isNaN(y) || isNaN(m) || isNaN(d) || y < 1900 || y > 2099 || m < 1 || m > 12 || d < 1 || d > 31) {
-                alert('请输入有效的日期');
                 return;
             }
 
@@ -429,7 +429,6 @@
             } else {
                 // 农历转公历
                 if (typeof Lunar === 'undefined') {
-                    alert('农历库未加载，无法转换农历日期');
                     return;
                 }
                 try {
@@ -437,7 +436,6 @@
                     const solar = lunar.toSolar();
                     targetDate = new Date(solar.getYear(), solar.getMonth() - 1, solar.getDay());
                 } catch (e) {
-                    alert('日期转换失败，请检查农历日期是否有效');
                     console.error('农历转换错误:', e.message);
                     return;
                 }
@@ -456,4 +454,209 @@
 
     // 初始化
     loadFixedFestivals().then(() => updateCalendar());
+
+    // ==================== 每日一言 ====================
+    const QUOTES = [
+        { text: '千里之行，始于足下。', author: '老子' },
+        { text: '不积跬步，无以至千里。', author: '荀子' },
+        { text: '学而时习之，不亦说乎？', author: '孔子' },
+        { text: '天行健，君子以自强不息。', author: '《周易》' },
+        { text: '路漫漫其修远兮，吾将上下而求索。', author: '屈原' },
+        { text: '宝剑锋从磨砺出，梅花香自苦寒来。', author: '古训' },
+        { text: '业精于勤，荒于嬉；行成于思，毁于随。', author: '韩愈' },
+        { text: '一寸光阴一寸金，寸金难买寸光阴。', author: '王贞白' },
+        { text: '黑发不知勤学早，白首方悔读书迟。', author: '颜真卿' },
+        { text: '三人行，必有我师焉。', author: '孔子' },
+        { text: '知之者不如好之者，好之者不如乐之者。', author: '孔子' },
+        { text: '纸上得来终觉浅，绝知此事要躬行。', author: '陆游' },
+        { text: '问渠那得清如许？为有源头活水来。', author: '朱熹' },
+        { text: '长风破浪会有时，直挂云帆济沧海。', author: '李白' },
+        { text: '会当凌绝顶，一览众山小。', author: '杜甫' },
+        { text: '海纳百川，有容乃大；壁立千仞，无欲则刚。', author: '林则徐' },
+        { text: '静以修身，俭以养德。', author: '诸葛亮' },
+        { text: '非淡泊无以明志，非宁静无以致远。', author: '诸葛亮' },
+        { text: '勿以恶小而为之，勿以善小而不为。', author: '刘备' },
+        { text: '穷则独善其身，达则兼济天下。', author: '孟子' }
+    ];
+
+    let quoteIndex = Math.floor(Math.random() * QUOTES.length);
+
+    function renderQuote() {
+        const textEl = document.getElementById('quoteText');
+        const authorEl = document.getElementById('quoteAuthor');
+        if (!textEl || !authorEl) return;
+        const q = QUOTES[quoteIndex];
+        textEl.style.opacity = '0';
+        authorEl.style.opacity = '0';
+        setTimeout(() => {
+            textEl.textContent = q.text;
+            authorEl.textContent = '— ' + q.author;
+            textEl.style.transition = 'opacity 0.3s ease';
+            authorEl.style.transition = 'opacity 0.3s ease';
+            textEl.style.opacity = '1';
+            authorEl.style.opacity = '1';
+        }, 150);
+    }
+
+    const quoteRefresh = document.getElementById('quoteRefresh');
+    if (quoteRefresh) {
+        quoteRefresh.addEventListener('click', () => {
+            quoteIndex = (quoteIndex + 1) % QUOTES.length;
+            renderQuote();
+        });
+    }
+
+    renderQuote();
+
+    // ==================== 节日倒计时 ====================
+    // 公历固定节日列表（月-日 → 名称）
+    const COUNTDOWN_FESTIVALS = [
+        { date: '1-1', name: '元旦' },
+        { date: '2-14', name: '情人节' },
+        { date: '3-8', name: '妇女节' },
+        { date: '3-12', name: '植树节' },
+        { date: '4-1', name: '愚人节' },
+        { date: '5-1', name: '劳动节' },
+        { date: '5-4', name: '青年节' },
+        { date: '6-1', name: '儿童节' },
+        { date: '7-1', name: '建党节' },
+        { date: '8-1', name: '建军节' },
+        { date: '9-10', name: '教师节' },
+        { date: '10-1', name: '国庆节' },
+        { date: '10-31', name: '万圣节' },
+        { date: '11-11', name: '光棍节' },
+        { date: '12-24', name: '平安夜' },
+        { date: '12-25', name: '圣诞节' }
+    ];
+
+    function getNextFestival() {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const festivals = [];
+
+        for (const f of COUNTDOWN_FESTIVALS) {
+            const [m, d] = f.date.split('-').map(Number);
+            // 今年的节日
+            let dateThisYear = new Date(now.getFullYear(), m - 1, d);
+            if (dateThisYear >= today) {
+                festivals.push({ name: f.name, date: dateThisYear });
+            }
+            // 明年的节日
+            let dateNextYear = new Date(now.getFullYear() + 1, m - 1, d);
+            festivals.push({ name: f.name, date: dateNextYear });
+        }
+
+        // 按日期排序，取最近的
+        festivals.sort((a, b) => a.date - b.date);
+        return festivals[0] || null;
+    }
+
+    function renderCountdown() {
+        const nameEl = document.getElementById('countdownName');
+        const numberEl = document.getElementById('countdownNumber');
+        const dateEl = document.getElementById('countdownDate');
+        if (!nameEl || !numberEl || !dateEl) return;
+
+        const next = getNextFestival();
+        if (!next) return;
+
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const diffMs = next.date - today;
+        const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+        nameEl.textContent = next.name;
+        numberEl.textContent = diffDays;
+        dateEl.textContent = `${next.date.getFullYear()}年${next.date.getMonth() + 1}月${next.date.getDate()}日`;
+    }
+
+    renderCountdown();
+
+    // ==================== 快捷操作面板 ====================
+    const qaCopyTime = document.getElementById('qaCopyTime');
+    const qaToggleTheme = document.getElementById('qaToggleTheme');
+    const qaFullscreen = document.getElementById('qaFullscreen');
+    const qaToTop = document.getElementById('qaToTop');
+    const qaShare = document.getElementById('qaShare');
+    const qaRandom = document.getElementById('qaRandom');
+
+    // 复制当前时间
+    if (qaCopyTime) {
+        qaCopyTime.addEventListener('click', async () => {
+            const now = new Date();
+            const text = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch (e) {
+                console.warn('复制失败:', e.message);
+            }
+        });
+    }
+
+    // 切换主题
+    if (qaToggleTheme) {
+        qaToggleTheme.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('uyea_theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('uyea_theme', 'dark');
+            }
+        });
+    }
+
+    // 全屏切换
+    if (qaFullscreen) {
+        qaFullscreen.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen();
+            }
+        });
+    }
+
+    // 返回顶部
+    if (qaToTop) {
+        qaToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // 分享
+    if (qaShare) {
+        qaShare.addEventListener('click', async () => {
+            const shareData = {
+                title: 'UYEA 悠野导航',
+                text: '悠野导航 - AI智能体、生活、工具网站导航',
+                url: window.location.href
+            };
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                } catch (e) {
+                    // 用户取消分享，无需处理
+                }
+            } else {
+                try {
+                    await navigator.clipboard.writeText(shareData.url);
+                } catch (e) {
+                    console.warn('分享功能不可用:', e.message);
+                }
+            }
+        });
+    }
+
+    // 随机访问一个导航站点
+    if (qaRandom) {
+        qaRandom.addEventListener('click', () => {
+            const cards = document.querySelectorAll('.card-item[href]');
+            if (cards.length === 0) return;
+            const randomCard = cards[Math.floor(Math.random() * cards.length)];
+            const url = randomCard.getAttribute('href');
+            window.open(url, '_blank', 'noopener');
+        });
+    }
 })();

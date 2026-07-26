@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="实用工具箱 - 开发者工具、设计美化、办公效率、多媒体处理">
-    <meta name="theme-color" content="#000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="实用工具箱 - JSON格式化、Base64编解码、正则测试、时间戳转换、颜色选择器、UUID生成器，纯前端开箱即用">
+    <meta name="theme-color" content="#1A4D3A">
     <meta name="color-scheme" content="light dark">
     <title>实用工具箱 | UYEA</title>
 
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="/IMAGE/ICO/zhihu.png">
 
     <meta property="og:title" content="实用工具箱 | UYEA">
-    <meta property="og:description" content="实用工具箱 - 开发者工具、设计美化、办公效率、多媒体处理">
+    <meta property="og:description" content="实用工具箱 - JSON格式化、Base64编解码、正则测试、时间戳转换、颜色选择器、UUID生成器">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://uyea-files.pages.dev/tools">
     <meta name="twitter:card" content="summary">
@@ -22,57 +22,413 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="UYEA">
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.2.0">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.2.0" as="style">
-    <link rel="preload" href="/JS/config.js?v=0.2.0" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.11" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.11" as="script">
 
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
-
+    <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
-        html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+        :root{--primary:#1A4D3A;--primary-gradient:linear-gradient(135deg,#1A4D3A 0%,#2D6A4F 100%);--accent:#B45309;--ink:#292524;--bg:#F7F3ED;--surface:#FFFFFF;--surface-warm:#FFFBF5;--border:#E7DFD3;--glass-bg:rgba(255,251,245,0.55);--glass-border:rgba(255,255,255,0.6);--glass-highlight:rgba(255,255,255,0.9);--text-primary:#292524;--text-secondary:#57534E;--text-muted:#A8A29E;--header-h:64px;--radius-md:10px;--radius-sm:6px;--shadow-sm:0 1px 3px rgba(41,37,36,0.08);--font-serif:'Playfair Display','Noto Serif SC',Georgia,serif}
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{overflow-x:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC',system-ui,sans-serif}
+        body{background:var(--bg);color:var(--text-primary);line-height:1.6;overflow-x:hidden}
+        .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+        .top-header{width:100%;height:var(--header-h);background:var(--glass-bg);backdrop-filter:blur(24px) saturate(200%);-webkit-backdrop-filter:blur(24px) saturate(200%);border-bottom:1px solid var(--glass-border);position:sticky;top:0;z-index:1000;box-shadow:inset 0 1px 0 var(--glass-highlight)}
+        .header-container{height:100%;max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+        .logo-text{font-family:var(--font-serif);font-size:clamp(22px,4vw,30px);font-weight:800;background:var(--primary-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;letter-spacing:clamp(1px,0.4vw,2px);white-space:nowrap}
+        .main-content{width:100%;padding:24px 20px;min-height:calc(100vh - var(--header-h))}
+        .content-wrapper{max-width:1400px;margin:0 auto;width:100%}
+        .section-title{font-family:var(--font-serif);font-size:clamp(24px,4vw,32px);font-weight:700;color:var(--ink);letter-spacing:-0.5px}
+        .section-header{margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+        .section-subtitle{font-size:13px;color:var(--text-muted);margin-top:4px}
+        .category-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:12px}
+        .tab-item{padding:10px 18px;background:transparent;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;color:var(--text-secondary);cursor:pointer;white-space:nowrap;min-height:44px}
+        .tab-item.active{color:var(--primary);background:#ECF5F1;border-bottom:2px solid var(--primary)}
+        .grid-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+        .card-item{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);text-decoration:none;color:var(--text-primary);aspect-ratio:2/1;overflow:hidden;cursor:pointer}
+        .card-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:#ECF5F1;flex-shrink:0;font-size:24px}
+        .card-title{font-size:clamp(12px,3vw,14px);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .tool-group{margin-bottom:32px}
+        .main-content{padding-bottom:140px}
+        /* 关键响应式：防止FOUC */
+        @media(max-width:1024px){.header-container,.content-wrapper{max-width:960px}.grid-container{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+        @media(max-width:900px){.nav-links{display:none}.menu-toggle{display:flex}}
+        @media(max-width:600px){.main-content{padding:16px 12px 110px}.header-right{gap:8px}.lang-btn{padding:6px 10px;min-width:40px;font-size:12px}.header-actions{gap:6px;padding-left:8px}.grid-container{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}.category-tabs{gap:6px}.tab-item{padding:8px 14px;font-size:13px}}
+        @media(max-width:480px){.main-content{padding:12px 10px 110px}.header-container{padding:0 14px}.grid-container{grid-template-columns:repeat(2,1fr);gap:8px}.card-item{padding:10px 12px;aspect-ratio:2.2/1}.card-icon{width:32px;height:32px;font-size:20px}}
+        @media(max-width:380px){.lang-selector{display:none}}
+        @media(max-width:320px){.main-content{padding:10px 8px 100px}.header-container{padding:0 10px}.logo-text{font-size:20px}.grid-container{grid-template-columns:1fr}}
+        @media(max-width:900px) and (orientation:landscape){.top-header{height:48px}.main-content{padding-top:12px;padding-bottom:90px}}
+        @media(min-width:1401px){.header-container,.content-wrapper{max-width:1600px;padding:0 32px}.main-content{padding:32px 32px 150px}.grid-container{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}}
+        /* iOS安全区域 */
+        @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
+
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.11" media="all">
+
+    <!-- 工具页面专属样式 -->
+    <style>
+        /* 工具卡片可点击指针 */
+        .card-item { cursor: pointer; }
+
+        /* ========== 工具模态框 ========== */
+        .tool-modal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(95vw, 700px);
+            max-height: 90vh;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 10000;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .tool-modal.show { display: flex; animation: modalPop 0.2s ease; }
+
+        .tool-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .tool-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 0;
+        }
+        .tool-modal-close {
+            width: 34px; height: 34px;
+            border: none;
+            background: var(--bg);
+            border-radius: 50%;
+            font-size: 22px;
+            line-height: 1;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all var(--duration) ease;
+        }
+        .tool-modal-close:hover { background: var(--accent-5); color: var(--ink); }
+
+        .tool-modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* ========== 工具表单元素 ========== */
+        .tool-field { margin-bottom: 16px; }
+        .tool-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .tool-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text-primary);
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+            transition: border-color var(--duration) ease, box-shadow var(--duration) ease;
+        }
+        .tool-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-lighter);
+        }
+        .tool-textarea[readonly] { background: var(--surface); }
+        .tool-input {
+            height: 40px;
+            padding: 0 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color var(--duration) ease, box-shadow var(--duration) ease;
+        }
+        .tool-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-lighter);
+        }
+        .tool-select {
+            height: 40px;
+            padding: 0 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+        }
+        .tool-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .tool-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .tool-error {
+            display: none;
+            padding: 10px 12px;
+            background: #FEE2E2;
+            color: #DC2626;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            margin-bottom: 12px;
+            border: 1px solid #FECACA;
+            word-break: break-word;
+        }
+        .tool-error.show { display: block; }
+        .tool-result-box {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 13px;
+            color: var(--text-primary);
+            min-height: 44px;
+            word-break: break-all;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .tool-info-bar {
+            padding: 12px 14px;
+            background: var(--primary-lighter);
+            border: 1px solid var(--primary-light);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .tool-ts-current {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+        .tool-prefix {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .tool-checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .tool-checkbox input { cursor: pointer; }
+
+        /* 按钮变体（基于 .post-btn） */
+        .post-btn-secondary {
+            background: var(--surface);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        .post-btn-secondary:hover { background: var(--primary-lighter); box-shadow: var(--shadow-sm); }
+        .post-btn-ghost {
+            background: var(--bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .post-btn-ghost:hover { background: var(--accent-5); box-shadow: var(--shadow-sm); }
+
+        /* 正则高亮 */
+        .tool-regex-highlight { line-height: 1.8; }
+        .tool-regex-highlight mark {
+            background: #FEF3C7;
+            color: #92400E;
+            padding: 1px 3px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        .tool-match-item {
+            padding: 8px 10px;
+            border-left: 3px solid var(--primary);
+            background: var(--primary-lighter);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            white-space: normal;
+        }
+        .tool-match-item .group-label {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-right: 4px;
+        }
+
+        /* 颜色选择器 */
+        .tool-color-preview {
+            width: 100%;
+            height: 80px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            transition: background-color 0.2s ease;
+        }
+        .tool-color-picker {
+            width: 100%;
+            height: 46px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* 工具模态框响应式 */
+        @media (max-width: 600px) {
+            .tool-modal { width: 96vw; max-height: 92vh; }
+            .tool-modal-body { padding: 16px; }
+            .tool-modal-header { padding: 14px 16px; }
+            .tool-modal-title { font-size: 16px; }
+            .tool-textarea { min-height: 100px; font-size: 12px; }
+            .tool-input { height: 38px; font-size: 13px; }
+            .tool-select { height: 38px; font-size: 13px; }
+            .tool-actions { gap: 6px; }
+            .tool-actions .post-btn { padding: 8px 14px; font-size: 13px; }
+        }
+        @media (max-width: 380px) {
+            .tool-modal { width: 98vw; max-height: 94vh; }
+            .tool-modal-body { padding: 12px; }
+            .tool-modal-header { padding: 12px 14px; }
+            .tool-textarea { min-height: 80px; }
+            .tool-actions .post-btn { padding: 7px 12px; font-size: 12px; }
+        }
+        @media (max-width: 900px) and (orientation: landscape) {
+            .tool-modal { width: 90vw; max-height: 85vh; }
+            .tool-modal-body { padding: 14px; max-height: 60vh; }
+        }
+    </style>
+
+    <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap"></noscript>
+
+    <!-- 防止暗色模式闪烁：在CSS加载前应用主题 -->
+    <script>
+        (function(){var t;try{t=localStorage.getItem('uyea_theme')}catch(e){t=null}if(!t)t=(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();
+    </script>
 </head>
 <body data-lang="zh-CN">
+    <div class="scroll-progress"></div>
+    <h1 class="sr-only">UYEA 实用工具箱</h1>
+
+    <!-- 顶部导航栏 -->
     <header class="top-header">
         <div class="header-container">
             <a href="/" class="logo-text">UYEA</a>
             <div class="header-right">
+                <nav class="nav-links">
+                    <a href="/" class="nav-link" data-i18n="nav.forum">悠野社区</a>
+                    <a href="navigation" class="nav-link" data-i18n="nav.home">网站导航</a>
+                    <a href="tools" class="nav-link active" data-i18n="nav.tools">线上工具</a>
+                </nav>
                 <div class="lang-selector" id="langSelector">
                     <div class="lang-highlight" id="langHighlight"></div>
                     <button class="lang-btn active" data-lang="zh-CN">中文</button>
                     <button class="lang-btn" data-lang="zh-TW">繁中</button>
-                    <button class="lang-btn" data-lang="en">English</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+                <div class="header-actions">
+                    <button class="search-icon-btn" id="searchIconBtn" aria-label="搜索">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                    <button class="user-btn" aria-label="用户中心" data-coming-soon="用户中心">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </button>
+                    <button class="theme-toggle" aria-label="切换暗色/亮色模式">
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </button>
                 </div>
                 <button class="menu-toggle" id="menuToggleBtn"><span></span><span></span><span></span></button>
             </div>
         </div>
+
+        <!-- 搜索下拉 -->
+        <div class="search-dropdown" id="searchDropdown">
+            <div class="search-engine-tabs" id="searchEngineTabs">
+                <button class="engine-tab active" data-value="baidu" data-i18n="search.engine.baidu">百度</button>
+                <button class="engine-tab" data-value="google" data-i18n="search.engine.google">Google</button>
+                <button class="engine-tab" data-value="bing" data-i18n="search.engine.bing">Bing</button>
+                <button class="engine-tab" data-value="site" data-i18n="search.engine.site">站内</button>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" data-i18n-placeholder="search.placeholder" placeholder="输入关键词搜索...">
+                <button class="search-submit-btn" id="searchSubmitBtn" aria-label="搜索">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </div>
+        </div>
     </header>
-    
+
+    <!-- 移动端下拉菜单 -->
     <div class="dropdown-menu" id="dropdownMenu">
         <nav class="menu-nav">
-            <a href="/" class="menu-item" data-i18n="nav.explore">开始探索</a>
-            <div class="menu-divider"></div>
+            <a href="/" class="menu-item" data-i18n="nav.forum">悠野社区</a>
             <a href="navigation" class="menu-item" data-i18n="nav.home">网站导航</a>
-            <div class="menu-divider"></div>
             <a href="tools" class="menu-item active" data-i18n="nav.tools">线上工具</a>
-            <div class="menu-divider"></div>
-            <a href="forum" class="menu-item" data-i18n="nav.forum">悠野社区</a>
         </nav>
         <div class="menu-auth-section">
             <button class="register-btn" data-coming-soon="注册"><span data-i18n="btn.register">注册</span></button>
         </div>
     </div>
 
+    <!-- 主内容 -->
     <main class="main-content">
         <div class="content-wrapper">
             <div class="section-header">
-                <h1 class="section-title" data-i18n="nav.tools">实用工具箱</h1>
+                <div>
+                    <div class="section-title" data-i18n="nav.tools">线上工具</div>
+                    <div class="section-subtitle" data-i18n="tools.subtitle">纯前端在线工具，开箱即用，数据不出本地</div>
+                </div>
             </div>
-            
+
             <!-- 分类标签 -->
             <div class="category-tabs" id="categoryTabs">
                 <div class="tab-item active" data-category="all">全部</div>
@@ -88,29 +444,21 @@
                     <h2 class="section-title">💻 开发者工具</h2>
                 </div>
                 <div class="grid-container">
-                    <a href="#" class="card-item" title="JSON 格式化">
+                    <a class="card-item" role="button" tabindex="0" data-tool="json" title="JSON 格式化">
                         <div class="card-icon">🗂️</div>
-                        <div class="card-info">
-                            <div class="card-title">JSON 格式化</div>
-                        </div>
+                        <div class="card-info"><div class="card-title">JSON 格式化</div></div>
                     </a>
-                    <a href="#" class="card-item" title="Base64 编解码">
+                    <a class="card-item" role="button" tabindex="0" data-tool="base64" title="Base64 编解码">
                         <div class="card-icon">🔣</div>
-                        <div class="card-info">
-                            <div class="card-title">Base64 编解码</div>
-                        </div>
+                        <div class="card-info"><div class="card-title">Base64 编解码</div></div>
                     </a>
-                    <a href="#" class="card-item" title="正则表达式测试">
+                    <a class="card-item" role="button" tabindex="0" data-tool="regex" title="正则表达式测试">
                         <div class="card-icon">🔍</div>
-                        <div class="card-info">
-                            <div class="card-title">正则表达式测试</div>
-                        </div>
+                        <div class="card-info"><div class="card-title">正则表达式测试</div></div>
                     </a>
-                    <a href="#" class="card-item" title="时间戳转换">
+                    <a class="card-item" role="button" tabindex="0" data-tool="timestamp" title="时间戳转换">
                         <div class="card-icon">⏱️</div>
-                        <div class="card-info">
-                            <div class="card-title">时间戳转换</div>
-                        </div>
+                        <div class="card-info"><div class="card-title">时间戳转换</div></div>
                     </a>
                 </div>
             </div>
@@ -121,83 +469,71 @@
                     <h2 class="section-title">🎨 设计美化</h2>
                 </div>
                 <div class="grid-container">
-                    <a href="#" class="card-item" title="在线调色板">
+                    <a class="card-item" role="button" tabindex="0" data-tool="color" title="颜色选择器">
                         <div class="card-icon">🎨</div>
-                        <div class="card-info">
-                            <div class="card-title">在线调色板</div>
-                        </div>
+                        <div class="card-info"><div class="card-title">颜色选择器</div></div>
                     </a>
-                    <a href="#" class="card-item" title="SVG 图标库">
-                        <div class="card-icon">🖼️</div>
-                        <div class="card-info">
-                            <div class="card-title">SVG 图标库</div>
-                        </div>
-                    </a>
-                    <a href="#" class="card-item" title="渐变颜色生成">
-                        <div class="card-icon">🌈</div>
-                        <div class="card-info">
-                            <div class="card-title">渐变颜色生成</div>
-                        </div>
+                    <a class="card-item" role="button" tabindex="0" data-tool="uuid" title="UUID 生成器">
+                        <div class="card-icon">🆔</div>
+                        <div class="card-info"><div class="card-title">UUID 生成器</div></div>
                     </a>
                 </div>
             </div>
 
-            <!-- 办公效率 -->
+            <!-- 办公效率（占位） -->
             <div class="tool-group" data-category="office">
                 <div class="section-header">
                     <h2 class="section-title">📂 办公效率</h2>
                 </div>
                 <div class="grid-container">
-                    <a href="#" class="card-item" title="PDF 转 Word">
+                    <a class="card-item" role="button" tabindex="0" data-coming-soon="PDF 转 Word" title="PDF 转 Word">
                         <div class="card-icon">📄</div>
-                        <div class="card-info">
-                            <div class="card-title">PDF 转 Word</div>
-                        </div>
+                        <div class="card-info"><div class="card-title">PDF 转 Word</div></div>
                     </a>
-                    <a href="#" class="card-item" title="流程图绘制">
+                    <a class="card-item" role="button" tabindex="0" data-coming-soon="流程图绘制" title="流程图绘制">
                         <div class="card-icon">📊</div>
-                        <div class="card-info">
-                            <div class="card-title">流程图绘制</div>
-                        </div>
+                        <div class="card-info"><div class="card-title">流程图绘制</div></div>
                     </a>
                 </div>
             </div>
 
-            <!-- 多媒体处理 -->
+            <!-- 多媒体处理（占位） -->
             <div class="tool-group" data-category="media">
                 <div class="section-header">
                     <h2 class="section-title">🎥 多媒体处理</h2>
                 </div>
                 <div class="grid-container">
-                    <a href="#" class="card-item" title="图片压缩">
+                    <a class="card-item" role="button" tabindex="0" data-coming-soon="图片压缩" title="图片压缩">
                         <div class="card-icon">🖼️</div>
-                        <div class="card-info">
-                            <div class="card-title">图片压缩</div>
-                        </div>
+                        <div class="card-info"><div class="card-title">图片压缩</div></div>
                     </a>
-                    <a href="#" class="card-item" title="视频转 GIF">
+                    <a class="card-item" role="button" tabindex="0" data-coming-soon="视频转 GIF" title="视频转 GIF">
                         <div class="card-icon">🎞️</div>
-                        <div class="card-info">
-                            <div class="card-title">视频转 GIF</div>
-                        </div>
+                        <div class="card-info"><div class="card-title">视频转 GIF</div></div>
                     </a>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- 开发中提示模态框 -->
-    <div class="modal-overlay" id="comingSoonOverlay"></div>
-    <div class="coming-soon-modal" id="comingSoonModal">
-        <div class="coming-soon-icon">🚀</div>
-        <div class="coming-soon-title" id="comingSoonTitle">功能开发中</div>
-        <div class="coming-soon-text" id="comingSoonText">敬请期待更新！</div>
-        <button class="coming-soon-btn" id="comingSoonClose">知道了</button>
+    <!-- 工具模态框 -->
+    <div class="modal-overlay" id="toolOverlay"></div>
+    <div class="tool-modal" id="toolModal" role="dialog" aria-modal="true" aria-labelledby="toolModalTitle">
+        <div class="tool-modal-header">
+            <h2 class="tool-modal-title" id="toolModalTitle">工具</h2>
+            <button class="tool-modal-close" id="toolModalClose" aria-label="关闭">&times;</button>
+        </div>
+        <div class="tool-modal-body" id="toolModalBody"></div>
     </div>
 
-    <script src="/JS/config.js?v=0.2.0" defer></script>
-    <script src="/JS/script.js?v=0.2.0" defer></script>
-    <script src="/JS/tools.js?v=0.2.0" defer></script>
+    <!-- 返回顶部 -->
+    <div class="back-to-top" role="button" aria-label="返回顶部" tabindex="0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </div>
+
+    <script src="/JS/config.js?v=0.6.11" defer></script>
+    <script src="/JS/script.js?v=0.6.11" defer></script>
+    <script src="/JS/tools.js?v=0.6.11" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

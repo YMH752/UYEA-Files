@@ -2,114 +2,34 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="悠野社区 - 分享AI使用心得、工具作品和生活点滴">
-    <meta name="theme-color" content="#000000">
-    <meta name="color-scheme" content="light dark">
-    <title>悠野社区 | UYEA</title>
-
-    <link rel="canonical" href="https://uyea-files.pages.dev/forum">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="悠野社区 - 论坛已合并为首页">
+    <meta name="theme-color" content="#1A4D3A">
+    <meta name="robots" content="noindex">
+    <title>跳转中... | UYEA</title>
     <link rel="icon" href="/IMAGE/ICO/zhihu.png" type="image/png">
-    <link rel="apple-touch-icon" href="/IMAGE/ICO/zhihu.png">
-
-    <meta property="og:title" content="悠野社区 | UYEA">
-    <meta property="og:description" content="悠野社区 - 分享AI使用心得、工具作品和生活点滴">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://uyea-files.pages.dev/forum">
-    <meta name="twitter:card" content="summary">
     <link rel="manifest" href="/manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="UYEA">
-
-    <link rel="stylesheet" href="/CSS/style.css?v=0.2.0">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.2.0" as="style">
-    <link rel="preload" href="/JS/config.js?v=0.2.0" as="script">
-    <link rel="preload" href="/JS/forum.js?v=0.2.0" as="script">
-
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
-
+    <meta http-equiv="refresh" content="0; url=/">
     <style>
         html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #F7F3ED; color: #57534E; }
+        .redirect-card { text-align: center; padding: 40px; }
+        .redirect-card h1 { font-size: 20px; color: #292524; margin-bottom: 8px; }
+        .redirect-card p { font-size: 14px; }
+        .redirect-card a { color: #1A4D3A; text-decoration: none; font-weight: 600; }
+        .spinner { width: 32px; height: 32px; border: 3px solid #ECF5F1; border-top-color: #1A4D3A; border-radius: 50%; margin: 0 auto 20px; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body data-lang="zh-CN">
-    <header class="top-header">
-        <div class="header-container">
-            <a href="/" class="logo-text">UYEA</a>
-            <div class="header-right">
-                <div class="lang-selector" id="langSelector">
-                    <div class="lang-highlight" id="langHighlight"></div>
-                    <button class="lang-btn active" data-lang="zh-CN">中文</button>
-                    <button class="lang-btn" data-lang="zh-TW">繁中</button>
-                    <button class="lang-btn" data-lang="en">English</button>
-                </div>
-                <button class="menu-toggle" id="menuToggleBtn"><span></span><span></span><span></span></button>
-            </div>
-        </div>
-    </header>
-    
-    <div class="dropdown-menu" id="dropdownMenu">
-        <nav class="menu-nav">
-            <a href="/" class="menu-item" data-i18n="nav.explore">开始探索</a>
-            <div class="menu-divider"></div>
-            <a href="navigation" class="menu-item" data-i18n="nav.home">网站导航</a>
-            <div class="menu-divider"></div>
-            <a href="tools" class="menu-item" data-i18n="nav.tools">线上工具</a>
-            <div class="menu-divider"></div>
-            <a href="forum" class="menu-item active" data-i18n="nav.forum">悠野社区</a>
-        </nav>
-        <div class="menu-auth-section">
-            <button class="register-btn" data-coming-soon="注册"><span data-i18n="btn.register">注册</span></button>
-        </div>
+<body>
+    <div class="redirect-card">
+        <div class="spinner"></div>
+        <h1>正在跳转到悠野社区</h1>
+        <p>如未自动跳转，请<a href="/">点击这里</a></p>
     </div>
-
-    <main class="main-content">
-        <div class="content-wrapper">
-            <div class="section-header">
-                <h1 class="section-title" data-i18n="nav.forum">悠野社区</h1>
-            </div>
-            
-            <div class="forum-toolbar">
-                <button class="post-btn" data-coming-soon="发布新帖子">＋ 发布新帖子</button>
-                <div class="forum-search">
-                    <span>🔍</span>
-                    <input type="text" id="forumSearchInput" placeholder="搜索帖子、话题或用户...">
-                </div>
-            </div>
-            
-            <div class="post-list" id="postList">
-            </div>
-            
-            <div class="no-results" id="noResults">
-                <div class="no-results-icon">🔍</div>
-                <div class="no-results-text">未找到匹配的帖子</div>
-            </div>
-        </div>
-    </main>
-
-    <!-- 开发中提示模态框 -->
-    <div class="modal-overlay" id="comingSoonOverlay"></div>
-    <div class="coming-soon-modal" id="comingSoonModal">
-        <div class="coming-soon-icon">🚀</div>
-        <div class="coming-soon-title" id="comingSoonTitle">功能开发中</div>
-        <div class="coming-soon-text" id="comingSoonText">敬请期待更新！</div>
-        <button class="coming-soon-btn" id="comingSoonClose">知道了</button>
-    </div>
-
-    <script src="/JS/config.js?v=0.2.0" defer></script>
-    <script src="/JS/script.js?v=0.2.0" defer></script>
-    <script src="/JS/forum.js?v=0.2.0" defer></script>
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(() => {});
-            });
-        }
+        // JS 即时跳转（与 meta refresh 互补）
+        window.location.replace('/');
     </script>
 </body>
 </html>

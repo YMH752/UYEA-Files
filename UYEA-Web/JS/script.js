@@ -1,15 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 安全读取 localStorage（隐私模式等场景可能不可用）
+    function safeGetItem(key) {
+        try { return localStorage.getItem(key); }
+        catch (e) { return null; }
+    }
+    function safeSetItem(key, value) {
+        try { localStorage.setItem(key, value); }
+        catch (e) { /* 静默忽略 */ }
+    }
+
     // ==================== 多语言系统 ====================
+    let currentLang = UYEA_CONFIG.defaultLanguage;
+
     const setLang = (lang) => {
+        currentLang = lang;
         const msgs = UYEA_CONFIG.i18n[lang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+        // 翻译文本内容
         document.querySelectorAll('[data-i18n]').forEach(el => {
             if (msgs[el.dataset.i18n]) el.textContent = msgs[el.dataset.i18n];
         });
-        try { 
-            localStorage.setItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language), lang); 
-        } catch (e) { 
-            console.warn('localStorage unavailable:', e.message); 
-        }
+        // 翻译 placeholder
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            if (msgs[el.dataset.i18nPlaceholder]) el.placeholder = msgs[el.dataset.i18nPlaceholder];
+        });
+        safeSetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language), lang);
+        // 通知其他模块语言已切换
+        window.dispatchEvent(new CustomEvent('languagechange', { detail: { lang } }));
     };
 
     // 语言按钮事件
@@ -24,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 初始化语言
-    const savedLang = localStorage.getItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language)) || UYEA_CONFIG.defaultLanguage;
+    const savedLang = safeGetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language)) || UYEA_CONFIG.defaultLanguage;
     langBtns.forEach(b => b.classList.toggle('active', b.dataset.lang === savedLang));
     setLang(savedLang);
     const activeBtn = document.querySelector('.lang-btn.active');
@@ -65,36 +81,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==================== 搜索系统 ====================
-    const engineBtn = document.getElementById('engineTriggerBtn');
-    const engineLabel = document.getElementById('engineTriggerLabel');
-    const engineItems = document.querySelectorAll('.engine-option-item');
+    const engineTabs = document.querySelectorAll('.engine-tab');
     const searchInput = document.getElementById('searchInput');
+    const searchSubmitBtn = document.getElementById('searchSubmitBtn');
     const searchIcon = document.getElementById('searchIconBtn');
     const searchDropdown = document.getElementById('searchDropdown');
 
-    let current = localStorage.getItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.searchEngine)) || UYEA_CONFIG.defaultSearchEngine;
-    if (!UYEA_CONFIG.searchEngines[current]) current = UYEA_CONFIG.defaultSearchEngine;
+    let current = safeGetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.searchEngine)) || UYEA_CONFIG.defaultSearchEngine;
+    if (!UYEA_CONFIG.searchEngines[current] && current !== 'site') current = UYEA_CONFIG.defaultSearchEngine;
 
-    // 初始化搜索引擎
-    engineItems.forEach(i => {
-        if (i.dataset.value === current) {
-            i.classList.add('selected');
-            if (engineLabel) engineLabel.textContent = i.textContent.trim();
-        }
-    });
+    // 初始化搜索引擎标签 active 状态
+    function syncEngineTabs() {
+        engineTabs.forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.value === current);
+        });
+    }
+    syncEngineTabs();
 
-    engineItems.forEach(i => {
-        i.addEventListener('click', (e) => {
+    // 搜索引擎标签点击切换
+    engineTabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
             e.stopPropagation();
-            current = i.dataset.value;
-            engineItems.forEach(x => x.classList.remove('selected'));
-            i.classList.add('selected');
-            if (engineLabel) engineLabel.textContent = i.textContent.trim();
-            try {
-                localStorage.setItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.searchEngine), current);
-            } catch (e) {
-                console.warn('localStorage unavailable:', e.message);
-            }
+            current = tab.dataset.value;
+            syncEngineTabs();
+            safeSetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.searchEngine), current);
             if (searchInput) {
                 searchInput.value = '';
                 searchInput.focus();
@@ -104,76 +114,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 搜索下拉菜单
     if (searchIcon && searchDropdown) {
-        searchIcon.addEventListener('click', () => {
+        searchIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
             searchDropdown.classList.toggle('show');
             if (searchDropdown.classList.contains('show') && searchInput) {
                 searchInput.focus();
             }
         });
         document.addEventListener('click', (e) => {
-            if (!searchDropdown.contains(e.target) && e.target !== searchIcon) {
+            if (!searchDropdown.contains(e.target) && !searchIcon.contains(e.target)) {
                 searchDropdown.classList.remove('show');
             }
         });
     }
 
-    // 搜索提交
+    // 执行搜索提交
+    function executeSearch() {
+        if (!searchInput) return;
+        const query = searchInput.value.trim();
+        if (!query) return;
+
+        if (current === 'site') {
+            // 站内搜索：静默处理
+            searchInput.value = '';
+        } else {
+            const engineUrl = UYEA_CONFIG.getSearchEngineUrl(current);
+            if (engineUrl) {
+                window.open(engineUrl + encodeURIComponent(query), '_blank');
+            }
+        }
+    }
+
+    // 搜索提交：回车 + 点击按钮
     if (searchInput) {
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                const query = searchInput.value.trim();
-                if (!query) return;
-                
-                if (current === 'site') {
-                    // 站内搜索提示
-                    showComingSoon('站内搜索');
-                    searchInput.value = '';
-                } else {
-                    const engineUrl = UYEA_CONFIG.getSearchEngineUrl(current);
-                    if (engineUrl) {
-                        window.open(engineUrl + encodeURIComponent(query), '_blank');
-                    }
-                }
+                e.preventDefault();
+                executeSearch();
             }
         });
     }
-
-    // ==================== 开发中提示模态框 ====================
-    const comingSoonModal = document.getElementById('comingSoonModal');
-    const comingSoonOverlay = document.getElementById('comingSoonOverlay');
-
-    function showComingSoon(title = '功能开发中', text = '该功能正在开发中，敬请期待！') {
-        const titleEl = document.getElementById('comingSoonTitle');
-        const textEl = document.getElementById('comingSoonText');
-        if (titleEl) titleEl.textContent = title;
-        if (textEl) textEl.textContent = text;
-        if (comingSoonModal) comingSoonModal.classList.add('show');
-        if (comingSoonOverlay) comingSoonOverlay.classList.add('show');
+    if (searchSubmitBtn) {
+        searchSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            executeSearch();
+        });
     }
 
-    function hideComingSoon() {
-        if (comingSoonModal) comingSoonModal.classList.remove('show');
-        if (comingSoonOverlay) comingSoonOverlay.classList.remove('show');
-    }
-
-    const comingSoonClose = document.getElementById('comingSoonClose');
-    if (comingSoonClose) comingSoonClose.addEventListener('click', hideComingSoon);
-    if (comingSoonOverlay) comingSoonOverlay.addEventListener('click', hideComingSoon);
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') hideComingSoon();
-    });
-
+    // ==================== 开发中功能（静默处理，不弹窗） ====================
     document.querySelectorAll('[data-coming-soon]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            const title = btn.dataset.comingSoon || '功能开发中';
-            showComingSoon(title);
         });
     });
 
     // ==================== 图标加载系统 ====================
     /**
-     * 尝试从多个源加载图标，失败降级到emoji
+     * 加载站点图标，失败降级到emoji
      * @param {HTMLImageElement} img 图片元素
      */
     function loadIcon(img) {
@@ -190,44 +187,25 @@ document.addEventListener('DOMContentLoaded', () => {
         loader.className = 'icon-loading';
         parent.appendChild(loader);
 
-        // 优先使用同域图标
-        const sources = [
-            UYEA_CONFIG.resources.iconBaseFallback + name + '.png',
-            UYEA_CONFIG.resources.iconBase + name + '.png'
-        ];
-        let sourceIndex = 0;
+        img.src = UYEA_CONFIG.iconBase + name + '.png';
+        img.style.display = 'none';
 
-        function tryNextSource() {
-            if (sourceIndex >= sources.length) {
-                // 所有源都失败，降级到emoji
-                if (loader.parentElement) loader.remove();
-                img.remove();
-                const span = document.createElement('span');
-                span.className = 'icon-emoji';
-                span.textContent = UYEA_CONFIG.emojiMap[name] || '🔗';
-                parent.appendChild(span);
-                return;
-            }
+        img.onload = () => {
+            if (loader.parentElement) loader.remove();
+            img.style.display = '';
+            img.dataset.iconLoaded = 'true';
+            delete img.dataset.iconLoading;
+        };
 
-            const src = sources[sourceIndex++];
-            img.src = src;
-            img.style.display = 'none';
-
-            // 成功加载
-            img.onload = () => {
-                if (loader.parentElement) loader.remove();
-                img.style.display = '';
-                img.dataset.iconLoaded = 'true';
-                delete img.dataset.iconLoading;
-            };
-
-            // 失败重试
-            img.onerror = () => {
-                tryNextSource();
-            };
-        }
-
-        tryNextSource();
+        img.onerror = () => {
+            // 加载失败，降级到emoji
+            if (loader.parentElement) loader.remove();
+            img.remove();
+            const span = document.createElement('span');
+            span.className = 'icon-emoji';
+            span.textContent = UYEA_CONFIG.emojiMap[name] || '🔗';
+            parent.appendChild(span);
+        };
     }
 
     function loadIconsIn(container) {
@@ -237,20 +215,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('img[data-site-name]').forEach(loadIcon);
 
-    // 使用 MutationObserver 监听动态插入的图标
-    new MutationObserver(mutations => {
-        mutations.forEach(m => {
-            m.addedNodes.forEach(n => {
-                if (n.nodeType === 1) {
-                    if (n.matches && n.matches('img[data-site-name]')) {
-                        loadIcon(n);
-                    } else if (n.querySelectorAll) {
-                        n.querySelectorAll('img[data-site-name]').forEach(loadIcon);
+    // 使用 MutationObserver 监听动态插入的图标（仅在动态加载图标的页面启动）
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent && document.getElementById('ai-section')) {
+        new MutationObserver(mutations => {
+            for (const m of mutations) {
+                for (const n of m.addedNodes) {
+                    if (n.nodeType === 1) {
+                        if (n.matches && n.matches('img[data-site-name]')) {
+                            loadIcon(n);
+                        } else if (n.querySelectorAll && n.querySelectorAll('img[data-site-name]').length) {
+                            n.querySelectorAll('img[data-site-name]').forEach(loadIcon);
+                        }
                     }
                 }
-            });
-        });
-    }).observe(document.body, { childList: true, subtree: true });
+            }
+        }).observe(mainContent, { childList: true, subtree: true });
+    }
 
     // ==================== 导航数据加载 (仅index页) ====================
     if (document.getElementById('ai-section')) {
@@ -265,9 +246,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (section && nav[cat]) {
                         section.querySelector('.grid-container').innerHTML = nav[cat]
                             .map(item => `
-                                <a href="${item.url}" target="_blank" class="card-item" title="${item.title}">
+                                <a href="${item.url}" target="_blank" rel="noopener" class="card-item" title="${item.title}">
                                     <div class="card-icon">
-                                        <img src="" data-site-name="${item.icon}" style="display:none" alt="${item.title}">
+                                        <img src="" data-site-name="${item.icon}" style="display:none" alt="${item.title}" loading="lazy">
                                     </div>
                                     <div class="card-info">
                                         <div class="card-title">${item.title}</div>
@@ -286,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // ==================== 时钟系统 ====================
+    // ==================== 时钟系统（仅有时钟元素时启动） ====================
     function updateClock() {
         const now = new Date();
         const el = document.getElementById('clockTimeMain');
@@ -320,12 +301,112 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    updateClock();
-    setInterval(updateClock, 1000);
+    // 仅在页面有时钟元素时启动定时器，避免无谓的每秒轮询
+    if (document.getElementById('clockTimeMain') || document.getElementById('clockDateGregorian')) {
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
 
     // ==================== 字体异步加载 ====================
     if (document.fonts && document.fonts.load) {
         document.fonts.load('400 14px Noto Sans SC', 'UYEA')
             .catch(err => console.warn('字体预加载失败:', err));
+    }
+
+    // ==================== 暗色模式切换 ====================
+    const themeToggle = document.querySelector('.theme-toggle');
+    const savedTheme = safeGetItem('uyea_theme') ||
+                       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                safeSetItem('uyea_theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                safeSetItem('uyea_theme', 'dark');
+            }
+        });
+    }
+
+    // ==================== 统一滚动处理（rAF节流） ====================
+    const scrollProgress = document.querySelector('.scroll-progress');
+    const backToTop = document.querySelector('.back-to-top');
+    const header = document.querySelector('.top-header');
+
+    let scrollTicking = false;
+    function onScroll() {
+        const scrollY = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+        // 滚动进度条
+        if (scrollProgress) {
+            scrollProgress.style.width = (docHeight > 0 ? (scrollY / docHeight) * 100 : 0) + '%';
+        }
+
+        // 返回顶部按钮
+        if (backToTop) {
+            backToTop.classList.toggle('show', scrollY > 200);
+        }
+
+        // 头部滚动阴影
+        if (header) {
+            header.classList.toggle('scrolled', scrollY > 10);
+        }
+
+        scrollTicking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!scrollTicking) {
+            requestAnimationFrame(onScroll);
+            scrollTicking = true;
+        }
+    }, { passive: true });
+
+    onScroll(); // 初始执行
+
+    // 返回顶部点击
+    if (backToTop) {
+        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        backToTop.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
+
+    // ==================== 滚动触发动画（IntersectionObserver） ====================
+    if ('IntersectionObserver' in window) {
+        const revealTargets = document.querySelectorAll('.section-group, .tool-group');
+        if (revealTargets.length > 0) {
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+            revealTargets.forEach(el => {
+                el.classList.add('reveal');
+                revealObserver.observe(el);
+            });
+        }
+    }
+
+    // ==================== 动态背景光球注入 ====================
+    if (!document.querySelector('.bg-orbs')) {
+        const orbs = document.createElement('div');
+        orbs.className = 'bg-orbs';
+        orbs.innerHTML = '<div class="bg-orb bg-orb-1"></div><div class="bg-orb bg-orb-2"></div><div class="bg-orb bg-orb-3"></div>';
+        document.body.insertBefore(orbs, document.body.firstChild);
     }
 });
