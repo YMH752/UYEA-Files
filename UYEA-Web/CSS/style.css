@@ -1,5 +1,5 @@
 ﻿/* ============================================================
-   UYEA 悠野社区 · style.css v0.6.13
+   UYEA 悠野社区 · style.css v0.6.14
    复古×现代 · 墨绿琥珀 · 液态玻璃 · 纸张质感
    ============================================================ */
 
@@ -1635,13 +1635,27 @@ html[data-theme="dark"] .bg-orb { opacity: 0.25; }
 
 .bottom-nav-item.active {
     color: var(--primary);
-    background: var(--glass-bg);
-    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 2px 8px rgba(26, 77, 58, 0.12);
+    background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(236,245,241,0.5) 100%);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.9), inset 0 -1px 1px rgba(26,77,58,0.06), 0 2px 8px rgba(26,77,58,0.15);
 }
 
 .bottom-nav-item:hover:not(.active) {
     color: var(--text-secondary);
-    background: var(--glass-bg);
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* 暗色模式：液体玻璃选中态 */
+html[data-theme="dark"] .bottom-nav-item.active {
+    background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(74,222,128,0.12) 100%);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.4);
+}
+
+html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
+    background: rgba(255,255,255,0.08);
 }
 
 @media (max-width: 600px) {
