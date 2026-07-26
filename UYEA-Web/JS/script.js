@@ -297,7 +297,7 @@
             const gridWidth = grid.clientWidth;
             const cardWidth = cards[0].getBoundingClientRect().width;
             if (cardWidth <= 0) return 1;
-            const gap = 10;
+            const gap = 6;
             return Math.max(1, Math.round((gridWidth + gap) / (cardWidth + gap)));
         }
 
