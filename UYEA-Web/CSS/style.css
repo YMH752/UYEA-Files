@@ -913,11 +913,7 @@ html[data-theme="coffee"] .section-title {
 /* ========== 分区（卡片网格 - 导航页） ========== */
 .section-group { margin-bottom: 28px; }
 
-/* 全部视图下每个分类最多显示2行卡片 */
-.section-group.limited .grid-container {
-    max-height: calc(var(--card-row-height, 48px) * 2 + var(--card-gap, 10px));
-    overflow: hidden;
-}
+/* 2行限制由JS精确控制（根据实际列数计算），无需CSS max-height */
 
 .grid-container {
     display: grid;

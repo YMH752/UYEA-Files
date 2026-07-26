@@ -200,9 +200,10 @@
         });
     });
 
-    // ==================== 图标加载系统 ====================
+    // ==================== 图标加载系统（优化版：异步解码 + 三级降级 + 懒加载） ====================
     /**
-     * 加载站点图标，失败降级到emoji
+     * 加载站点图标
+     * 降级链：本地PNG → Google favicon API → emoji
      * @param {HTMLImageElement} img 图片元素
      */
     function loadIcon(img) {
@@ -214,38 +215,76 @@
         // 避免重复加载
         if (img.dataset.iconLoaded === 'true' || img.dataset.iconLoading === 'true') return;
         img.dataset.iconLoading = 'true';
+        img.decoding = 'async';
 
         const loader = document.createElement('div');
         loader.className = 'icon-loading';
         parent.appendChild(loader);
-
-        img.src = UYEA_CONFIG.iconBase + name + '.png';
         img.style.display = 'none';
 
-        img.onload = () => {
-            if (loader.parentElement) loader.remove();
-            img.style.display = '';
-            img.dataset.iconLoaded = 'true';
-            delete img.dataset.iconLoading;
-        };
+        const localUrl = UYEA_CONFIG.iconBase + name + '.png';
+        const siteUrl = img.dataset.siteUrl;
+        const googleUrl = siteUrl ? 'https://www.google.com/s2/favicons?domain=' + siteUrl + '&sz=64' : null;
 
-        img.onerror = () => {
-            // 加载失败，降级到emoji
-            if (loader.parentElement) loader.remove();
-            img.remove();
-            const span = document.createElement('span');
-            span.className = 'icon-emoji';
-            span.textContent = UYEA_CONFIG.emojiMap[name] || '🔗';
-            parent.appendChild(span);
-        };
+        function tryLoad(url, isFallback) {
+            img.onload = () => {
+                if (loader.parentElement) loader.remove();
+                img.style.display = '';
+                img.dataset.iconLoaded = 'true';
+                delete img.dataset.iconLoading;
+            };
+            img.onerror = () => {
+                if (!isFallback && googleUrl) {
+                    // 本地失败，降级 Google favicon API
+                    tryLoad(googleUrl, true);
+                } else {
+                    // 最终降级到 emoji
+                    if (loader.parentElement) loader.remove();
+                    img.remove();
+                    const span = document.createElement('span');
+                    span.className = 'icon-emoji';
+                    span.textContent = UYEA_CONFIG.emojiMap[name] || '🔗';
+                    parent.appendChild(span);
+                    delete img.dataset.iconLoading;
+                }
+            };
+            img.src = url;
+        }
+
+        tryLoad(localUrl, false);
+    }
+
+    // IntersectionObserver 懒加载：视口外图标延迟加载，提升首屏性能
+    let iconObserver = null;
+    if ('IntersectionObserver' in window) {
+        iconObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    loadIcon(entry.target);
+                    iconObserver.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: '80px' });
     }
 
     function loadIconsIn(container) {
         if (!container) return;
-        container.querySelectorAll('img[data-site-name]').forEach(loadIcon);
+        container.querySelectorAll('img[data-site-name]').forEach(img => {
+            if (iconObserver) {
+                iconObserver.observe(img);
+            } else {
+                loadIcon(img);
+            }
+        });
     }
 
-    document.querySelectorAll('img[data-site-name]').forEach(loadIcon);
+    document.querySelectorAll('img[data-site-name]').forEach(img => {
+        if (iconObserver) {
+            iconObserver.observe(img);
+        } else {
+            loadIcon(img);
+        }
+    });
 
     // 使用 MutationObserver 监听动态插入的图标（仅在动态加载图标的页面启动）
     const mainContent = document.querySelector('.main-content');
@@ -255,9 +294,13 @@
                 for (const n of m.addedNodes) {
                     if (n.nodeType === 1) {
                         if (n.matches && n.matches('img[data-site-name]')) {
-                            loadIcon(n);
+                            if (iconObserver) iconObserver.observe(n);
+                            else loadIcon(n);
                         } else if (n.querySelectorAll && n.querySelectorAll('img[data-site-name]').length) {
-                            n.querySelectorAll('img[data-site-name]').forEach(loadIcon);
+                            n.querySelectorAll('img[data-site-name]').forEach(img => {
+                                if (iconObserver) iconObserver.observe(img);
+                                else loadIcon(img);
+                            });
                         }
                     }
                 }
@@ -280,7 +323,7 @@
         function navCardHtml(item) {
             return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" title="${navEsc(item.title)}">
                 <div class="card-icon">
-                    <img src="" data-site-name="${navEsc(item.icon)}" style="display:none" alt="${navEsc(item.title)}" loading="lazy">
+                    <img src="" data-site-name="${navEsc(item.icon)}" data-site-url="${navEsc(item.url)}" style="display:none" alt="${navEsc(item.title)}" loading="lazy" decoding="async">
                 </div>
                 <div class="card-info">
                     <div class="card-title">${navEsc(item.title)}</div>
@@ -288,12 +331,25 @@
             </a>`;
         }
 
-        // 分类筛选 + 搜索过滤
+        // 计算grid容器当前列数
+        function getGridColumns(grid, cards) {
+            if (!grid || !cards || cards.length === 0) return 1;
+            const gridWidth = grid.clientWidth;
+            const cardWidth = cards[0].getBoundingClientRect().width;
+            if (cardWidth <= 0) return 1;
+            const gap = 10;
+            return Math.max(1, Math.round((gridWidth + gap) / (cardWidth + gap)));
+        }
+
+        // 分类筛选 + 搜索过滤 + 2行限制
         function applyNavFilter() {
             const searchInput = document.getElementById('navSearchInput');
             const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
             const noResults = document.getElementById('navNoResults');
             let visibleCount = 0;
+
+            // "全部"视图且无搜索时，限制每分类最多显示2行
+            const isLimited = (currentCategory === 'all' && !keyword);
 
             document.querySelectorAll('.section-group').forEach(section => {
                 const sectionCat = section.dataset.category;
@@ -303,21 +359,27 @@
                     return;
                 }
 
-                // "全部"视图下限制每个分类只显示2行；有搜索时取消限制显示全部匹配
-                const isLimited = (currentCategory === 'all' && !keyword);
-                section.classList.toggle('limited', isLimited);
-
-                // 搜索过滤：隐藏不匹配的卡片
                 const cards = section.querySelectorAll('.card-item');
+                const grid = section.querySelector('.grid-container');
+
+                // 2行限制：计算当前列数，最多显示 columns*2 张卡片
+                let maxVisible = Infinity;
+                if (isLimited && grid && cards.length > 0) {
+                    const columns = getGridColumns(grid, cards);
+                    maxVisible = columns * 2;
+                }
+
+                // 搜索过滤 + 2行限制
                 let sectionVisible = 0;
                 cards.forEach(card => {
                     const title = (card.dataset.title || card.querySelector('.card-title')?.textContent || '').toLowerCase();
-                    const match = !keyword || title.includes(keyword);
-                    card.style.display = match ? '' : 'none';
-                    if (match) sectionVisible++;
+                    const matchSearch = !keyword || title.includes(keyword);
+                    const withinLimit = sectionVisible < maxVisible;
+                    const show = matchSearch && (withinLimit || !isLimited);
+                    card.style.display = show ? '' : 'none';
+                    if (show) sectionVisible++;
                 });
 
-                // 搜索后该分组无可见卡片则隐藏整个分组
                 section.style.display = (sectionVisible > 0) ? '' : 'none';
                 visibleCount += sectionVisible;
             });
@@ -340,6 +402,8 @@
                         loadIconsIn(section.querySelector('.grid-container'));
                     }
                 });
+                // 卡片渲染完成后应用2行限制
+                applyNavFilter();
             })
             .catch(err => {
                 console.warn('导航数据加载失败，网站功能受限:', err);
@@ -383,6 +447,13 @@
                 navSearchTimer = setTimeout(applyNavFilter, 200);
             });
         }
+
+        // 窗口resize时重新计算2行限制（防抖）
+        let navResizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(navResizeTimer);
+            navResizeTimer = setTimeout(applyNavFilter, 200);
+        });
     }
 
     // ==================== 字体异步加载 ====================
