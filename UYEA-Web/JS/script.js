@@ -247,58 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('img[data-site-name]').forEach(loadIcon);
 
-    // 使用 MutationObserver 监听动态插入的图标（仅在动态加载图标的页面启动）
-    const mainContent = document.querySelector('.main-content');
-    if (mainContent && document.getElementById('ai-section')) {
-        new MutationObserver(mutations => {
-            for (const m of mutations) {
-                for (const n of m.addedNodes) {
-                    if (n.nodeType === 1) {
-                        if (n.matches && n.matches('img[data-site-name]')) {
-                            loadIcon(n);
-                        } else if (n.querySelectorAll && n.querySelectorAll('img[data-site-name]').length) {
-                            n.querySelectorAll('img[data-site-name]').forEach(loadIcon);
-                        }
-                    }
-                }
-            }
-        }).observe(mainContent, { childList: true, subtree: true });
-    }
-
-    // ==================== 导航数据加载 (仅index页) ====================
-    if (document.getElementById('ai-section')) {
-        fetch(UYEA_CONFIG.dataFiles.navigation)
-            .then(r => {
-                if (!r.ok) throw new Error(`HTTP ${r.status}: 导航数据加载失败`);
-                return r.json();
-            })
-            .then(nav => {
-                ['ai', 'life', 'tools'].forEach(cat => {
-                    const section = document.getElementById(cat + '-section');
-                    if (section && nav[cat]) {
-                        section.querySelector('.grid-container').innerHTML = nav[cat]
-                            .map(item => `
-                                <a href="${item.url}" target="_blank" rel="noopener" class="card-item" title="${item.title}">
-                                    <div class="card-icon">
-                                        <img src="" data-site-name="${item.icon}" style="display:none" alt="${item.title}" loading="lazy">
-                                    </div>
-                                    <div class="card-info">
-                                        <div class="card-title">${item.title}</div>
-                                    </div>
-                                </a>
-                            `).join('');
-                        loadIconsIn(section.querySelector('.grid-container'));
-                    }
-                });
-            })
-            .catch(err => {
-                console.warn('导航数据加载失败，网站功能受限:', err);
-                document.querySelectorAll('.grid-container').forEach(el => {
-                    el.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">导航数据加载失败，请刷新重试</div>';
-                });
-            });
-    }
-
     // ==================== 时钟系统（仅有时钟元素时启动） ====================
     function updateClock() {
         const now = new Date();
