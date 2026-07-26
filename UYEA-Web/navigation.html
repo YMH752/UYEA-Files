@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="悠野导航 - AI智能体、生活、工具网站导航，集成时钟日历">
+    <meta name="description" content="悠野导航 - AI智能体、生活、工具网站导航">
     <meta name="theme-color" content="#1A4D3A">
     <meta name="color-scheme" content="light dark">
     <title>悠野导航 | UYEA</title>
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="/IMAGE/ICO/zhihu.png">
 
     <meta property="og:title" content="悠野导航 | UYEA">
-    <meta property="og:description" content="悠野导航 - AI智能体、生活、工具网站导航，集成时钟日历">
+    <meta property="og:description" content="悠野导航 - AI智能体、生活、工具网站导航">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://uyea-files.pages.dev/navigation">
     <meta name="twitter:card" content="summary">
@@ -24,9 +24,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.26" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.26" as="script">
-    <link rel="preload" href="/JS/calendar.js?v=0.6.26" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.27" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.27" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -65,7 +64,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.26" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.27" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -173,138 +172,38 @@
             <div class="section-header">
                 <div>
                     <div class="section-title" data-i18n="nav.home">网站导航</div>
-                    <div class="section-subtitle" data-i18n="nav.subtitle">AI智能体、生活、工具网站导航，集成时钟日历</div>
+                    <div class="section-subtitle" data-i18n="nav.subtitle">AI智能体、生活、工具网站导航</div>
                 </div>
             </div>
 
-            <!-- 信息面板：时钟 + 日历 + 新组件 -->
-            <div class="info-panel">
-                <!-- 简约时钟卡片 -->
-                <div class="info-card clock-card" id="clockDisplay">
-                    <div class="clock-time-main" id="clockTimeMain">00:00:00</div>
-                    <div class="clock-date-gregorian" id="clockDateGregorian">2026年1月1日</div>
-                    <div class="clock-date-lunar" id="clockDateLunar">（农历正月初一）</div>
-                </div>
+            <!-- AI智能体 -->
+            <div class="section-group" id="ai-section">
+                <div class="section-header"><h2 class="section-title" data-i18n="section.ai">AI 智能体</h2></div>
+                <div class="grid-container"></div>
+            </div>
 
-                <!-- 简约日历卡片 -->
-                <div class="info-card calendar-card">
-                    <div class="calendar-header">
-                        <button class="calendar-nav-arrow" id="prevMonth" aria-label="上个月">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                        </button>
-                        <div class="calendar-title" id="calendarTitle">2026年1月</div>
-                        <button class="calendar-nav-arrow" id="nextMonth" aria-label="下个月">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                        </button>
-                    </div>
-                    <div class="calendar-weekdays">
-                        <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
-                    </div>
-                    <div class="calendar-grid" id="calendarGrid"></div>
-                    <div class="holiday-bar" id="holidayBar"></div>
-                </div>
+            <!-- 生活 -->
+            <div class="section-group" id="life-section">
+                <div class="section-header"><h2 class="section-title" data-i18n="section.life">生活</h2></div>
+                <div class="grid-container"></div>
+            </div>
 
-                <!-- 新组件：每日一言 -->
-                <div class="info-card quote-card" id="quoteCard">
-                    <div class="quote-icon">"</div>
-                    <div class="quote-text" id="quoteText">加载中...</div>
-                    <div class="quote-author" id="quoteAuthor">—</div>
-                    <button class="quote-refresh" id="quoteRefresh" aria-label="换一句">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                    </button>
-                </div>
-
-                <!-- 新组件：节日倒计时 -->
-                <div class="info-card countdown-card" id="countdownCard">
-                    <div class="countdown-label">下一个节日</div>
-                    <div class="countdown-name" id="countdownName">—</div>
-                    <div class="countdown-days">
-                        <span class="countdown-number" id="countdownNumber">0</span>
-                        <span class="countdown-unit">天</span>
-                    </div>
-                    <div class="countdown-date" id="countdownDate">—</div>
-                </div>
-
-                <!-- 新组件：快捷操作面板 -->
-                <div class="info-card quick-action-card" id="quickActionCard">
-                    <div class="quick-action-label">快捷操作</div>
-                    <div class="quick-action-grid">
-                        <button class="quick-action-btn" id="qaCopyTime" aria-label="复制当前时间">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                            <span>复制时间</span>
-                        </button>
-                        <button class="quick-action-btn" id="qaToggleTheme" aria-label="切换主题">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                            <span>切换主题</span>
-                        </button>
-                        <button class="quick-action-btn" id="qaFullscreen" aria-label="全屏">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-                            <span>全屏</span>
-                        </button>
-                        <button class="quick-action-btn" id="qaToTop" aria-label="返回顶部">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
-                            <span>返回顶部</span>
-                        </button>
-                        <button class="quick-action-btn" id="qaShare" aria-label="分享">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                            <span>分享</span>
-                        </button>
-                        <button class="quick-action-btn" id="qaRandom" aria-label="随机导航">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
-                            <span>随机访问</span>
-                        </button>
-                    </div>
-                </div>
+            <!-- 工具 -->
+            <div class="section-group" id="tools-section">
+                <div class="section-header"><h2 class="section-title" data-i18n="section.tools">工具</h2></div>
+                <div class="grid-container"></div>
             </div>
         </div>
     </main>
-
-    <!-- 跳转日期模态框 -->
-    <div class="modal-overlay" id="modalOverlay"></div>
-    <div class="modal-jump" id="modalJump">
-        <div class="modal-title">跳转到指定日期</div>
-        <div class="modal-radio-group">
-            <label><input type="radio" name="calendarType" value="solar" checked> 公历</label>
-            <label><input type="radio" name="calendarType" value="lunar"> 农历</label>
-        </div>
-        <div class="modal-inputs-wrapper">
-            <input type="number" id="jumpYear" placeholder="年" min="1900" max="2099">
-            <input type="number" id="jumpMonth" placeholder="月" min="1" max="12">
-            <input type="number" id="jumpDay" placeholder="日" min="1" max="31">
-        </div>
-        <div class="modal-actions">
-            <button class="modal-btn modal-btn-cancel" id="modalCancel">取消</button>
-            <button class="modal-btn modal-btn-confirm" id="modalConfirm">确认</button>
-        </div>
-    </div>
 
     <!-- 返回顶部 -->
     <div class="back-to-top" role="button" aria-label="返回顶部" tabindex="0">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
-    <script src="/JS/liquid-glass.js?v=0.6.26" defer></script>
-    <script src="/JS/config.js?v=0.6.26" defer></script>
-    <script src="/JS/script.js?v=0.6.26" defer></script>
-    <script src="/JS/calendar.js?v=0.6.26" defer></script>
-    <!-- lunar.js (425KB) 延迟加载：浏览器空闲时再加载农历库 -->
-    <script>
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => {
-                var s = document.createElement('script');
-                s.src = '/JS/lunar.js?v=0.6.26';
-                s.defer = true;
-                document.head.appendChild(s);
-            });
-        } else {
-            setTimeout(() => {
-                var s = document.createElement('script');
-                s.src = '/JS/lunar.js?v=0.6.26';
-                s.defer = true;
-                document.head.appendChild(s);
-            }, 1000);
-        }
-    </script>
+    <script src="/JS/liquid-glass.js?v=0.6.27" defer></script>
+    <script src="/JS/config.js?v=0.6.27" defer></script>
+    <script src="/JS/script.js?v=0.6.27" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

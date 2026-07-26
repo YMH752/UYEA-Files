@@ -247,44 +247,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('img[data-site-name]').forEach(loadIcon);
 
-    // ==================== 时钟系统（仅有时钟元素时启动） ====================
-    function updateClock() {
-        const now = new Date();
-        const el = document.getElementById('clockTimeMain');
-        if (el) {
-            el.textContent = [now.getHours(), now.getMinutes(), now.getSeconds()]
-                .map(v => String(v).padStart(2, '0'))
-                .join(':');
-        }
-
-        const g = document.getElementById('clockDateGregorian');
-        if (g) {
-            g.textContent = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
-        }
-
-        // 农历更新 - 仅在lunar.js加载成功时执行
-        if (typeof Solar !== 'undefined' && typeof Lunar !== 'undefined') {
-            try {
-                const lunar = Lunar.fromSolar(Solar.fromYmd(now.getFullYear(), now.getMonth() + 1, now.getDate()));
-                const l = document.getElementById('clockDateLunar');
-                if (l) {
-                    l.textContent = `（农历${lunar.getMonthInChinese()}${lunar.getDayInChinese()}）`;
+    // 使用 MutationObserver 监听动态插入的图标（仅在动态加载图标的页面启动）
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent && document.getElementById('ai-section')) {
+        new MutationObserver(mutations => {
+            for (const m of mutations) {
+                for (const n of m.addedNodes) {
+                    if (n.nodeType === 1) {
+                        if (n.matches && n.matches('img[data-site-name]')) {
+                            loadIcon(n);
+                        } else if (n.querySelectorAll && n.querySelectorAll('img[data-site-name]').length) {
+                            n.querySelectorAll('img[data-site-name]').forEach(loadIcon);
+                        }
+                    }
                 }
-            } catch (e) {
-                console.warn('农历计算失败:', e.message);
             }
-        } else {
-            const l = document.getElementById('clockDateLunar');
-            if (l) {
-                l.style.display = 'none';
-            }
-        }
+        }).observe(mainContent, { childList: true, subtree: true });
     }
 
-    // 仅在页面有时钟元素时启动定时器，避免无谓的每秒轮询
-    if (document.getElementById('clockTimeMain') || document.getElementById('clockDateGregorian')) {
-        updateClock();
-        setInterval(updateClock, 1000);
+    // ==================== 导航数据加载 (仅navigation页) ====================
+    if (document.getElementById('ai-section')) {
+        fetch(UYEA_CONFIG.dataFiles.navigation)
+            .then(r => {
+                if (!r.ok) throw new Error(`HTTP ${r.status}: 导航数据加载失败`);
+                return r.json();
+            })
+            .then(nav => {
+                ['ai', 'life', 'tools'].forEach(cat => {
+                    const section = document.getElementById(cat + '-section');
+                    if (section && nav[cat]) {
+                        section.querySelector('.grid-container').innerHTML = nav[cat]
+                            .map(item => `
+                                <a href="${item.url}" target="_blank" rel="noopener" class="card-item" title="${item.title}">
+                                    <div class="card-icon">
+                                        <img src="" data-site-name="${item.icon}" style="display:none" alt="${item.title}" loading="lazy">
+                                    </div>
+                                    <div class="card-info">
+                                        <div class="card-title">${item.title}</div>
+                                    </div>
+                                </a>
+                            `).join('');
+                        loadIconsIn(section.querySelector('.grid-container'));
+                    }
+                });
+            })
+            .catch(err => {
+                console.warn('导航数据加载失败，网站功能受限:', err);
+                document.querySelectorAll('.grid-container').forEach(el => {
+                    el.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">导航数据加载失败，请刷新重试</div>';
+                });
+            });
     }
 
     // ==================== 字体异步加载 ====================
