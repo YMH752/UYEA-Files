@@ -982,7 +982,26 @@ html[data-theme="coffee"] .section-title {
 
 .card-item:hover .card-icon { transform: scale(1.1); }
 
-.card-icon img { width: 100%; height: 100%; object-fit: contain; visibility: hidden; }
+.card-icon img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    visibility: hidden;
+    transition: filter var(--duration) ease;
+}
+
+/* 暗色主题：深色背景上的深色图标需要提亮 */
+html[data-theme="dark"] .card-icon img,
+html[data-theme="coffee"] .card-icon img {
+    filter: brightness(1.15) contrast(1.05);
+}
+
+/* 极客主题：黑底荧光绿，图标需要反转颜色确保可见 */
+html[data-theme="geek"] .card-icon {
+    background: rgba(0, 255, 65, 0.08);
+}
+html[data-theme="geek"] .card-icon img {
+    filter: invert(1) hue-rotate(80deg) brightness(1.2);
+}
 
 .icon-loading {
     position: absolute;
