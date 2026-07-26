@@ -1,4 +1,4 @@
-/**
+﻿/**
  * UYEA Forum - forum.js
  * 论坛帖子加载、搜索、feed分类筛选
  * 适用于论坛主页（index.html）

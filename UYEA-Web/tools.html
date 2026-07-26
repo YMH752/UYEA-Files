@@ -24,8 +24,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.28" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.28" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.29" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.29" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -64,7 +64,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.28" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.29" media="all">
 
     <!-- 工具页面专属样式 -->
     <style>
@@ -448,6 +448,16 @@
                 </div>
             </div>
 
+            <!-- 论坛风格工具栏：搜索过滤 -->
+            <div class="forum-toolbar">
+                <div class="forum-search">
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </span>
+                    <input type="text" id="toolsSearchInput" data-i18n-placeholder="tools.searchPlaceholder" placeholder="搜索工具名称...">
+                </div>
+            </div>
+
             <!-- 分类标签 -->
             <div class="category-tabs" id="categoryTabs">
                 <div class="tab-item active" data-category="all">全部</div>
@@ -457,82 +467,112 @@
                 <div class="tab-item" data-category="media">🎥 多媒体处理</div>
             </div>
 
-            <!-- 开发者工具 -->
-            <div class="tool-group" data-category="dev">
-                <div class="section-header">
-                    <h2 class="section-title">💻 开发者工具</h2>
+            <!-- 分类分组视图（全部模式） -->
+            <div id="toolsGroupedView">
+                <!-- 开发者工具 -->
+                <div class="tool-group" data-category="dev">
+                    <div class="section-header">
+                        <h2 class="section-title">💻 开发者工具</h2>
+                    </div>
+                    <div class="grid-container">
+                        <a class="card-item" role="button" tabindex="0" data-tool="json" data-title="JSON 格式化" title="JSON 格式化">
+                            <div class="card-icon">🗂️</div>
+                            <div class="card-info"><div class="card-title">JSON 格式化</div></div>
+                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="base64" data-title="Base64 编解码" title="Base64 编解码">
+                            <div class="card-icon">🔣</div>
+                            <div class="card-info"><div class="card-title">Base64 编解码</div></div>
+                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="regex" data-title="正则表达式测试" title="正则表达式测试">
+                            <div class="card-icon">🔍</div>
+                            <div class="card-info"><div class="card-title">正则表达式测试</div></div>
+                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="timestamp" data-title="时间戳转换" title="时间戳转换">
+                            <div class="card-icon">⏱️</div>
+                            <div class="card-info"><div class="card-title">时间戳转换</div></div>
+                        </a>
+                    </div>
                 </div>
-                <div class="grid-container">
-                    <a class="card-item" role="button" tabindex="0" data-tool="json" title="JSON 格式化">
-                        <div class="card-icon">🗂️</div>
-                        <div class="card-info"><div class="card-title">JSON 格式化</div></div>
-                    </a>
-                    <a class="card-item" role="button" tabindex="0" data-tool="base64" title="Base64 编解码">
-                        <div class="card-icon">🔣</div>
-                        <div class="card-info"><div class="card-title">Base64 编解码</div></div>
-                    </a>
-                    <a class="card-item" role="button" tabindex="0" data-tool="regex" title="正则表达式测试">
-                        <div class="card-icon">🔍</div>
-                        <div class="card-info"><div class="card-title">正则表达式测试</div></div>
-                    </a>
-                    <a class="card-item" role="button" tabindex="0" data-tool="timestamp" title="时间戳转换">
-                        <div class="card-icon">⏱️</div>
-                        <div class="card-info"><div class="card-title">时间戳转换</div></div>
-                    </a>
+
+                <!-- 设计美化 -->
+                <div class="tool-group" data-category="design">
+                    <div class="section-header">
+                        <h2 class="section-title">🎨 设计美化</h2>
+                    </div>
+                    <div class="grid-container">
+                        <a class="card-item" role="button" tabindex="0" data-tool="color" data-title="颜色选择器" title="颜色选择器">
+                            <div class="card-icon">🎨</div>
+                            <div class="card-info"><div class="card-title">颜色选择器</div></div>
+                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="uuid" data-title="UUID 生成器" title="UUID 生成器">
+                            <div class="card-icon">🆔</div>
+                            <div class="card-info"><div class="card-title">UUID 生成器</div></div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 办公效率（占位） -->
+                <div class="tool-group" data-category="office">
+                    <div class="section-header">
+                        <h2 class="section-title">📂 办公效率</h2>
+                    </div>
+                    <div class="grid-container">
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="PDF 转 Word" data-title="PDF 转 Word" title="PDF 转 Word">
+                            <div class="card-icon">📄</div>
+                            <div class="card-info"><div class="card-title">PDF 转 Word</div></div>
+                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="流程图绘制" data-title="流程图绘制" title="流程图绘制">
+                            <div class="card-icon">📊</div>
+                            <div class="card-info"><div class="card-title">流程图绘制</div></div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 多媒体处理（占位） -->
+                <div class="tool-group" data-category="media">
+                    <div class="section-header">
+                        <h2 class="section-title">🎥 多媒体处理</h2>
+                    </div>
+                    <div class="grid-container">
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片压缩" data-title="图片压缩" title="图片压缩">
+                            <div class="card-icon">🖼️</div>
+                            <div class="card-info"><div class="card-title">图片压缩</div></div>
+                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="视频转 GIF" data-title="视频转 GIF" title="视频转 GIF">
+                            <div class="card-icon">🎞️</div>
+                            <div class="card-info"><div class="card-title">视频转 GIF</div></div>
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <!-- 设计美化 -->
-            <div class="tool-group" data-category="design">
-                <div class="section-header">
-                    <h2 class="section-title">🎨 设计美化</h2>
-                </div>
-                <div class="grid-container">
-                    <a class="card-item" role="button" tabindex="0" data-tool="color" title="颜色选择器">
-                        <div class="card-icon">🎨</div>
-                        <div class="card-info"><div class="card-title">颜色选择器</div></div>
-                    </a>
-                    <a class="card-item" role="button" tabindex="0" data-tool="uuid" title="UUID 生成器">
-                        <div class="card-icon">🆔</div>
-                        <div class="card-info"><div class="card-title">UUID 生成器</div></div>
-                    </a>
-                </div>
+            <!-- 扁平化视图（A-Z / 最新模式） -->
+            <div id="toolsFlatView" style="display:none;">
+                <div class="grid-container" id="toolsFlatGrid"></div>
             </div>
 
-            <!-- 办公效率（占位） -->
-            <div class="tool-group" data-category="office">
-                <div class="section-header">
-                    <h2 class="section-title">📂 办公效率</h2>
-                </div>
-                <div class="grid-container">
-                    <a class="card-item" role="button" tabindex="0" data-coming-soon="PDF 转 Word" title="PDF 转 Word">
-                        <div class="card-icon">📄</div>
-                        <div class="card-info"><div class="card-title">PDF 转 Word</div></div>
-                    </a>
-                    <a class="card-item" role="button" tabindex="0" data-coming-soon="流程图绘制" title="流程图绘制">
-                        <div class="card-icon">📊</div>
-                        <div class="card-info"><div class="card-title">流程图绘制</div></div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- 多媒体处理（占位） -->
-            <div class="tool-group" data-category="media">
-                <div class="section-header">
-                    <h2 class="section-title">🎥 多媒体处理</h2>
-                </div>
-                <div class="grid-container">
-                    <a class="card-item" role="button" tabindex="0" data-coming-soon="图片压缩" title="图片压缩">
-                        <div class="card-icon">🖼️</div>
-                        <div class="card-info"><div class="card-title">图片压缩</div></div>
-                    </a>
-                    <a class="card-item" role="button" tabindex="0" data-coming-soon="视频转 GIF" title="视频转 GIF">
-                        <div class="card-icon">🎞️</div>
-                        <div class="card-info"><div class="card-title">视频转 GIF</div></div>
-                    </a>
-                </div>
+            <!-- 无结果提示 -->
+            <div class="no-results" id="toolsNoResults">
+                <div class="no-results-icon">🔍</div>
+                <div class="no-results-text" data-i18n="tools.noResults">未找到匹配的工具</div>
             </div>
         </div>
+
+        <!-- 底部玻璃导航栏：排序切换 -->
+        <nav class="bottom-nav" id="bottomNav" data-liquid-glass data-lg-strength="0.5">
+            <button class="bottom-nav-item active" data-sort="all">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span data-i18n="bottom.all">全部</span>
+            </button>
+            <button class="bottom-nav-item" data-sort="az">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h4M4 7V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2"></path><path d="M16 20l4-8h-4M16 12l4 8"></path></svg>
+                <span data-i18n="bottom.az">A-Z</span>
+            </button>
+            <button class="bottom-nav-item" data-sort="latest">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span data-i18n="bottom.latest">最新</span>
+            </button>
+        </nav>
     </main>
 
     <!-- 工具模态框 -->
@@ -550,10 +590,10 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
-    <script src="/JS/liquid-glass.js?v=0.6.28" defer></script>
-    <script src="/JS/config.js?v=0.6.28" defer></script>
-    <script src="/JS/script.js?v=0.6.28" defer></script>
-    <script src="/JS/tools.js?v=0.6.28" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.29" defer></script>
+    <script src="/JS/config.js?v=0.6.29" defer></script>
+    <script src="/JS/script.js?v=0.6.29" defer></script>
+    <script src="/JS/tools.js?v=0.6.29" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

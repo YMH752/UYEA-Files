@@ -1,4 +1,4 @@
-/**
+﻿/**
  * UYEA 全局配置文件
  * 集中管理所有URL、API、路径、超时等配置
  * 更新此文件以改变应用行为，无需修改其他文件
@@ -84,7 +84,7 @@ const UYEA_CONFIG = {
       'section.life': '生活',
       'section.tools': '工具',
       'forum.subtitle': '分享 AI 心得、工具作品与生活点滴',
-      'nav.subtitle': 'AI智能体、生活、工具网站导航，集成时钟日历',
+      'nav.subtitle': 'AI智能体、生活、工具网站导航',
       'tools.subtitle': '纯前端在线工具，开箱即用，数据不出本地',
       'forum.cat.announcement': '公告',
       'forum.cat.ai': 'AI 探讨',
@@ -102,7 +102,14 @@ const UYEA_CONFIG = {
       'search.engine.site': '站内',
       'bottom.recommend': '推荐',
       'bottom.follow': '关注',
-      'bottom.favorite': '收藏'
+      'bottom.favorite': '收藏',
+      'bottom.all': '全部',
+      'bottom.az': 'A-Z',
+      'bottom.latest': '最新',
+      'nav.searchPlaceholder': '搜索网站名称...',
+      'tools.searchPlaceholder': '搜索工具名称...',
+      'nav.noResults': '未找到匹配的网站',
+      'tools.noResults': '未找到匹配的工具'
     },
     'zh-TW': {
       'nav.home': '網站導航',
@@ -113,7 +120,7 @@ const UYEA_CONFIG = {
       'section.life': '生活',
       'section.tools': '工具',
       'forum.subtitle': '分享 AI 心得、工具作品與生活點滴',
-      'nav.subtitle': 'AI智能體、生活、工具網站導航，集成時鐘日曆',
+      'nav.subtitle': 'AI智能體、生活、工具網站導航',
       'tools.subtitle': '純前端線上工具，開箱即用，數據不出本地',
       'forum.cat.announcement': '公告',
       'forum.cat.ai': 'AI 探討',
@@ -131,7 +138,14 @@ const UYEA_CONFIG = {
       'search.engine.site': '站內',
       'bottom.recommend': '推薦',
       'bottom.follow': '關注',
-      'bottom.favorite': '收藏'
+      'bottom.favorite': '收藏',
+      'bottom.all': '全部',
+      'bottom.az': 'A-Z',
+      'bottom.latest': '最新',
+      'nav.searchPlaceholder': '搜索網站名稱...',
+      'tools.searchPlaceholder': '搜索工具名稱...',
+      'nav.noResults': '未找到匹配的網站',
+      'tools.noResults': '未找到匹配的工具'
     },
     'en': {
       'nav.home': 'Navigation',
@@ -160,7 +174,14 @@ const UYEA_CONFIG = {
       'search.engine.site': 'Site',
       'bottom.recommend': 'Recommend',
       'bottom.follow': 'Following',
-      'bottom.favorite': 'Favorites'
+      'bottom.favorite': 'Favorites',
+      'bottom.all': 'All',
+      'bottom.az': 'A-Z',
+      'bottom.latest': 'Latest',
+      'nav.searchPlaceholder': 'Search site names...',
+      'tools.searchPlaceholder': 'Search tool names...',
+      'nav.noResults': 'No matching sites found',
+      'tools.noResults': 'No matching tools found'
     }
   },
 

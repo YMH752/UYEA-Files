@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     // 安全读取 localStorage（隐私模式等场景可能不可用）
     function safeGetItem(key) {
         try { return localStorage.getItem(key); }
@@ -265,31 +265,104 @@ document.addEventListener('DOMContentLoaded', () => {
         }).observe(mainContent, { childList: true, subtree: true });
     }
 
-    // ==================== 导航数据加载 (仅navigation页) ====================
+    // ==================== 导航数据加载 + 排序/搜索 (仅navigation页) ====================
     if (document.getElementById('ai-section')) {
+        let allNavItems = [];   // 扁平化全部卡片数据 [{title,url,icon,category}, ...]
+        let currentSort = 'all'; // all / az / latest
+        let navSearchTimer = null;
+
+        // HTML 转义
+        function navEsc(str) {
+            if (str == null) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // 生成单张卡片 HTML
+        function navCardHtml(item) {
+            return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" title="${navEsc(item.title)}">
+                <div class="card-icon">
+                    <img src="" data-site-name="${navEsc(item.icon)}" style="display:none" alt="${navEsc(item.title)}" loading="lazy">
+                </div>
+                <div class="card-info">
+                    <div class="card-title">${navEsc(item.title)}</div>
+                </div>
+            </a>`;
+        }
+
+        // 渲染分组视图（全部模式）
+        function renderGroupedView() {
+            const groupedView = document.getElementById('navGroupedView');
+            const flatView = document.getElementById('navFlatView');
+            if (!groupedView || !flatView) return;
+            groupedView.style.display = '';
+            flatView.style.display = 'none';
+        }
+
+        // 渲染扁平视图（A-Z / 最新模式）
+        function renderFlatView(items) {
+            const groupedView = document.getElementById('navGroupedView');
+            const flatView = document.getElementById('navFlatView');
+            const flatGrid = document.getElementById('navFlatGrid');
+            const noResults = document.getElementById('navNoResults');
+            if (!groupedView || !flatView || !flatGrid) return;
+
+            groupedView.style.display = 'none';
+            flatView.style.display = '';
+            flatGrid.innerHTML = items.map(navCardHtml).join('');
+            loadIconsIn(flatGrid);
+            if (noResults) noResults.classList.toggle('show', items.length === 0);
+        }
+
+        // 过滤 + 排序 + 渲染
+        function applyNavFilter() {
+            const searchInput = document.getElementById('navSearchInput');
+            const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const noResults = document.getElementById('navNoResults');
+
+            if (currentSort === 'all' && !keyword) {
+                // 全部模式 + 无搜索：显示分组视图
+                renderGroupedView();
+                if (noResults) noResults.classList.remove('show');
+                return;
+            }
+
+            // 扁平化过滤
+            let items = allNavItems;
+            if (keyword) {
+                items = items.filter(item => item.title.toLowerCase().includes(keyword));
+            }
+
+            if (currentSort === 'az') {
+                items = [...items].sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
+            } else if (currentSort === 'latest') {
+                items = [...items].reverse(); // JSON 末尾 = 最新
+            }
+
+            renderFlatView(items);
+        }
+
         fetch(UYEA_CONFIG.dataFiles.navigation)
             .then(r => {
                 if (!r.ok) throw new Error(`HTTP ${r.status}: 导航数据加载失败`);
                 return r.json();
             })
             .then(nav => {
+                // 渲染分组视图
                 ['ai', 'life', 'tools'].forEach(cat => {
                     const section = document.getElementById(cat + '-section');
                     if (section && nav[cat]) {
                         section.querySelector('.grid-container').innerHTML = nav[cat]
-                            .map(item => `
-                                <a href="${item.url}" target="_blank" rel="noopener" class="card-item" title="${item.title}">
-                                    <div class="card-icon">
-                                        <img src="" data-site-name="${item.icon}" style="display:none" alt="${item.title}" loading="lazy">
-                                    </div>
-                                    <div class="card-info">
-                                        <div class="card-title">${item.title}</div>
-                                    </div>
-                                </a>
-                            `).join('');
+                            .map(navCardHtml).join('');
                         loadIconsIn(section.querySelector('.grid-container'));
                     }
                 });
+
+                // 扁平化存储全部数据
+                allNavItems = [
+                    ...(nav.ai || []).map(item => ({ ...item, category: 'ai' })),
+                    ...(nav.life || []).map(item => ({ ...item, category: 'life' })),
+                    ...(nav.tools || []).map(item => ({ ...item, category: 'tools' }))
+                ];
             })
             .catch(err => {
                 console.warn('导航数据加载失败，网站功能受限:', err);
@@ -297,6 +370,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     el.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">导航数据加载失败，请刷新重试</div>';
                 });
             });
+
+        // 底部导航栏排序切换
+        document.querySelectorAll('.bottom-nav-item[data-sort]').forEach(item => {
+            item.addEventListener('click', () => {
+                if (item.classList.contains('active')) return;
+                document.querySelectorAll('.bottom-nav-item[data-sort]').forEach(x => x.classList.remove('active'));
+                item.classList.add('active');
+                currentSort = item.dataset.sort;
+                // 清空搜索框
+                const searchInput = document.getElementById('navSearchInput');
+                if (searchInput) searchInput.value = '';
+                applyNavFilter();
+            });
+        });
+
+        // 搜索过滤（防抖）
+        const navSearchInput = document.getElementById('navSearchInput');
+        if (navSearchInput) {
+            navSearchInput.addEventListener('input', () => {
+                clearTimeout(navSearchTimer);
+                navSearchTimer = setTimeout(applyNavFilter, 200);
+            });
+        }
     }
 
     // ==================== 字体异步加载 ====================

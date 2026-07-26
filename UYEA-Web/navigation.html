@@ -24,8 +24,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.28" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.28" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.29" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.29" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -61,7 +61,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.28" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.29" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -173,24 +173,64 @@
                 </div>
             </div>
 
-            <!-- AI智能体 -->
-            <div class="section-group" id="ai-section">
-                <div class="section-header"><h2 class="section-title" data-i18n="section.ai">AI 智能体</h2></div>
-                <div class="grid-container"></div>
+            <!-- 论坛风格工具栏：搜索过滤 -->
+            <div class="forum-toolbar">
+                <div class="forum-search">
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </span>
+                    <input type="text" id="navSearchInput" data-i18n-placeholder="nav.searchPlaceholder" placeholder="搜索网站名称...">
+                </div>
             </div>
 
-            <!-- 生活 -->
-            <div class="section-group" id="life-section">
-                <div class="section-header"><h2 class="section-title" data-i18n="section.life">生活</h2></div>
-                <div class="grid-container"></div>
+            <!-- 分类分组视图（全部模式） -->
+            <div id="navGroupedView">
+                <!-- AI智能体 -->
+                <div class="section-group" id="ai-section">
+                    <div class="section-header"><h2 class="section-title" data-i18n="section.ai">AI 智能体</h2></div>
+                    <div class="grid-container"></div>
+                </div>
+
+                <!-- 生活 -->
+                <div class="section-group" id="life-section">
+                    <div class="section-header"><h2 class="section-title" data-i18n="section.life">生活</h2></div>
+                    <div class="grid-container"></div>
+                </div>
+
+                <!-- 工具 -->
+                <div class="section-group" id="tools-section">
+                    <div class="section-header"><h2 class="section-title" data-i18n="section.tools">工具</h2></div>
+                    <div class="grid-container"></div>
+                </div>
             </div>
 
-            <!-- 工具 -->
-            <div class="section-group" id="tools-section">
-                <div class="section-header"><h2 class="section-title" data-i18n="section.tools">工具</h2></div>
-                <div class="grid-container"></div>
+            <!-- 扁平化视图（A-Z / 最新模式） -->
+            <div id="navFlatView" style="display:none;">
+                <div class="grid-container" id="navFlatGrid"></div>
+            </div>
+
+            <!-- 无结果提示 -->
+            <div class="no-results" id="navNoResults">
+                <div class="no-results-icon">🔍</div>
+                <div class="no-results-text" data-i18n="nav.noResults">未找到匹配的网站</div>
             </div>
         </div>
+
+        <!-- 底部玻璃导航栏：排序切换 -->
+        <nav class="bottom-nav" id="bottomNav" data-liquid-glass data-lg-strength="0.5">
+            <button class="bottom-nav-item active" data-sort="all">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span data-i18n="bottom.all">全部</span>
+            </button>
+            <button class="bottom-nav-item" data-sort="az">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h4M4 7V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2"></path><path d="M16 20l4-8h-4M16 12l4 8"></path></svg>
+                <span data-i18n="bottom.az">A-Z</span>
+            </button>
+            <button class="bottom-nav-item" data-sort="latest">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span data-i18n="bottom.latest">最新</span>
+            </button>
+        </nav>
     </main>
 
     <!-- 返回顶部 -->
@@ -198,9 +238,9 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
-    <script src="/JS/liquid-glass.js?v=0.6.28" defer></script>
-    <script src="/JS/config.js?v=0.6.28" defer></script>
-    <script src="/JS/script.js?v=0.6.28" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.29" defer></script>
+    <script src="/JS/config.js?v=0.6.29" defer></script>
+    <script src="/JS/script.js?v=0.6.29" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

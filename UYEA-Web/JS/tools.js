@@ -1,4 +1,4 @@
-/**
+﻿/**
  * UYEA Tools Page - tools.js
  * 纯前端在线工具集（JSON / Base64 / 正则 / 时间戳 / 颜色 / UUID）
  * 所有计算在浏览器本地完成，不依赖任何后端服务
@@ -23,6 +23,123 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     // 初始全部显示
     groups.forEach(g => { g.style.display = 'block'; });
+
+    // ==================== 排序 + 搜索（仿论坛页） ====================
+    let currentSort = 'all'; // all / az / latest
+    let currentCategory = 'all';
+    let toolsSearchTimer = null;
+
+    // 收集全部工具卡片数据（扁平化）
+    const allToolCards = [];
+    document.querySelectorAll('#toolsGroupedView .card-item').forEach((card, index) => {
+        const group = card.closest('.tool-group');
+        allToolCards.push({
+            el: card.cloneNode(true),
+            title: card.dataset.title || card.querySelector('.card-title')?.textContent || '',
+            category: group ? group.dataset.category : 'other',
+            index: index
+        });
+    });
+
+    function applyToolsFilter() {
+        const searchInput = document.getElementById('toolsSearchInput');
+        const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const groupedView = document.getElementById('toolsGroupedView');
+        const flatView = document.getElementById('toolsFlatView');
+        const flatGrid = document.getElementById('toolsFlatGrid');
+        const noResults = document.getElementById('toolsNoResults');
+        if (!groupedView || !flatView || !flatGrid) return;
+
+        // 全部模式 + 无搜索 + 无分类过滤：显示分组视图
+        if (currentSort === 'all' && !keyword && currentCategory === 'all') {
+            groupedView.style.display = '';
+            flatView.style.display = 'none';
+            if (noResults) noResults.classList.remove('show');
+            return;
+        }
+
+        // 全部模式 + 有分类过滤 + 无搜索：仍用分组视图（分类标签控制显示）
+        if (currentSort === 'all' && !keyword && currentCategory !== 'all') {
+            groupedView.style.display = '';
+            flatView.style.display = 'none';
+            if (noResults) noResults.classList.remove('show');
+            return;
+        }
+
+        // 扁平化视图：A-Z / 最新 / 有搜索
+        groupedView.style.display = 'none';
+        flatView.style.display = '';
+
+        let items = allToolCards;
+        // 分类过滤
+        if (currentCategory !== 'all') {
+            items = items.filter(item => item.category === currentCategory);
+        }
+        // 搜索过滤
+        if (keyword) {
+            items = items.filter(item => item.title.toLowerCase().includes(keyword));
+        }
+        // 排序
+        if (currentSort === 'az') {
+            items = [...items].sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
+        } else if (currentSort === 'latest') {
+            items = [...items].reverse();
+        }
+
+        flatGrid.innerHTML = items.map(item => item.el.outerHTML).join('');
+
+        // 重新绑定扁平视图中的工具卡片点击事件
+        flatGrid.querySelectorAll('[data-tool]').forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                openTool(card.dataset.tool);
+            });
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openTool(card.dataset.tool);
+                }
+            });
+        });
+
+        // 重新绑定开发中功能卡片（静默处理）
+        flatGrid.querySelectorAll('[data-coming-soon]').forEach(card => {
+            card.addEventListener('click', (e) => { e.preventDefault(); });
+        });
+
+        if (noResults) noResults.classList.toggle('show', items.length === 0);
+    }
+
+    // 底部导航栏排序切换
+    document.querySelectorAll('.bottom-nav-item[data-sort]').forEach(item => {
+        item.addEventListener('click', () => {
+            if (item.classList.contains('active')) return;
+            document.querySelectorAll('.bottom-nav-item[data-sort]').forEach(x => x.classList.remove('active'));
+            item.classList.add('active');
+            currentSort = item.dataset.sort;
+            // 清空搜索框
+            const searchInput = document.getElementById('toolsSearchInput');
+            if (searchInput) searchInput.value = '';
+            applyToolsFilter();
+        });
+    });
+
+    // 分类标签联动
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            currentCategory = this.dataset.category;
+            applyToolsFilter();
+        });
+    });
+
+    // 搜索过滤（防抖）
+    const toolsSearchInput = document.getElementById('toolsSearchInput');
+    if (toolsSearchInput) {
+        toolsSearchInput.addEventListener('input', () => {
+            clearTimeout(toolsSearchTimer);
+            toolsSearchTimer = setTimeout(applyToolsFilter, 200);
+        });
+    }
 
     // ==================== 工具模态框管理 ====================
     const toolOverlay = document.getElementById('toolOverlay');
