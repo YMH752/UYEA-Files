@@ -200,10 +200,9 @@
         });
     });
 
-    // ==================== 图标加载系统（直接加载 + 三级降级） ====================
+    // ==================== 图标加载系统（本地高清PNG → emoji降级） ====================
     /**
-     * 加载站点图标
-     * 降级链：本地PNG → DuckDuckGo favicon → emoji
+     * 加载站点图标（所有高清图标已保存在GitHub仓库）
      * @param {HTMLImageElement} img 图片元素
      */
     function loadIcon(img) {
@@ -221,44 +220,25 @@
         loader.className = 'icon-loading';
         parent.appendChild(loader);
 
-        const localUrl = UYEA_CONFIG.iconBase + name + '.png';
+        img.onload = () => {
+            if (loader.parentElement) loader.remove();
+            img.style.visibility = 'visible';
+            img.dataset.iconLoaded = 'true';
+            delete img.dataset.iconLoading;
+        };
 
-        // 从完整URL提取域名，用于favicon降级服务
-        let ddgUrl = null;
-        const siteUrl = img.dataset.siteUrl;
-        if (siteUrl) {
-            try {
-                const hostname = new URL(siteUrl).hostname;
-                ddgUrl = 'https://icons.duckduckgo.com/ip3/' + hostname + '.ico';
-            } catch(e) {}
-        }
+        img.onerror = () => {
+            // 本地图标加载失败，降级到 emoji
+            if (loader.parentElement) loader.remove();
+            img.remove();
+            const span = document.createElement('span');
+            span.className = 'icon-emoji';
+            span.textContent = UYEA_CONFIG.emojiMap[name] || '🔗';
+            parent.appendChild(span);
+            delete img.dataset.iconLoading;
+        };
 
-        function tryLoad(url, isFallback) {
-            img.onload = () => {
-                if (loader.parentElement) loader.remove();
-                img.style.visibility = 'visible';
-                img.dataset.iconLoaded = 'true';
-                delete img.dataset.iconLoading;
-            };
-            img.onerror = () => {
-                if (!isFallback && ddgUrl) {
-                    // 本地失败，降级 DuckDuckGo favicon（中国可访问）
-                    tryLoad(ddgUrl, true);
-                } else {
-                    // 最终降级到 emoji
-                    if (loader.parentElement) loader.remove();
-                    img.remove();
-                    const span = document.createElement('span');
-                    span.className = 'icon-emoji';
-                    span.textContent = UYEA_CONFIG.emojiMap[name] || '🔗';
-                    parent.appendChild(span);
-                    delete img.dataset.iconLoading;
-                }
-            };
-            img.src = url;
-        }
-
-        tryLoad(localUrl, false);
+        img.src = UYEA_CONFIG.iconBase + name + '.png';
     }
 
     // 直接加载容器内所有图标（不使用IntersectionObserver，避免与display:none冲突）
