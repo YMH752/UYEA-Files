@@ -265,10 +265,9 @@
         }).observe(mainContent, { childList: true, subtree: true });
     }
 
-    // ==================== 导航数据加载 + 排序/搜索 (仅navigation页) ====================
+    // ==================== 导航数据加载 + 分类筛选/搜索 (仅navigation页) ====================
     if (document.getElementById('ai-section')) {
-        let allNavItems = [];   // 扁平化全部卡片数据 [{title,url,icon,category}, ...]
-        let currentSort = 'all'; // all / az / latest
+        let currentCategory = 'all';
         let navSearchTimer = null;
 
         // HTML 转义
@@ -289,56 +288,37 @@
             </a>`;
         }
 
-        // 渲染分组视图（全部模式）
-        function renderGroupedView() {
-            const groupedView = document.getElementById('navGroupedView');
-            const flatView = document.getElementById('navFlatView');
-            if (!groupedView || !flatView) return;
-            groupedView.style.display = '';
-            flatView.style.display = 'none';
-        }
-
-        // 渲染扁平视图（A-Z / 最新模式）
-        function renderFlatView(items) {
-            const groupedView = document.getElementById('navGroupedView');
-            const flatView = document.getElementById('navFlatView');
-            const flatGrid = document.getElementById('navFlatGrid');
-            const noResults = document.getElementById('navNoResults');
-            if (!groupedView || !flatView || !flatGrid) return;
-
-            groupedView.style.display = 'none';
-            flatView.style.display = '';
-            flatGrid.innerHTML = items.map(navCardHtml).join('');
-            loadIconsIn(flatGrid);
-            if (noResults) noResults.classList.toggle('show', items.length === 0);
-        }
-
-        // 过滤 + 排序 + 渲染
+        // 分类筛选 + 搜索过滤
         function applyNavFilter() {
             const searchInput = document.getElementById('navSearchInput');
             const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
             const noResults = document.getElementById('navNoResults');
+            let visibleCount = 0;
 
-            if (currentSort === 'all' && !keyword) {
-                // 全部模式 + 无搜索：显示分组视图
-                renderGroupedView();
-                if (noResults) noResults.classList.remove('show');
-                return;
-            }
+            document.querySelectorAll('.section-group').forEach(section => {
+                const sectionCat = section.dataset.category;
+                // 分类过滤
+                if (currentCategory !== 'all' && sectionCat !== currentCategory) {
+                    section.style.display = 'none';
+                    return;
+                }
 
-            // 扁平化过滤
-            let items = allNavItems;
-            if (keyword) {
-                items = items.filter(item => item.title.toLowerCase().includes(keyword));
-            }
+                // 搜索过滤：隐藏不匹配的卡片
+                const cards = section.querySelectorAll('.card-item');
+                let sectionVisible = 0;
+                cards.forEach(card => {
+                    const title = (card.dataset.title || card.querySelector('.card-title')?.textContent || '').toLowerCase();
+                    const match = !keyword || title.includes(keyword);
+                    card.style.display = match ? '' : 'none';
+                    if (match) sectionVisible++;
+                });
 
-            if (currentSort === 'az') {
-                items = [...items].sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
-            } else if (currentSort === 'latest') {
-                items = [...items].reverse(); // JSON 末尾 = 最新
-            }
+                // 搜索后该分组无可见卡片则隐藏整个分组
+                section.style.display = (sectionVisible > 0) ? '' : 'none';
+                visibleCount += sectionVisible;
+            });
 
-            renderFlatView(items);
+            if (noResults) noResults.classList.toggle('show', visibleCount === 0);
         }
 
         fetch(UYEA_CONFIG.dataFiles.navigation)
@@ -356,13 +336,6 @@
                         loadIconsIn(section.querySelector('.grid-container'));
                     }
                 });
-
-                // 扁平化存储全部数据
-                allNavItems = [
-                    ...(nav.ai || []).map(item => ({ ...item, category: 'ai' })),
-                    ...(nav.life || []).map(item => ({ ...item, category: 'life' })),
-                    ...(nav.tools || []).map(item => ({ ...item, category: 'tools' }))
-                ];
             })
             .catch(err => {
                 console.warn('导航数据加载失败，网站功能受限:', err);
@@ -371,13 +344,13 @@
                 });
             });
 
-        // 底部导航栏排序切换
-        document.querySelectorAll('.bottom-nav-item[data-sort]').forEach(item => {
+        // 底部导航栏分类切换
+        document.querySelectorAll('.bottom-nav-item[data-category]').forEach(item => {
             item.addEventListener('click', () => {
                 if (item.classList.contains('active')) return;
-                document.querySelectorAll('.bottom-nav-item[data-sort]').forEach(x => x.classList.remove('active'));
+                document.querySelectorAll('.bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
                 item.classList.add('active');
-                currentSort = item.dataset.sort;
+                currentCategory = item.dataset.category;
                 // 清空搜索框
                 const searchInput = document.getElementById('navSearchInput');
                 if (searchInput) searchInput.value = '';

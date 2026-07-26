@@ -7,127 +7,52 @@
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    // ==================== 分类标签切换 ====================
-    const tabs = document.querySelectorAll('.tab-item');
-    const groups = document.querySelectorAll('.tool-group');
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function () {
-            tabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            const cat = this.dataset.category;
-            groups.forEach(g => {
-                g.style.display = (cat === 'all' || g.dataset.category === cat) ? 'block' : 'none';
-            });
-        });
-    });
-    // 初始全部显示
-    groups.forEach(g => { g.style.display = 'block'; });
-
-    // ==================== 排序 + 搜索（仿论坛页） ====================
-    let currentSort = 'all'; // all / az / latest
+    // ==================== 分类筛选 + 搜索 ====================
     let currentCategory = 'all';
     let toolsSearchTimer = null;
-
-    // 收集全部工具卡片数据（扁平化）
-    const allToolCards = [];
-    document.querySelectorAll('#toolsGroupedView .card-item').forEach((card, index) => {
-        const group = card.closest('.tool-group');
-        allToolCards.push({
-            el: card.cloneNode(true),
-            title: card.dataset.title || card.querySelector('.card-title')?.textContent || '',
-            category: group ? group.dataset.category : 'other',
-            index: index
-        });
-    });
 
     function applyToolsFilter() {
         const searchInput = document.getElementById('toolsSearchInput');
         const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
-        const groupedView = document.getElementById('toolsGroupedView');
-        const flatView = document.getElementById('toolsFlatView');
-        const flatGrid = document.getElementById('toolsFlatGrid');
         const noResults = document.getElementById('toolsNoResults');
-        if (!groupedView || !flatView || !flatGrid) return;
+        let visibleCount = 0;
 
-        // 全部模式 + 无搜索 + 无分类过滤：显示分组视图
-        if (currentSort === 'all' && !keyword && currentCategory === 'all') {
-            groupedView.style.display = '';
-            flatView.style.display = 'none';
-            if (noResults) noResults.classList.remove('show');
-            return;
-        }
+        document.querySelectorAll('.tool-group').forEach(group => {
+            const groupCat = group.dataset.category;
+            // 分类过滤
+            if (currentCategory !== 'all' && groupCat !== currentCategory) {
+                group.style.display = 'none';
+                return;
+            }
 
-        // 全部模式 + 有分类过滤 + 无搜索：仍用分组视图（分类标签控制显示）
-        if (currentSort === 'all' && !keyword && currentCategory !== 'all') {
-            groupedView.style.display = '';
-            flatView.style.display = 'none';
-            if (noResults) noResults.classList.remove('show');
-            return;
-        }
-
-        // 扁平化视图：A-Z / 最新 / 有搜索
-        groupedView.style.display = 'none';
-        flatView.style.display = '';
-
-        let items = allToolCards;
-        // 分类过滤
-        if (currentCategory !== 'all') {
-            items = items.filter(item => item.category === currentCategory);
-        }
-        // 搜索过滤
-        if (keyword) {
-            items = items.filter(item => item.title.toLowerCase().includes(keyword));
-        }
-        // 排序
-        if (currentSort === 'az') {
-            items = [...items].sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
-        } else if (currentSort === 'latest') {
-            items = [...items].reverse();
-        }
-
-        flatGrid.innerHTML = items.map(item => item.el.outerHTML).join('');
-
-        // 重新绑定扁平视图中的工具卡片点击事件
-        flatGrid.querySelectorAll('[data-tool]').forEach(card => {
-            card.addEventListener('click', (e) => {
-                e.preventDefault();
-                openTool(card.dataset.tool);
+            // 搜索过滤：隐藏不匹配的卡片
+            const cards = group.querySelectorAll('.card-item');
+            let groupVisible = 0;
+            cards.forEach(card => {
+                const title = (card.dataset.title || card.querySelector('.card-title')?.textContent || '').toLowerCase();
+                const match = !keyword || title.includes(keyword);
+                card.style.display = match ? '' : 'none';
+                if (match) groupVisible++;
             });
-            card.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    openTool(card.dataset.tool);
-                }
-            });
+
+            // 搜索后该分组无可见卡片则隐藏整个分组
+            group.style.display = (groupVisible > 0) ? '' : 'none';
+            visibleCount += groupVisible;
         });
 
-        // 重新绑定开发中功能卡片（静默处理）
-        flatGrid.querySelectorAll('[data-coming-soon]').forEach(card => {
-            card.addEventListener('click', (e) => { e.preventDefault(); });
-        });
-
-        if (noResults) noResults.classList.toggle('show', items.length === 0);
+        if (noResults) noResults.classList.toggle('show', visibleCount === 0);
     }
 
-    // 底部导航栏排序切换
-    document.querySelectorAll('.bottom-nav-item[data-sort]').forEach(item => {
+    // 底部导航栏分类切换
+    document.querySelectorAll('.bottom-nav-item[data-category]').forEach(item => {
         item.addEventListener('click', () => {
             if (item.classList.contains('active')) return;
-            document.querySelectorAll('.bottom-nav-item[data-sort]').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
             item.classList.add('active');
-            currentSort = item.dataset.sort;
+            currentCategory = item.dataset.category;
             // 清空搜索框
             const searchInput = document.getElementById('toolsSearchInput');
             if (searchInput) searchInput.value = '';
-            applyToolsFilter();
-        });
-    });
-
-    // 分类标签联动
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function () {
-            currentCategory = this.dataset.category;
             applyToolsFilter();
         });
     });

@@ -24,8 +24,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.29" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.29" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.30" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.30" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -61,7 +61,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.29" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.30" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -183,30 +183,25 @@
                 </div>
             </div>
 
-            <!-- 分类分组视图（全部模式） -->
+            <!-- 分类分组视图 -->
             <div id="navGroupedView">
                 <!-- AI智能体 -->
-                <div class="section-group" id="ai-section">
+                <div class="section-group" id="ai-section" data-category="ai">
                     <div class="section-header"><h2 class="section-title" data-i18n="section.ai">AI 智能体</h2></div>
                     <div class="grid-container"></div>
                 </div>
 
                 <!-- 生活 -->
-                <div class="section-group" id="life-section">
+                <div class="section-group" id="life-section" data-category="life">
                     <div class="section-header"><h2 class="section-title" data-i18n="section.life">生活</h2></div>
                     <div class="grid-container"></div>
                 </div>
 
                 <!-- 工具 -->
-                <div class="section-group" id="tools-section">
+                <div class="section-group" id="tools-section" data-category="tools">
                     <div class="section-header"><h2 class="section-title" data-i18n="section.tools">工具</h2></div>
                     <div class="grid-container"></div>
                 </div>
-            </div>
-
-            <!-- 扁平化视图（A-Z / 最新模式） -->
-            <div id="navFlatView" style="display:none;">
-                <div class="grid-container" id="navFlatGrid"></div>
             </div>
 
             <!-- 无结果提示 -->
@@ -216,19 +211,23 @@
             </div>
         </div>
 
-        <!-- 底部玻璃导航栏：排序切换 -->
+        <!-- 底部玻璃导航栏：分类切换 -->
         <nav class="bottom-nav" id="bottomNav" data-liquid-glass data-lg-strength="0.5">
-            <button class="bottom-nav-item active" data-sort="all">
+            <button class="bottom-nav-item active" data-category="all">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 <span data-i18n="bottom.all">全部</span>
             </button>
-            <button class="bottom-nav-item" data-sort="az">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h4M4 7V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2"></path><path d="M16 20l4-8h-4M16 12l4 8"></path></svg>
-                <span data-i18n="bottom.az">A-Z</span>
+            <button class="bottom-nav-item" data-category="ai">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10 10 10 0 0 0 10-10 10 10 0 0 0-10-10z"></path><path d="M8 14v-4M8 14h2M16 14v-4M16 14l-2-2M16 14l2-2"></path></svg>
+                <span data-i18n="section.ai">AI</span>
             </button>
-            <button class="bottom-nav-item" data-sort="latest">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                <span data-i18n="bottom.latest">最新</span>
+            <button class="bottom-nav-item" data-category="life">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"></path></svg>
+                <span data-i18n="section.life">生活</span>
+            </button>
+            <button class="bottom-nav-item" data-category="tools">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                <span data-i18n="section.tools">工具</span>
             </button>
         </nav>
     </main>
@@ -238,9 +237,9 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
-    <script src="/JS/liquid-glass.js?v=0.6.29" defer></script>
-    <script src="/JS/config.js?v=0.6.29" defer></script>
-    <script src="/JS/script.js?v=0.6.29" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.30" defer></script>
+    <script src="/JS/config.js?v=0.6.30" defer></script>
+    <script src="/JS/script.js?v=0.6.30" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
