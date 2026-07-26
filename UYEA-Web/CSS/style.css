@@ -1,5 +1,5 @@
-/* ============================================================
-   UYEA 悠野社区 · style.css v0.6.45
+﻿/* ============================================================
+   UYEA 悠野社区 · style.css v0.6.46
    复古×现代 · 墨绿琥珀 · 液态玻璃 · 纸张质感
    ============================================================ */
 
@@ -1016,6 +1016,53 @@ html[data-theme="coffee"] .section-title {
 }
 
 .card-item:hover .card-title { color: var(--primary); }
+
+/* 添加网站卡片（加号按钮，用于后续网站上传功能） */
+.add-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 6px 4px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed var(--border);
+    border-radius: 0;
+    color: var(--text-muted);
+    cursor: pointer;
+    overflow: hidden;
+    min-width: 0;
+    font-family: inherit;
+    text-decoration: none;
+    animation: fadeInUp 0.4s var(--ease-smooth) both;
+}
+.add-card .card-icon {
+    border: 1.5px dashed var(--border);
+    background: transparent;
+    color: var(--text-muted);
+}
+.add-card .add-card-title {
+    font-size: clamp(12px, 2.5vw, 14px);
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color var(--duration) ease;
+}
+.add-card:hover {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+.add-card:hover .card-icon {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.add-card:hover .add-card-title {
+    color: var(--primary);
+}
+@media(max-width:480px){
+    .add-card { padding: 5px 4px; }
+    .add-card .card-icon { width: 24px; height: 24px; font-size: 13px; }
+}
 
 /* ========== 模态框 ========== */
 .modal-overlay {

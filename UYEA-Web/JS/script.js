@@ -227,6 +227,20 @@
             </a>`;
         }
 
+        // 生成添加网站卡片 HTML（加号按钮，用于后续网站上传功能）
+        function addCardHtml() {
+            const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+            const text = msgs['nav.addSite'] || '添加网站';
+            return `<button class="add-card" aria-label="${navEsc(text)}">
+                <div class="card-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+                <div class="card-info">
+                    <div class="card-title add-card-title" data-i18n="nav.addSite">${navEsc(text)}</div>
+                </div>
+            </button>`;
+        }
+
         // 计算grid容器当前列数
         function getGridColumns(grid, cards) {
             if (!grid || !cards || cards.length === 0) return 1;
@@ -305,16 +319,22 @@
                 return r.json();
             })
             .then(nav => {
-                // 渲染分组视图（6个分类）
+                // 渲染分组视图（6个分类），每个分类末尾追加"添加网站"加号按钮
                 ['ai', 'social', 'tools', 'shopping', 'news', 'life'].forEach(cat => {
                     const section = document.getElementById(cat + '-section');
                     if (section && nav[cat]) {
-                        section.querySelector('.grid-container').innerHTML = nav[cat]
-                            .map(navCardHtml).join('');
+                        const grid = section.querySelector('.grid-container');
+                        grid.innerHTML = nav[cat].map(navCardHtml).join('') + addCardHtml();
                     }
                 });
                 // 卡片渲染完成后应用2行限制
                 applyNavFilter();
+                // "添加网站"按钮点击事件（静默处理，上传功能后续开发）
+                document.querySelectorAll('.add-card').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                    });
+                });
             })
             .catch(err => {
                 console.warn('导航数据加载失败，网站功能受限:', err);
