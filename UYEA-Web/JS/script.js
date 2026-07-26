@@ -344,13 +344,18 @@
                 });
             });
 
-        // 底部导航栏分类切换
+        // 底部导航栏分类切换（支持再次点击取消回到全部）
         document.querySelectorAll('.bottom-nav-item[data-category]').forEach(item => {
             item.addEventListener('click', () => {
-                if (item.classList.contains('active')) return;
-                document.querySelectorAll('.bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
-                item.classList.add('active');
-                currentCategory = item.dataset.category;
+                if (item.classList.contains('active')) {
+                    // 再次点击已激活按钮：取消选择，回到全部
+                    item.classList.remove('active');
+                    currentCategory = 'all';
+                } else {
+                    document.querySelectorAll('.bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
+                    item.classList.add('active');
+                    currentCategory = item.dataset.category;
+                }
                 // 清空搜索框
                 const searchInput = document.getElementById('navSearchInput');
                 if (searchInput) searchInput.value = '';
