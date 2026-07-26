@@ -331,6 +331,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 safeSetItem('uyea_theme', 'dark');
             }
+            // 通知液态玻璃模块重新应用（blur 值随主题切换变化）
+            document.dispatchEvent(new CustomEvent('uyea:themeChanged'));
         });
     }
 
