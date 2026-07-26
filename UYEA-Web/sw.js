@@ -1,11 +1,11 @@
 ﻿/*
- * UYEA 悠野社区 - Service Worker v0.6.24
+ * UYEA 悠野社区 - Service Worker v0.6.25
  * 缓存优先策略，支持离线访问
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
 
-const CACHE_NAME = 'uyea-v0.6.24';
-const V = 'v=0.6.24';
+const CACHE_NAME = 'uyea-v0.6.25';
+const V = 'v=0.6.25';
 
 // 核心静态资源（安装时预缓存）
 const CORE_ASSETS = [
@@ -58,12 +58,28 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// 拦截请求：缓存优先 + 后台更新
+// 拦截请求：HTML 网络优先 / 其他缓存优先
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
   // 仅处理同源 GET 请求
   if (request.method !== 'GET' || !request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
+  // HTML 文档：网络优先（确保用户第一次刷新即获取最新 HTML 和 JS 版本）
+  if (request.destination === 'document') {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response && response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request).then(cached => cached || caches.match('/index.html')))
+    );
     return;
   }
 
@@ -83,7 +99,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 其他请求：缓存优先 + 后台更新
+  // 其他请求（JS/CSS/图片等）：缓存优先 + 后台更新
   event.respondWith(
     caches.match(request).then(cached => {
       if (cached) {
@@ -115,12 +131,7 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => {
-          // 离线降级：HTML 请求返回首页
-          if (request.destination === 'document') {
-            return caches.match('/index.html');
-          }
-        });
+        .catch(() => {})
     })
   );
 });
