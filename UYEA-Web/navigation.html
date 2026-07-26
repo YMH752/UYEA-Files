@@ -24,8 +24,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.44" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.44" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.45" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.45" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -43,7 +43,7 @@
         .section-header{margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
         .section-title{font-family:var(--font-serif);font-size:clamp(24px,4vw,32px);font-weight:700;color:var(--ink);letter-spacing:-0.5px}
         .section-subtitle{font-size:13px;color:var(--text-muted);margin-top:4px}
-        .grid-container{display:grid;grid-template-columns:1fr;gap:0;max-width:480px;margin:0 auto}
+        .grid-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0 16px}
         .card-item{display:flex;align-items:center;gap:8px;padding:6px 4px;background:transparent;border:none;border-bottom:1px solid var(--border);border-radius:0;text-decoration:none;color:var(--text-primary);overflow:hidden;min-width:0}
         .card-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-full);background:transparent;flex-shrink:0;font-size:16px}
         .card-title{font-size:clamp(12px,2.5vw,14px);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -52,7 +52,7 @@
         @media(max-width:1024px){.header-container,.content-wrapper{max-width:960px}}
         @media(max-width:900px){.nav-links{display:none}.menu-toggle{display:flex}}
         @media(max-width:600px){.main-content{padding:16px 12px 110px}.header-right{gap:8px}.lang-btn{padding:6px 10px;min-width:40px;font-size:12px}.header-actions{gap:6px;padding-left:8px}}
-        @media(max-width:480px){.main-content{padding:12px 10px 110px}.header-container{padding:0 14px}.card-item{padding:5px 4px}.card-icon{width:24px;height:24px;font-size:13px}}
+        @media(max-width:480px){.main-content{padding:12px 10px 110px}.header-container{padding:0 14px}.grid-container{grid-template-columns:repeat(2,1fr);gap:0 12px}.card-item{padding:5px 4px}.card-icon{width:24px;height:24px;font-size:13px}}
         
         @media(max-width:320px){.main-content{padding:10px 8px 100px}.header-container{padding:0 10px}.logo-text{font-size:20px}}
         @media(max-width:900px) and (orientation:landscape){.top-header{height:48px}.main-content{padding-top:12px;padding-bottom:90px}}
@@ -61,7 +61,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.44" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.45" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -284,9 +284,9 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
-    <script src="/JS/liquid-glass.js?v=0.6.44" defer></script>
-    <script src="/JS/config.js?v=0.6.44" defer></script>
-    <script src="/JS/script.js?v=0.6.44" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.45" defer></script>
+    <script src="/JS/config.js?v=0.6.45" defer></script>
+    <script src="/JS/script.js?v=0.6.45" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

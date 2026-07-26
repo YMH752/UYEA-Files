@@ -1,5 +1,5 @@
 /* ============================================================
-   UYEA 悠野社区 · style.css v0.6.44
+   UYEA 悠野社区 · style.css v0.6.45
    复古×现代 · 墨绿琥珀 · 液态玻璃 · 纸张质感
    ============================================================ */
 
@@ -915,13 +915,11 @@ html[data-theme="coffee"] .section-title {
 
 /* 2行限制由JS精确控制（根据实际列数计算），无需CSS max-height */
 
-/* O+ 紧凑单列下划线布局：限制宽度，压缩间距，密度高 */
+/* O+ 多列下划线布局：自适应列数，舒适间距 */
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    max-width: 480px;
-    margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0 16px;
 }
 
 .card-item {
@@ -1531,7 +1529,8 @@ html[data-theme="coffee"] .bottom-nav-item.active {
     /* 底部导航保持可读性，最小11px */
     .bottom-nav-item { padding: 6px 12px; font-size: 11px; }
     .bottom-nav { gap: 2px; padding: 5px; }
-    /* 窄屏保持紧凑，不缩小图标 */
+    /* 窄屏保持2列，缩小图标 */
+    .grid-container { grid-template-columns: repeat(2, 1fr); gap: 0 12px; }
     .card-item { padding: 5px 4px; }
     .card-icon { width: 24px; height: 24px; font-size: 13px; }
 }
