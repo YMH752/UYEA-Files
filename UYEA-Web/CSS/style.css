@@ -585,7 +585,12 @@ a { color: var(--primary); text-decoration: none; }
     .header-container { gap: 8px; padding: 0 14px; }
 }
 
-/* 手机端搜索按钮 + 下拉面板（≤900px） */
+/* 手机端搜索按钮 + 下拉面板（模仿语言/主题下拉样式） */
+.search-selector {
+    position: relative;
+    flex-shrink: 0;
+}
+
 .mobile-search-toggle {
     display: none;
     align-items: center;
@@ -606,22 +611,30 @@ a { color: var(--primary); text-decoration: none; }
     border-color: var(--primary-light);
 }
 
+/* 搜索下拉面板：模仿 .lang-dropdown / .theme-dropdown 样式 */
 .mobile-search-panel {
     display: none;
-    position: fixed;
-    top: var(--header-h);
-    left: 0; right: 0;
-    padding: 14px 16px;
-    background: rgba(247, 243, 237, 0.88);
-    backdrop-filter: blur(40px) saturate(220%);
-    -webkit-backdrop-filter: blur(40px) saturate(220%);
-    border-bottom: 1px solid var(--glass-border);
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 300px;
+    padding: 8px;
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
     box-shadow: var(--shadow-md), inset 0 1px 0 var(--glass-highlight);
-    z-index: 999;
-    animation: slideDown 0.25s var(--ease-smooth);
+    z-index: 1001;
+    animation: searchDropIn 0.2s var(--ease-bounce);
 }
 
-.mobile-search-panel.show { display: flex; flex-direction: column; gap: 10px; }
+.mobile-search-panel.show { display: flex; flex-direction: column; gap: 8px; }
+
+@keyframes searchDropIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 .mobile-search-engine-row {
     display: flex;
@@ -630,8 +643,8 @@ a { color: var(--primary); text-decoration: none; }
 
 .mobile-engine-option {
     flex: 1;
-    padding: 7px 4px;
-    border: 1px solid var(--border);
+    padding: 8px 4px;
+    border: none;
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--text-secondary);
@@ -639,12 +652,18 @@ a { color: var(--primary); text-decoration: none; }
     font-weight: 600;
     cursor: pointer;
     transition: all var(--duration) ease;
+    text-shadow: var(--text-shadow-glass);
+}
+
+.mobile-engine-option:hover {
+    background: var(--primary-lighter);
+    color: var(--primary);
 }
 
 .mobile-engine-option.active {
     background: var(--primary-lighter);
     color: var(--primary);
-    border-color: var(--primary-light);
+    font-weight: 700;
 }
 
 .mobile-search-input-row {
@@ -657,13 +676,14 @@ a { color: var(--primary); text-decoration: none; }
     flex: 1;
     min-width: 0;
     padding: 0 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background: var(--surface-warm);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    background: var(--glass-bg);
     color: var(--text-primary);
     font-size: 16px; /* iOS 防缩放 */
     outline: none;
     -webkit-appearance: none;
+    text-shadow: var(--text-shadow-glass);
 }
 
 .mobile-search-input:focus {
@@ -688,15 +708,6 @@ a { color: var(--primary); text-decoration: none; }
 body.view-forum .header-search { display: none !important; }
 body.view-forum .mobile-search-toggle { display: flex !important; }
 body.view-forum .header-container { gap: 8px; }
-
-/* 深色/极客/咖啡主题：搜索面板背景适配 */
-html[data-theme="dark"] .mobile-search-panel,
-html[data-theme="geek"] .mobile-search-panel {
-    background: rgba(28, 25, 23, 0.92);
-}
-html[data-theme="coffee"] .mobile-search-panel {
-    background: rgba(61, 41, 20, 0.92);
-}
 
 @media (max-width: 900px) {
     .mobile-search-toggle { display: flex; }
