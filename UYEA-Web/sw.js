@@ -1,11 +1,11 @@
 /*
- * UYEA 悠野社区 - Service Worker v0.6.61
+ * UYEA 悠野社区 - Service Worker v0.6.62
  * 缓存优先策略，支持离线访问
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
 
-const CACHE_NAME = 'uyea-v0.6.61';
-const V = 'v=0.6.61';
+const CACHE_NAME = 'uyea-v0.6.62';
+const V = 'v=0.6.62';
 
 // 核心静态资源（安装时预缓存）
 const CORE_ASSETS = [

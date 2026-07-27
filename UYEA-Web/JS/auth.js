@@ -234,48 +234,306 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
+    // ==================== 设备/浏览器检测 ====================
+    function detectBrowser() {
+        const ua = navigator.userAgent;
+        const isMobile = /Mobile|Android|iPhone|iPad|iPod/i.test(ua);
+
+        let browser = 'other', browserName = '浏览器';
+        if (/MicroMessenger/i.test(ua)) { browser = 'wechat'; browserName = '微信'; }
+        else if (/QQBrowser/i.test(ua) && !/MQQBrowser/i.test(ua)) { browser = 'qq-desktop'; browserName = 'QQ浏览器'; }
+        else if (/MQQBrowser/i.test(ua)) { browser = 'qq-mobile'; browserName = 'QQ浏览器'; }
+        else if (/UBrowser/i.test(ua)) { browser = 'uc-desktop'; browserName = 'UC浏览器'; }
+        else if (/UCBrowser/i.test(ua)) { browser = 'uc-mobile'; browserName = 'UC浏览器'; }
+        else if (/Quark/i.test(ua)) { browser = 'quark'; browserName = '夸克浏览器'; }
+        else if (/360SE|360EE/i.test(ua)) { browser = '360-desktop'; browserName = '360浏览器'; }
+        else if (/360 Aphone Browser/i.test(ua)) { browser = '360-mobile'; browserName = '360浏览器'; }
+        else if (/SE 2\.|MetaSr/i.test(ua)) { browser = 'sogou'; browserName = '搜狗浏览器'; }
+        else if (/baidubrowser|BaiduHD/i.test(ua)) { browser = 'baidu'; browserName = '百度浏览器'; }
+        else if (/MiuiBrowser/i.test(ua)) { browser = 'xiaomi'; browserName = '小米浏览器'; }
+        else if (/HuaweiBrowser|HBPC/i.test(ua)) { browser = 'huawei'; browserName = '华为浏览器'; }
+        else if (/OppoBrowser|HeyTapBrowser/i.test(ua)) { browser = 'oppo'; browserName = 'OPPO浏览器'; }
+        else if (/VivoBrowser/i.test(ua)) { browser = 'vivo'; browserName = 'vivo浏览器'; }
+        else if (/Edg/i.test(ua)) { browser = 'edge'; browserName = 'Edge'; }
+        else if (/Chrome/i.test(ua) && !/Edg|OPR|Brave|Vivaldi/i.test(ua)) { browser = 'chrome'; browserName = 'Chrome'; }
+        else if (/Firefox/i.test(ua)) { browser = 'firefox'; browserName = 'Firefox'; }
+        else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) { browser = 'safari'; browserName = 'Safari'; }
+        else if (/OPR|Opera/i.test(ua)) { browser = 'opera'; browserName = 'Opera'; }
+        else if (/Brave/i.test(ua)) { browser = 'brave'; browserName = 'Brave'; }
+        else if (/Vivaldi/i.test(ua)) { browser = 'vivaldi'; browserName = 'Vivaldi'; }
+
+        let os = 'unknown';
+        if (/Windows/i.test(ua)) os = 'windows';
+        else if (/Mac OS/i.test(ua) && !/iPhone|iPad/i.test(ua)) os = 'mac';
+        else if (/Android/i.test(ua)) os = 'android';
+        else if (/iPhone|iPad|iPod/i.test(ua)) os = 'ios';
+
+        return { browser, browserName, os, isMobile };
+    }
+
+    // 浏览器教程数据（platform: desktop/mobile/both）
+    // 每个步骤用多语言对象 {zh, tw, en}
+    function getBrowserGuides() {
+        const lang = (window.currentLang || 'zh-CN');
+        const lc = lang === 'en' ? 'en' : (lang === 'zh-TW' ? 'tw' : 'zh');
+        const L = function(s) { return s[lc] || s['zh']; };
+
+        return [
+            // ===== 桌面端 =====
+            { id: 'chrome', platform: 'desktop', name: 'Chrome', icon: 'C',
+              steps: [
+                  { zh: '点击右上角「⋯」菜单，选择「设置」', tw: '點擊右上角「⋯」選單，選擇「設定」', en: 'Click "⋯" menu > "Settings"' },
+                  { zh: '在「启动时」选择「打开特定网页或一组网页」', tw: '在「啟動時」選擇「打開特定網頁」', en: 'Under "On startup" select "Open a specific page"' },
+                  { zh: '点击「添加新网页」，粘贴网址后点击「添加」', tw: '點擊「添加新網頁」，貼上網址後點擊「添加」', en: 'Click "Add a new page", paste URL, click "Add"' }
+              ]
+            },
+            { id: 'edge', platform: 'desktop', name: 'Edge', icon: 'E',
+              steps: [
+                  { zh: '点击右上角「⋯」菜单，选择「设置」', tw: '點擊右上角「⋯」選單，選擇「設定」', en: 'Click "⋯" menu > "Settings"' },
+                  { zh: '在「开始、主页和新建标签页」中选择「打开以下页面」', tw: '在「開始、主頁和新建分頁」中選擇「打開以下頁面」', en: 'Under "Start, home, and new tabs" select "Open these pages"' },
+                  { zh: '点击「添加新页面」，粘贴网址后保存', tw: '點擊「添加新頁面」，貼上網址後儲存', en: 'Click "Add a new page", paste URL, save' }
+              ]
+            },
+            { id: 'firefox', platform: 'desktop', name: 'Firefox', icon: 'F',
+              steps: [
+                  { zh: '点击右上角「≡」菜单，选择「设置」', tw: '點擊右上角「≡」選單，選擇「設定」', en: 'Click "≡" menu > "Settings"' },
+                  { zh: '在「主页」栏目中，将主页设为「自定义网址」', tw: '在「首頁」欄目中，將首頁設為「自訂網址」', en: 'Under "Home" set to "Custom URL"' },
+                  { zh: '粘贴网址到输入框即可', tw: '貼上網址到輸入框即可', en: 'Paste URL into the input box' }
+              ]
+            },
+            { id: 'safari', platform: 'desktop', name: 'Safari', icon: 'S',
+              steps: [
+                  { zh: '打开菜单栏「Safari > 设置（偏好设置）」', tw: '打開選單列「Safari > 設定」', en: 'Go to "Safari > Settings"' },
+                  { zh: '在「通用」标签页中找到「主页」字段', tw: '在「一般」標籤頁中找到「首頁」欄位', en: 'Under "General" tab find "Homepage" field' },
+                  { zh: '粘贴网址后关闭设置窗口', tw: '貼上網址後關閉設定視窗', en: 'Paste URL, close settings' }
+              ]
+            },
+            { id: 'opera', platform: 'desktop', name: 'Opera', icon: 'O',
+              steps: [
+                  { zh: '点击右上角「≡」菜单，选择「设置」', tw: '點擊右上角「≡」選單，選擇「設定」', en: 'Click "≡" menu > "Settings"' },
+                  { zh: '在「启动时」选择「打开特定页面」', tw: '在「啟動時」選擇「打開特定頁面」', en: 'Under "On startup" select "Open a specific page"' },
+                  { zh: '粘贴网址后保存', tw: '貼上網址後儲存', en: 'Paste URL, save' }
+              ]
+            },
+            { id: 'brave', platform: 'desktop', name: 'Brave', icon: 'B',
+              steps: [
+                  { zh: '点击右上角「≡」菜单，选择「设置」', tw: '點擊右上角「≡」選單，選擇「設定」', en: 'Click "≡" menu > "Settings"' },
+                  { zh: '在「启动时」选择「打开特定网页」', tw: '在「啟動時」選擇「打開特定網頁」', en: 'Under "On startup" select "Open a specific page"' },
+                  { zh: '粘贴网址后点击「添加」', tw: '貼上網址後點擊「添加」', en: 'Paste URL, click "Add"' }
+              ]
+            },
+            { id: 'vivaldi', platform: 'desktop', name: 'Vivaldi', icon: 'V',
+              steps: [
+                  { zh: '点击左上角「V」图标，选择「设置」', tw: '點擊左上角「V」圖標，選擇「設定」', en: 'Click "V" icon > "Settings"' },
+                  { zh: '在「启动时」选择「特定网页」', tw: '在「啟動時」選擇「特定網頁」', en: 'Under "On startup" select "Specific page"' },
+                  { zh: '粘贴网址后保存', tw: '貼上網址後儲存', en: 'Paste URL, save' }
+              ]
+            },
+            { id: '360-desktop', platform: 'desktop', name: '360浏览器', icon: '3',
+              steps: [
+                  { zh: '点击右上角「☰」菜单，选择「设置」', tw: '點擊右上角「☰」選單，選擇「設定」', en: 'Click "☰" menu > "Settings"' },
+                  { zh: '在「基本设置」中找到「启动时打开」', tw: '在「基本設定」中找到「啟動時打開」', en: 'Under "Basic settings" find "Open on startup"' },
+                  { zh: '选择「自定义网页」，粘贴网址后保存', tw: '選擇「自訂網頁」，貼上網址後儲存', en: 'Select "Custom URL", paste URL, save' }
+              ]
+            },
+            { id: 'qq-desktop', platform: 'desktop', name: 'QQ浏览器', icon: 'Q',
+              steps: [
+                  { zh: '点击右上角「☰」菜单，选择「设置」', tw: '點擊右上角「☰」選單，選擇「設定」', en: 'Click "☰" menu > "Settings"' },
+                  { zh: '在「常规」中找到「启动时打开」', tw: '在「常規」中找到「啟動時打開」', en: 'Under "General" find "Open on startup"' },
+                  { zh: '选择「自定义网页」，粘贴网址后保存', tw: '選擇「自訂網頁」，貼上網址後儲存', en: 'Select "Custom URL", paste URL, save' }
+              ]
+            },
+            { id: 'sogou', platform: 'desktop', name: '搜狗浏览器', icon: 'S',
+              steps: [
+                  { zh: '点击右上角「☰」菜单，选择「选项」', tw: '點擊右上角「☰」選單，選擇「選項」', en: 'Click "☰" menu > "Options"' },
+                  { zh: '在「基本设置」中找到「主页」', tw: '在「基本設定」中找到「首頁」', en: 'Under "Basic settings" find "Homepage"' },
+                  { zh: '粘贴网址后保存', tw: '貼上網址後儲存', en: 'Paste URL, save' }
+              ]
+            },
+            { id: 'uc-desktop', platform: 'desktop', name: 'UC浏览器', icon: 'U',
+              steps: [
+                  { zh: '点击右上角「☰」菜单，选择「设置」', tw: '點擊右上角「☰」選單，選擇「設定」', en: 'Click "☰" menu > "Settings"' },
+                  { zh: '在「常规」中找到「主页」设置', tw: '在「常規」中找到「首頁」設定', en: 'Under "General" find "Homepage" setting' },
+                  { zh: '粘贴网址后保存', tw: '貼上網址後儲存', en: 'Paste URL, save' }
+              ]
+            },
+
+            // ===== 移动端 Android =====
+            { id: 'chrome-android', platform: 'mobile', name: 'Chrome (Android)', icon: 'C',
+              steps: [
+                  { zh: '点击右上角「⋮」菜单，选择「设置」', tw: '點擊右上角「⋮」選單，選擇「設定」', en: 'Tap "⋮" menu > "Settings"' },
+                  { zh: '找到「主页」选项，选择「打开此网页」', tw: '找到「首頁」選項，選擇「打開此網頁」', en: 'Find "Homepage" > "Open this page"' },
+                  { zh: '粘贴网址后返回即可', tw: '貼上網址後返回即可', en: 'Paste URL, go back' }
+              ]
+            },
+            { id: 'firefox-android', platform: 'mobile', name: 'Firefox (Android)', icon: 'F',
+              steps: [
+                  { zh: '点击右上角「⋮」菜单，选择「设置」', tw: '點擊右上角「⋮」選單，選擇「設定」', en: 'Tap "⋮" menu > "Settings"' },
+                  { zh: '找到「主页」选项，选择「自定义」', tw: '找到「首頁」選項，選擇「自訂」', en: 'Find "Homepage" > "Custom"' },
+                  { zh: '粘贴网址后保存', tw: '貼上網址後儲存', en: 'Paste URL, save' }
+              ]
+            },
+            { id: 'quark', platform: 'mobile', name: '夸克浏览器', icon: 'Q',
+              steps: [
+                  { zh: '点击右下角「☰」菜单，进入「设置」', tw: '點擊右下角「☰」選單，進入「設定」', en: 'Tap "☰" menu > "Settings"' },
+                  { zh: '找到「主页」或「起始页」设置', tw: '找到「首頁」或「起始頁」設定', en: 'Find "Homepage" or "Start page" setting' },
+                  { zh: '选择「自定义」，粘贴网址后保存', tw: '選擇「自訂」，貼上網址後儲存', en: 'Select "Custom", paste URL, save' }
+              ]
+            },
+            { id: 'uc-mobile', platform: 'mobile', name: 'UC浏览器', icon: 'U',
+              steps: [
+                  { zh: '点击底部菜单「☰」，选择「设置」', tw: '點擊底部選單「☰」，選擇「設定」', en: 'Tap bottom "☰" menu > "Settings"' },
+                  { zh: '找到「主页设置」或「启动页」', tw: '找到「首頁設定」或「啟動頁」', en: 'Find "Homepage" or "Start page"' },
+                  { zh: '选择「自定义网址」，粘贴后保存', tw: '選擇「自訂網址」，貼上後儲存', en: 'Select "Custom URL", paste, save' }
+              ]
+            },
+            { id: 'qq-mobile', platform: 'mobile', name: 'QQ浏览器', icon: 'Q',
+              steps: [
+                  { zh: '点击底部「☰」菜单，选择「设置」', tw: '點擊底部「☰」選單，選擇「設定」', en: 'Tap bottom "☰" menu > "Settings"' },
+                  { zh: '找到「主页」或「起始页」设置', tw: '找到「首頁」或「起始頁」設定', en: 'Find "Homepage" or "Start page"' },
+                  { zh: '选择「自定义」，粘贴网址后保存', tw: '選擇「自訂」，貼上網址後儲存', en: 'Select "Custom", paste URL, save' }
+              ]
+            },
+            { id: 'baidu', platform: 'mobile', name: '百度浏览器', icon: 'B',
+              steps: [
+                  { zh: '点击底部「☰」菜单，进入「设置」', tw: '點擊底部「☰」選單，進入「設定」', en: 'Tap bottom "☰" menu > "Settings"' },
+                  { zh: '找到「主页设置」选项', tw: '找到「首頁設定」選項', en: 'Find "Homepage" setting' },
+                  { zh: '选择「自定义网址」，粘贴后保存', tw: '選擇「自訂網址」，貼上後儲存', en: 'Select "Custom URL", paste, save' }
+              ]
+            },
+            { id: 'xiaomi', platform: 'mobile', name: '小米浏览器', icon: 'M',
+              steps: [
+                  { zh: '点击底部「☰」菜单，进入「设置」', tw: '點擊底部「☰」選單，進入「設定」', en: 'Tap bottom "☰" menu > "Settings"' },
+                  { zh: '找到「主页」或「起始页」设置', tw: '找到「首頁」或「起始頁」設定', en: 'Find "Homepage" or "Start page"' },
+                  { zh: '选择「自定义网址」，粘贴后保存', tw: '選擇「自訂網址」，貼上後儲存', en: 'Select "Custom URL", paste, save' }
+              ]
+            },
+            { id: 'huawei', platform: 'mobile', name: '华为浏览器', icon: 'H',
+              steps: [
+                  { zh: '点击底部「☰」菜单，进入「设置」', tw: '點擊底部「☰」選單，進入「設定」', en: 'Tap bottom "☰" menu > "Settings"' },
+                  { zh: '找到「主页设置」或「起始页」', tw: '找到「首頁設定」或「起始頁」', en: 'Find "Homepage" or "Start page"' },
+                  { zh: '选择「自定义」，粘贴网址后保存', tw: '選擇「自訂」，貼上網址後儲存', en: 'Select "Custom", paste URL, save' }
+              ]
+            },
+            { id: 'oppo', platform: 'mobile', name: 'OPPO浏览器', icon: 'O',
+              steps: [
+                  { zh: '点击底部「☰」菜单，进入「设置」', tw: '點擊底部「☰」選單，進入「設定」', en: 'Tap bottom "☰" menu > "Settings"' },
+                  { zh: '找到「主页」设置选项', tw: '找到「首頁」設定選項', en: 'Find "Homepage" setting' },
+                  { zh: '选择「自定义网址」，粘贴后保存', tw: '選擇「自訂網址」，貼上後儲存', en: 'Select "Custom URL", paste, save' }
+              ]
+            },
+            { id: 'vivo', platform: 'mobile', name: 'vivo浏览器', icon: 'V',
+              steps: [
+                  { zh: '点击底部「☰」菜单，进入「设置」', tw: '點擊底部「☰」選單，進入「設定」', en: 'Tap bottom "☰" menu > "Settings"' },
+                  { zh: '找到「主页设置」选项', tw: '找到「首頁設定」選項', en: 'Find "Homepage" setting' },
+                  { zh: '选择「自定义网址」，粘贴后保存', tw: '選擇「自訂網址」，貼上後儲存', en: 'Select "Custom URL", paste, save' }
+              ]
+            },
+            { id: '360-mobile', platform: 'mobile', name: '360浏览器', icon: '3',
+              steps: [
+                  { zh: '点击底部「☰」菜单，进入「设置」', tw: '點擊底部「☰」選單，進入「設定」', en: 'Tap bottom "☰" menu > "Settings"' },
+                  { zh: '找到「主页设置」选项', tw: '找到「首頁設定」選項', en: 'Find "Homepage" setting' },
+                  { zh: '选择「自定义网址」，粘贴后保存', tw: '選擇「自訂網址」，貼上後儲存', en: 'Select "Custom URL", paste, save' }
+              ]
+            },
+            { id: 'wechat', platform: 'mobile', name: '微信内置浏览器', icon: 'W',
+              steps: [
+                  { zh: '微信内置浏览器无法设置首页', tw: '微信內置瀏覽器無法設置首頁', en: 'WeChat browser cannot set homepage' },
+                  { zh: '建议点击右上角「⋯」选择「在浏览器打开」', tw: '建議點擊右上角「⋯」選擇「在瀏覽器打開」', en: 'Tap "⋯" > "Open in browser"' },
+                  { zh: '在系统浏览器中按上述步骤设置', tw: '在系統瀏覽器中按上述步驟設定', en: 'Set homepage in system browser' }
+              ]
+            },
+
+            // ===== 移动端 iOS =====
+            { id: 'safari-ios', platform: 'mobile', name: 'Safari (iOS)', icon: 'S',
+              steps: [
+                  { zh: '打开「设置」App，向下滑动找到「Safari」', tw: '打開「設定」App，向下滑動找到「Safari」', en: 'Open "Settings" app, find "Safari"' },
+                  { zh: '点击「主页」，选择「自定义」', tw: '點擊「首頁」，選擇「自訂」', en: 'Tap "Homepage" > "Custom"' },
+                  { zh: '粘贴网址后返回即可', tw: '貼上網址後返回即可', en: 'Paste URL, go back' }
+              ]
+            },
+            { id: 'chrome-ios', platform: 'mobile', name: 'Chrome (iOS)', icon: 'C',
+              steps: [
+                  { zh: '点击右下角「⋮」菜单，选择「设置」', tw: '點擊右下角「⋮」選單，選擇「設定」', en: 'Tap "⋮" menu > "Settings"' },
+                  { zh: '找到「主页」选项，选择「自定义网页」', tw: '找到「首頁」選項，選擇「自訂網頁」', en: 'Find "Homepage" > "Custom page"' },
+                  { zh: '粘贴网址后返回即可', tw: '貼上網址後返回即可', en: 'Paste URL, go back' }
+              ]
+            }
+        ].map(function(g) {
+            // 转换步骤为当前语言
+            g.steps = g.steps.map(function(s, i) {
+                return { num: i + 1, text: L(s) };
+            });
+            return g;
+        });
+    }
+
+    // 将检测结果映射到教程ID
+    function mapDetectedToGuide(detected) {
+        var map = {
+            'chrome': detected.isMobile ? 'chrome-android' : 'chrome',
+            'edge': 'edge', 'firefox': detected.isMobile ? 'firefox-android' : 'firefox',
+            'safari': detected.isMobile ? 'safari-ios' : 'safari',
+            'opera': 'opera', 'brave': 'brave', 'vivaldi': 'vivaldi',
+            '360-desktop': '360-desktop', '360-mobile': '360-mobile',
+            'qq-desktop': 'qq-desktop', 'qq-mobile': 'qq-mobile',
+            'sogou': 'sogou', 'uc-desktop': 'uc-desktop', 'uc-mobile': 'uc-mobile',
+            'baidu': 'baidu', 'xiaomi': 'xiaomi', 'huawei': 'huawei',
+            'oppo': 'oppo', 'vivo': 'vivo', 'wechat': 'wechat'
+        };
+        // iOS上的Chrome
+        if (detected.os === 'ios' && detected.browser === 'chrome') return 'chrome-ios';
+        return map[detected.browser] || null;
+    }
+
     // 设为首页引导弹窗 HTML
     function renderSetHomepageGuide() {
+        const detected = detectBrowser();
+        const guides = getBrowserGuides();
+        const detectedId = mapDetectedToGuide(detected);
+        const defaultTab = detected.isMobile ? 'mobile' : 'desktop';
+
+        const desktopGuides = guides.filter(g => g.platform === 'desktop');
+        const mobileGuides = guides.filter(g => g.platform === 'mobile');
+
+        function renderGuideCard(g) {
+            const isDetected = (g.id === detectedId);
+            return `<div class="hp-browser-card${isDetected ? ' hp-detected' : ''}" data-guide-id="${g.id}">
+                <div class="hp-browser-header">
+                    <span class="hp-browser-icon">${escapeHtml(g.icon)}</span>
+                    <span class="hp-browser-name">${escapeHtml(g.name)}</span>
+                    ${isDetected ? '<span class="hp-current-tag">' + escapeHtml(t('homepage.detected')) + ' ✓</span>' : ''}
+                </div>
+                <div class="hp-browser-steps">
+                    ${g.steps.map(s => `<p>${s.num}. ${escapeHtml(s.text)}</p>`).join('')}
+                </div>
+            </div>`;
+        }
+
         return `
             <div class="homepage-guide">
-                <div class="homepage-guide-intro">${t('homepage.intro')}</div>
-                <div class="homepage-browser-list">
-                    <div class="homepage-browser-item">
-                        <div class="homepage-browser-name">Chrome / Edge</div>
-                        <div class="homepage-browser-steps">
-                            <p>1. ${t('homepage.chrome.step1')}</p>
-                            <p>2. ${t('homepage.chrome.step2')}</p>
-                            <p>3. ${t('homepage.chrome.step3')}</p>
-                        </div>
-                    </div>
-                    <div class="homepage-browser-item">
-                        <div class="homepage-browser-name">Firefox</div>
-                        <div class="homepage-browser-steps">
-                            <p>1. ${t('homepage.firefox.step1')}</p>
-                            <p>2. ${t('homepage.firefox.step2')}</p>
-                            <p>3. ${t('homepage.firefox.step3')}</p>
-                        </div>
-                    </div>
-                    <div class="homepage-browser-item">
-                        <div class="homepage-browser-name">Safari</div>
-                        <div class="homepage-browser-steps">
-                            <p>1. ${t('homepage.safari.step1')}</p>
-                            <p>2. ${t('homepage.safari.step2')}</p>
-                        </div>
-                    </div>
-                    <div class="homepage-browser-item">
-                        <div class="homepage-browser-name">${t('homepage.mobile.title')}</div>
-                        <div class="homepage-browser-steps">
-                            <p>1. ${t('homepage.mobile.step1')}</p>
-                            <p>2. ${t('homepage.mobile.step2')}</p>
-                        </div>
-                    </div>
+                <div class="homepage-guide-intro">${escapeHtml(t('homepage.intro'))}</div>
+                ${detected.browser !== 'other' ? `
+                <div class="hp-detected-banner">
+                    <span class="hp-detected-icon">📍</span>
+                    <span>${escapeHtml(t('homepage.detected'))} <strong>${escapeHtml(detected.browserName)}</strong>，${escapeHtml(t('homepage.followSteps'))}</span>
+                </div>` : ''}
+                <div class="hp-tabs">
+                    <button class="hp-tab${defaultTab === 'desktop' ? ' active' : ''}" data-tab="desktop">${escapeHtml(t('homepage.tab.desktop'))}</button>
+                    <button class="hp-tab${defaultTab === 'mobile' ? ' active' : ''}" data-tab="mobile">${escapeHtml(t('homepage.tab.mobile'))}</button>
                 </div>
+                <div class="hp-tab-content${defaultTab === 'desktop' ? '' : ' hp-hidden'}" id="hpTabDesktop">
+                    ${desktopGuides.map(renderGuideCard).join('')}
+                </div>
+                <div class="hp-tab-content${defaultTab === 'mobile' ? '' : ' hp-hidden'}" id="hpTabMobile">
+                    ${mobileGuides.map(renderGuideCard).join('')}
+                </div>
+                <div class="hp-scroll-hint">${escapeHtml(t('homepage.scrollHint'))}</div>
                 <div class="homepage-guide-url">
                     <input type="text" class="homepage-url-input" id="homepageUrl" readonly value="https://uyea-files.pages.dev/">
-                    <button class="post-btn post-btn-secondary" id="copyHomepageUrl">${t('homepage.copyUrl')}</button>
+                    <button class="post-btn post-btn-secondary" id="copyHomepageUrl">${escapeHtml(t('homepage.copyUrl'))}</button>
                 </div>
-                <div class="homepage-guide-note">${t('homepage.note')}</div>
+                <div class="homepage-guide-note">${escapeHtml(t('homepage.note'))}</div>
             </div>
         `;
     }
@@ -580,6 +838,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => { copyBtn.textContent = orig; }, 1500);
             });
         }
+
+        // 绑定标签页切换
+        authModalBody.querySelectorAll('.hp-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                authModalBody.querySelectorAll('.hp-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                authModalBody.querySelector('#hpTabDesktop').classList.toggle('hp-hidden', targetTab !== 'desktop');
+                authModalBody.querySelector('#hpTabMobile').classList.toggle('hp-hidden', targetTab !== 'mobile');
+            });
+        });
+
+        // 自动滚动到检测到的浏览器卡片
+        setTimeout(() => {
+            const detectedCard = authModalBody.querySelector('.hp-browser-card.hp-detected');
+            if (detectedCard) {
+                detectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 300);
     }
 
     // ==================== 初始化 ====================

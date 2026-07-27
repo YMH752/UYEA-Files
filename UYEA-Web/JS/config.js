@@ -195,7 +195,13 @@ const UYEA_CONFIG = {
       'homepage.mobile.step2': '粘贴下方网址即可设为首页',
       'homepage.copyUrl': '复制网址',
       'homepage.copied': '已复制',
-      'homepage.note': '提示：也可将本站添加到书签栏，一键快速访问。'
+      'homepage.note': '提示：也可将本站添加到书签栏，一键快速访问。',
+      'homepage.tab.desktop': '桌面端',
+      'homepage.tab.mobile': '移动端',
+      'homepage.detected': '检测到您正在使用',
+      'homepage.followSteps': '请参考以下步骤设置',
+      'homepage.otherBrowsers': '其他浏览器',
+      'homepage.scrollHint': '左右滑动查看更多浏览器'
     },
     'zh-TW': {
       'nav.home': '網站導航',
@@ -308,7 +314,13 @@ const UYEA_CONFIG = {
       'homepage.mobile.step2': '貼上下方網址即可設為首頁',
       'homepage.copyUrl': '複製網址',
       'homepage.copied': '已複製',
-      'homepage.note': '提示：也可將本站加入書籤列，一鍵快速訪問。'
+      'homepage.note': '提示：也可將本站加入書籤列，一鍵快速訪問。',
+      'homepage.tab.desktop': '桌面端',
+      'homepage.tab.mobile': '移動端',
+      'homepage.detected': '檢測到您正在使用',
+      'homepage.followSteps': '請參考以下步驟設置',
+      'homepage.otherBrowsers': '其他瀏覽器',
+      'homepage.scrollHint': '左右滑動查看更多瀏覽器'
     },
     'en': {
       'nav.home': 'Navigation',
@@ -421,7 +433,13 @@ const UYEA_CONFIG = {
       'homepage.mobile.step2': 'Paste the URL below to set as homepage',
       'homepage.copyUrl': 'Copy URL',
       'homepage.copied': 'Copied',
-      'homepage.note': 'Tip: You can also bookmark this site for one-click access.'
+      'homepage.note': 'Tip: You can also bookmark this site for one-click access.',
+      'homepage.tab.desktop': 'Desktop',
+      'homepage.tab.mobile': 'Mobile',
+      'homepage.detected': 'Detected: You are using',
+      'homepage.followSteps': 'Follow these steps to set up',
+      'homepage.otherBrowsers': 'Other Browsers',
+      'homepage.scrollHint': 'Swipe to see more browsers'
     }
   },
 
