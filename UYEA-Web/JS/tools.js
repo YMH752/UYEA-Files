@@ -133,17 +133,21 @@ document.addEventListener('DOMContentLoaded', () => {
         toolsResizeTimer = setTimeout(applyToolsFilter, 200);
     });
 
-    // 监听视图切换：切换到工具视图时应用筛选
+    // 监听视图切换：切换到工具视图时恢复分类状态并重新应用筛选
     let toolsFilterApplied = false;
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view !== 'tools') return;
         bindToolsEvents();
-        if (!toolsFilterApplied) {
-            setTimeout(() => {
-                applyToolsFilter();
-                toolsFilterApplied = true;
-            }, 50);
-        }
+        // 恢复底部导航active状态（switchView会重置底部导航HTML）
+        document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
+        const activeBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${currentCategory}"]`);
+        if (activeBtn) activeBtn.classList.add('active');
+        // 重新应用筛选（视图从隐藏变可见，需重新计算布局）
+        setTimeout(() => {
+            applyToolsFilter();
+            toolsFilterApplied = true;
+            if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
+        }, 50);
     });
 
     // 页面加载时立即绑定事件（工具卡片是静态HTML，无需异步加载）

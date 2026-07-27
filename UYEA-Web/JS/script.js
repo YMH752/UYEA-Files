@@ -390,17 +390,23 @@
         }, 200);
     });
 
-    // 监听视图切换：切换到导航视图时应用筛选（首次切换计算布局）
+    // 监听视图切换：切换到导航视图时恢复分类状态并重新应用筛选
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view === 'nav') {
-            if (navInitialized && !navFilterApplied) {
-                setTimeout(() => {
-                    applyNavFilter();
-                    navFilterApplied = true;
-                }, 50);
-            } else {
+            if (!navInitialized) {
                 setTimeout(initNavView, 50);
+                return;
             }
+            // 恢复底部导航active状态（switchView会重置底部导航HTML）
+            document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
+            const activeBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${navCurrentCategory}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            // 重新应用筛选（视图从隐藏变可见，需重新计算布局）
+            setTimeout(() => {
+                applyNavFilter();
+                navFilterApplied = true;
+                if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
+            }, 50);
         }
     });
 

@@ -165,10 +165,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 监听视图切换：切换回论坛视图时重新绑定事件
+    // 监听视图切换：切换回论坛视图时恢复分类状态
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view === 'forum') {
             bindForumEvents();
+            // 恢复底部导航active状态（switchView会重置底部导航HTML）
+            document.querySelectorAll('#bottomNav .bottom-nav-item[data-tab]').forEach(x => x.classList.remove('active'));
+            const activeBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-tab="${currentFeed}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
         }
     });
 
