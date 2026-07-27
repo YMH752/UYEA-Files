@@ -4,12 +4,12 @@
   "description": "悠野社区 - 分享AI使用心得、工具作品和生活点滴",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F7F3ED",
-  "theme_color": "#1A4D3A",
+  "background_color": "#F4F7F2",
+  "theme_color": "#1B5E20",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231A4D3A'/%3E%3Ctext x='50' y='68' font-family='serif' font-size='52' font-weight='bold' fill='white' text-anchor='middle'%3EU%3C/text%3E%3C/svg%3E",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231B5E20'/%3E%3Ctext x='50' y='68' font-family='serif' font-size='52' font-weight='bold' fill='white' text-anchor='middle'%3EU%3C/text%3E%3C/svg%3E",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
