@@ -30,12 +30,14 @@
 
     // ==================== 多语言系统 ====================
     let currentLang = UYEA_CONFIG.defaultLanguage;
+    window.currentLang = currentLang; // 初始暴露给其他模块
 
     // 语言缩写映射
     const langAbbr = { 'zh-CN': '中', 'zh-TW': '繁', 'en': 'EN' };
 
     const setLang = (lang) => {
         currentLang = lang;
+        window.currentLang = lang; // 暴露给其他模块（auth.js等）
         const msgs = UYEA_CONFIG.i18n[lang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
         // 翻译文本内容
         document.querySelectorAll('[data-i18n]').forEach(el => {

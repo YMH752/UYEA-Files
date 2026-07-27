@@ -25,8 +25,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.60" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.60" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.61" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.61" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -63,7 +63,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.60" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.61" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -124,7 +124,7 @@
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                     </button>
-                    <button class="user-btn" aria-label="用户中心" data-coming-soon="用户中心">
+                    <button class="user-btn" aria-label="用户中心" id="userBtn">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
@@ -175,6 +175,7 @@
         </nav>
         <div class="menu-auth-section">
             <button class="register-btn" data-coming-soon="注册"><span data-i18n="btn.register">注册</span></button>
+            <button class="homepage-guide-btn" id="homepageGuideBtn"><span data-i18n="homepage.title">设为浏览器首页</span></button>
         </div>
     </div>
 
@@ -646,6 +647,16 @@
         <div class="tool-modal-body" id="toolModalBody"></div>
     </div>
 
+    <!-- 认证弹窗（登录/注册/个人中心/设为首页引导） -->
+    <div class="modal-overlay" id="authOverlay"></div>
+    <div class="tool-modal auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+        <div class="tool-modal-header">
+            <h2 class="tool-modal-title" id="authModalTitle">登录</h2>
+            <button class="tool-modal-close" id="authModalClose" aria-label="关闭">&times;</button>
+        </div>
+        <div class="tool-modal-body" id="authModalBody"></div>
+    </div>
+
     <!-- 返回顶部 -->
     <div class="back-to-top" role="button" aria-label="返回顶部" tabindex="0">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
@@ -715,11 +726,12 @@
         }
     </style>
 
-    <script src="/JS/liquid-glass.js?v=0.6.60" defer></script>
-    <script src="/JS/config.js?v=0.6.60" defer></script>
-    <script src="/JS/script.js?v=0.6.60" defer></script>
-    <script src="/JS/tools.js?v=0.6.60" defer></script>
-    <script src="/JS/forum.js?v=0.6.60" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.61" defer></script>
+    <script src="/JS/config.js?v=0.6.61" defer></script>
+    <script src="/JS/script.js?v=0.6.61" defer></script>
+    <script src="/JS/tools.js?v=0.6.61" defer></script>
+    <script src="/JS/forum.js?v=0.6.61" defer></script>
+    <script src="/JS/auth.js?v=0.6.61" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };

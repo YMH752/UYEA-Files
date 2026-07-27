@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "passwordHash": "833f7a29514e07849cc9512efcad594b786a1e9443cdcb63ed59d2eb6ab5d08e",
+    "nickname": "悠野管理员",
+    "avatar": "",
+    "email": "admin@uyea.dev",
+    "role": "admin",
+    "joinDate": "2026-07-27",
+    "bio": "悠野社区管理员"
+  }
+]
