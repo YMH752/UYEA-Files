@@ -1,11 +1,14 @@
-# 覆盖 Clean URLs：将 .html 后缀 301 重定向到 clean URL
-/forum.html /forum 301
-/navigation.html /navigation 301
-/tools.html /tools 301
+# 三个页面已合并为SPA首页
+# .html 文件通过自身JS重定向到对应hash路由
+/forum.html / 301
+/navigation.html / 301
+/tools.html / 301
 /index.html / 301
 
-# 论坛已合并为首页：/forum 重定向到首页
+# clean URL 重定向到首页（带视图参数，SPA读取后自动切换视图）
 /forum / 301
+/navigation /?view=nav 302
+/tools /?view=tools 302
 
 # 旧路径兼容：将 /UYEA-Web/* 重定向到 /*
 /UYEA-Web/* /:splat 301

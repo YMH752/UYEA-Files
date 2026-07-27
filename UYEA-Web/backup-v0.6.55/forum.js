@@ -144,30 +144,18 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPosts();
 
     // ==================== 底部导航栏 tab 切换 ====================
-    function bindForumEvents() {
-        const bottomNavItems = document.querySelectorAll('#bottomNav .bottom-nav-item');
-        bottomNavItems.forEach(item => {
-            item.addEventListener('click', () => {
-                if (item.classList.contains('active')) return; // 已选中则跳过
-                bottomNavItems.forEach(x => x.classList.remove('active'));
-                item.classList.add('active');
-                currentFeed = item.dataset.tab;
-                const searchInput = document.getElementById('forumSearchInput');
-                if (searchInput) searchInput.value = '';
-                filterPosts();
-            });
+    const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+    bottomNavItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (item.classList.contains('active')) return; // 已选中则跳过
+            bottomNavItems.forEach(x => x.classList.remove('active'));
+            item.classList.add('active');
+            currentFeed = item.dataset.tab;
+            const searchInput = document.getElementById('forumSearchInput');
+            if (searchInput) searchInput.value = '';
+            filterPosts();
         });
-    }
-
-    // 监听视图切换：切换回论坛视图时重新绑定事件
-    window.addEventListener('viewchange', (e) => {
-        if (e.detail.view === 'forum') {
-            bindForumEvents();
-        }
     });
-
-    // 初始绑定论坛底部导航事件
-    bindForumEvents();
 
     // 语言切换时重新渲染帖子（翻译标签）
     window.addEventListener('languagechange', () => {

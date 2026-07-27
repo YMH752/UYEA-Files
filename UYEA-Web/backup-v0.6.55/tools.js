@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // "全部"视图且无搜索时，限制每分类最多显示2行
         const isLimited = (currentCategory === 'all' && !keyword);
 
-        document.querySelectorAll('#toolsView .tool-group').forEach(group => {
+        document.querySelectorAll('.tool-group').forEach(group => {
             const groupCat = group.dataset.category;
             // 分类过滤
             if (currentCategory !== 'all' && groupCat !== currentCategory) {
@@ -74,44 +74,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // "更多"按钮只在"全部"视图且无搜索时显示，切到具体分类或搜索时隐藏
         const showMoreBtns = (currentCategory === 'all' && !keyword);
-        document.querySelectorAll('#toolsView .more-btn[data-target-category]').forEach(btn => {
+        document.querySelectorAll('.more-btn[data-target-category]').forEach(btn => {
             btn.style.display = showMoreBtns ? '' : 'none';
         });
 
         // 加号按钮只在具体分类视图显示，"全部"视图隐藏
         const showAddCards = (currentCategory !== 'all');
-        document.querySelectorAll('#toolsView .add-card').forEach(btn => {
+        document.querySelectorAll('.add-card').forEach(btn => {
             btn.style.display = showAddCards ? '' : 'none';
         });
     }
 
-    // 绑定工具视图事件（底部导航切换后需重新绑定）
-    function bindToolsEvents() {
-        // 底部导航栏分类切换
-        document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(item => {
-            item.addEventListener('click', () => {
-                if (item.classList.contains('active')) return;
-                document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
-                item.classList.add('active');
-                currentCategory = item.dataset.category;
-                // 清空搜索框
-                const searchInput = document.getElementById('toolsSearchInput');
-                if (searchInput) searchInput.value = '';
-                applyToolsFilter();
-            });
+    // 底部导航栏分类切换
+    document.querySelectorAll('.bottom-nav-item[data-category]').forEach(item => {
+        item.addEventListener('click', () => {
+            if (item.classList.contains('active')) return;
+            document.querySelectorAll('.bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
+            item.classList.add('active');
+            currentCategory = item.dataset.category;
+            // 清空搜索框
+            const searchInput = document.getElementById('toolsSearchInput');
+            if (searchInput) searchInput.value = '';
+            applyToolsFilter();
         });
+    });
 
-        // "更多"按钮：点击后切换到对应分类
-        document.querySelectorAll('#toolsView .more-btn[data-target-category]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const targetCat = btn.dataset.targetCategory;
-                const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
-                if (targetNavBtn) {
-                    targetNavBtn.click();
-                }
-            });
+    // "更多"按钮：点击后切换到对应分类
+    document.querySelectorAll('.more-btn[data-target-category]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetCat = btn.dataset.targetCategory;
+            const targetNavBtn = document.querySelector(`.bottom-nav-item[data-category="${targetCat}"]`);
+            if (targetNavBtn) {
+                targetNavBtn.click();
+            }
         });
-    }
+    });
 
     // 搜索过滤（防抖）
     const toolsSearchInput = document.getElementById('toolsSearchInput');
@@ -122,25 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 窗口大小变化时重新计算2行限制（仅在工具视图激活时）
+    // 窗口大小变化时重新计算2行限制
     let toolsResizeTimer = null;
     window.addEventListener('resize', () => {
-        const toolsView = document.getElementById('toolsView');
-        if (!toolsView || toolsView.style.display === 'none') return;
         clearTimeout(toolsResizeTimer);
         toolsResizeTimer = setTimeout(applyToolsFilter, 200);
     });
 
-    // 监听视图切换：切换到工具视图时初始化
-    let toolsInitialized = false;
-    window.addEventListener('viewchange', (e) => {
-        if (e.detail.view !== 'tools') return;
-        bindToolsEvents();
-        if (!toolsInitialized) {
-            toolsInitialized = true;
-        }
-        setTimeout(applyToolsFilter, 50);
-    });
+    // 页面加载后初始应用2行限制 + 隐藏"全部"视图下的加号按钮
+    applyToolsFilter();
 
     // ==================== 工具模态框管理 ====================
     const toolOverlay = document.getElementById('toolOverlay');
@@ -197,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 工具卡片点击 / 键盘交互
-    document.querySelectorAll('#toolsView [data-tool]').forEach(card => {
+    document.querySelectorAll('[data-tool]').forEach(card => {
         card.addEventListener('click', (e) => {
             e.preventDefault();
             openTool(card.dataset.tool);
@@ -211,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 添加工具按钮：静默处理，上传/添加功能后续开发
-    document.querySelectorAll('#toolsView .add-card').forEach(btn => {
+    document.querySelectorAll('.add-card').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
         });

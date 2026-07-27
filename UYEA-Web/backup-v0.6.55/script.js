@@ -203,114 +203,121 @@
     // ==================== 图标占位符系统（底色+边框，待后续替换为真实图标） ====================
     // 卡片图标使用首字母占位符，由 navCardHtml 内联生成，无需异步加载
 
-    // ==================== 导航数据加载 + 分类筛选/搜索 ====================
-    let navInitialized = false;
-    let navCurrentCategory = 'all';
-    let navSearchTimer = null;
+    // ==================== 导航数据加载 + 分类筛选/搜索 (仅navigation页) ====================
+    if (document.getElementById('ai-section')) {
+        let currentCategory = 'all';
+        let navSearchTimer = null;
 
-    // HTML 转义
-    function navEsc(str) {
-        if (str == null) return '';
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
+        // HTML 转义
+        function navEsc(str) {
+            if (str == null) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
 
-    // 生成单张卡片 HTML（图标用首字母占位符，底色+边框）
-    function navCardHtml(item) {
-        const firstChar = (item.title || '?').charAt(0).toUpperCase();
-        return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" data-title="${navEsc(item.title)}" title="${navEsc(item.title)}">
-            <div class="card-icon">
-                <span class="icon-placeholder">${navEsc(firstChar)}</span>
-            </div>
-            <div class="card-info">
-                <div class="card-title">${navEsc(item.title)}</div>
-            </div>
-        </a>`;
-    }
+        // 生成单张卡片 HTML（图标用首字母占位符，底色+边框）
+        function navCardHtml(item) {
+            const firstChar = (item.title || '?').charAt(0).toUpperCase();
+            return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" data-title="${navEsc(item.title)}" title="${navEsc(item.title)}">
+                <div class="card-icon">
+                    <span class="icon-placeholder">${navEsc(firstChar)}</span>
+                </div>
+                <div class="card-info">
+                    <div class="card-title">${navEsc(item.title)}</div>
+                </div>
+            </a>`;
+        }
 
-    // 生成添加网站卡片 HTML（加号按钮，用于后续网站上传功能）
-    function addCardHtml() {
-        const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
-        const text = msgs['nav.addSite'] || '添加网站';
-        return `<button class="add-card" aria-label="${navEsc(text)}">
-            <div class="card-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            </div>
-            <div class="card-info">
-                <div class="card-title add-card-title" data-i18n="nav.addSite">${navEsc(text)}</div>
-            </div>
-        </button>`;
-    }
+        // 生成添加网站卡片 HTML（加号按钮，用于后续网站上传功能）
+        function addCardHtml() {
+            const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+            const text = msgs['nav.addSite'] || '添加网站';
+            return `<button class="add-card" aria-label="${navEsc(text)}">
+                <div class="card-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+                <div class="card-info">
+                    <div class="card-title add-card-title" data-i18n="nav.addSite">${navEsc(text)}</div>
+                </div>
+            </button>`;
+        }
 
-    // 计算grid容器当前列数
-    function getGridColumns(grid, cards) {
-        if (!grid || !cards || cards.length === 0) return 1;
-        const gridWidth = grid.clientWidth;
-        const cardWidth = cards[0].getBoundingClientRect().width;
-        if (cardWidth <= 0) return 1;
-        const gap = 16;
-        return Math.max(1, Math.floor((gridWidth + gap) / (cardWidth + gap)));
-    }
+        // 计算grid容器当前列数
+        function getGridColumns(grid, cards) {
+            if (!grid || !cards || cards.length === 0) return 1;
+            const gridWidth = grid.clientWidth;
+            const cardWidth = cards[0].getBoundingClientRect().width;
+            if (cardWidth <= 0) return 1;
+            const gap = 16; // 与 CSS gap: 0 16px 一致
+            return Math.max(1, Math.floor((gridWidth + gap) / (cardWidth + gap)));
+        }
 
-    // 分类筛选 + 搜索过滤 + 2行限制（仅作用于#navView内）
-    function applyNavFilter() {
-        const searchInput = document.getElementById('navSearchInput');
-        const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
-        const noResults = document.getElementById('navNoResults');
-        let visibleCount = 0;
-        const isLimited = (navCurrentCategory === 'all' && !keyword);
+        // 分类筛选 + 搜索过滤 + 2行限制
+        function applyNavFilter() {
+            const searchInput = document.getElementById('navSearchInput');
+            const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const noResults = document.getElementById('navNoResults');
+            let visibleCount = 0;
 
-        document.querySelectorAll('#navView .section-group').forEach(section => {
-            const sectionCat = section.dataset.category;
-            if (navCurrentCategory !== 'all' && sectionCat !== navCurrentCategory) {
-                section.style.display = 'none';
-                return;
-            }
-            section.style.display = '';
-            const cards = section.querySelectorAll('.card-item');
-            const grid = section.querySelector('.grid-container');
-            cards.forEach(c => { c.style.display = ''; });
+            // "全部"视图且无搜索时，限制每分类最多显示2行
+            const isLimited = (currentCategory === 'all' && !keyword);
 
-            let maxVisible = Infinity;
-            if (isLimited && grid && cards.length > 0) {
-                const columns = getGridColumns(grid, cards);
-                maxVisible = columns * 2;
-            }
+            document.querySelectorAll('.section-group').forEach(section => {
+                const sectionCat = section.dataset.category;
+                // 分类过滤
+                if (currentCategory !== 'all' && sectionCat !== currentCategory) {
+                    section.style.display = 'none';
+                    return;
+                }
 
-            let sectionVisible = 0;
-            cards.forEach(card => {
-                const title = (card.dataset.title || card.querySelector('.card-title')?.textContent || '').toLowerCase();
-                const matchSearch = !keyword || title.includes(keyword);
-                const withinLimit = sectionVisible < maxVisible;
-                const show = matchSearch && (withinLimit || !isLimited);
-                card.style.display = show ? '' : 'none';
-                if (show) sectionVisible++;
+                // 先显示 section，修复切换分类后 display:none 导致 grid.clientWidth=0 的 BUG
+                section.style.display = '';
+
+                const cards = section.querySelectorAll('.card-item');
+                const grid = section.querySelector('.grid-container');
+
+                // 先显示所有卡片，修复上一轮筛选隐藏 cards[0] 导致 getBoundingClientRect().width=0 的 BUG
+                cards.forEach(c => { c.style.display = ''; });
+
+                // 2行限制：计算当前列数，最多显示 columns*2 张卡片
+                let maxVisible = Infinity;
+                if (isLimited && grid && cards.length > 0) {
+                    const columns = getGridColumns(grid, cards);
+                    maxVisible = columns * 2;
+                }
+
+                // 搜索过滤 + 2行限制
+                let sectionVisible = 0;
+                cards.forEach(card => {
+                    const title = (card.dataset.title || card.querySelector('.card-title')?.textContent || '').toLowerCase();
+                    const matchSearch = !keyword || title.includes(keyword);
+                    const withinLimit = sectionVisible < maxVisible;
+                    const show = matchSearch && (withinLimit || !isLimited);
+                    card.style.display = show ? '' : 'none';
+                    if (show) sectionVisible++;
+                });
+
+                section.style.display = (sectionVisible > 0) ? '' : 'none';
+                // 强制添加 revealed 类，避免 reveal 动画导致切换分类时内容不可见
+                if (sectionVisible > 0) {
+                    section.classList.add('revealed');
+                }
+                visibleCount += sectionVisible;
             });
 
-            section.style.display = (sectionVisible > 0) ? '' : 'none';
-            if (sectionVisible > 0) section.classList.add('revealed');
-            visibleCount += sectionVisible;
-        });
+            if (noResults) noResults.classList.toggle('show', visibleCount === 0);
 
-        if (noResults) noResults.classList.toggle('show', visibleCount === 0);
+            // "更多"按钮只在"全部"视图且无搜索时显示，切到具体分类或搜索时隐藏
+            const showMoreBtns = (currentCategory === 'all' && !keyword);
+            document.querySelectorAll('.more-btn[data-target-category]').forEach(btn => {
+                btn.style.display = showMoreBtns ? '' : 'none';
+            });
 
-        const showMoreBtns = (navCurrentCategory === 'all' && !keyword);
-        document.querySelectorAll('#navView .more-btn[data-target-category]').forEach(btn => {
-            btn.style.display = showMoreBtns ? '' : 'none';
-        });
-        const showAddCards = (navCurrentCategory !== 'all');
-        document.querySelectorAll('#navView .add-card').forEach(btn => {
-            btn.style.display = showAddCards ? '' : 'none';
-        });
-    }
-
-    // 初始化导航视图（首次切换到导航视图时调用）
-    function initNavView() {
-        if (navInitialized) {
-            applyNavFilter();
-            bindNavEvents();
-            return;
+            // 加号按钮只在具体分类视图显示，"全部"视图隐藏
+            const showAddCards = (currentCategory !== 'all');
+            document.querySelectorAll('.add-card').forEach(btn => {
+                btn.style.display = showAddCards ? '' : 'none';
+            });
         }
-        navInitialized = true;
 
         fetch(UYEA_CONFIG.dataFiles.navigation, { cache: 'no-cache' })
             .then(r => {
@@ -318,6 +325,7 @@
                 return r.json();
             })
             .then(nav => {
+                // 渲染分组视图（6个分类），每个分类末尾追加"添加网站"加号按钮
                 ['ai', 'social', 'tools', 'creative', 'shopping', 'news', 'life'].forEach(cat => {
                     const section = document.getElementById(cat + '-section');
                     if (section && nav[cat]) {
@@ -325,39 +333,50 @@
                         grid.innerHTML = nav[cat].map(navCardHtml).join('') + addCardHtml();
                     }
                 });
+                // 卡片渲染完成后应用2行限制
                 applyNavFilter();
-                document.querySelectorAll('#navView .add-card').forEach(btn => {
-                    btn.addEventListener('click', (e) => { e.preventDefault(); });
+                // "添加网站"按钮点击事件（静默处理，上传功能后续开发）
+                document.querySelectorAll('.add-card').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                    });
                 });
-                bindNavEvents();
             })
             .catch(err => {
-                console.warn('导航数据加载失败:', err);
+                console.warn('导航数据加载失败，网站功能受限:', err);
+                document.querySelectorAll('.grid-container').forEach(el => {
+                    el.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">导航数据加载失败，请刷新重试</div>';
+                });
             });
-    }
 
-    // 绑定导航视图事件（底部导航切换后需重新绑定）
-    function bindNavEvents() {
-        document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(item => {
+        // 底部导航栏分类切换
+        document.querySelectorAll('.bottom-nav-item[data-category]').forEach(item => {
             item.addEventListener('click', () => {
-                document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
+                document.querySelectorAll('.bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
                 item.classList.add('active');
-                navCurrentCategory = item.dataset.category;
+                currentCategory = item.dataset.category;
+                // 清空搜索框
                 const searchInput = document.getElementById('navSearchInput');
                 if (searchInput) searchInput.value = '';
                 applyNavFilter();
+                // 滚动到顶部
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         });
 
-        document.querySelectorAll('#navView .more-btn[data-target-category]').forEach(btn => {
+        // "更多"按钮：点击后切换到对应分类
+        document.querySelectorAll('.more-btn[data-target-category]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const targetCat = btn.dataset.targetCategory;
-                const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
-                if (targetNavBtn) targetNavBtn.click();
+                // 模拟点击底部导航对应的分类按钮
+                const targetNavBtn = document.querySelector(`.bottom-nav-item[data-category="${targetCat}"]`);
+                if (targetNavBtn) {
+                    targetNavBtn.click();
+                }
             });
         });
 
+        // 搜索过滤（防抖）
         const navSearchInput = document.getElementById('navSearchInput');
         if (navSearchInput) {
             navSearchInput.addEventListener('input', () => {
@@ -365,23 +384,14 @@
                 navSearchTimer = setTimeout(applyNavFilter, 200);
             });
         }
+
+        // 窗口resize时重新计算2行限制（防抖）
+        let navResizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(navResizeTimer);
+            navResizeTimer = setTimeout(applyNavFilter, 200);
+        });
     }
-
-    // 窗口resize时重新计算2行限制（防抖）
-    let navResizeTimer = null;
-    window.addEventListener('resize', () => {
-        clearTimeout(navResizeTimer);
-        navResizeTimer = setTimeout(() => {
-            if (document.getElementById('navView')?.style.display !== 'none') applyNavFilter();
-        }, 200);
-    });
-
-    // 监听视图切换：切换到导航视图时初始化
-    window.addEventListener('viewchange', (e) => {
-        if (e.detail.view === 'nav') {
-            setTimeout(initNavView, 50);
-        }
-    });
 
     // ==================== 字体异步加载 ====================
     if (document.fonts && document.fonts.load) {

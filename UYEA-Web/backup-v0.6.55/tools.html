@@ -1,25 +1,22 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-CN">
-<!DOCTYPE html>
-<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="悠野社区(UYEA) - 论坛、导航、工具，一站式平台">
+    <meta name="description" content="实用工具箱 - JSON格式化、Base64编解码、正则测试、时间戳转换、颜色选择器、UUID生成器，纯前端开箱即用">
     <meta name="theme-color" content="#1A4D3A">
     <meta name="color-scheme" content="light dark">
-    <title>UYEA | 悠野社区</title>
+    <title>实用工具箱 | UYEA</title>
 
-    <link rel="canonical" href="https://uyea-files.pages.dev/">
+    <link rel="canonical" href="https://uyea-files.pages.dev/tools">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231A4D3A'/%3E%3Ctext x='50' y='68' font-family='serif' font-size='52' font-weight='bold' fill='white' text-anchor='middle'%3EU%3C/text%3E%3C/svg%3E" type="image/svg+xml">
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231A4D3A'/%3E%3Ctext x='50' y='68' font-family='serif' font-size='52' font-weight='bold' fill='white' text-anchor='middle'%3EU%3C/text%3E%3C/svg%3E">
 
-    <meta property="og:title" content="UYEA | 悠野社区">
-    <meta property="og:description" content="悠野社区 - 以论坛为主页，分享AI使用心得、工具作品和生活点滴">
+    <meta property="og:title" content="实用工具箱 | UYEA">
+    <meta property="og:description" content="实用工具箱 - JSON格式化、Base64编解码、正则测试、时间戳转换、颜色选择器、UUID生成器">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://uyea-files.pages.dev/">
-    <meta property="og:image" content="https://uyea-files.pages.dev/IMAGE/JPG/Peter_Thomas(2-2).webp">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:url" content="https://uyea-files.pages.dev/tools">
+    <meta name="twitter:card" content="summary">
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -27,12 +24,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.56" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.56" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.55" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.55" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
-        :root{--primary:#1A4D3A;--primary-gradient:linear-gradient(135deg,#1A4D3A 0%,#2D6A4F 100%);--accent:#B45309;--ink:#292524;--bg:#F7F3ED;--surface:#FFFFFF;--surface-warm:#FFFBF5;--border:#E7DFD3;--glass-bg:rgba(255,251,245,0.18);--glass-border:rgba(255,255,255,0.25);--glass-highlight:rgba(255,255,255,0.9);--text-primary:#292524;--text-secondary:#57534E;--text-muted:#A8A29E;--header-h:64px;--radius-md:10px;--radius-sm:6px;--shadow-sm:0 1px 3px rgba(41,37,36,0.08);--font-serif:'Playfair Display','Noto Serif SC',Georgia,serif}
+        :root{--primary:#1A4D3A;--primary-gradient:linear-gradient(135deg,#1A4D3A 0%,#2D6A4F 100%);--accent:#B45309;--ink:#292524;--bg:#F7F3ED;--surface:#FFFFFF;--surface-warm:#FFFBF5;--border:#E7DFD3;--glass-bg:rgba(255,251,245,0.18);--glass-border:rgba(255,255,255,0.25);--glass-highlight:rgba(255,255,255,0.9);--text-primary:#292524;--text-secondary:#57534E;--text-muted:#A8A29E;--header-h:64px;--radius-md:10px;--radius-sm:6px;--radius-full:999px;--shadow-sm:0 1px 3px rgba(41,37,36,0.08);--font-serif:'Playfair Display','Noto Serif SC',Georgia,serif}
         *{margin:0;padding:0;box-sizing:border-box}
         html{overflow-x:hidden;overflow-y:scroll;scrollbar-gutter:stable;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC',system-ui,sans-serif}
         body{background:var(--bg);color:var(--text-primary);line-height:1.6}
@@ -42,30 +39,309 @@
         .logo-text{font-family:var(--font-serif);font-size:clamp(22px,4vw,30px);font-weight:800;background:var(--primary-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;letter-spacing:clamp(1px,0.4vw,2px);white-space:nowrap}
         .main-content{width:100%;padding:24px 20px;min-height:calc(100vh - var(--header-h))}
         .content-wrapper{max-width:1400px;margin:0 auto;width:100%}
-        .section-header{margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
         .section-title{font-family:var(--font-serif);font-size:clamp(24px,4vw,32px);font-weight:700;color:var(--ink);letter-spacing:-0.5px}
+        .section-header{margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
         .section-subtitle{font-size:13px;color:var(--text-muted);margin-top:4px}
-        .post-list{display:flex;flex-direction:column;gap:10px}
-        .post-item{display:block;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);text-decoration:none;color:var(--text-primary);border-left:3px solid var(--accent)}
-        .post-title{font-family:var(--font-serif);font-size:16px;font-weight:700;margin-bottom:6px;color:var(--ink)}
-        .post-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--text-muted)}
-        .post-tag{padding:3px 10px;background:#FFFBEB;border-radius:12px;font-size:11px;font-weight:600;color:#92400E;border:1px solid #FEF3C7}
-        .post-excerpt{font-size:13px;color:var(--text-secondary);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        .grid-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0 16px}
+        .card-item{display:flex;align-items:center;gap:8px;padding:6px 4px;background:transparent;border:none;border-bottom:1px solid var(--border);border-radius:0;text-decoration:none;color:var(--text-primary);overflow:hidden;min-width:0;cursor:pointer}
+        .card-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-full);background:transparent;flex-shrink:0;font-size:16px}
+        .card-title{font-size:clamp(12px,2.5vw,14px);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .add-card{display:flex;align-items:center;gap:8px;padding:6px 4px;background:transparent;border:none;border-bottom:1px dashed var(--border);border-radius:0;color:var(--text-muted);cursor:pointer;overflow:hidden;min-width:0;font-family:inherit}
+        .add-card .card-icon{border:1.5px dashed var(--border);background:transparent;color:var(--text-muted)}
+        .add-card .add-card-title{font-size:clamp(12px,2.5vw,14px);font-weight:500;color:var(--text-muted)}
+        .add-card:hover{color:var(--primary);border-bottom-color:var(--primary)}
+        .add-card:hover .card-icon{border-color:var(--primary);color:var(--primary)}
+        .add-card:hover .add-card-title{color:var(--primary)}
+        .tool-group{margin-bottom:28px}
         .main-content{padding-bottom:140px}
+        .no-results-icon svg{width:40px;height:40px;color:var(--text-muted)}
         /* 关键响应式：防止FOUC */
         @media(max-width:1024px){.header-container,.content-wrapper{max-width:960px}}
         @media(max-width:900px){.nav-links{display:none}.menu-toggle{display:flex}}
-        @media(max-width:600px){.main-content{padding:16px 12px 110px}.header-right{gap:8px}.lang-btn{padding:6px 10px;min-width:40px;font-size:12px}.header-actions{gap:6px;padding-left:8px}.post-item{padding:14px 16px}.post-title{font-size:15px}}
-        @media(max-width:480px){.main-content{padding:12px 10px 110px}.header-container{padding:0 14px}.post-item{padding:12px 14px}.post-title{font-size:14px}.post-excerpt{font-size:12px}}
-        
-        @media(max-width:320px){.main-content{padding:10px 8px 100px}.header-container{padding:0 10px}.logo-text{font-size:20px}.post-item{padding:10px 12px}.post-title{font-size:13px}}
+        @media(max-width:600px){.main-content{padding:16px 12px 110px}.header-right{gap:8px}.lang-btn{padding:6px 10px;min-width:40px;font-size:12px}.header-actions{gap:6px;padding-left:8px}}
+        @media(max-width:480px){.main-content{padding:12px 10px 110px}.header-container{padding:0 14px}.grid-container{grid-template-columns:repeat(2,1fr);gap:0 12px}.card-item{padding:5px 4px}.card-icon{width:24px;height:24px;font-size:13px}.add-card{padding:5px 4px}.add-card .card-icon{width:24px;height:24px;font-size:13px}}
+
+        @media(max-width:320px){.main-content{padding:10px 8px 100px}.header-container{padding:0 10px}.logo-text{font-size:20px}}
         @media(max-width:900px) and (orientation:landscape){.top-header{height:48px}.main-content{padding-top:12px;padding-bottom:90px}}
-        @media(min-width:1401px){.header-container,.content-wrapper{max-width:1600px;padding:0 32px}.main-content{padding:32px 32px 150px}.post-item{padding:20px 24px}}
+        @media(min-width:1401px){.header-container,.content-wrapper{max-width:1600px;padding:0 32px}.main-content{padding:32px 32px 150px}}
         /* iOS安全区域 */
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.56" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.55" media="all">
+
+    <!-- 工具页面专属样式 -->
+    <style>
+        /* 工具卡片可点击指针 */
+        .card-item { cursor: pointer; }
+
+        /* ========== 工具模态框 ========== */
+        .tool-modal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(95vw, 700px);
+            max-height: 90vh;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 10000;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .tool-modal.show { display: flex; animation: modalPop 0.2s ease; }
+
+        .tool-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .tool-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 0;
+        }
+        .tool-modal-close {
+            width: 34px; height: 34px;
+            border: none;
+            background: var(--bg);
+            border-radius: 50%;
+            font-size: 22px;
+            line-height: 1;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all var(--duration) ease;
+        }
+        .tool-modal-close:hover { background: var(--accent-5); color: var(--ink); }
+
+        .tool-modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* ========== 工具表单元素 ========== */
+        .tool-field { margin-bottom: 16px; }
+        .tool-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .tool-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text-primary);
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+            transition: border-color var(--duration) ease, box-shadow var(--duration) ease;
+        }
+        .tool-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-lighter);
+        }
+        .tool-textarea[readonly] { background: var(--surface); }
+        .tool-input {
+            height: 40px;
+            padding: 0 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text-primary);
+            font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
+            font-family: inherit;
+            outline: none;
+            transition: border-color var(--duration) ease, box-shadow var(--duration) ease;
+        }
+        .tool-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-lighter);
+        }
+        .tool-select {
+            height: 40px;
+            padding: 0 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text-primary);
+            font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+        }
+        .tool-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .tool-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .tool-error {
+            display: none;
+            padding: 10px 12px;
+            background: #FEE2E2;
+            color: #DC2626;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            margin-bottom: 12px;
+            border: 1px solid #FECACA;
+            word-break: break-word;
+        }
+        .tool-error.show { display: block; }
+        .tool-result-box {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 13px;
+            color: var(--text-primary);
+            min-height: 44px;
+            word-break: break-all;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .tool-info-bar {
+            padding: 12px 14px;
+            background: var(--primary-lighter);
+            border: 1px solid var(--primary-light);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .tool-ts-current {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+        .tool-prefix {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .tool-checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .tool-checkbox input { cursor: pointer; }
+
+        /* 按钮变体（基于 .post-btn） */
+        .post-btn-secondary {
+            background: var(--surface);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        .post-btn-secondary:hover { background: var(--primary-lighter); box-shadow: var(--shadow-sm); }
+        .post-btn-ghost {
+            background: var(--bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .post-btn-ghost:hover { background: var(--accent-5); box-shadow: var(--shadow-sm); }
+
+        /* 正则高亮 */
+        .tool-regex-highlight { line-height: 1.8; }
+        .tool-regex-highlight mark {
+            background: #FEF3C7;
+            color: #92400E;
+            padding: 1px 3px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        .tool-match-item {
+            padding: 8px 10px;
+            border-left: 3px solid var(--primary);
+            background: var(--primary-lighter);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            white-space: normal;
+        }
+        .tool-match-item .group-label {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-right: 4px;
+        }
+
+        /* 颜色选择器 */
+        .tool-color-preview {
+            width: 100%;
+            height: 80px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            transition: background-color 0.2s ease;
+        }
+        .tool-color-picker {
+            width: 100%;
+            height: 46px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* 工具模态框响应式 */
+        @media (max-width: 600px) {
+            .tool-modal { width: 96vw; max-height: 92vh; }
+            .tool-modal-body { padding: 16px; }
+            .tool-modal-header { padding: 14px 16px; }
+            .tool-modal-title { font-size: 16px; }
+            .tool-textarea { min-height: 100px; }
+            .tool-input { height: 38px; }
+            .tool-select { height: 38px; }
+            .tool-actions { gap: 6px; }
+            .tool-actions .post-btn { padding: 8px 14px; font-size: 13px; }
+        }
+        @media (max-width: 380px) {
+            .tool-modal { width: 98vw; max-height: 94vh; }
+            .tool-modal-body { padding: 12px; }
+            .tool-modal-header { padding: 12px 14px; }
+            .tool-textarea { min-height: 80px; }
+            .tool-actions .post-btn { padding: 7px 12px; font-size: 12px; }
+        }
+        @media (max-width: 900px) and (orientation: landscape) {
+            .tool-modal { width: 90vw; max-height: 85vh; }
+            .tool-modal-body { padding: 14px; max-height: 60vh; }
+        }
+    </style>
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -77,31 +353,18 @@
     </script>
 </head>
 <body data-lang="zh-CN">
-    <!-- ==================== 加载动画 ==================== -->
-    <div class="page-loader" id="pageLoader">
-        <div class="loader-content">
-            <div class="loader-logo">UYEA</div>
-            <div class="loader-spinner">
-                <div class="spinner-ring"></div>
-                <div class="spinner-ring"></div>
-                <div class="spinner-ring"></div>
-            </div>
-            <div class="loader-text">加载中</div>
-        </div>
-    </div>
-
     <div class="scroll-progress"></div>
-    <h1 class="sr-only">UYEA 悠野社区 - 论坛、导航、工具</h1>
+    <h1 class="sr-only">UYEA 实用工具箱</h1>
 
-    <!-- ==================== 顶部导航栏 ==================== -->
+    <!-- 顶部导航栏 -->
     <header class="top-header" data-liquid-glass data-lg-strength="0.4">
         <div class="header-container">
-            <a href="/" class="logo-text" data-view="forum">UYEA</a>
+            <a href="/" class="logo-text">UYEA</a>
             <div class="header-right">
                 <nav class="nav-links">
-                    <a href="#" class="nav-link active" data-view="forum" data-i18n="nav.forum">悠野社区</a>
-                    <a href="#" class="nav-link" data-view="nav" data-i18n="nav.home">网站导航</a>
-                    <a href="#" class="nav-link" data-view="tools" data-i18n="nav.tools">线上工具</a>
+                    <a href="/" class="nav-link" data-i18n="nav.forum">悠野社区</a>
+                    <a href="navigation" class="nav-link" data-i18n="nav.home">网站导航</a>
+                    <a href="tools" class="nav-link active" data-i18n="nav.tools">线上工具</a>
                 </nav>
                 <div class="lang-selector" id="langSelector">
                     <button class="lang-icon-btn" id="langIconBtn" aria-label="切换语言">
@@ -170,174 +433,36 @@
     <!-- 移动端下拉菜单 -->
     <div class="dropdown-menu" id="dropdownMenu" data-liquid-glass data-lg-strength="0.5">
         <nav class="menu-nav">
-            <a href="#" class="menu-item active" data-view="forum" data-i18n="nav.forum">悠野社区</a>
-            <a href="#" class="menu-item" data-view="nav" data-i18n="nav.home">网站导航</a>
-            <a href="#" class="menu-item" data-view="tools" data-i18n="nav.tools">线上工具</a>
+            <a href="/" class="menu-item" data-i18n="nav.forum">悠野社区</a>
+            <a href="navigation" class="menu-item" data-i18n="nav.home">网站导航</a>
+            <a href="tools" class="menu-item active" data-i18n="nav.tools">线上工具</a>
         </nav>
         <div class="menu-auth-section">
             <button class="register-btn" data-coming-soon="注册"><span data-i18n="btn.register">注册</span></button>
         </div>
     </div>
 
-    <!-- ==================== 主内容：三视图切换 ==================== -->
+    <!-- 主内容 -->
     <main class="main-content">
         <div class="content-wrapper">
-
-            <!-- ===== 论坛视图 ===== -->
-            <div class="view-container" id="forumView" style="display:block;">
-                <div class="forum-main">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title" data-i18n="nav.forum">悠野社区</div>
-                    </div>
-                </div>
-
-                <div class="forum-toolbar">
-                    <button class="post-btn" data-coming-soon="发布新帖子">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        <span data-i18n="forum.newPost">发布新帖</span>
-                    </button>
-                    <div class="forum-search">
-                        <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        </span>
-                        <input type="text" id="forumSearchInput" data-i18n-placeholder="forum.searchPlaceholder" placeholder="搜索帖子、话题或用户...">
-                    </div>
-                </div>
-
-                <div class="post-list" id="postList"></div>
-
-                <div class="no-results" id="noResults">
-                    <div class="no-results-icon">🔍</div>
-                    <div class="no-results-text" data-i18n="forum.noResults">未找到匹配的帖子</div>
+            <div class="section-header">
+                <div>
+                    <div class="section-title" data-i18n="nav.tools">线上工具</div>
                 </div>
             </div>
-        </div>
+
+            <!-- 论坛风格工具栏：搜索过滤 -->
+            <div class="forum-toolbar">
+                <div class="forum-search">
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </span>
+                    <input type="text" id="toolsSearchInput" data-i18n-placeholder="tools.searchPlaceholder" placeholder="搜索工具名称...">
+                </div>
             </div>
 
-            <!-- ===== 导航视图 ===== -->
-            <div class="view-container" id="navView" style="display:none;">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title" data-i18n="nav.home">网站导航</div>
-                        <div class="section-subtitle" data-i18n="nav.subtitle">AI、生活、工具网站导航</div>
-                    </div>
-                </div>
-                <div class="forum-toolbar">
-                    <div class="forum-search">
-                        <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        </span>
-                        <input type="text" id="navSearchInput" data-i18n-placeholder="nav.searchPlaceholder" placeholder="搜索网站名称...">
-                    </div>
-                </div>
-                <div id="navGroupedView">
-                <!-- AI -->
-                <div class="section-group" id="ai-section" data-category="ai">
-                    <div class="section-header">
-                        <h2 class="section-title" data-i18n="section.ai">AI</h2>
-                        <button class="more-btn" data-target-category="ai"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-                    </div>
-                    <div class="grid-container"></div>
-                </div>
-
-                <!-- 社区 -->
-                <div class="section-group" id="social-section" data-category="social">
-                    <div class="section-header">
-                        <h2 class="section-title" data-i18n="section.social">社区</h2>
-                        <button class="more-btn" data-target-category="social"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-                    </div>
-                    <div class="grid-container"></div>
-                </div>
-
-                <!-- 工具 -->
-                <div class="section-group" id="tools-section" data-category="tools">
-                    <div class="section-header">
-                        <h2 class="section-title" data-i18n="section.tools">工具</h2>
-                        <button class="more-btn" data-target-category="tools"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-                    </div>
-                    <div class="grid-container"></div>
-                </div>
-
-                <!-- 设计 -->
-                <div class="section-group" id="creative-section" data-category="creative">
-                    <div class="section-header">
-                        <h2 class="section-title" data-i18n="section.creative">设计</h2>
-                        <button class="more-btn" data-target-category="creative"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-                    </div>
-                    <div class="grid-container"></div>
-                </div>
-
-                <!-- 购物 -->
-                <div class="section-group" id="shopping-section" data-category="shopping">
-                    <div class="section-header">
-                        <h2 class="section-title" data-i18n="section.shopping">购物</h2>
-                        <button class="more-btn" data-target-category="shopping"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-                    </div>
-                    <div class="grid-container"></div>
-                </div>
-
-                <!-- 资讯 -->
-                <div class="section-group" id="news-section" data-category="news">
-                    <div class="section-header">
-                        <h2 class="section-title" data-i18n="section.news">资讯</h2>
-                        <button class="more-btn" data-target-category="news"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-                    </div>
-                    <div class="grid-container"></div>
-                </div>
-
-                <!-- 生活 -->
-                <div class="section-group" id="life-section" data-category="life">
-                    <div class="section-header">
-                        <h2 class="section-title" data-i18n="section.life">生活</h2>
-                        <button class="more-btn" data-target-category="life"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-                    </div>
-                    <div class="grid-container"></div>
-                </div>
-            </div>
-                <!-- 无结果提示 -->
-            <div class="no-results" id="navNoResults">
-                <div class="no-results-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                </div>
-                <div class="no-results-text" data-i18n="nav.noResults">未找到匹配的网站</div>
-            </div>
-        </div>
-
-        <!-- 底部玻璃导航栏：根据视图动态切换 -->
-        <nav class="bottom-nav" id="bottomNav" data-liquid-glass data-lg-strength="0.5">
-            <button class="bottom-nav-item active" data-tab="recommend">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h4"></path><path d="M9 11V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6"></path><path d="M9 11h6"></path><path d="M9 22V11"></path><path d="M15 11h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"></path></svg>
-                <span data-i18n="bottom.recommend">推荐</span>
-            </button>
-            <button class="bottom-nav-item" data-tab="follow">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
-                <span data-i18n="bottom.follow">关注</span>
-            </button>
-            <button class="bottom-nav-item" data-tab="favorite">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                <span data-i18n="bottom.favorite">收藏</span>
-            </button>
-        </nav>
-            </div>
-
-            <!-- ===== 工具视图 ===== -->
-            <div class="view-container" id="toolsView" style="display:none;">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title" data-i18n="nav.tools">线上工具</div>
-                        <div class="section-subtitle" data-i18n="tools.subtitle">纯前端在线工具，开箱即用，数据不出本地</div>
-                    </div>
-                </div>
-                <div class="forum-toolbar">
-                    <div class="forum-search">
-                        <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        </span>
-                        <input type="text" id="toolsSearchInput" data-i18n-placeholder="tools.searchPlaceholder" placeholder="搜索工具名称...">
-                    </div>
-                </div>
-                <div id="toolsGroupedView">
+            <!-- 分类分组视图 -->
+            <div id="toolsGroupedView">
 
                 <!-- 开发者工具 -->
                 <div class="tool-group section-group" data-category="dev">
@@ -623,7 +748,8 @@
                     </div>
                 </div>
             </div>
-                <!-- 无结果提示 -->
+
+            <!-- 无结果提示 -->
             <div class="no-results" id="toolsNoResults">
                 <div class="no-results-icon">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -671,28 +797,6 @@
                 <span data-i18n="bottom.media">媒体</span>
             </button>
         </nav>
-            </div>
-
-        </div>
-
-        <!-- 底部玻璃导航栏：根据视图动态切换 -->
-        <nav class="bottom-nav" id="bottomNav" data-liquid-glass data-lg-strength="0.5">
-            
-        
-            <button class="bottom-nav-item active" data-tab="recommend">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h4"></path><path d="M9 11V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6"></path><path d="M9 11h6"></path><path d="M9 22V11"></path><path d="M15 11h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"></path></svg>
-                <span data-i18n="bottom.recommend">推荐</span>
-            </button>
-            <button class="bottom-nav-item" data-tab="follow">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
-                <span data-i18n="bottom.follow">关注</span>
-            </button>
-            <button class="bottom-nav-item" data-tab="favorite">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                <span data-i18n="bottom.favorite">收藏</span>
-            </button>
-        
-        </nav>
     </main>
 
     <!-- 工具模态框 -->
@@ -710,222 +814,15 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
-    <!-- 加载动画CSS -->
-    <style>
-        .page-loader {
-            position: fixed; inset: 0; z-index: 99999;
-            background: var(--bg, #F7F3ED);
-            display: flex; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-content { text-align: center; }
-        .loader-logo {
-            font-family: var(--font-serif, Georgia, serif);
-            font-size: clamp(32px, 8vw, 48px);
-            font-weight: 800;
-            background: var(--primary-gradient, linear-gradient(135deg, #1A4D3A 0%, #2D6A4F 100%));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 2px;
-            margin-bottom: 24px;
-            animation: loaderPulse 1.5s ease-in-out infinite;
-        }
-        .loader-spinner {
-            position: relative; width: 48px; height: 48px; margin: 0 auto 16px;
-        }
-        .spinner-ring {
-            position: absolute; inset: 0; border-radius: 50%;
-            border: 3px solid transparent;
-            animation: spinnerSpin 1.2s linear infinite;
-        }
-        .spinner-ring:nth-child(1) { border-top-color: var(--primary, #1A4D3A); animation-delay: 0s; }
-        .spinner-ring:nth-child(2) { border-right-color: var(--accent, #B45309); animation-delay: 0.15s; opacity: 0.7; }
-        .spinner-ring:nth-child(3) { border-bottom-color: var(--primary, #2D6A4F); animation-delay: 0.3s; opacity: 0.4; }
-        .loader-text {
-            font-size: 13px; color: var(--text-muted, #A8A29E);
-            letter-spacing: 1px;
-        }
-        .loader-text::after { content: '...'; animation: loaderDots 1.5s steps(4) infinite; }
-        @keyframes loaderPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.96); } }
-        @keyframes spinnerSpin { to { transform: rotate(360deg); } }
-        @keyframes loaderDots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
-        /* 视图切换动画 */
-        .view-container { animation: viewFadeIn 0.25s ease; }
-        @keyframes viewFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
-
-    <script src="/JS/liquid-glass.js?v=0.6.56" defer></script>
-    <script src="/JS/config.js?v=0.6.56" defer></script>
-    <script src="/JS/script.js?v=0.6.56" defer></script>
-    <script src="/JS/tools.js?v=0.6.56" defer></script>
-    <script src="/JS/forum.js?v=0.6.56" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.55" defer></script>
+    <script src="/JS/config.js?v=0.6.55" defer></script>
+    <script src="/JS/script.js?v=0.6.55" defer></script>
+    <script src="/JS/tools.js?v=0.6.55" defer></script>
     <script>
-        // ==================== 加载动画 ====================
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loader = document.getElementById('pageLoader');
-                if (loader) loader.classList.add('hidden');
-            }, 300);
-        });
-
-        // ==================== 视图切换系统 ====================
-        const VIEWS = {
-            forum: { bottomNav: 'forum', searchInput: 'forumSearchInput' },
-            nav: { bottomNav: 'nav', searchInput: 'navSearchInput' },
-            tools: { bottomNav: 'tools', searchInput: 'toolsSearchInput' }
-        };
-
-        // 底部导航HTML缓存
-        const BOTTOM_NAVS = {
-            forum: `<button class="bottom-nav-item active" data-tab="recommend">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h4"></path><path d="M9 11V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6"></path><path d="M9 11h6"></path><path d="M9 22V11"></path><path d="M15 11h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"></path></svg>
-                <span data-i18n="bottom.recommend">推荐</span>
-            </button>
-            <button class="bottom-nav-item" data-tab="follow">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
-                <span data-i18n="bottom.follow">关注</span>
-            </button>
-            <button class="bottom-nav-item" data-tab="favorite">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                <span data-i18n="bottom.favorite">收藏</span>
-            </button>`,
-            nav: `<button class="bottom-nav-item active" data-category="all">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                <span data-i18n="bottom.all">全部</span>
-            </button>
-            <button class="bottom-nav-item" data-category="ai">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10 10 10 0 0 0 10-10 10 10 0 0 0-10-10z"></path><path d="M8 14v-4M8 14h2M16 14v-4M16 14l-2-2M16 14l2-2"></path></svg>
-                <span data-i18n="bottom.ai">AI</span>
-            </button>
-            <button class="bottom-nav-item" data-category="social">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                <span data-i18n="bottom.social">社区</span>
-            </button>
-            <button class="bottom-nav-item" data-category="tools">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
-                <span data-i18n="bottom.tools">工具</span>
-            </button>
-            <button class="bottom-nav-item" data-category="creative">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
-                <span data-i18n="bottom.creative">设计</span>
-            </button>
-            <button class="bottom-nav-item" data-category="shopping">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                <span data-i18n="bottom.shopping">购物</span>
-            </button>
-            <button class="bottom-nav-item" data-category="news">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"></path></svg>
-                <span data-i18n="bottom.news">资讯</span>
-            </button>
-            <button class="bottom-nav-item" data-category="life">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <span data-i18n="bottom.life">生活</span>
-            </button>`,
-            tools: `<button class="bottom-nav-item active" data-category="all">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                <span data-i18n="bottom.all">全部</span>
-            </button>
-            <button class="bottom-nav-item" data-category="dev">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                <span data-i18n="bottom.dev">开发</span>
-            </button>
-            <button class="bottom-nav-item" data-category="text">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
-                <span data-i18n="bottom.text">文本</span>
-            </button>
-            <button class="bottom-nav-item" data-category="design">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
-                <span data-i18n="bottom.design">设计</span>
-            </button>
-            <button class="bottom-nav-item" data-category="gen">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                <span data-i18n="bottom.gen">生成</span>
-            </button>
-            <button class="bottom-nav-item" data-category="convert">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
-                <span data-i18n="bottom.convert">转换</span>
-            </button>
-            <button class="bottom-nav-item" data-category="net">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                <span data-i18n="bottom.net">网络</span>
-            </button>
-            <button class="bottom-nav-item" data-category="office">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                <span data-i18n="bottom.office">办公</span>
-            </button>
-            <button class="bottom-nav-item" data-category="media">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-                <span data-i18n="bottom.media">媒体</span>
-            </button>`
-        };
-
-        let currentView = 'forum';
-
-        function switchView(viewName) {
-            if (!VIEWS[viewName] || currentView === viewName) return;
-            currentView = viewName;
-
-            // 切换视图容器
-            document.querySelectorAll('.view-container').forEach(v => v.style.display = 'none');
-            const target = document.getElementById(viewName + 'View');
-            if (target) {
-                target.style.display = 'block';
-                // 重新触发动画
-                target.style.animation = 'none';
-                target.offsetHeight;
-                target.style.animation = '';
-            }
-
-            // 更新nav-link active状态
-            document.querySelectorAll('.nav-link[data-view]').forEach(link => {
-                link.classList.toggle('active', link.dataset.view === viewName);
-            });
-            document.querySelectorAll('.menu-item[data-view]').forEach(link => {
-                link.classList.toggle('active', link.dataset.view === viewName);
-            });
-
-            // 更新底部导航
-            const bottomNav = document.getElementById('bottomNav');
-            if (bottomNav && BOTTOM_NAVS[viewName]) {
-                bottomNav.innerHTML = BOTTOM_NAVS[viewName];
-            }
-
-            // 滚动到顶部
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // 通知各模块视图已切换
-            window.dispatchEvent(new CustomEvent('viewchange', { detail: { view: viewName } }));
-
-            // 更新URL hash
-            history.replaceState(null, '', viewName === 'forum' ? '#/' : '#/' + viewName);
-        }
-
-        // nav-link 和 menu-item 点击切换视图
-        document.addEventListener('click', (e) => {
-            const link = e.target.closest('[data-view]');
-            if (link) {
-                e.preventDefault();
-                const view = link.dataset.view;
-                if (link.classList.contains('logo-text') || link.tagName === 'A') {
-                    switchView(view);
-                }
-            }
-        });
-
-        // 根据URL hash或query参数初始化视图
-        const hash = window.location.hash;
-        const params = new URLSearchParams(window.location.search);
-        const viewParam = params.get('view');
-        if (hash === '#/nav' || viewParam === 'nav') switchView('nav');
-        else if (hash === '#/tools' || viewParam === 'tools') switchView('tools');
-        // 清除query参数，保留hash路由
-        if (viewParam) history.replaceState(null, '', viewParam === 'forum' ? '#/' : '#/' + viewParam);
-
-        // ==================== Service Worker ====================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js').then(reg => {
+                    // 检测到新 Service Worker 激活时自动刷新页面，确保加载最新代码
                     navigator.serviceWorker.addEventListener('controllerchange', () => {
                         window.location.reload();
                     });
