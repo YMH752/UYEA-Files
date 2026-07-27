@@ -94,6 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
                 item.classList.add('active');
                 currentCategory = item.dataset.category;
+                // 滚动底部导航到激活项
+                if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
                 // 清空搜索框
                 const searchInput = document.getElementById('toolsSearchInput');
                 if (searchInput) searchInput.value = '';
@@ -131,16 +133,23 @@ document.addEventListener('DOMContentLoaded', () => {
         toolsResizeTimer = setTimeout(applyToolsFilter, 200);
     });
 
-    // 监听视图切换：切换到工具视图时初始化
-    let toolsInitialized = false;
+    // 监听视图切换：切换到工具视图时应用筛选
+    let toolsFilterApplied = false;
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view !== 'tools') return;
         bindToolsEvents();
-        if (!toolsInitialized) {
-            toolsInitialized = true;
+        if (!toolsFilterApplied) {
+            setTimeout(() => {
+                applyToolsFilter();
+                toolsFilterApplied = true;
+            }, 50);
         }
-        setTimeout(applyToolsFilter, 50);
     });
+
+    // 页面加载时立即绑定事件（工具卡片是静态HTML，无需异步加载）
+    bindToolsEvents();
+    // 通知加载动画：工具模块已就绪
+    window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'tools' } }));
 
     // ==================== 工具模态框管理 ====================
     const toolOverlay = document.getElementById('toolOverlay');

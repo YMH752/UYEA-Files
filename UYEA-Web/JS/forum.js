@@ -51,7 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadPosts() {
-        if (!list) return;
+        if (!list) {
+            window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'forum' } }));
+            return;
+        }
 
         // 骨架屏
         list.innerHTML = Array(5).fill(0).map(() => `
@@ -85,6 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">${esc(e.message)}</div>
                 </div>
             `;
+        } finally {
+            // 无论成功或失败，都通知加载动画：论坛模块已就绪
+            window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'forum' } }));
         }
     }
 

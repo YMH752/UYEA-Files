@@ -303,10 +303,14 @@
         });
     }
 
-    // 初始化导航视图（首次切换到导航视图时调用）
+    // 初始化导航视图（页面加载时即预加载数据，首次切换时再计算布局）
+    let navFilterApplied = false;
     function initNavView() {
         if (navInitialized) {
-            applyNavFilter();
+            if (document.getElementById('navView')?.style.display !== 'none') {
+                applyNavFilter();
+                navFilterApplied = true;
+            }
             bindNavEvents();
             return;
         }
@@ -325,14 +329,22 @@
                         grid.innerHTML = nav[cat].map(navCardHtml).join('') + addCardHtml();
                     }
                 });
-                applyNavFilter();
+                // 如果导航视图当前可见，立即应用筛选；否则延迟到首次切换
+                if (document.getElementById('navView')?.style.display !== 'none') {
+                    applyNavFilter();
+                    navFilterApplied = true;
+                }
                 document.querySelectorAll('#navView .add-card').forEach(btn => {
                     btn.addEventListener('click', (e) => { e.preventDefault(); });
                 });
                 bindNavEvents();
+                // 通知加载动画：导航模块已就绪
+                window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'nav' } }));
             })
             .catch(err => {
                 console.warn('导航数据加载失败:', err);
+                // 即使失败也通知就绪，避免加载动画卡死
+                window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'nav' } }));
             });
     }
 
@@ -343,6 +355,8 @@
                 document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
                 item.classList.add('active');
                 navCurrentCategory = item.dataset.category;
+                // 滚动底部导航到激活项
+                scrollBottomNavToActive();
                 const searchInput = document.getElementById('navSearchInput');
                 if (searchInput) searchInput.value = '';
                 applyNavFilter();
@@ -376,12 +390,22 @@
         }, 200);
     });
 
-    // 监听视图切换：切换到导航视图时初始化
+    // 监听视图切换：切换到导航视图时应用筛选（首次切换计算布局）
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view === 'nav') {
-            setTimeout(initNavView, 50);
+            if (navInitialized && !navFilterApplied) {
+                setTimeout(() => {
+                    applyNavFilter();
+                    navFilterApplied = true;
+                }, 50);
+            } else {
+                setTimeout(initNavView, 50);
+            }
         }
     });
+
+    // 页面加载时立即预加载导航数据（不等待视图切换）
+    initNavView();
 
     // ==================== 字体异步加载 ====================
     if (document.fonts && document.fonts.load) {
