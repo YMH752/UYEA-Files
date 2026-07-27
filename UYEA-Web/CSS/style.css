@@ -361,25 +361,21 @@ a { color: var(--primary); text-decoration: none; }
     justify-content: center;
     gap: 4px;
     width: 44px; height: 44px;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
+    background: transparent;
+    border: none;
     border-radius: 10px;
     cursor: pointer;
-    color: var(--primary);
-    transition: all var(--duration) var(--ease-smooth);
-    box-shadow: inset 0 1px 0 var(--glass-highlight);
+    color: var(--text-secondary);
+    transition: color var(--duration) var(--ease-smooth);
     text-shadow: var(--text-shadow-glass);
 }
 
 .lang-icon-btn:hover {
-    background: var(--glass-bg);
+    color: var(--primary);
 }
 
 .lang-icon-btn.active {
-    border-color: var(--primary);
-    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 0 0 2px var(--primary-lighter);
+    color: var(--primary);
 }
 
 .lang-current {
@@ -447,20 +443,17 @@ a { color: var(--primary); text-decoration: none; }
     align-items: center;
     justify-content: center;
     width: 40px; height: 40px;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
+    background: transparent;
+    border: none;
     cursor: pointer;
-    color: var(--primary);
+    color: var(--text-secondary);
     flex-shrink: 0;
-    transition: all var(--duration) var(--ease-smooth);
-    box-shadow: inset 0 1px 0 var(--glass-highlight);
+    transition: color var(--duration) var(--ease-smooth);
     border-radius: 50%;
 }
 
 .user-btn:hover {
-    background: var(--glass-bg);
+    color: var(--primary);
 }
 
 /* ---------- 常驻搜索栏（顶部居中） ---------- */
@@ -595,19 +588,21 @@ a { color: var(--primary); text-decoration: none; }
     align-items: center;
     justify-content: center;
     width: 40px; height: 40px;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-full);
-    background: var(--glass-bg);
-    color: var(--text-primary);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
     cursor: pointer;
     flex-shrink: 0;
     transition: color var(--duration) ease;
+    border-radius: var(--radius-full);
+}
+
+.mobile-search-toggle:hover {
+    color: var(--primary);
 }
 
 .mobile-search-toggle.active {
-    background: var(--primary-lighter);
     color: var(--primary);
-    border-color: var(--primary-light);
 }
 
 /* 搜索下拉面板：颜色加深防融合，模糊度拉高，居中显示 */
@@ -668,6 +663,11 @@ a { color: var(--primary); text-decoration: none; }
     box-shadow: 0 0 0 0.5px var(--primary-light);
 }
 
+/* 咖啡主题：搜索引擎选中背景加深 */
+html[data-theme="coffee"] .mobile-engine-option.active {
+    background: #E0D0BC;
+}
+
 .mobile-search-input-row {
     display: flex;
     gap: 8px;
@@ -690,7 +690,7 @@ a { color: var(--primary); text-decoration: none; }
 
 .mobile-search-input:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-lighter);
+    outline: none;
 }
 
 .mobile-search-submit {
@@ -1368,26 +1368,22 @@ html[data-theme="coffee"] .section-title {
     align-items: center;
     justify-content: center;
     width: 44px; height: 44px;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
+    background: transparent;
+    border: none;
     border-radius: 50%;
     cursor: pointer;
-    color: var(--primary);
+    color: var(--text-secondary);
     flex-shrink: 0;
-    transition: background var(--duration) var(--ease-smooth);
+    transition: color var(--duration) var(--ease-smooth);
     position: relative;
     overflow: hidden;
-    box-shadow: inset 0 1px 0 var(--glass-highlight);
     text-shadow: var(--text-shadow-glass);
 }
 
-.theme-icon-btn:hover { background: var(--glass-bg); }
+.theme-icon-btn:hover { color: var(--primary); }
 
 .theme-icon-btn.active {
-    border-color: var(--primary);
-    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 0 0 2px var(--primary-lighter);
+    color: var(--primary);
 }
 
 .theme-icon-btn svg { transition: opacity 0.3s ease; }
