@@ -450,7 +450,7 @@ a { color: var(--primary); text-decoration: none; }
     color: var(--text-secondary);
     flex-shrink: 0;
     transition: color var(--duration) var(--ease-smooth), box-shadow var(--duration) var(--ease-smooth);
-    border-radius: 50%;
+    border-radius: 10px;
 }
 
 .user-btn:hover {
@@ -600,7 +600,7 @@ a { color: var(--primary); text-decoration: none; }
     cursor: pointer;
     flex-shrink: 0;
     transition: color var(--duration) ease, box-shadow var(--duration) ease;
-    border-radius: var(--radius-full);
+    border-radius: 10px;
 }
 
 .mobile-search-toggle:hover {
@@ -1425,7 +1425,7 @@ html[data-theme="coffee"] .section-title {
     width: 44px; height: 44px;
     background: transparent;
     border: none;
-    border-radius: 50%;
+    border-radius: 10px;
     cursor: pointer;
     color: var(--text-secondary);
     flex-shrink: 0;
