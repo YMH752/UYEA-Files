@@ -56,6 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // 该分组无可见卡片则隐藏整个分组
             group.style.display = (groupVisible > 0) ? '' : 'none';
             visibleCount += groupVisible;
+
+            // 重新触发卡片切换动画（Apple/华为/OPPO风格：弹性缩放+淡入）
+            let cardIdx = 0;
+            cards.forEach(card => {
+                if (card.style.display !== 'none') {
+                    card.style.animation = 'none';
+                    card.offsetHeight; // 强制回流以重置动画
+                    card.style.animation = `cardSwitchIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(cardIdx * 0.025, 0.3)}s both`;
+                    cardIdx++;
+                }
+            });
         });
 
         if (noResults) noResults.classList.toggle('show', visibleCount === 0);

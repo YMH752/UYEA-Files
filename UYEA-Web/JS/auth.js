@@ -519,12 +519,16 @@ document.addEventListener('DOMContentLoaded', () => {
         authOverlay.classList.add('show');
         authModal.classList.add('show');
         document.body.style.overflow = 'hidden';
+        const userBtn = document.querySelector('.user-btn');
+        if (userBtn) userBtn.classList.add('active');
     }
 
     function closeAuthModal() {
         authOverlay.classList.remove('show');
         authModal.classList.remove('show');
         document.body.style.overflow = '';
+        const userBtn = document.querySelector('.user-btn');
+        if (userBtn) userBtn.classList.remove('active');
     }
 
     function renderAuthModal() {
