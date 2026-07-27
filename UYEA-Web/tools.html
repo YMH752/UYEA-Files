@@ -24,12 +24,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.48" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.48" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.50" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.50" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
-        :root{--primary:#1A4D3A;--primary-gradient:linear-gradient(135deg,#1A4D3A 0%,#2D6A4F 100%);--accent:#B45309;--ink:#292524;--bg:#F7F3ED;--surface:#FFFFFF;--surface-warm:#FFFBF5;--border:#E7DFD3;--glass-bg:rgba(255,251,245,0.18);--glass-border:rgba(255,255,255,0.25);--glass-highlight:rgba(255,255,255,0.9);--text-primary:#292524;--text-secondary:#57534E;--text-muted:#A8A29E;--header-h:64px;--radius-md:10px;--radius-sm:6px;--shadow-sm:0 1px 3px rgba(41,37,36,0.08);--font-serif:'Playfair Display','Noto Serif SC',Georgia,serif}
+        :root{--primary:#1A4D3A;--primary-gradient:linear-gradient(135deg,#1A4D3A 0%,#2D6A4F 100%);--accent:#B45309;--ink:#292524;--bg:#F7F3ED;--surface:#FFFFFF;--surface-warm:#FFFBF5;--border:#E7DFD3;--glass-bg:rgba(255,251,245,0.18);--glass-border:rgba(255,255,255,0.25);--glass-highlight:rgba(255,255,255,0.9);--text-primary:#292524;--text-secondary:#57534E;--text-muted:#A8A29E;--header-h:64px;--radius-md:10px;--radius-sm:6px;--radius-full:999px;--shadow-sm:0 1px 3px rgba(41,37,36,0.08);--font-serif:'Playfair Display','Noto Serif SC',Georgia,serif}
         *{margin:0;padding:0;box-sizing:border-box}
         html{overflow-x:hidden;overflow-y:scroll;scrollbar-gutter:stable;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC',system-ui,sans-serif}
         body{background:var(--bg);color:var(--text-primary);line-height:1.6}
@@ -42,26 +42,34 @@
         .section-title{font-family:var(--font-serif);font-size:clamp(24px,4vw,32px);font-weight:700;color:var(--ink);letter-spacing:-0.5px}
         .section-header{margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
         .section-subtitle{font-size:13px;color:var(--text-muted);margin-top:4px}
-        .grid-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
-        .card-item{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);text-decoration:none;color:var(--text-primary);aspect-ratio:2/1;overflow:hidden;cursor:pointer}
-        .card-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:#ECF5F1;flex-shrink:0;font-size:24px}
-        .card-title{font-size:clamp(12px,3vw,14px);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .tool-group{margin-bottom:32px}
+        .grid-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0 16px}
+        .card-item{display:flex;align-items:center;gap:8px;padding:6px 4px;background:transparent;border:none;border-bottom:1px solid var(--border);border-radius:0;text-decoration:none;color:var(--text-primary);overflow:hidden;min-width:0;cursor:pointer}
+        .card-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-full);background:transparent;flex-shrink:0;font-size:16px}
+        .icon-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--primary-lighter);border:1.5px solid var(--primary-light);border-radius:var(--radius-full);font-size:14px;font-weight:700;color:var(--primary);text-transform:uppercase}
+        .card-title{font-size:clamp(12px,2.5vw,14px);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .add-card{display:flex;align-items:center;gap:8px;padding:6px 4px;background:transparent;border:none;border-bottom:1px dashed var(--border);border-radius:0;color:var(--text-muted);cursor:pointer;overflow:hidden;min-width:0;font-family:inherit}
+        .add-card .card-icon{border:1.5px dashed var(--border);background:transparent;color:var(--text-muted)}
+        .add-card .add-card-title{font-size:clamp(12px,2.5vw,14px);font-weight:500;color:var(--text-muted)}
+        .add-card:hover{color:var(--primary);border-bottom-color:var(--primary)}
+        .add-card:hover .card-icon{border-color:var(--primary);color:var(--primary)}
+        .add-card:hover .add-card-title{color:var(--primary)}
+        .tool-group{margin-bottom:28px}
         .main-content{padding-bottom:140px}
+        .no-results-icon svg{width:40px;height:40px;color:var(--text-muted)}
         /* 关键响应式：防止FOUC */
-        @media(max-width:1024px){.header-container,.content-wrapper{max-width:960px}.grid-container{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+        @media(max-width:1024px){.header-container,.content-wrapper{max-width:960px}}
         @media(max-width:900px){.nav-links{display:none}.menu-toggle{display:flex}}
-        @media(max-width:600px){.main-content{padding:16px 12px 110px}.header-right{gap:8px}.lang-btn{padding:6px 10px;min-width:40px;font-size:12px}.header-actions{gap:6px;padding-left:8px}.grid-container{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}}
-        @media(max-width:480px){.main-content{padding:12px 10px 110px}.header-container{padding:0 14px}.grid-container{grid-template-columns:repeat(2,1fr);gap:8px}.card-item{padding:10px 12px;aspect-ratio:2.2/1}.card-icon{width:32px;height:32px;font-size:20px}}
-        
-        @media(max-width:320px){.main-content{padding:10px 8px 100px}.header-container{padding:0 10px}.logo-text{font-size:20px}.grid-container{grid-template-columns:1fr}}
+        @media(max-width:600px){.main-content{padding:16px 12px 110px}.header-right{gap:8px}.lang-btn{padding:6px 10px;min-width:40px;font-size:12px}.header-actions{gap:6px;padding-left:8px}}
+        @media(max-width:480px){.main-content{padding:12px 10px 110px}.header-container{padding:0 14px}.grid-container{grid-template-columns:repeat(2,1fr);gap:0 12px}.card-item{padding:5px 4px}.card-icon{width:24px;height:24px;font-size:13px}.icon-placeholder{font-size:12px}.add-card{padding:5px 4px}.add-card .card-icon{width:24px;height:24px;font-size:13px}}
+
+        @media(max-width:320px){.main-content{padding:10px 8px 100px}.header-container{padding:0 10px}.logo-text{font-size:20px}}
         @media(max-width:900px) and (orientation:landscape){.top-header{height:48px}.main-content{padding-top:12px;padding-bottom:90px}}
-        @media(min-width:1401px){.header-container,.content-wrapper{max-width:1600px;padding:0 32px}.main-content{padding:32px 32px 150px}.grid-container{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}}
+        @media(min-width:1401px){.header-container,.content-wrapper{max-width:1600px;padding:0 32px}.main-content{padding:32px 32px 150px}}
         /* iOS安全区域 */
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.48" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.50" media="all">
 
     <!-- 工具页面专属样式 -->
     <style>
@@ -457,85 +465,103 @@
             <!-- 分类分组视图 -->
             <div id="toolsGroupedView">
                 <!-- 开发者工具 -->
-                <div class="tool-group" data-category="dev">
+                <div class="tool-group section-group" data-category="dev">
                     <div class="section-header">
-                        <h2 class="section-title">💻 开发者工具</h2>
+                        <h2 class="section-title" data-i18n="section.dev">开发者工具</h2>
                     </div>
                     <div class="grid-container">
                         <a class="card-item" role="button" tabindex="0" data-tool="json" data-title="JSON 格式化" title="JSON 格式化">
-                            <div class="card-icon">🗂️</div>
+                            <div class="card-icon"><span class="icon-placeholder">J</span></div>
                             <div class="card-info"><div class="card-title">JSON 格式化</div></div>
                         </a>
                         <a class="card-item" role="button" tabindex="0" data-tool="base64" data-title="Base64 编解码" title="Base64 编解码">
-                            <div class="card-icon">🔣</div>
+                            <div class="card-icon"><span class="icon-placeholder">B</span></div>
                             <div class="card-info"><div class="card-title">Base64 编解码</div></div>
                         </a>
                         <a class="card-item" role="button" tabindex="0" data-tool="regex" data-title="正则表达式测试" title="正则表达式测试">
-                            <div class="card-icon">🔍</div>
+                            <div class="card-icon"><span class="icon-placeholder">正</span></div>
                             <div class="card-info"><div class="card-title">正则表达式测试</div></div>
                         </a>
                         <a class="card-item" role="button" tabindex="0" data-tool="timestamp" data-title="时间戳转换" title="时间戳转换">
-                            <div class="card-icon">⏱️</div>
+                            <div class="card-icon"><span class="icon-placeholder">时</span></div>
                             <div class="card-info"><div class="card-title">时间戳转换</div></div>
                         </a>
+                        <button class="add-card" data-category="dev" data-i18n-title="tools.addTool" title="添加工具">
+                            <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                            <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
+                        </button>
                     </div>
                 </div>
 
                 <!-- 设计美化 -->
-                <div class="tool-group" data-category="design">
+                <div class="tool-group section-group" data-category="design">
                     <div class="section-header">
-                        <h2 class="section-title">🎨 设计美化</h2>
+                        <h2 class="section-title" data-i18n="section.design">设计美化</h2>
                     </div>
                     <div class="grid-container">
                         <a class="card-item" role="button" tabindex="0" data-tool="color" data-title="颜色选择器" title="颜色选择器">
-                            <div class="card-icon">🎨</div>
+                            <div class="card-icon"><span class="icon-placeholder">颜</span></div>
                             <div class="card-info"><div class="card-title">颜色选择器</div></div>
                         </a>
                         <a class="card-item" role="button" tabindex="0" data-tool="uuid" data-title="UUID 生成器" title="UUID 生成器">
-                            <div class="card-icon">🆔</div>
+                            <div class="card-icon"><span class="icon-placeholder">U</span></div>
                             <div class="card-info"><div class="card-title">UUID 生成器</div></div>
                         </a>
+                        <button class="add-card" data-category="design" data-i18n-title="tools.addTool" title="添加工具">
+                            <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                            <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
+                        </button>
                     </div>
                 </div>
 
                 <!-- 办公效率（占位） -->
-                <div class="tool-group" data-category="office">
+                <div class="tool-group section-group" data-category="office">
                     <div class="section-header">
-                        <h2 class="section-title">📂 办公效率</h2>
+                        <h2 class="section-title" data-i18n="section.office">办公效率</h2>
                     </div>
                     <div class="grid-container">
                         <a class="card-item" role="button" tabindex="0" data-coming-soon="PDF 转 Word" data-title="PDF 转 Word" title="PDF 转 Word">
-                            <div class="card-icon">📄</div>
+                            <div class="card-icon"><span class="icon-placeholder">P</span></div>
                             <div class="card-info"><div class="card-title">PDF 转 Word</div></div>
                         </a>
                         <a class="card-item" role="button" tabindex="0" data-coming-soon="流程图绘制" data-title="流程图绘制" title="流程图绘制">
-                            <div class="card-icon">📊</div>
+                            <div class="card-icon"><span class="icon-placeholder">流</span></div>
                             <div class="card-info"><div class="card-title">流程图绘制</div></div>
                         </a>
+                        <button class="add-card" data-category="office" data-i18n-title="tools.addTool" title="添加工具">
+                            <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                            <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
+                        </button>
                     </div>
                 </div>
 
                 <!-- 多媒体处理（占位） -->
-                <div class="tool-group" data-category="media">
+                <div class="tool-group section-group" data-category="media">
                     <div class="section-header">
-                        <h2 class="section-title">🎥 多媒体处理</h2>
+                        <h2 class="section-title" data-i18n="section.media">多媒体处理</h2>
                     </div>
                     <div class="grid-container">
                         <a class="card-item" role="button" tabindex="0" data-coming-soon="图片压缩" data-title="图片压缩" title="图片压缩">
-                            <div class="card-icon">🖼️</div>
+                            <div class="card-icon"><span class="icon-placeholder">图</span></div>
                             <div class="card-info"><div class="card-title">图片压缩</div></div>
                         </a>
                         <a class="card-item" role="button" tabindex="0" data-coming-soon="视频转 GIF" data-title="视频转 GIF" title="视频转 GIF">
-                            <div class="card-icon">🎞️</div>
+                            <div class="card-icon"><span class="icon-placeholder">视</span></div>
                             <div class="card-info"><div class="card-title">视频转 GIF</div></div>
                         </a>
+                        <button class="add-card" data-category="media" data-i18n-title="tools.addTool" title="添加工具">
+                            <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                            <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
+                        </button>
                     </div>
                 </div>
             </div>
 
             <!-- 无结果提示 -->
             <div class="no-results" id="toolsNoResults">
-                <div class="no-results-icon">🔍</div>
+                <div class="no-results-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </div>
                 <div class="no-results-text" data-i18n="tools.noResults">未找到匹配的工具</div>
             </div>
         </div>
@@ -548,19 +574,19 @@
             </button>
             <button class="bottom-nav-item" data-category="dev">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                <span>开发</span>
+                <span data-i18n="bottom.dev">开发</span>
             </button>
             <button class="bottom-nav-item" data-category="design">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
-                <span>设计</span>
+                <span data-i18n="bottom.design">设计</span>
             </button>
             <button class="bottom-nav-item" data-category="office">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                <span>办公</span>
+                <span data-i18n="bottom.office">办公</span>
             </button>
             <button class="bottom-nav-item" data-category="media">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-                <span>媒体</span>
+                <span data-i18n="bottom.media">媒体</span>
             </button>
         </nav>
     </main>
@@ -580,10 +606,10 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
-    <script src="/JS/liquid-glass.js?v=0.6.48" defer></script>
-    <script src="/JS/config.js?v=0.6.48" defer></script>
-    <script src="/JS/script.js?v=0.6.48" defer></script>
-    <script src="/JS/tools.js?v=0.6.48" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.50" defer></script>
+    <script src="/JS/config.js?v=0.6.50" defer></script>
+    <script src="/JS/script.js?v=0.6.50" defer></script>
+    <script src="/JS/tools.js?v=0.6.50" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

@@ -130,6 +130,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 添加工具按钮：静默处理，上传/添加功能后续开发
+    document.querySelectorAll('.add-card').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+        });
+    });
+
     toolCloseBtn.addEventListener('click', closeTool);
     toolOverlay.addEventListener('click', closeTool);
     document.addEventListener('keydown', (e) => {
