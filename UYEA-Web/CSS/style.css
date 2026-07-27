@@ -807,6 +807,7 @@ html[data-theme="coffee"] .section-title {
     gap: 6px;
     position: relative;
     overflow: hidden;
+    isolation: isolate;
 }
 
 .post-btn::before {
@@ -818,6 +819,7 @@ html[data-theme="coffee"] .section-title {
     background: rgba(255, 255, 255, 0.3);
     transform: translate(-50%, -50%);
     transition: width 0.5s ease, height 0.5s ease;
+    z-index: -1;
 }
 
 .post-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
