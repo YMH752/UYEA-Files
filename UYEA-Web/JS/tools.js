@@ -128,10 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view !== 'tools') return;
         bindToolsEvents();
-        // 恢复底部导航active状态（switchView会重置底部导航HTML）
-        document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
-        const activeBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${currentCategory}"]`);
-        if (activeBtn) activeBtn.classList.add('active');
+        // 切换视图时统一重置为第一个分类（全部），不保留历史位置
+        currentCategory = 'all';
+        // 底部导航HTML已默认第一项active，无需额外操作
         // 重新应用筛选（视图从隐藏变可见，需重新计算布局）
         setTimeout(() => {
             applyToolsFilter();

@@ -752,7 +752,7 @@
         }, 150);
     });
 
-    // 监听视图切换：切换到导航视图时恢复分类状态并重新应用筛选
+    // 监听视图切换：切换到导航视图时重置为第一个分类（全部）并重新应用筛选
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view === 'nav') {
             if (!navInitialized) {
@@ -761,10 +761,9 @@
             }
             // switchView替换了底部导航HTML，需重新绑定事件
             bindNavEvents();
-            // 恢复底部导航active状态（switchView会重置底部导航HTML）
-            document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
-            const activeBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${navCurrentCategory}"]`);
-            if (activeBtn) activeBtn.classList.add('active');
+            // 切换视图时统一重置为第一个分类（全部），不保留历史位置
+            navCurrentCategory = 'all';
+            // 底部导航HTML已默认第一项active，无需额外操作
             // 重新应用筛选（视图从隐藏变可见，需重新计算布局）
             setTimeout(() => {
                 applyNavFilter();

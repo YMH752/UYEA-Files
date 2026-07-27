@@ -105,14 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 监听视图切换：切换回论坛视图时恢复分类状态
+    // 监听视图切换：切换回论坛视图时重置为第一个分类（推荐）
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view === 'forum') {
             bindForumEvents();
-            // 恢复底部导航active状态（switchView会重置底部导航HTML）
-            document.querySelectorAll('#bottomNav .bottom-nav-item[data-tab]').forEach(x => x.classList.remove('active'));
-            const activeBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-tab="${currentFeed}"]`);
-            if (activeBtn) activeBtn.classList.add('active');
+            // 切换视图时统一重置为第一个分类（推荐），不保留历史位置
+            currentFeed = 'recommend';
+            // 底部导航HTML已默认第一项active，无需额外操作
+            filterPosts();
             if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
         }
     });

@@ -25,8 +25,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.80" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.80" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.81" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.81" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -70,7 +70,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.80" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.81" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -783,13 +783,13 @@
         }
     </style>
 
-    <script src="/JS/liquid-glass.js?v=0.6.80" defer></script>
-    <script src="/JS/config.js?v=0.6.80" defer></script>
-    <script src="/JS/utils.js?v=0.6.80" defer></script>
-    <script src="/JS/script.js?v=0.6.80" defer></script>
-    <script src="/JS/tools.js?v=0.6.80" defer></script>
-    <script src="/JS/forum.js?v=0.6.80" defer></script>
-    <script src="/JS/auth.js?v=0.6.80" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.81" defer></script>
+    <script src="/JS/config.js?v=0.6.81" defer></script>
+    <script src="/JS/utils.js?v=0.6.81" defer></script>
+    <script src="/JS/script.js?v=0.6.81" defer></script>
+    <script src="/JS/tools.js?v=0.6.81" defer></script>
+    <script src="/JS/forum.js?v=0.6.81" defer></script>
+    <script src="/JS/auth.js?v=0.6.81" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
@@ -973,11 +973,12 @@
                 return closest;
             }
 
-            // 找出与指示器矩形重叠的所有项
+            // 找出指示器中心所在的项（缩小触发范围：仅指示器中心覆盖到的项才高亮）
             function findOverlappingItems(indRect) {
+                const indCenter = indRect.left + indRect.width / 2;
                 return items.filter(item => {
                     const r = item.getBoundingClientRect();
-                    return r.left < indRect.right && r.right > indRect.left;
+                    return indCenter >= r.left && indCenter <= r.right;
                 });
             }
 
@@ -1011,6 +1012,8 @@
                     const m = t.match(/translateX\(([-\d.]+)px\)/);
                     initTransform = m ? parseFloat(m[1]) : 0;
                 }
+                // 清除起始位置的选中效果，拖动开始时不显示高亮
+                clearLens();
             }
 
             function onMove(e) {
@@ -1107,11 +1110,13 @@
                     bottomNav.style.display = '';
                     bottomNav.innerHTML = BOTTOM_NAVS[viewName];
                     bottomNav.scrollTo({ left: 0, behavior: 'smooth' });
-                    // 延迟创建凸透镜指示器（等待DOM渲染）
-                    setTimeout(() => {
-                        window.updateBottomNavIndicator();
-                        window.bindBottomNavDrag();
-                    }, 50);
+                    // 延迟创建凸透镜指示器（等待DOM渲染完成，双rAF确保布局已计算）
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            window.updateBottomNavIndicator();
+                            window.bindBottomNavDrag();
+                        });
+                    });
                 }
 
                 // 滚动到顶部
@@ -1137,14 +1142,19 @@
             }
         });
 
-        // 根据URL hash或query参数初始化视图
-        const hash = window.location.hash;
-        const params = new URLSearchParams(window.location.search);
-        const viewParam = params.get('view');
-        if (hash === '#/nav' || viewParam === 'nav') switchView('nav');
-        else if (hash === '#/tools' || viewParam === 'tools') switchView('tools');
-        // 清除query参数，保留hash路由
-        if (viewParam) history.replaceState(null, '', viewParam === 'forum' ? '#/' : '#/' + viewParam);
+        // 优化：刷新后始终从社区页开始，底部导航为"推荐"，其余设置保留用户当前配置
+        history.replaceState(null, '', '#/');
+        // 初始化默认视图（论坛）的底部导航指示器和拖拽
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                window.updateBottomNavIndicator();
+                window.bindBottomNavDrag();
+            });
+        });
+        // 页面完全加载后再次校准指示器位置（字体/图片加载可能影响布局）
+        window.addEventListener('load', () => {
+            requestAnimationFrame(() => window.updateBottomNavIndicator());
+        });
 
         // ==================== 右下角成就式提示弹窗 ====================
         // 全局函数：显示"正在完善中"成就式提示，点击页面任意处自动关闭
@@ -1161,6 +1171,9 @@
 
             // 显示弹窗
             toast.classList.add('show');
+            // 标记刚刚显示，防止同一点击事件的冒泡立即关闭弹窗
+            toast._justShown = true;
+            setTimeout(() => { toast._justShown = false; }, 200);
 
             // 清除之前的定时器
             if (toast._timer) clearTimeout(toast._timer);
@@ -1181,7 +1194,7 @@
 
         // 点击页面任意处自动关闭（延迟绑定，避免立即触发）
         document.addEventListener('click', (e) => {
-            if (achievementToast && achievementToast.classList.contains('show')) {
+            if (achievementToast && achievementToast.classList.contains('show') && !achievementToast._justShown) {
                 // 不处理弹窗自身的点击（已单独绑定）
                 if (e.target.closest('.achievement-toast')) return;
                 achievementToast.classList.remove('show');
