@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </svg>
                     </div>
                     <div class="auth-hero-title">${t('auth.login')}</div>
-                    <div class="auth-hero-subtitle">${t('auth.welcomeBack') || '欢迎回来'}</div>
+                    <div class="auth-hero-subtitle">${t('auth.welcomeBack')}</div>
                 </div>
                 <div class="auth-field">
                     <label class="auth-label" for="loginUsername">${t('auth.username')}</label>
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </svg>
                     </div>
                     <div class="auth-hero-title">${t('auth.register')}</div>
-                    <div class="auth-hero-subtitle">${t('auth.createAccount') || '创建新账户'}</div>
+                    <div class="auth-hero-subtitle">${t('auth.createAccount')}</div>
                 </div>
                 <div class="auth-field">
                     <label class="auth-label" for="regUsername">${t('auth.username')}</label>
@@ -649,10 +649,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter') { e.preventDefault(); passwordInput.focus(); }
         });
 
-        // 切换到注册
+        // 切换到注册：注册功能尚未开放，显示"完善中"提示（保留注册表单代码供未来使用）
         document.getElementById('switchToRegister').addEventListener('click', () => {
-            currentAuthMode = 'register';
-            renderAuthModal();
+            closeAuthModal();
+            if (typeof window.showAchievement === 'function') {
+                window.showAchievement(t('toast.comingSoon') || '正在完善中', t('toast.register') || '注册功能正在完善中，敬请期待');
+            }
         });
 
         // 自动聚焦用户名输入框
