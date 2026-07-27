@@ -25,8 +25,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.79" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.79" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.80" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.80" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -70,7 +70,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.79" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.80" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -708,6 +708,17 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
+    <!-- 右下角成就式提示弹窗 -->
+    <div class="achievement-toast" id="achievementToast" role="alert" aria-live="polite">
+        <div class="achievement-icon" id="achievementIcon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+        </div>
+        <div class="achievement-content">
+            <div class="achievement-title" id="achievementTitle">正在完善中</div>
+            <div class="achievement-desc" id="achievementDesc">该功能正在开发中，敬请期待</div>
+        </div>
+    </div>
+
     <!-- 加载动画CSS -->
     <style>
         .page-loader {
@@ -772,13 +783,13 @@
         }
     </style>
 
-    <script src="/JS/liquid-glass.js?v=0.6.79" defer></script>
-    <script src="/JS/config.js?v=0.6.79" defer></script>
-    <script src="/JS/utils.js?v=0.6.79" defer></script>
-    <script src="/JS/script.js?v=0.6.79" defer></script>
-    <script src="/JS/tools.js?v=0.6.79" defer></script>
-    <script src="/JS/forum.js?v=0.6.79" defer></script>
-    <script src="/JS/auth.js?v=0.6.79" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.80" defer></script>
+    <script src="/JS/config.js?v=0.6.80" defer></script>
+    <script src="/JS/utils.js?v=0.6.80" defer></script>
+    <script src="/JS/script.js?v=0.6.80" defer></script>
+    <script src="/JS/tools.js?v=0.6.80" defer></script>
+    <script src="/JS/forum.js?v=0.6.80" defer></script>
+    <script src="/JS/auth.js?v=0.6.80" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
@@ -948,7 +959,7 @@
             let indicator = null;
             let items = [];
             let initTransform = 0;
-            let lensItem = null;      // 当前被凸透镜放大的项
+            let lensItems = [];       // 当前被凸透镜覆盖的所有项
 
             function findClosestItem(centerX) {
                 let closest = null;
@@ -962,11 +973,31 @@
                 return closest;
             }
 
+            // 找出与指示器矩形重叠的所有项
+            function findOverlappingItems(indRect) {
+                return items.filter(item => {
+                    const r = item.getBoundingClientRect();
+                    return r.left < indRect.right && r.right > indRect.left;
+                });
+            }
+
+            function updateLens(indRect) {
+                const newLens = findOverlappingItems(indRect);
+                const newSet = new Set(newLens);
+                // 移除不再重叠的项
+                lensItems.forEach(item => {
+                    if (!newSet.has(item)) item.classList.remove('lens-active');
+                });
+                // 添加新重叠的项
+                newLens.forEach(item => {
+                    if (!item.classList.contains('lens-active')) item.classList.add('lens-active');
+                });
+                lensItems = newLens;
+            }
+
             function clearLens() {
-                if (lensItem) {
-                    lensItem.classList.remove('lens-active');
-                    lensItem = null;
-                }
+                lensItems.forEach(item => item.classList.remove('lens-active'));
+                lensItems = [];
             }
 
             function onStart(e) {
@@ -998,17 +1029,9 @@
                     indicator.style.transform = `translateY(-50%) translateX(${initTransform + deltaX}px)`;
                     e.preventDefault();
 
-                    // 凸透镜效果：动态放大指示器下方的项
+                    // 凸透镜效果：指示器覆盖范围内所有项都放大突出
                     const indRect = indicator.getBoundingClientRect();
-                    const indCenter = indRect.left + indRect.width / 2;
-                    const closest = findClosestItem(indCenter);
-                    if (closest !== lensItem) {
-                        clearLens();
-                        if (closest) {
-                            closest.classList.add('lens-active');
-                            lensItem = closest;
-                        }
-                    }
+                    updateLens(indRect);
                 }
             }
 
@@ -1122,6 +1145,49 @@
         else if (hash === '#/tools' || viewParam === 'tools') switchView('tools');
         // 清除query参数，保留hash路由
         if (viewParam) history.replaceState(null, '', viewParam === 'forum' ? '#/' : '#/' + viewParam);
+
+        // ==================== 右下角成就式提示弹窗 ====================
+        // 全局函数：显示"正在完善中"成就式提示，点击页面任意处自动关闭
+        window.showAchievement = function(title, desc) {
+            const toast = document.getElementById('achievementToast');
+            const titleEl = document.getElementById('achievementTitle');
+            const descEl = document.getElementById('achievementDesc');
+            if (!toast) return;
+
+            // 根据点击来源设置优先级文案
+            const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+            titleEl.textContent = title || msgs['toast.comingSoon'] || '正在完善中';
+            descEl.textContent = desc || msgs['toast.comingSoonDesc'] || '该功能正在开发中，敬请期待';
+
+            // 显示弹窗
+            toast.classList.add('show');
+
+            // 清除之前的定时器
+            if (toast._timer) clearTimeout(toast._timer);
+            // 4秒后自动关闭
+            toast._timer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        };
+
+        // 点击弹窗本身关闭
+        const achievementToast = document.getElementById('achievementToast');
+        if (achievementToast) {
+            achievementToast.addEventListener('click', () => {
+                achievementToast.classList.remove('show');
+                if (achievementToast._timer) clearTimeout(achievementToast._timer);
+            });
+        }
+
+        // 点击页面任意处自动关闭（延迟绑定，避免立即触发）
+        document.addEventListener('click', (e) => {
+            if (achievementToast && achievementToast.classList.contains('show')) {
+                // 不处理弹窗自身的点击（已单独绑定）
+                if (e.target.closest('.achievement-toast')) return;
+                achievementToast.classList.remove('show');
+                if (achievementToast._timer) clearTimeout(achievementToast._timer);
+            }
+        });
 
         // ==================== Service Worker ====================
         if ('serviceWorker' in navigator) {

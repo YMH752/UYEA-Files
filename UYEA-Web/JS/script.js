@@ -523,10 +523,15 @@
         updateHeaderEngineLabel();
     });
 
-    // ==================== 开发中功能（静默处理，不弹窗） ====================
+    // ==================== 开发中功能：显示成就式提示弹窗 ====================
     document.querySelectorAll('[data-coming-soon]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
+            const name = btn.getAttribute('data-coming-soon') || btn.dataset.title || '';
+            const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+            if (typeof window.showAchievement === 'function') {
+                window.showAchievement(msgs['toast.comingSoon'] || '正在完善中', name + (msgs['toast.comingSoonDesc'] || ' · 正在开发中，敬请期待'));
+            }
         });
     });
 
@@ -676,7 +681,13 @@
                     navFilterApplied = true;
                 }
                 document.querySelectorAll('#navView .add-card').forEach(btn => {
-                    btn.addEventListener('click', (e) => { e.preventDefault(); });
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if (typeof window.showAchievement === 'function') {
+                            const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+                            window.showAchievement(msgs['toast.comingSoon'] || '正在完善中', msgs['toast.addSite'] || '添加网站功能正在开发中');
+                        }
+                    });
                 });
                 bindNavEvents();
                 // 通知加载动画：导航模块已就绪

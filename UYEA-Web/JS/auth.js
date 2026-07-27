@@ -98,24 +98,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const authModalClose = document.getElementById('authModalClose');
     const userBtn = document.querySelector('.user-btn');
 
-    // 登录表单 HTML
+    // 登录表单 HTML（重新设计：液态玻璃卡片风格）
     function renderLoginForm() {
         return `
             <div class="auth-form" id="loginForm">
-                <div class="auth-avatar">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                <div class="auth-hero">
+                    <div class="auth-hero-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                            <polyline points="10 17 15 12 10 7"></polyline>
+                            <line x1="15" y1="12" x2="3" y2="12"></line>
+                        </svg>
+                    </div>
+                    <div class="auth-hero-title">${t('auth.login')}</div>
+                    <div class="auth-hero-subtitle">${t('auth.welcomeBack') || '欢迎回来'}</div>
                 </div>
                 <div class="auth-field">
                     <label class="auth-label" for="loginUsername">${t('auth.username')}</label>
-                    <input type="text" class="auth-input" id="loginUsername" placeholder="${t('auth.usernamePlaceholder')}" autocomplete="username" autocapitalize="none">
+                    <div class="auth-input-wrap">
+                        <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <input type="text" class="auth-input" id="loginUsername" placeholder="${t('auth.usernamePlaceholder')}" autocomplete="username" autocapitalize="none">
+                    </div>
                 </div>
                 <div class="auth-field">
                     <label class="auth-label" for="loginPassword">${t('auth.password')}</label>
-                    <div class="auth-password-wrap">
-                        <input type="password" class="auth-input" id="loginPassword" placeholder="${t('auth.passwordPlaceholder')}" autocomplete="current-password">
+                    <div class="auth-input-wrap">
+                        <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <input type="password" class="auth-input auth-input-password" id="loginPassword" placeholder="${t('auth.passwordPlaceholder')}" autocomplete="current-password">
                         <button class="auth-password-toggle" id="loginPasswordToggle" type="button" aria-label="${t('auth.togglePassword')}">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </button>
@@ -129,35 +138,45 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span>${t('auth.noAccount')}</span>
                     <button class="auth-switch-btn" id="switchToRegister">${t('auth.register')}</button>
                 </div>
-                <div class="auth-hint">${t('auth.demoHint')}</div>
             </div>
         `;
     }
 
-    // 注册表单 HTML
+    // 注册表单 HTML（重新设计：液态玻璃卡片风格）
     function renderRegisterForm() {
         return `
             <div class="auth-form" id="registerForm">
-                <div class="auth-avatar">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="8.5" cy="7" r="4"></circle>
-                        <line x1="20" y1="8" x2="20" y2="14"></line>
-                        <line x1="23" y1="11" x2="17" y2="11"></line>
-                    </svg>
+                <div class="auth-hero">
+                    <div class="auth-hero-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                        </svg>
+                    </div>
+                    <div class="auth-hero-title">${t('auth.register')}</div>
+                    <div class="auth-hero-subtitle">${t('auth.createAccount') || '创建新账户'}</div>
                 </div>
                 <div class="auth-field">
                     <label class="auth-label" for="regUsername">${t('auth.username')}</label>
-                    <input type="text" class="auth-input" id="regUsername" placeholder="${t('auth.usernamePlaceholder')}" autocomplete="username" autocapitalize="none" maxlength="20">
+                    <div class="auth-input-wrap">
+                        <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <input type="text" class="auth-input" id="regUsername" placeholder="${t('auth.usernamePlaceholder')}" autocomplete="username" autocapitalize="none" maxlength="20">
+                    </div>
                 </div>
                 <div class="auth-field">
                     <label class="auth-label" for="regNickname">${t('auth.nickname')}</label>
-                    <input type="text" class="auth-input" id="regNickname" placeholder="${t('auth.nicknamePlaceholder')}" maxlength="20">
+                    <div class="auth-input-wrap">
+                        <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                        <input type="text" class="auth-input" id="regNickname" placeholder="${t('auth.nicknamePlaceholder')}" maxlength="20">
+                    </div>
                 </div>
                 <div class="auth-field">
                     <label class="auth-label" for="regPassword">${t('auth.password')}</label>
-                    <div class="auth-password-wrap">
-                        <input type="password" class="auth-input" id="regPassword" placeholder="${t('auth.passwordPlaceholder')}" autocomplete="new-password" minlength="6" maxlength="32">
+                    <div class="auth-input-wrap">
+                        <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <input type="password" class="auth-input auth-input-password" id="regPassword" placeholder="${t('auth.passwordPlaceholder')}" autocomplete="new-password" minlength="6" maxlength="32">
                         <button class="auth-password-toggle" id="regPasswordToggle" type="button" aria-label="${t('auth.togglePassword')}">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </button>
@@ -165,7 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="auth-field">
                     <label class="auth-label" for="regPasswordConfirm">${t('auth.confirmPassword')}</label>
-                    <input type="password" class="auth-input" id="regPasswordConfirm" placeholder="${t('auth.confirmPasswordPlaceholder')}" autocomplete="new-password">
+                    <div class="auth-input-wrap">
+                        <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <input type="password" class="auth-input" id="regPasswordConfirm" placeholder="${t('auth.confirmPasswordPlaceholder')}" autocomplete="new-password">
+                    </div>
                 </div>
                 <div class="auth-error" id="registerError"></div>
                 <div class="auth-actions">
@@ -179,28 +201,18 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // 已登录用户面板 HTML
+    // 已登录用户面板（简洁版：仅显示头像+昵称+退出，不显示账号详情）
     function renderUserProfile(session) {
         const avatarLetter = (session.nickname || session.username || 'U').charAt(0).toUpperCase();
         return `
-            <div class="auth-profile">
-                <div class="auth-profile-avatar">${escapeHtml(avatarLetter)}</div>
-                <div class="auth-profile-info">
-                    <div class="auth-profile-name">${escapeHtml(session.nickname || session.username)}</div>
-                    <div class="auth-profile-role">${session.role === 'admin' ? t('auth.roleAdmin') : t('auth.roleUser')}</div>
+            <div class="auth-form">
+                <div class="auth-hero">
+                    <div class="auth-hero-avatar">${escapeHtml(avatarLetter)}</div>
+                    <div class="auth-hero-title">${escapeHtml(session.nickname || session.username)}</div>
+                    <div class="auth-hero-subtitle">${session.role === 'admin' ? t('auth.roleAdmin') : t('auth.roleUser')}</div>
                 </div>
-                <div class="auth-profile-actions">
-                    <button class="post-btn post-btn-ghost auth-logout-btn" id="logoutBtn">${t('auth.logout')}</button>
-                </div>
-            </div>
-            <div class="auth-profile-meta">
-                <div class="auth-meta-item">
-                    <span class="auth-meta-label">${t('auth.username')}</span>
-                    <span class="auth-meta-value">${escapeHtml(session.username)}</span>
-                </div>
-                <div class="auth-meta-item">
-                    <span class="auth-meta-label">${t('auth.loginTime')}</span>
-                    <span class="auth-meta-value">${new Date(session.loginAt).toLocaleString()}</span>
+                <div class="auth-actions">
+                    <button class="post-btn post-btn-ghost auth-submit-btn" id="logoutBtn">${t('auth.logout')}</button>
                 </div>
             </div>
         `;
@@ -596,7 +608,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const users = await loadUsers();
                 const user = users.find(u => u.username === username);
                 if (!user) {
-                    showAuthError('loginError', t('auth.errorUserNotFound'));
+                    // 用户不存在：关闭弹窗，显示成就式提示
+                    closeAuthModal();
+                    if (typeof window.showAchievement === 'function') {
+                        window.showAchievement(t('toast.comingSoon') || '正在完善中', t('toast.loginNotFound') || '登录功能正在完善中，敬请期待');
+                    }
                     submitBtn.disabled = false;
                     submitBtn.textContent = t('auth.login');
                     return;
@@ -666,53 +682,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (password.length < 6) { showAuthError('registerError', t('auth.errorPasswordTooShort')); return; }
             if (password !== confirm) { showAuthError('registerError', t('auth.errorPasswordMismatch')); return; }
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = t('auth.registering');
-
-            try {
-                const users = await loadUsers();
-                if (users.some(u => u.username === username)) {
-                    showAuthError('registerError', t('auth.errorUserExists'));
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = t('auth.register');
-                    return;
-                }
-
-                const passwordHash = await sha256(password);
-                const newUser = {
-                    id: Date.now(),
-                    username: username,
-                    passwordHash: passwordHash,
-                    nickname: nickname,
-                    avatar: '',
-                    email: '',
-                    role: 'user',
-                    joinDate: new Date().toISOString().split('T')[0],
-                    bio: ''
-                };
-
-                // 保存到 localStorage（注册用户覆盖存储）
-                const stored = safeGetItem(STORAGE_KEYS.users);
-                let registered = [];
-                if (stored) {
-                    try { registered = JSON.parse(stored); } catch (e) { /* 忽略 */ }
-                }
-                registered.push(newUser);
-                saveRegisteredUsers(registered);
-
-                // 自动登录
-                setSession(newUser);
-                submitBtn.textContent = t('auth.registerSuccess');
-                setTimeout(() => {
-                    closeAuthModal();
-                    updateUserBtnState();
-                }, 500);
-            } catch (e) {
-                console.error('注册失败:', e);
-                showAuthError('registerError', t('auth.errorNetwork'));
-                submitBtn.disabled = false;
-                submitBtn.textContent = t('auth.register');
+            // 注册功能完善中：关闭弹窗，显示成就式提示
+            closeAuthModal();
+            if (typeof window.showAchievement === 'function') {
+                window.showAchievement(t('toast.comingSoon') || '正在完善中', t('toast.register') || '注册功能正在完善中，敬请期待');
             }
+            // 重置表单
+            submitBtn.disabled = false;
+            submitBtn.textContent = t('auth.register');
         }
 
         submitBtn.addEventListener('click', doRegister);

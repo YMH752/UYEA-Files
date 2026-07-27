@@ -212,10 +212,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 添加工具按钮：静默处理，上传/添加功能后续开发
+    // 添加工具按钮：显示成就式提示弹窗
     document.querySelectorAll('#toolsView .add-card').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
+            if (typeof window.showAchievement === 'function') {
+                const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+                window.showAchievement(msgs['toast.comingSoon'] || '正在完善中', msgs['toast.addTool'] || '添加工具功能正在开发中');
+            }
         });
     });
 
