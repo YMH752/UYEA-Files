@@ -1,13 +1,6 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
-    // 安全读取 localStorage（隐私模式等场景可能不可用）
-    function safeGetItem(key) {
-        try { return localStorage.getItem(key); }
-        catch (e) { return null; }
-    }
-    function safeSetItem(key, value) {
-        try { localStorage.setItem(key, value); }
-        catch (e) { /* 静默忽略 */ }
-    }
+    // 引用共享工具函数
+    const { safeGetItem, safeSetItem, escapeHtml: esc, getGridColumns, translateTag } = window.UYEA_UTILS;
 
     // ==================== 下拉菜单互斥机制 ====================
     // 打开任一下拉菜单时，自动关闭其他所有下拉菜单，防止重叠
@@ -26,6 +19,8 @@
             if (btn) btn.classList.remove('active');
         });
     }
+    // 暴露给 auth.js 等其他模块调用
+    window.closeAllDropdowns = closeAllDropdowns;
 
     // ==================== 多语言系统 ====================
     let currentLang = UYEA_CONFIG.defaultLanguage;
@@ -68,13 +63,6 @@
             const open = langDropdown.classList.toggle('show');
             langIconBtn.classList.toggle('active', open);
         });
-        // 点击外部关闭下拉
-        document.addEventListener('click', (e) => {
-            if (!langDropdown.contains(e.target) && e.target !== langIconBtn && !langIconBtn.contains(e.target)) {
-                langDropdown.classList.remove('show');
-                langIconBtn.classList.remove('active');
-            }
-        });
     }
 
     // 语言选项点击事件
@@ -103,12 +91,6 @@
             closeAllDropdowns('menuToggleBtn');
             const open = dropdown.classList.toggle('show');
             menuToggle.classList.toggle('active', open);
-        });
-        document.addEventListener('click', (e) => {
-            if (!dropdown.contains(e.target) && e.target !== menuToggle) {
-                dropdown.classList.remove('show');
-                menuToggle.classList.remove('active');
-            }
         });
     }
 
@@ -161,11 +143,6 @@
             e.stopPropagation();
             closeAllDropdowns(null);
             headerEngineDropdown.classList.toggle('show');
-        });
-        document.addEventListener('click', (e) => {
-            if (headerEngineDropdown && !headerEngineSelect.contains(e.target)) {
-                headerEngineDropdown.classList.remove('show');
-            }
         });
     }
     headerEngineOptions.forEach(opt => {
@@ -241,8 +218,7 @@
                 results.push({
                     title: card.dataset.title,
                     tool: card.dataset.tool,
-                    comingSoon: card.hasAttribute('data-coming-soon'),
-                    element: card
+                    comingSoon: card.hasAttribute('data-coming-soon')
                 });
             }
         });
@@ -272,30 +248,20 @@
         if (forumResults.length > 0) {
             forumSection.style.display = '';
             forumCount.textContent = forumResults.length;
-            // 帖子标签 i18n 映射
-            const TAG_I18N_MAP = {
-                '公告': 'forum.cat.announcement', 'AI 探讨': 'forum.cat.ai',
-                '工具': 'forum.cat.tools', '生活': 'forum.cat.life', '反馈': 'forum.cat.feedback'
-            };
-            const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
-            function translateTag(tag) {
-                const key = TAG_I18N_MAP[tag];
-                return key ? (msgs[key] || tag) : tag;
-            }
             forumResultsEl.innerHTML = forumResults.map(p => {
                 const hasUrl = p.url && p.url !== '#';
-                const href = hasUrl ? navEsc(p.url) : 'javascript:void(0)';
+                const href = hasUrl ? esc(p.url) : 'javascript:void(0)';
                 const targetAttr = hasUrl ? ' target="_blank" rel="noopener"' : '';
                 return `<a href="${href}" class="post-item"${targetAttr}>
                     <div class="post-meta">
-                        <span class="post-tag">${navEsc(translateTag(p.tag))}</span>
+                        <span class="post-tag">${esc(translateTag(p.tag, currentLang))}</span>
                         <span class="dot">•</span>
-                        <span>${navEsc(p.author)}</span>
+                        <span>${esc(p.author)}</span>
                         <span class="dot">•</span>
-                        <span>${navEsc(p.time)}</span>
+                        <span>${esc(p.time)}</span>
                     </div>
-                    <div class="post-title">${navEsc(p.title)}</div>
-                    <div class="post-excerpt">${navEsc(p.excerpt)}</div>
+                    <div class="post-title">${esc(p.title)}</div>
+                    <div class="post-excerpt">${esc(p.excerpt)}</div>
                 </a>`;
             }).join('');
         } else {
@@ -311,9 +277,9 @@
             navCount.textContent = navResults.length;
             navResultsEl.innerHTML = navResults.map(item => {
                 const firstChar = (item.title || '?').charAt(0).toUpperCase();
-                return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" data-title="${navEsc(item.title)}" title="${navEsc(item.title)}">
-                    <div class="card-icon"><span class="icon-placeholder">${navEsc(firstChar)}</span></div>
-                    <div class="card-info"><div class="card-title">${navEsc(item.title)}</div></div>
+                return `<a href="${esc(item.url)}" target="_blank" rel="noopener" class="card-item" data-title="${esc(item.title)}" title="${esc(item.title)}">
+                    <div class="card-icon"><span class="icon-placeholder">${esc(firstChar)}</span></div>
+                    <div class="card-info"><div class="card-title">${esc(item.title)}</div></div>
                 </a>`;
             }).join('');
         } else {
@@ -329,10 +295,10 @@
             toolsCount.textContent = toolsResults.length;
             toolsResultsEl.innerHTML = toolsResults.map(item => {
                 const firstChar = (item.title || '?').charAt(0).toUpperCase();
-                const clickAttr = item.comingSoon ? ' data-coming-soon="' + navEsc(item.title) + '"' : ' data-tool="' + navEsc(item.tool) + '"';
-                return `<a class="card-item" role="button" tabindex="0"${clickAttr} data-title="${navEsc(item.title)}" title="${navEsc(item.title)}">
-                    <div class="card-icon"><span class="icon-placeholder">${navEsc(firstChar)}</span></div>
-                    <div class="card-info"><div class="card-title">${navEsc(item.title)}</div></div>
+                const clickAttr = item.comingSoon ? ' data-coming-soon="' + esc(item.title) + '"' : ' data-tool="' + esc(item.tool) + '"';
+                return `<a class="card-item" role="button" tabindex="0"${clickAttr} data-title="${esc(item.title)}" title="${esc(item.title)}">
+                    <div class="card-icon"><span class="icon-placeholder">${esc(firstChar)}</span></div>
+                    <div class="card-info"><div class="card-title">${esc(item.title)}</div></div>
                 </a>`;
             }).join('');
 
@@ -490,16 +456,30 @@
         });
     });
 
-    // ==================== ESC键关闭所有下拉菜单 ====================
+    // ==================== ESC键 + 点击外部关闭所有下拉菜单 ====================
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeAllDropdowns(null);
-            DROPDOWN_PAIRS.forEach(({ btnId, menuId }) => {
-                const btn = document.getElementById(btnId);
-                const menu = document.getElementById(menuId);
-                if (menu) menu.classList.remove('show');
-                if (btn) btn.classList.remove('active');
-            });
+            if (headerEngineDropdown) headerEngineDropdown.classList.remove('show');
+        }
+    });
+
+    // 统一的点击外部关闭下拉菜单（替换4个独立监听器，减少事件监听器数量）
+    document.addEventListener('click', (e) => {
+        DROPDOWN_PAIRS.forEach(({ btnId, menuId }) => {
+            const btn = document.getElementById(btnId);
+            const menu = document.getElementById(menuId);
+            if (menu && menu.classList.contains('show')) {
+                if (!menu.contains(e.target) && e.target !== btn && (!btn || !btn.contains(e.target))) {
+                    menu.classList.remove('show');
+                    if (btn) btn.classList.remove('active');
+                }
+            }
+        });
+        // 引擎选择下拉不在 DROPDOWN_PAIRS 中，单独处理
+        if (headerEngineDropdown && headerEngineDropdown.classList.contains('show') &&
+            headerEngineSelect && !headerEngineSelect.contains(e.target)) {
+            headerEngineDropdown.classList.remove('show');
         }
     });
 
@@ -509,25 +489,16 @@
     // ==================== 导航数据加载 + 分类筛选/搜索 ====================
     let navInitialized = false;
     let navCurrentCategory = 'all';
-    let navSearchTimer = null;
-    // 调试：暴露闭包变量
-    window.__debug = { get navCurrentCategory() { return navCurrentCategory; } };
-
-    // HTML 转义
-    function navEsc(str) {
-        if (str == null) return '';
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
 
     // 生成单张卡片 HTML（图标用首字母占位符，底色+边框）
     function navCardHtml(item) {
         const firstChar = (item.title || '?').charAt(0).toUpperCase();
-        return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" data-title="${navEsc(item.title)}" title="${navEsc(item.title)}">
+        return `<a href="${esc(item.url)}" target="_blank" rel="noopener" class="card-item" data-title="${esc(item.title)}" title="${esc(item.title)}">
             <div class="card-icon">
-                <span class="icon-placeholder">${navEsc(firstChar)}</span>
+                <span class="icon-placeholder">${esc(firstChar)}</span>
             </div>
             <div class="card-info">
-                <div class="card-title">${navEsc(item.title)}</div>
+                <div class="card-title">${esc(item.title)}</div>
             </div>
         </a>`;
     }
@@ -536,33 +507,21 @@
     function addCardHtml() {
         const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
         const text = msgs['nav.addSite'] || '添加网站';
-        return `<button class="add-card" aria-label="${navEsc(text)}">
+        return `<button class="add-card" aria-label="${esc(text)}">
             <div class="card-icon">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </div>
             <div class="card-info">
-                <div class="card-title add-card-title" data-i18n="nav.addSite">${navEsc(text)}</div>
+                <div class="card-title add-card-title" data-i18n="nav.addSite">${esc(text)}</div>
             </div>
         </button>`;
     }
 
-    // 计算grid容器当前列数
-    function getGridColumns(grid, cards) {
-        if (!grid || !cards || cards.length === 0) return 1;
-        const gridWidth = grid.clientWidth;
-        const cardWidth = cards[0].getBoundingClientRect().width;
-        if (cardWidth <= 0) return 1;
-        const gap = 16;
-        return Math.max(1, Math.floor((gridWidth + gap) / (cardWidth + gap)));
-    }
-
     // 分类筛选 + 搜索过滤 + 2行限制（仅作用于#navView内）
     function applyNavFilter() {
-        const searchInput = document.getElementById('navSearchInput');
-        const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
         const noResults = document.getElementById('navNoResults');
         let visibleCount = 0;
-        const isLimited = (navCurrentCategory === 'all' && !keyword);
+        const isLimited = (navCurrentCategory === 'all');
 
         document.querySelectorAll('#navView .section-group').forEach(section => {
             const sectionCat = section.dataset.category;
@@ -583,10 +542,8 @@
 
             let sectionVisible = 0;
             cards.forEach(card => {
-                const title = (card.dataset.title || card.querySelector('.card-title')?.textContent || '').toLowerCase();
-                const matchSearch = !keyword || title.includes(keyword);
                 const withinLimit = sectionVisible < maxVisible;
-                const show = matchSearch && (withinLimit || !isLimited);
+                const show = (withinLimit || !isLimited);
                 card.style.display = show ? '' : 'none';
                 if (show) sectionVisible++;
             });
@@ -598,7 +555,7 @@
 
         if (noResults) noResults.classList.toggle('show', visibleCount === 0);
 
-        const showMoreBtns = (navCurrentCategory === 'all' && !keyword);
+        const showMoreBtns = (navCurrentCategory === 'all');
         document.querySelectorAll('#navView .more-btn[data-target-category]').forEach(btn => {
             btn.style.display = showMoreBtns ? '' : 'none';
         });
@@ -655,7 +612,6 @@
 
     // 绑定导航视图事件（底部导航切换后需重新绑定）
     let moreBtnsBound = false;
-    let navSearchBound = false;
     function bindNavEvents() {
         document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(item => {
             item.addEventListener('click', () => {
@@ -664,8 +620,6 @@
                 navCurrentCategory = item.dataset.category;
                 // 滚动底部导航到激活项
                 if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
-                const searchInput = document.getElementById('navSearchInput');
-                if (searchInput) searchInput.value = '';
                 applyNavFilter();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
@@ -681,17 +635,6 @@
                     if (targetNavBtn) targetNavBtn.click();
                 });
             });
-        }
-
-        if (!navSearchBound) {
-            navSearchBound = true;
-            const navSearchInput = document.getElementById('navSearchInput');
-            if (navSearchInput) {
-                navSearchInput.addEventListener('input', () => {
-                    clearTimeout(navSearchTimer);
-                    navSearchTimer = setTimeout(applyNavFilter, 200);
-                });
-            }
         }
     }
 
@@ -765,13 +708,6 @@
             closeAllDropdowns('themeIconBtn');
             const open = themeDropdown.classList.toggle('show');
             themeIconBtn.classList.toggle('active', open);
-        });
-        // 点击外部关闭下拉
-        document.addEventListener('click', (e) => {
-            if (!themeDropdown.contains(e.target) && e.target !== themeIconBtn && !themeIconBtn.contains(e.target)) {
-                themeDropdown.classList.remove('show');
-                themeIconBtn.classList.remove('active');
-            }
         });
     }
 

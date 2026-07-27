@@ -7,29 +7,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    // ==================== 工具函数 ====================
-    function safeGetItem(key) {
-        try { return localStorage.getItem(key); }
-        catch (e) { return null; }
-    }
-    function safeSetItem(key, value) {
-        try { localStorage.setItem(key, value); }
-        catch (e) { /* 静默忽略 */ }
-    }
-    function safeRemoveItem(key) {
-        try { localStorage.removeItem(key); }
-        catch (e) { /* 静默忽略 */ }
-    }
-
-    function escapeHtml(str) {
-        if (str == null) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
+    // 引用共享工具函数
+    const { safeGetItem, safeSetItem, safeRemoveItem, escapeHtml, t } = window.UYEA_UTILS;
 
     // SHA-256 哈希（使用 Web Crypto API）
     async function sha256(text) {
@@ -38,13 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const hashBuffer = await crypto.subtle.digest('SHA-256', data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    // 获取当前语言翻译
-    function t(key) {
-        const lang = window.currentLang || (window.UYEA_CONFIG && UYEA_CONFIG.defaultLanguage) || 'zh-CN';
-        const msgs = (window.UYEA_CONFIG && UYEA_CONFIG.i18n && UYEA_CONFIG.i18n[lang]) || {};
-        return msgs[key] || key;
     }
 
     // ==================== 用户数据管理 ====================

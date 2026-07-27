@@ -7,28 +7,18 @@
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    // ==================== 分类筛选 + 搜索 + 2行限制 ====================
-    let currentCategory = 'all';
-    let toolsSearchTimer = null;
+    // 引用共享工具函数
+    const { getGridColumns, escapeHtml } = window.UYEA_UTILS;
 
-    // 计算grid容器当前列数
-    function getGridColumns(grid, cards) {
-        if (!grid || !cards || cards.length === 0) return 1;
-        const gridWidth = grid.clientWidth;
-        const cardWidth = cards[0].getBoundingClientRect().width;
-        if (cardWidth <= 0) return 1;
-        const gap = 16; // 与 CSS gap: 0 16px 一致
-        return Math.max(1, Math.floor((gridWidth + gap) / (cardWidth + gap)));
-    }
+    // ==================== 分类筛选 + 2行限制 ====================
+    let currentCategory = 'all';
 
     function applyToolsFilter() {
-        const searchInput = document.getElementById('toolsSearchInput');
-        const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
         const noResults = document.getElementById('toolsNoResults');
         let visibleCount = 0;
 
-        // "全部"视图且无搜索时，限制每分类最多显示2行
-        const isLimited = (currentCategory === 'all' && !keyword);
+        // "全部"视图时，限制每分类最多显示2行
+        const isLimited = (currentCategory === 'all');
 
         document.querySelectorAll('#toolsView .tool-group').forEach(group => {
             const groupCat = group.dataset.category;
@@ -54,26 +44,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 maxVisible = columns * 2;
             }
 
-            // 搜索过滤 + 2行限制
+            // 2行限制
             let groupVisible = 0;
             cards.forEach(card => {
-                const title = (card.dataset.title || card.querySelector('.card-title')?.textContent || '').toLowerCase();
-                const matchSearch = !keyword || title.includes(keyword);
                 const withinLimit = groupVisible < maxVisible;
-                const show = matchSearch && (withinLimit || !isLimited);
+                const show = withinLimit || !isLimited;
                 card.style.display = show ? '' : 'none';
                 if (show) groupVisible++;
             });
 
-            // 搜索后该分组无可见卡片则隐藏整个分组
+            // 该分组无可见卡片则隐藏整个分组
             group.style.display = (groupVisible > 0) ? '' : 'none';
             visibleCount += groupVisible;
         });
 
         if (noResults) noResults.classList.toggle('show', visibleCount === 0);
 
-        // "更多"按钮只在"全部"视图且无搜索时显示，切到具体分类或搜索时隐藏
-        const showMoreBtns = (currentCategory === 'all' && !keyword);
+        // "更多"按钮只在"全部"视图显示，切到具体分类时隐藏
+        const showMoreBtns = (currentCategory === 'all');
         document.querySelectorAll('#toolsView .more-btn[data-target-category]').forEach(btn => {
             btn.style.display = showMoreBtns ? '' : 'none';
         });
@@ -97,9 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentCategory = item.dataset.category;
                 // 滚动底部导航到激活项
                 if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
-                // 清空搜索框
-                const searchInput = document.getElementById('toolsSearchInput');
-                if (searchInput) searchInput.value = '';
                 applyToolsFilter();
             });
         });
@@ -119,15 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 搜索过滤（防抖）
-    const toolsSearchInput = document.getElementById('toolsSearchInput');
-    if (toolsSearchInput) {
-        toolsSearchInput.addEventListener('input', () => {
-            clearTimeout(toolsSearchTimer);
-            toolsSearchTimer = setTimeout(applyToolsFilter, 200);
-        });
-    }
-
     // 窗口大小变化时重新计算2行限制（仅在工具视图激活时）
     let toolsResizeTimer = null;
     window.addEventListener('resize', () => {
@@ -138,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 监听视图切换：切换到工具视图时恢复分类状态并重新应用筛选
-    let toolsFilterApplied = false;
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view !== 'tools') return;
         bindToolsEvents();
@@ -149,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // 重新应用筛选（视图从隐藏变可见，需重新计算布局）
         setTimeout(() => {
             applyToolsFilter();
-            toolsFilterApplied = true;
             if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
         }, 50);
     });
@@ -457,11 +431,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const highlight = root.querySelector('#regexHighlight');
         const matchesBox = root.querySelector('#regexMatches');
         const error = root.querySelector('#regexError');
-
-        function escapeHtml(s) {
-            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-        }
 
         function run() {
             hideError(error);

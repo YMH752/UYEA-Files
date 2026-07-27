@@ -5,50 +5,14 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 引用共享工具函数
+    const { escapeHtml: esc, translateTag, t } = window.UYEA_UTILS;
+
     const list = document.getElementById('postList');
     const noResults = document.getElementById('noResults');
 
     let allPosts = [];
     let currentFeed = 'recommend';
-    let searchTimer = null;
-    let cachedLang = null; // 缓存语言值，避免每次翻译都读取 localStorage
-
-    // 帖子标签中文 → i18n 键映射
-    const TAG_I18N_MAP = {
-        '公告': 'forum.cat.announcement',
-        'AI 探讨': 'forum.cat.ai',
-        '工具': 'forum.cat.tools',
-        '生活': 'forum.cat.life',
-        '反馈': 'forum.cat.feedback'
-    };
-
-    function t(key) {
-        if (typeof UYEA_CONFIG === 'undefined') return key;
-        if (cachedLang === null) {
-            cachedLang = UYEA_CONFIG.defaultLanguage;
-            try {
-                cachedLang = localStorage.getItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language)) || UYEA_CONFIG.defaultLanguage;
-            } catch (e) { /* 隐私模式下使用默认语言 */ }
-        }
-        const msgs = UYEA_CONFIG.i18n[cachedLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
-        return msgs[key] || key;
-    }
-
-    function translateTag(tag) {
-        const key = TAG_I18N_MAP[tag];
-        return key ? t(key) : tag;
-    }
-
-    // HTML 转义，防止 XSS
-    function esc(str) {
-        if (str == null) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
 
     async function loadPosts() {
         if (!list) {
@@ -77,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!Array.isArray(posts) || posts.length === 0) throw new Error('无帖子数据');
 
             allPosts = posts;
-            bindSearch();
             filterPosts();
 
         } catch (e) {
@@ -101,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         list.innerHTML = posts.map(p => {
-            const tagHtml = `<span class="post-tag">${esc(translateTag(p.tag))}</span>`;
+            const tagHtml = `<span class="post-tag">${esc(translateTag(p.tag, window.currentLang))}</span>`;
             // "#" 或空 URL 视为无链接，避免页面跳转和空白标签页
             const hasUrl = p.url && p.url !== '#';
             const href = hasUrl ? esc(p.url) : 'javascript:void(0)';
@@ -121,30 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterPosts() {
-        const searchInput = document.getElementById('forumSearchInput');
-        const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
-
-        const filtered = allPosts.filter(p => {
-            if ((p.feed || 'recommend') !== currentFeed) return false;
-            if (!keyword) return true;
-            return (p.title || '').toLowerCase().includes(keyword) ||
-                   (p.excerpt || '').toLowerCase().includes(keyword) ||
-                   (p.author || '').toLowerCase().includes(keyword) ||
-                   (p.tag || '').toLowerCase().includes(keyword);
-        });
-
+        const filtered = allPosts.filter(p => (p.feed || 'recommend') === currentFeed);
         renderPosts(filtered);
         if (noResults) noResults.classList.toggle('show', filtered.length === 0);
-    }
-
-    function bindSearch() {
-        const searchInput = document.getElementById('forumSearchInput');
-        if (!searchInput) return;
-        // 防抖：输入停止 200ms 后才过滤
-        searchInput.addEventListener('input', () => {
-            clearTimeout(searchTimer);
-            searchTimer = setTimeout(filterPosts, 200);
-        });
     }
 
     loadPosts();
@@ -158,8 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 bottomNavItems.forEach(x => x.classList.remove('active'));
                 item.classList.add('active');
                 currentFeed = item.dataset.tab;
-                const searchInput = document.getElementById('forumSearchInput');
-                if (searchInput) searchInput.value = '';
                 filterPosts();
             });
         });
@@ -182,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 语言切换时重新渲染帖子（翻译标签）
     window.addEventListener('languagechange', () => {
-        cachedLang = null; // 重置语言缓存
         if (allPosts.length > 0) filterPosts();
     });
 });

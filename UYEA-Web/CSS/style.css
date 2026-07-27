@@ -463,104 +463,6 @@ a { color: var(--primary); text-decoration: none; }
     background: var(--glass-bg);
 }
 
-/* ---------- 搜索（液态玻璃） ---------- */
-.search-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    max-width: 90vw;
-    width: 340px;
-    background: var(--glass-bg-strong);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg), inset 0 1px 0 var(--glass-highlight);
-    z-index: 300;
-    padding: 14px;
-    animation: fadeUp 0.25s var(--ease-smooth);
-}
-
-.search-dropdown.show { display: block; }
-
-.search-container {
-    display: flex;
-    align-items: center;
-    background: var(--surface-warm);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    height: 40px;
-    overflow: hidden;
-    max-width: 100%;
-    transition: border-color var(--duration) ease, box-shadow var(--duration) ease;
-}
-
-.search-container:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-lighter), 0 0 16px rgba(26, 77, 58, 0.12); }
-
-/* 搜索引擎标签栏（液态玻璃） */
-.search-engine-tabs {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 10px;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-sm);
-    padding: 3px;
-    box-shadow: inset 0 1px 0 var(--glass-highlight);
-}
-
-.engine-tab {
-    flex: 1;
-    padding: 10px 14px;
-    min-height: 36px;
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: all var(--duration) var(--ease-smooth);
-    white-space: nowrap;
-}
-
-.engine-tab:hover { color: var(--primary); }
-.engine-tab.active {
-    background: var(--primary-gradient);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(26, 77, 58, 0.3);
-}
-
-/* 搜索提交按钮 */
-.search-submit-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px; height: 44px;
-    background: var(--primary-gradient);
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: opacity var(--duration) ease, transform var(--duration) ease;
-    box-shadow: 0 2px 8px rgba(26, 77, 58, 0.25);
-}
-.search-submit-btn:hover { opacity: 0.92; transform: scale(1.05); }
-
-.search-input {
-    border: none; background: transparent; outline: none;
-    width: 100%; min-width: 0;
-    padding: 0 10px;
-    font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
-    color: var(--text-primary);
-    flex: 1;
-}
-
-.search-input::placeholder { color: var(--text-muted); }
-
 /* ---------- 常驻搜索栏（顶部居中） ---------- */
 .header-search {
     position: absolute;
@@ -937,35 +839,6 @@ html[data-theme="coffee"] .section-title {
 }
 .post-btn-ghost::before { background: var(--accent-5); }
 .post-btn-ghost:hover { box-shadow: var(--shadow-sm); }
-
-.forum-search {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    max-width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 0 14px;
-    height: 42px;
-    gap: 8px;
-    min-width: 0;
-    transition: border-color var(--duration) ease, box-shadow var(--duration) ease;
-}
-
-.forum-search:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-lighter), 0 0 16px rgba(26, 77, 58, 0.08); }
-
-.forum-search span { flex-shrink: 0; color: var(--text-muted); }
-
-.forum-search input {
-    flex: 1; min-width: 0;
-    border: none; background: transparent; outline: none;
-    font-size: 16px; /* >=16px 防止 iOS Safari 聚焦时自动缩放页面 */
-    color: var(--text-primary);
-    width: 100%;
-}
-
-.forum-search input::placeholder { color: var(--text-muted); }
 
 /* 帖子列表 */
 .post-list { display: flex; flex-direction: column; gap: 10px; }
@@ -1620,16 +1493,6 @@ html[data-theme="coffee"] .bg-orb-3 {
     transform: translateY(0);
 }
 
-/* ========== 搜索框增强 ========== */
-.forum-search svg {
-    transition: transform var(--duration) var(--ease-smooth);
-}
-
-.forum-search:focus-within svg {
-    transform: scale(1.1);
-    color: var(--primary);
-}
-
 /* ---------- 底部液态玻璃导航栏 ---------- */
 .bottom-nav {
     position: fixed;
@@ -1788,7 +1651,6 @@ html[data-theme="coffee"] .bottom-nav-item.active {
     .back-to-top { bottom: 70px; width: 44px; height: 44px; }
     .section-group { margin-bottom: 16px; }
     .card-item { padding: 5px 4px; }
-    .search-dropdown { top: calc(100% + 4px); max-height: 60vh; overflow-y: auto; }
 }
 
 /* 平板竖屏优化（768px-1024px）：增强中屏体验 */
