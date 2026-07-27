@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 绑定工具视图事件（底部导航切换后需重新绑定）
+    let toolsMoreBtnsBound = false;
     function bindToolsEvents() {
         // 底部导航栏分类切换
         document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(item => {
@@ -103,16 +104,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // "更多"按钮：点击后切换到对应分类
-        document.querySelectorAll('#toolsView .more-btn[data-target-category]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const targetCat = btn.dataset.targetCategory;
-                const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
-                if (targetNavBtn) {
-                    targetNavBtn.click();
-                }
+        // "更多"按钮只需绑定一次（静态HTML不会随视图切换重建）
+        if (!toolsMoreBtnsBound) {
+            toolsMoreBtnsBound = true;
+            document.querySelectorAll('#toolsView .more-btn[data-target-category]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetCat = btn.dataset.targetCategory;
+                    const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
+                    if (targetNavBtn) {
+                        targetNavBtn.click();
+                    }
+                });
             });
-        });
+        }
     }
 
     // 搜索过滤（防抖）

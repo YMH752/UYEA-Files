@@ -349,6 +349,8 @@
     }
 
     // 绑定导航视图事件（底部导航切换后需重新绑定）
+    let moreBtnsBound = false;
+    let navSearchBound = false;
     function bindNavEvents() {
         document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(item => {
             item.addEventListener('click', () => {
@@ -356,7 +358,7 @@
                 item.classList.add('active');
                 navCurrentCategory = item.dataset.category;
                 // 滚动底部导航到激活项
-                scrollBottomNavToActive();
+                if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
                 const searchInput = document.getElementById('navSearchInput');
                 if (searchInput) searchInput.value = '';
                 applyNavFilter();
@@ -364,20 +366,26 @@
             });
         });
 
-        document.querySelectorAll('#navView .more-btn[data-target-category]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const targetCat = btn.dataset.targetCategory;
-                const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
-                if (targetNavBtn) targetNavBtn.click();
+        // "更多"按钮只需绑定一次（静态HTML不会随视图切换重建）
+        if (!moreBtnsBound) {
+            moreBtnsBound = true;
+            document.querySelectorAll('#navView .more-btn[data-target-category]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetCat = btn.dataset.targetCategory;
+                    const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
+                    if (targetNavBtn) targetNavBtn.click();
+                });
             });
-        });
+        }
 
-        const navSearchInput = document.getElementById('navSearchInput');
-        if (navSearchInput) {
-            navSearchInput.addEventListener('input', () => {
-                clearTimeout(navSearchTimer);
-                navSearchTimer = setTimeout(applyNavFilter, 200);
-            });
+        if (!navSearchBound) {
+            navSearchBound = true;
+            const navSearchInput = document.getElementById('navSearchInput');
+            if (navSearchInput) {
+                navSearchInput.addEventListener('input', () => {
+                    clearTimeout(navSearchTimer);
+                    navSearchTimer = setTimeout(applyNavFilter, 200);
+                });
         }
     }
 
