@@ -79,10 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const toolRegistry = {
         json:      { title: 'JSON 格式化',     render: renderJson,      init: initJson },
         base64:    { title: 'Base64 编解码',   render: renderBase64,    init: initBase64 },
+        url:       { title: 'URL 编解码',      render: renderUrl,       init: initUrl },
+        hash:      { title: '哈希生成',         render: renderHash,      init: initHash },
         regex:     { title: '正则表达式测试',   render: renderRegex,     init: initRegex },
         timestamp: { title: '时间戳转换',       render: renderTimestamp, init: initTimestamp },
         color:     { title: '颜色选择器',       render: renderColor,     init: initColor },
-        uuid:      { title: 'UUID 生成器',      render: renderUuid,      init: initUuid }
+        uuid:      { title: 'UUID 生成器',      render: renderUuid,      init: initUuid },
+        wordcount: { title: '字数统计',         render: renderWordCount, init: initWordCount },
+        password:  { title: '随机密码生成',     render: renderPassword,  init: initPassword }
     };
 
     function openTool(key) {
@@ -750,6 +754,239 @@ document.addEventListener('DOMContentLoaded', () => {
             if (output.value) copyText(output.value, e.currentTarget);
         });
         // 首次自动生成
+        generate();
+    }
+
+    // ==================== 7. URL 编解码 ====================
+    function renderUrl() {
+        return '' +
+            '<div class="tool-field">' +
+                '<label class="tool-label">操作模式</label>' +
+                '<div class="tool-row">' +
+                    '<label class="tool-checkbox"><input type="radio" name="urlmode" value="encode" checked> 编码（文本 → URL）</label>' +
+                    '<label class="tool-checkbox"><input type="radio" name="urlmode" value="decode"> 解码（URL → 文本）</label>' +
+                '</div>' +
+            '</div>' +
+            '<div class="tool-field">' +
+                '<label class="tool-label" for="urlInput">输入</label>' +
+                '<textarea class="tool-textarea" id="urlInput" placeholder="输入文本或 URL 编码字符串..."></textarea>' +
+            '</div>' +
+            '<div class="tool-actions">' +
+                '<button class="post-btn" id="urlRun">执行</button>' +
+                '<button class="post-btn post-btn-ghost" id="urlSwap">↑↓ 结果转输入</button>' +
+                '<button class="post-btn post-btn-ghost" id="urlClear">清空</button>' +
+            '</div>' +
+            '<div class="tool-error" id="urlError"></div>' +
+            '<div class="tool-field">' +
+                '<label class="tool-label" for="urlOutput">输出</label>' +
+                '<textarea class="tool-textarea" id="urlOutput" readonly placeholder="编解码结果..."></textarea>' +
+            '</div>' +
+            '<div class="tool-actions">' +
+                '<button class="post-btn post-btn-secondary" id="urlCopy">复制结果</button>' +
+            '</div>';
+    }
+    function initUrl(root) {
+        const input = root.querySelector('#urlInput');
+        const output = root.querySelector('#urlOutput');
+        const error = root.querySelector('#urlError');
+        function getMode() {
+            const c = root.querySelector('input[name="urlmode"]:checked');
+            return c ? c.value : 'encode';
+        }
+        function run() {
+            hideError(error);
+            const raw = input.value;
+            if (!raw) { showError(error, '请输入内容'); return; }
+            try {
+                output.value = getMode() === 'encode' ? encodeURIComponent(raw) : decodeURIComponent(raw);
+            } catch (e) {
+                output.value = '';
+                showError(error, '转换失败：' + e.message + '（解码时请确认输入为合法 URL 编码）');
+            }
+        }
+        root.querySelector('#urlRun').addEventListener('click', run);
+        root.querySelector('#urlSwap').addEventListener('click', () => {
+            if (output.value) { input.value = output.value; output.value = ''; hideError(error); input.focus(); }
+        });
+        root.querySelector('#urlClear').addEventListener('click', () => {
+            input.value = ''; output.value = ''; hideError(error); input.focus();
+        });
+        root.querySelector('#urlCopy').addEventListener('click', (e) => {
+            if (output.value) copyText(output.value, e.currentTarget);
+        });
+    }
+
+    // ==================== 8. 哈希生成（SHA-1/256/384/512） ====================
+    function renderHash() {
+        return '' +
+            '<div class="tool-field">' +
+                '<label class="tool-label">算法</label>' +
+                '<div class="tool-row">' +
+                    '<label class="tool-checkbox"><input type="radio" name="halgo" value="SHA-1"> SHA-1</label>' +
+                    '<label class="tool-checkbox"><input type="radio" name="halgo" value="SHA-256" checked> SHA-256</label>' +
+                    '<label class="tool-checkbox"><input type="radio" name="halgo" value="SHA-384"> SHA-384</label>' +
+                    '<label class="tool-checkbox"><input type="radio" name="halgo" value="SHA-512"> SHA-512</label>' +
+                '</div>' +
+            '</div>' +
+            '<div class="tool-field">' +
+                '<label class="tool-label" for="hashInput">输入文本</label>' +
+                '<textarea class="tool-textarea" id="hashInput" placeholder="输入要计算哈希的文本..."></textarea>' +
+            '</div>' +
+            '<div class="tool-actions">' +
+                '<button class="post-btn" id="hashRun">计算哈希</button>' +
+                '<button class="post-btn post-btn-ghost" id="hashClear">清空</button>' +
+            '</div>' +
+            '<div class="tool-error" id="hashError"></div>' +
+            '<div class="tool-field">' +
+                '<label class="tool-label" for="hashOutput">哈希值（Hex）</label>' +
+                '<textarea class="tool-textarea" id="hashOutput" readonly placeholder="哈希结果将显示在这里..." style="min-height:80px"></textarea>' +
+            '</div>' +
+            '<div class="tool-actions">' +
+                '<button class="post-btn post-btn-secondary" id="hashCopy">复制结果</button>' +
+            '</div>';
+    }
+    function initHash(root) {
+        const input = root.querySelector('#hashInput');
+        const output = root.querySelector('#hashOutput');
+        const error = root.querySelector('#hashError');
+        function getAlgo() {
+            const c = root.querySelector('input[name="halgo"]:checked');
+            return c ? c.value : 'SHA-256';
+        }
+        function buf2hex(buf) {
+            const bytes = new Uint8Array(buf);
+            let hex = '';
+            for (let i = 0; i < bytes.length; i++) hex += bytes[i].toString(16).padStart(2, '0');
+            return hex;
+        }
+        async function run() {
+            hideError(error);
+            const raw = input.value;
+            if (!raw) { showError(error, '请输入文本'); return; }
+            try {
+                const enc = new TextEncoder().encode(raw);
+                const buf = await crypto.subtle.digest(getAlgo(), enc);
+                output.value = buf2hex(buf);
+            } catch (e) {
+                output.value = '';
+                showError(error, '计算失败：' + e.message);
+            }
+        }
+        root.querySelector('#hashRun').addEventListener('click', run);
+        root.querySelector('#hashClear').addEventListener('click', () => {
+            input.value = ''; output.value = ''; hideError(error); input.focus();
+        });
+        root.querySelector('#hashCopy').addEventListener('click', (e) => {
+            if (output.value) copyText(output.value, e.currentTarget);
+        });
+    }
+
+    // ==================== 9. 字数统计 ====================
+    function renderWordCount() {
+        return '' +
+            '<div class="tool-field">' +
+                '<label class="tool-label" for="wcInput">输入文本</label>' +
+                '<textarea class="tool-textarea" id="wcInput" placeholder="粘贴或输入文本，自动实时统计..." style="min-height:160px"></textarea>' +
+            '</div>' +
+            '<div class="tool-info-bar" id="wcStats" style="flex-direction:column;align-items:flex-start;gap:8px">' +
+                '<div><span class="tool-ts-current" id="wcChars">0</span> 字符（含空格）</div>' +
+                '<div><span class="tool-ts-current" id="wcCharsNoSpace">0</span> 字符（不含空格）</div>' +
+                '<div><span class="tool-ts-current" id="wcWords">0</span> 单词 / 英文词数</div>' +
+                '<div><span class="tool-ts-current" id="wcChinese">0</span> 中文字数</div>' +
+                '<div><span class="tool-ts-current" id="wcLines">0</span> 行数</div>' +
+            '</div>' +
+            '<div class="tool-actions">' +
+                '<button class="post-btn post-btn-ghost" id="wcClear">清空</button>' +
+            '</div>';
+    }
+    function initWordCount(root) {
+        const input = root.querySelector('#wcInput');
+        const elChars = root.querySelector('#wcChars');
+        const elCharsNoSpace = root.querySelector('#wcCharsNoSpace');
+        const elWords = root.querySelector('#wcWords');
+        const elChinese = root.querySelector('#wcChinese');
+        const elLines = root.querySelector('#wcLines');
+        function update() {
+            const t = input.value;
+            elChars.textContent = t.length;
+            elCharsNoSpace.textContent = t.replace(/\s/g, '').length;
+            // 英文单词数
+            const en = t.match(/[a-zA-Z0-9]+(?:[''-][a-zA-Z0-9]+)*/g);
+            elWords.textContent = en ? en.length : 0;
+            // 中文字数
+            const zh = t.match(/[\u4e00-\u9fa5]/g);
+            elChinese.textContent = zh ? zh.length : 0;
+            // 行数
+            elLines.textContent = t === '' ? 0 : t.split(/\r?\n/).length;
+        }
+        input.addEventListener('input', update);
+        root.querySelector('#wcClear').addEventListener('click', () => {
+            input.value = ''; update(); input.focus();
+        });
+        update();
+    }
+
+    // ==================== 10. 随机密码生成 ====================
+    function renderPassword() {
+        return '' +
+            '<div class="tool-field">' +
+                '<label class="tool-label">密码长度：<span class="tool-ts-current" id="pwLenVal">16</span></label>' +
+                '<input type="range" id="pwLen" min="4" max="64" value="16" style="width:100%">' +
+            '</div>' +
+            '<div class="tool-field">' +
+                '<label class="tool-label">字符组成</label>' +
+                '<div class="tool-row">' +
+                    '<label class="tool-checkbox"><input type="checkbox" id="pwLower" checked> 小写 a-z</label>' +
+                    '<label class="tool-checkbox"><input type="checkbox" id="pwUpper" checked> 大写 A-Z</label>' +
+                    '<label class="tool-checkbox"><input type="checkbox" id="pwDigit" checked> 数字 0-9</label>' +
+                    '<label class="tool-checkbox"><input type="checkbox" id="pwSymbol"> 符号 !@#$…</label>' +
+                '</div>' +
+            '</div>' +
+            '<div class="tool-actions">' +
+                '<button class="post-btn" id="pwGen">生成密码</button>' +
+                '<button class="post-btn post-btn-secondary" id="pwCopy">复制密码</button>' +
+            '</div>' +
+            '<div class="tool-error" id="pwError"></div>' +
+            '<div class="tool-field">' +
+                '<label class="tool-label" for="pwOutput">生成的密码</label>' +
+                '<textarea class="tool-textarea" id="pwOutput" readonly style="min-height:60px;font-size:18px;letter-spacing:1px"></textarea>' +
+            '</div>';
+    }
+    function initPassword(root) {
+        const lenSlider = root.querySelector('#pwLen');
+        const lenLabel = root.querySelector('#pwLenVal');
+        const output = root.querySelector('#pwOutput');
+        const error = root.querySelector('#pwError');
+        const SYMBOLS = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+        function secureRandInt(max) {
+            const arr = new Uint32Array(1);
+            (window.crypto || { getRandomValues: null }).getRandomValues
+                ? crypto.getRandomValues(arr)
+                : arr[0] = Math.floor(Math.random() * 0xFFFFFFFF);
+            return arr[0] % max;
+        }
+        function buildPool() {
+            let pool = '';
+            if (root.querySelector('#pwLower').checked) pool += 'abcdefghijklmnopqrstuvwxyz';
+            if (root.querySelector('#pwUpper').checked) pool += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (root.querySelector('#pwDigit').checked) pool += '0123456789';
+            if (root.querySelector('#pwSymbol').checked) pool += SYMBOLS;
+            return pool;
+        }
+        function generate() {
+            hideError(error);
+            const pool = buildPool();
+            if (!pool) { showError(error, '请至少选择一种字符类型'); output.value = ''; return; }
+            const n = parseInt(lenSlider.value, 10);
+            let pwd = '';
+            for (let i = 0; i < n; i++) pwd += pool[secureRandInt(pool.length)];
+            output.value = pwd;
+        }
+        lenSlider.addEventListener('input', () => { lenLabel.textContent = lenSlider.value; });
+        root.querySelector('#pwGen').addEventListener('click', generate);
+        root.querySelector('#pwCopy').addEventListener('click', (e) => {
+            if (output.value) copyText(output.value, e.currentTarget);
+        });
         generate();
     }
 });
