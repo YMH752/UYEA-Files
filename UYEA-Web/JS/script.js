@@ -7,7 +7,9 @@
     const DROPDOWN_PAIRS = [
         { btnId: 'langIconBtn', menuId: 'langDropdown' },
         { btnId: 'themeIconBtn', menuId: 'themeDropdown' },
-        { btnId: 'menuToggleBtn', menuId: 'dropdownMenu' }
+        { btnId: 'menuToggleBtn', menuId: 'dropdownMenu' },
+        { btnId: 'mobileSearchToggle', menuId: 'mobileSearchPanel' },
+        { btnId: 'headerEngineSelect', menuId: 'headerEngineDropdown' }
     ];
 
     function closeAllDropdowns(exceptBtnId) {
@@ -151,7 +153,7 @@
     if (headerEngineSelect) {
         headerEngineSelect.addEventListener('click', (e) => {
             e.stopPropagation();
-            closeAllDropdowns(null);
+            closeAllDropdowns('headerEngineSelect');
             headerEngineDropdown.classList.toggle('show');
         });
     }
@@ -169,7 +171,7 @@
     if (mobileSearchToggle && mobileSearchPanel) {
         mobileSearchToggle.addEventListener('click', (e) => {
             e.stopPropagation();
-            closeAllDropdowns(null);
+            closeAllDropdowns('mobileSearchToggle');
             const open = mobileSearchPanel.classList.toggle('show');
             mobileSearchToggle.classList.toggle('active', open);
             if (open && mobileSearchInput) {
@@ -225,16 +227,6 @@
             }
         });
     }
-
-    // 点击外部关闭手机端搜索面板
-    document.addEventListener('click', (e) => {
-        if (mobileSearchPanel && mobileSearchPanel.classList.contains('show') &&
-            !mobileSearchPanel.contains(e.target) && e.target !== mobileSearchToggle &&
-            !mobileSearchToggle.contains(e.target)) {
-            mobileSearchPanel.classList.remove('show');
-            mobileSearchToggle.classList.remove('active');
-        }
-    });
 
     // ==================== 站内搜索功能 ====================
     let siteSearchData = { posts: null, nav: null };
@@ -542,11 +534,10 @@
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeAllDropdowns(null);
-            if (headerEngineDropdown) headerEngineDropdown.classList.remove('show');
         }
     });
 
-    // 统一的点击外部关闭下拉菜单（替换4个独立监听器，减少事件监听器数量）
+    // 统一的点击外部关闭下拉菜单（所有下拉菜单均在 DROPDOWN_PAIRS 中统一处理）
     document.addEventListener('click', (e) => {
         DROPDOWN_PAIRS.forEach(({ btnId, menuId }) => {
             const btn = document.getElementById(btnId);
@@ -558,11 +549,6 @@
                 }
             }
         });
-        // 引擎选择下拉不在 DROPDOWN_PAIRS 中，单独处理
-        if (headerEngineDropdown && headerEngineDropdown.classList.contains('show') &&
-            headerEngineSelect && !headerEngineSelect.contains(e.target)) {
-            headerEngineDropdown.classList.remove('show');
-        }
     });
 
     // ==================== 图标占位符系统（底色+边框，待后续替换为真实图标） ====================

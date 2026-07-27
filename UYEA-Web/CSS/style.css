@@ -612,9 +612,9 @@ a { color: var(--primary); text-decoration: none; }
     top: var(--header-h);
     left: 0; right: 0;
     padding: 14px 16px;
-    background: var(--glass-bg-strong);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    background: rgba(247, 243, 237, 0.88);
+    backdrop-filter: blur(40px) saturate(220%);
+    -webkit-backdrop-filter: blur(40px) saturate(220%);
     border-bottom: 1px solid var(--glass-border);
     box-shadow: var(--shadow-md), inset 0 1px 0 var(--glass-highlight);
     z-index: 999;
@@ -682,6 +682,20 @@ a { color: var(--primary); text-decoration: none; }
     color: white;
     cursor: pointer;
     flex-shrink: 0;
+}
+
+/* 论坛视图：搜索栏自动改为按钮（所有屏幕尺寸） */
+body.view-forum .header-search { display: none !important; }
+body.view-forum .mobile-search-toggle { display: flex !important; }
+body.view-forum .header-container { gap: 8px; }
+
+/* 深色/极客/咖啡主题：搜索面板背景适配 */
+html[data-theme="dark"] .mobile-search-panel,
+html[data-theme="geek"] .mobile-search-panel {
+    background: rgba(28, 25, 23, 0.92);
+}
+html[data-theme="coffee"] .mobile-search-panel {
+    background: rgba(61, 41, 20, 0.92);
 }
 
 @media (max-width: 900px) {
