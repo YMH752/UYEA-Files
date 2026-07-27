@@ -1,0 +1,12 @@
+# Cloudflare Wrangler CLI 缓存
+.wrangler/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
