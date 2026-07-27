@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
 
         try {
-            const res = await fetch(UYEA_CONFIG.dataFiles.posts);
+            const res = await fetch(UYEA_CONFIG.dataFiles.posts, { cache: 'no-cache' });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const posts = await res.json();
             if (!Array.isArray(posts) || posts.length === 0) throw new Error('无帖子数据');

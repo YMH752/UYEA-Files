@@ -319,7 +319,7 @@
             });
         }
 
-        fetch(UYEA_CONFIG.dataFiles.navigation)
+        fetch(UYEA_CONFIG.dataFiles.navigation, { cache: 'no-cache' })
             .then(r => {
                 if (!r.ok) throw new Error(`HTTP ${r.status}: 导航数据加载失败`);
                 return r.json();
