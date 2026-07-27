@@ -291,6 +291,7 @@ a { color: var(--primary); text-decoration: none; }
     display: flex;
     align-items: center;
     gap: 12px;
+    position: relative;
     width: 100%;
 }
 
@@ -311,7 +312,7 @@ a { color: var(--primary); text-decoration: none; }
 
 .logo-text:hover { opacity: 0.85; }
 
-.header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-left: auto; }
 
 .nav-links { display: flex; align-items: center; gap: 2px; }
 
@@ -347,34 +348,6 @@ a { color: var(--primary); text-decoration: none; }
 
 .nav-link:hover::after { transform: scaleX(1); }
 .nav-link.active::after { transform: scaleX(1); }
-
-/* ---------- 内联语言切换器 ---------- */
-.lang-inline {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    flex-shrink: 0;
-}
-
-.lang-inline-btn {
-    padding: 5px 8px;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
-    background: transparent;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    min-width: 30px;
-    text-align: center;
-    transition: color 0.2s ease, background 0.2s ease;
-}
-
-.lang-inline-btn:hover { color: var(--text-secondary); }
-.lang-inline-btn.active {
-    color: var(--primary);
-    background: var(--primary-lighter);
-}
 
 /* 语言选择器（简约图标版） */
 .lang-selector {
@@ -590,9 +563,11 @@ a { color: var(--primary); text-decoration: none; }
 
 /* ---------- 常驻搜索栏（顶部居中） ---------- */
 .header-search {
-    flex: 1;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     max-width: 520px;
-    margin: 0 auto;
+    width: 100%;
     display: flex;
     align-items: center;
     height: 38px;
@@ -601,6 +576,7 @@ a { color: var(--primary); text-decoration: none; }
     border-radius: var(--radius-md);
     overflow: visible;
     transition: border-color var(--duration) ease, box-shadow var(--duration) ease;
+    z-index: 1;
 }
 
 .header-search:focus-within {
@@ -703,7 +679,7 @@ a { color: var(--primary); text-decoration: none; }
 
 /* 移动端搜索栏紧凑显示 */
 @media (max-width: 900px) {
-    .header-search { max-width: none; margin: 0 4px; height: 36px; }
+    .header-search { position: relative; left: auto; transform: none; flex: 1; max-width: none; margin: 0 4px; height: 36px; }
     .header-engine-select { padding: 0 8px; font-size: 12px; }
     .header-search-input { padding: 0 8px; font-size: 13px; }
     .header-search-btn { width: 36px; }
@@ -1756,7 +1732,6 @@ html[data-theme="coffee"] .bottom-nav-item.active {
 @media (max-width: 600px) {
     .main-content { padding: 16px 12px 110px; }
     .header-right { gap: 4px; }
-    .lang-inline-btn { padding: 4px 6px; font-size: 11px; min-width: 26px; }
     .theme-icon-btn { width: 40px; height: 40px; }
     .user-btn { width: 40px; height: 40px; }
     .forum-toolbar { flex-direction: column; }
@@ -1784,7 +1759,7 @@ html[data-theme="coffee"] .bottom-nav-item.active {
 
 /* 超小屏（380px）：隐藏非核心元素 */
 @media (max-width: 380px) {
-    .lang-inline { display: none; }
+    .lang-selector { display: none; }
     .bottom-nav-item { padding: 6px 10px; font-size: 10px; }
     .header-right { gap: 4px; }
     .card-icon { width: 34px; height: 34px; font-size: 20px; }

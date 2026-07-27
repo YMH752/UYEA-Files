@@ -12,6 +12,7 @@
     // ==================== 下拉菜单互斥机制 ====================
     // 打开任一下拉菜单时，自动关闭其他所有下拉菜单，防止重叠
     const DROPDOWN_PAIRS = [
+        { btnId: 'langIconBtn', menuId: 'langDropdown' },
         { btnId: 'themeIconBtn', menuId: 'themeDropdown' },
         { btnId: 'menuToggleBtn', menuId: 'dropdownMenu' }
     ];
@@ -30,6 +31,9 @@
     let currentLang = UYEA_CONFIG.defaultLanguage;
     window.currentLang = currentLang; // 初始暴露给其他模块
 
+    // 语言缩写映射
+    const langAbbr = { 'zh-CN': '中', 'zh-TW': '繁', 'en': 'EN' };
+
     const setLang = (lang) => {
         currentLang = lang;
         window.currentLang = lang; // 暴露给其他模块（auth.js等）
@@ -42,20 +46,47 @@
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
             if (msgs[el.dataset.i18nPlaceholder]) el.placeholder = msgs[el.dataset.i18nPlaceholder];
         });
-        // 更新内联语言按钮选中状态
-        document.querySelectorAll('.lang-inline-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.lang === lang);
+        // 更新语言缩写显示
+        const langCurrent = document.getElementById('langCurrent');
+        if (langCurrent) langCurrent.textContent = langAbbr[lang] || '中';
+        // 更新下拉菜单选中状态
+        document.querySelectorAll('.lang-option').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.lang === lang);
         });
         safeSetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language), lang);
         // 通知其他模块语言已切换
         window.dispatchEvent(new CustomEvent('languagechange', { detail: { lang } }));
     };
 
-    // 内联语言按钮：点击直接切换语言
-    const langInlineBtns = document.querySelectorAll('.lang-inline-btn');
-    langInlineBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            setLang(btn.dataset.lang);
+    // 语言图标按钮：点击切换下拉菜单
+    const langIconBtn = document.getElementById('langIconBtn');
+    const langDropdown = document.getElementById('langDropdown');
+    if (langIconBtn && langDropdown) {
+        langIconBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllDropdowns('langIconBtn');
+            const open = langDropdown.classList.toggle('show');
+            langIconBtn.classList.toggle('active', open);
+        });
+        // 点击外部关闭下拉
+        document.addEventListener('click', (e) => {
+            if (!langDropdown.contains(e.target) && e.target !== langIconBtn && !langIconBtn.contains(e.target)) {
+                langDropdown.classList.remove('show');
+                langIconBtn.classList.remove('active');
+            }
+        });
+    }
+
+    // 语言选项点击事件
+    const langOptions = document.querySelectorAll('.lang-option');
+    langOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+            langOptions.forEach(x => x.classList.remove('active'));
+            opt.classList.add('active');
+            setLang(opt.dataset.lang);
+            // 关闭下拉菜单
+            if (langDropdown) langDropdown.classList.remove('show');
+            if (langIconBtn) langIconBtn.classList.remove('active');
         });
     });
 
