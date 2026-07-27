@@ -470,7 +470,7 @@ a { color: var(--primary); text-decoration: none; }
     transform: translateX(-50%);
     max-width: 520px;
     width: 100%;
-    display: flex;
+    display: none; /* 默认隐藏，仅大屏(≥1299×834)显示 */
     align-items: center;
     height: 38px;
     background: var(--surface-warm);
@@ -579,20 +579,19 @@ a { color: var(--primary); text-decoration: none; }
 
 .header-search-btn:hover { opacity: 0.9; }
 
-/* 移动端搜索栏紧凑显示 */
+/* 小屏紧凑显示（搜索栏已默认隐藏，按钮默认显示） */
 @media (max-width: 900px) {
-    .header-search { display: none; }
     .header-container { gap: 8px; padding: 0 14px; }
 }
 
-/* 手机端搜索按钮 + 下拉面板（模仿语言/主题下拉样式） */
+/* 搜索按钮 + 下拉面板（模仿语言/主题下拉样式） */
 .search-selector {
     position: relative;
     flex-shrink: 0;
 }
 
 .mobile-search-toggle {
-    display: none;
+    display: flex; /* 默认显示，仅大屏(≥1299×834)隐藏 */
     align-items: center;
     justify-content: center;
     width: 40px; height: 40px;
@@ -611,17 +610,18 @@ a { color: var(--primary); text-decoration: none; }
     border-color: var(--primary-light);
 }
 
-/* 搜索下拉面板：模仿 .lang-dropdown / .theme-dropdown 样式，提高不透明度和模糊度 */
+/* 搜索下拉面板：颜色与语言/主题下拉统一，模糊度拉高，居中显示 */
 .mobile-search-panel {
     display: none;
     position: absolute;
     top: calc(100% + 8px);
-    right: 0;
-    min-width: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 320px;
     padding: 8px;
-    background: rgba(255, 251, 245, 0.72);
-    backdrop-filter: blur(40px) saturate(220%);
-    -webkit-backdrop-filter: blur(40px) saturate(220%);
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(48px) saturate(240%);
+    -webkit-backdrop-filter: blur(48px) saturate(240%);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md), inset 0 1px 0 var(--glass-highlight);
@@ -632,8 +632,8 @@ a { color: var(--primary); text-decoration: none; }
 .mobile-search-panel.show { display: flex; flex-direction: column; gap: 8px; }
 
 @keyframes searchDropIn {
-    from { opacity: 0; transform: translateY(-8px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(0.95); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
 }
 
 .mobile-search-engine-row {
@@ -704,22 +704,10 @@ a { color: var(--primary); text-decoration: none; }
     flex-shrink: 0;
 }
 
-/* 论坛视图：搜索栏自动改为按钮（所有屏幕尺寸） */
-body.view-forum .header-search { display: none !important; }
-body.view-forum .mobile-search-toggle { display: flex !important; }
-body.view-forum .header-container { gap: 8px; }
-
-/* 深色/极客/咖啡主题：搜索面板背景适配（高不透明度防背后文字透出） */
-html[data-theme="dark"] .mobile-search-panel,
-html[data-theme="geek"] .mobile-search-panel {
-    background: rgba(28, 25, 23, 0.78);
-}
-html[data-theme="coffee"] .mobile-search-panel {
-    background: rgba(61, 41, 20, 0.78);
-}
-
-@media (max-width: 900px) {
-    .mobile-search-toggle { display: flex; }
+/* 大屏（≥1299×834）：显示桌面搜索栏，隐藏搜索按钮 */
+@media (min-width: 1299px) and (min-height: 834px) {
+    .header-search { display: flex !important; }
+    .mobile-search-toggle { display: none; }
 }
 
 /* ---------- 站内搜索结果视图 ---------- */
