@@ -717,13 +717,28 @@
         }
     }
 
-    // 窗口resize时重新计算2行限制（防抖）
+    // 窗口resize时重新计算2行限制 + 搜索栏断点同步关闭下拉（防抖）
     let navResizeTimer = null;
+    let lastDesktopMode = window.innerWidth >= 1299;
     window.addEventListener('resize', () => {
         clearTimeout(navResizeTimer);
         navResizeTimer = setTimeout(() => {
             if (document.getElementById('navView')?.style.display !== 'none') applyNavFilter();
-        }, 200);
+            // 跨越1299px断点时关闭搜索相关下拉，防止触发元素消失后下拉悬空
+            const isDesktop = window.innerWidth >= 1299;
+            if (isDesktop !== lastDesktopMode) {
+                lastDesktopMode = isDesktop;
+                // 桌面端：关闭手机搜索面板；手机端：关闭桌面引擎下拉
+                const mobilePanel = document.getElementById('mobileSearchPanel');
+                const headerDropdown = document.getElementById('headerEngineDropdown');
+                if (mobilePanel) { mobilePanel.classList.remove('show'); }
+                const mobileToggle = document.getElementById('mobileSearchToggle');
+                if (mobileToggle) { mobileToggle.classList.remove('active'); }
+                if (headerDropdown) { headerDropdown.classList.remove('show'); }
+                const headerSelect = document.getElementById('headerEngineSelect');
+                if (headerSelect) { headerSelect.classList.remove('active'); }
+            }
+        }, 150);
     });
 
     // 监听视图切换：切换到导航视图时恢复分类状态并重新应用筛选

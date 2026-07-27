@@ -1,5 +1,5 @@
 /* ============================================================
-   UYEA 悠野社区 · style.css v0.6.78
+   UYEA 悠野社区 · style.css v0.6.79
    复古×现代 · 墨绿琥珀 · 液态玻璃 · 纸张质感
    ============================================================ */
 
@@ -488,7 +488,7 @@ a { color: var(--primary); text-decoration: none; }
     transform: translateX(-50%);
     max-width: 520px;
     width: 100%;
-    display: none; /* 默认隐藏，仅大屏(≥1299×834)显示 */
+    display: none; /* 默认隐藏，仅宽屏(≥1299px)显示 */
     align-items: center;
     height: 38px;
     background: var(--surface-warm);
@@ -628,7 +628,7 @@ a { color: var(--primary); text-decoration: none; }
 }
 
 .mobile-search-toggle {
-    display: flex; /* 默认显示，仅大屏(≥1299×834)隐藏 */
+    display: flex; /* 默认显示，仅宽屏(≥1299px)隐藏 */
     align-items: center;
     justify-content: center;
     width: 40px; height: 40px;
@@ -779,8 +779,8 @@ html[data-theme="coffee"] .mobile-engine-option.active {
     flex-shrink: 0;
 }
 
-/* 大屏（≥1299×834）：显示桌面搜索栏，隐藏搜索按钮 */
-@media (min-width: 1299px) and (min-height: 834px) {
+/* 宽屏（≥1299px）：显示桌面搜索栏，隐藏搜索按钮 */
+@media (min-width: 1299px) {
     .header-search { display: flex !important; }
     .mobile-search-toggle { display: none; }
 }
