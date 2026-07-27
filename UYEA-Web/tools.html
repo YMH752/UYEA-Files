@@ -24,8 +24,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.51" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.51" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.53" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.53" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -68,7 +68,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.51" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.53" media="all">
 
     <!-- 工具页面专属样式 -->
     <style>
@@ -463,45 +463,38 @@
 
             <!-- 分类分组视图 -->
             <div id="toolsGroupedView">
+
                 <!-- 开发者工具 -->
                 <div class="tool-group section-group" data-category="dev">
                     <div class="section-header">
                         <h2 class="section-title" data-i18n="section.dev">开发者工具</h2>
+                        <button class="more-btn" data-target-category="dev"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
                     </div>
                     <div class="grid-container">
-                        <a class="card-item" role="button" tabindex="0" data-tool="json" data-title="JSON 格式化" title="JSON 格式化">
-                            <div class="card-info"><div class="card-title">JSON 格式化</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-tool="base64" data-title="Base64 编解码" title="Base64 编解码">
-                            <div class="card-info"><div class="card-title">Base64 编解码</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-tool="url" data-title="URL 编解码" title="URL 编解码">
-                            <div class="card-info"><div class="card-title">URL 编解码</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-tool="hash" data-title="哈希生成" title="哈希生成">
-                            <div class="card-info"><div class="card-title">哈希生成</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-tool="regex" data-title="正则表达式测试" title="正则表达式测试">
-                            <div class="card-info"><div class="card-title">正则表达式测试</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-tool="timestamp" data-title="时间戳转换" title="时间戳转换">
-                            <div class="card-info"><div class="card-title">时间戳转换</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="JWT 解码" data-title="JWT 解码" title="JWT 解码">
-                            <div class="card-info"><div class="card-title">JWT 解码</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="二维码生成" data-title="二维码生成" title="二维码生成">
-                            <div class="card-info"><div class="card-title">二维码生成</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Cron 表达式" data-title="Cron 表达式" title="Cron 表达式">
-                            <div class="card-info"><div class="card-title">Cron 表达式</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="HTML 转义" data-title="HTML 转义" title="HTML 转义">
-                            <div class="card-info"><div class="card-title">HTML 转义</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Hex 编解码" data-title="Hex 编解码" title="Hex 编解码">
-                            <div class="card-info"><div class="card-title">Hex 编解码</div></div>
-                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="json" data-title="JSON 格式化" title="JSON 格式化"><div class="card-info"><div class="card-title">JSON 格式化</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="base64" data-title="Base64 编解码" title="Base64 编解码"><div class="card-info"><div class="card-title">Base64 编解码</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="url" data-title="URL 编解码" title="URL 编解码"><div class="card-info"><div class="card-title">URL 编解码</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="hash" data-title="哈希生成" title="哈希生成"><div class="card-info"><div class="card-title">哈希生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="regex" data-title="正则表达式测试" title="正则表达式测试"><div class="card-info"><div class="card-title">正则表达式测试</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="timestamp" data-title="时间戳转换" title="时间戳转换"><div class="card-info"><div class="card-title">时间戳转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="JWT 解码" data-title="JWT 解码" title="JWT 解码"><div class="card-info"><div class="card-title">JWT 解码</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Cron 表达式" data-title="Cron 表达式" title="Cron 表达式"><div class="card-info"><div class="card-title">Cron 表达式</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="HTML 转义" data-title="HTML 转义" title="HTML 转义"><div class="card-info"><div class="card-title">HTML 转义</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Hex 编解码" data-title="Hex 编解码" title="Hex 编解码"><div class="card-info"><div class="card-title">Hex 编解码</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="SQL 格式化" data-title="SQL 格式化" title="SQL 格式化"><div class="card-info"><div class="card-title">SQL 格式化</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="HTTP 状态码" data-title="HTTP 状态码" title="HTTP 状态码"><div class="card-info"><div class="card-title">HTTP 状态码</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="代码对比" data-title="代码对比" title="代码对比"><div class="card-info"><div class="card-title">代码对比</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="XML 格式化" data-title="XML 格式化" title="XML 格式化"><div class="card-info"><div class="card-title">XML 格式化</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="MIME 类型" data-title="MIME 类型" title="MIME 类型"><div class="card-info"><div class="card-title">MIME 类型</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="User-Agent 解析" data-title="User-Agent 解析" title="User-Agent 解析"><div class="card-info"><div class="card-title">User-Agent 解析</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="YAML 转换" data-title="YAML 转换" title="YAML 转换"><div class="card-info"><div class="card-title">YAML 转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="JSONPath 查询" data-title="JSONPath 查询" title="JSONPath 查询"><div class="card-info"><div class="card-title">JSONPath 查询</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="CSS 压缩" data-title="CSS 压缩" title="CSS 压缩"><div class="card-info"><div class="card-title">CSS 压缩</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="JS 压缩" data-title="JS 压缩" title="JS 压缩"><div class="card-info"><div class="card-title">JS 压缩</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="HTML 美化" data-title="HTML 美化" title="HTML 美化"><div class="card-info"><div class="card-title">HTML 美化</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="代码混淆" data-title="代码混淆" title="代码混淆"><div class="card-info"><div class="card-title">代码混淆</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="ASCII 艺术字" data-title="ASCII 艺术字" title="ASCII 艺术字"><div class="card-info"><div class="card-title">ASCII 艺术字</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Lorem Ipsum" data-title="Lorem Ipsum" title="Lorem Ipsum"><div class="card-info"><div class="card-title">Lorem Ipsum</div></div></a>
                         <button class="add-card" data-category="dev" data-i18n-title="tools.addTool" title="添加工具">
                             <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
                             <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
@@ -513,26 +506,33 @@
                 <div class="tool-group section-group" data-category="text">
                     <div class="section-header">
                         <h2 class="section-title" data-i18n="section.text">文本工具</h2>
+                        <button class="more-btn" data-target-category="text"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
                     </div>
                     <div class="grid-container">
-                        <a class="card-item" role="button" tabindex="0" data-tool="wordcount" data-title="字数统计" title="字数统计">
-                            <div class="card-info"><div class="card-title">字数统计</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-tool="password" data-title="随机密码生成" title="随机密码生成">
-                            <div class="card-info"><div class="card-title">随机密码生成</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本对比" data-title="文本对比" title="文本对比">
-                            <div class="card-info"><div class="card-title">文本对比</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="大小写转换" data-title="大小写转换" title="大小写转换">
-                            <div class="card-info"><div class="card-title">大小写转换</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本去重" data-title="文本去重" title="文本去重">
-                            <div class="card-info"><div class="card-title">文本去重</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Lorem 占位文本" data-title="Lorem 占位文本" title="Lorem 占位文本">
-                            <div class="card-info"><div class="card-title">Lorem 占位文本</div></div>
-                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="wordcount" data-title="字数统计" title="字数统计"><div class="card-info"><div class="card-title">字数统计</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本对比" data-title="文本对比" title="文本对比"><div class="card-info"><div class="card-title">文本对比</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="大小写转换" data-title="大小写转换" title="大小写转换"><div class="card-info"><div class="card-title">大小写转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本去重" data-title="文本去重" title="文本去重"><div class="card-info"><div class="card-title">文本去重</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本反转" data-title="文本反转" title="文本反转"><div class="card-info"><div class="card-title">文本反转</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="繁简转换" data-title="繁简转换" title="繁简转换"><div class="card-info"><div class="card-title">繁简转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="拼音转换" data-title="拼音转换" title="拼音转换"><div class="card-info"><div class="card-title">拼音转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="字符替换" data-title="字符替换" title="字符替换"><div class="card-info"><div class="card-title">字符替换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="行排序" data-title="行排序" title="行排序"><div class="card-info"><div class="card-title">行排序</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="进制转换" data-title="进制转换" title="进制转换"><div class="card-info"><div class="card-title">进制转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本加密" data-title="文本加密" title="文本加密"><div class="card-info"><div class="card-title">文本加密</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本转语音" data-title="文本转语音" title="文本转语音"><div class="card-info"><div class="card-title">文本转语音</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本脱敏" data-title="文本脱敏" title="文本脱敏"><div class="card-info"><div class="card-title">文本脱敏</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="随机文本" data-title="随机文本" title="随机文本"><div class="card-info"><div class="card-title">随机文本</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本分行" data-title="文本分行" title="文本分行"><div class="card-info"><div class="card-title">文本分行</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="空格删除" data-title="空格删除" title="空格删除"><div class="card-info"><div class="card-title">空格删除</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="全角半角转换" data-title="全角半角转换" title="全角半角转换"><div class="card-info"><div class="card-title">全角半角转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Markdown 预览" data-title="Markdown 预览" title="Markdown 预览"><div class="card-info"><div class="card-title">Markdown 预览</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本拼接" data-title="文本拼接" title="文本拼接"><div class="card-info"><div class="card-title">文本拼接</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本截取" data-title="文本截取" title="文本截取"><div class="card-info"><div class="card-title">文本截取</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="关键词提取" data-title="关键词提取" title="关键词提取"><div class="card-info"><div class="card-title">关键词提取</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本摘要" data-title="文本摘要" title="文本摘要"><div class="card-info"><div class="card-title">文本摘要</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="字频统计" data-title="字频统计" title="字频统计"><div class="card-info"><div class="card-title">字频统计</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文本diff" data-title="文本 Diff" title="文本 Diff"><div class="card-info"><div class="card-title">文本 Diff</div></div></a>
                         <button class="add-card" data-category="text" data-i18n-title="tools.addTool" title="添加工具">
                             <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
                             <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
@@ -544,27 +544,136 @@
                 <div class="tool-group section-group" data-category="design">
                     <div class="section-header">
                         <h2 class="section-title" data-i18n="section.design">设计美化</h2>
+                        <button class="more-btn" data-target-category="design"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
                     </div>
                     <div class="grid-container">
-                        <a class="card-item" role="button" tabindex="0" data-tool="color" data-title="颜色选择器" title="颜色选择器">
-                            <div class="card-info"><div class="card-title">颜色选择器</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-tool="uuid" data-title="UUID 生成器" title="UUID 生成器">
-                            <div class="card-info"><div class="card-title">UUID 生成器</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="CSS 渐变生成" data-title="CSS 渐变生成" title="CSS 渐变生成">
-                            <div class="card-info"><div class="card-title">CSS 渐变生成</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="阴影生成器" data-title="阴影生成器" title="阴影生成器">
-                            <div class="card-info"><div class="card-title">阴影生成器</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="SVG 优化" data-title="SVG 优化" title="SVG 优化">
-                            <div class="card-info"><div class="card-title">SVG 优化</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="屏幕取色器" data-title="屏幕取色器" title="屏幕取色器">
-                            <div class="card-info"><div class="card-title">屏幕取色器</div></div>
-                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="color" data-title="颜色选择器" title="颜色选择器"><div class="card-info"><div class="card-title">颜色选择器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="CSS 渐变生成" data-title="CSS 渐变生成" title="CSS 渐变生成"><div class="card-info"><div class="card-title">CSS 渐变生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="阴影生成器" data-title="阴影生成器" title="阴影生成器"><div class="card-info"><div class="card-title">阴影生成器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="SVG 优化" data-title="SVG 优化" title="SVG 优化"><div class="card-info"><div class="card-title">SVG 优化</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="屏幕取色器" data-title="屏幕取色器" title="屏幕取色器"><div class="card-info"><div class="card-title">屏幕取色器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="调色板生成" data-title="调色板生成" title="调色板生成"><div class="card-info"><div class="card-title">调色板生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="字体预览" data-title="字体预览" title="字体预览"><div class="card-info"><div class="card-title">字体预览</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="圆角生成器" data-title="圆角生成器" title="圆角生成器"><div class="card-info"><div class="card-title">圆角生成器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Favicon 生成" data-title="Favicon 生成" title="Favicon 生成"><div class="card-info"><div class="card-title">Favicon 生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片转 Base64" data-title="图片转 Base64" title="图片转 Base64"><div class="card-info"><div class="card-title">图片转 Base64</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="CSS 单位转换" data-title="CSS 单位转换" title="CSS 单位转换"><div class="card-info"><div class="card-title">CSS 单位转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="渐变色卡" data-title="渐变色卡" title="渐变色卡"><div class="card-info"><div class="card-title">渐变色卡</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片占位符" data-title="图片占位符" title="图片占位符"><div class="card-info"><div class="card-title">图片占位符</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="按钮生成器" data-title="按钮生成器" title="按钮生成器"><div class="card-info"><div class="card-title">按钮生成器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="CSS 动画生成" data-title="CSS 动画生成" title="CSS 动画生成"><div class="card-info"><div class="card-title">CSS 动画生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="网格生成器" data-title="网格生成器" title="网格生成器"><div class="card-info"><div class="card-title">网格生成器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="渐变文字" data-title="渐变文字" title="渐变文字"><div class="card-info"><div class="card-title">渐变文字</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="边框生成器" data-title="边框生成器" title="边框生成器"><div class="card-info"><div class="card-title">边框生成器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="贝塞尔曲线" data-title="贝塞尔曲线" title="贝塞尔曲线"><div class="card-info"><div class="card-title">贝塞尔曲线</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="响应式预览" data-title="响应式预览" title="响应式预览"><div class="card-info"><div class="card-title">响应式预览</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="色值转换" data-title="色值转换" title="色值转换"><div class="card-info"><div class="card-title">色值转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="配色方案" data-title="配色方案" title="配色方案"><div class="card-info"><div class="card-title">配色方案</div></div></a>
                         <button class="add-card" data-category="design" data-i18n-title="tools.addTool" title="添加工具">
+                            <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                            <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 生成工具 -->
+                <div class="tool-group section-group" data-category="gen">
+                    <div class="section-header">
+                        <h2 class="section-title" data-i18n="section.gen">生成工具</h2>
+                        <button class="more-btn" data-target-category="gen"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                    </div>
+                    <div class="grid-container">
+                        <a class="card-item" role="button" tabindex="0" data-tool="uuid" data-title="UUID 生成器" title="UUID 生成器"><div class="card-info"><div class="card-title">UUID 生成器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-tool="password" data-title="随机密码生成" title="随机密码生成"><div class="card-info"><div class="card-title">随机密码生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="二维码生成" data-title="二维码生成" title="二维码生成"><div class="card-info"><div class="card-title">二维码生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="条形码生成" data-title="条形码生成" title="条形码生成"><div class="card-info"><div class="card-title">条形码生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="验证码生成" data-title="验证码生成" title="验证码生成"><div class="card-info"><div class="card-title">验证码生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Lorem 占位文本" data-title="Lorem 占位文本" title="Lorem 占位文本"><div class="card-info"><div class="card-title">Lorem 占位文本</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="名字生成" data-title="名字生成" title="名字生成"><div class="card-info"><div class="card-title">名字生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="IP 地址生成" data-title="IP 地址生成" title="IP 地址生成"><div class="card-info"><div class="card-title">IP 地址生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="颜色生成" data-title="颜色生成" title="颜色生成"><div class="card-info"><div class="card-title">颜色生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="数字序列生成" data-title="数字序列生成" title="数字序列生成"><div class="card-info"><div class="card-title">数字序列生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="邮箱生成" data-title="邮箱生成" title="邮箱生成"><div class="card-info"><div class="card-title">邮箱生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="手机号生成" data-title="手机号生成" title="手机号生成"><div class="card-info"><div class="card-title">手机号生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="时间生成" data-title="时间生成" title="时间生成"><div class="card-info"><div class="card-title">时间生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="字符串生成" data-title="字符串生成" title="字符串生成"><div class="card-info"><div class="card-title">字符串生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="GUID 生成" data-title="GUID 生成" title="GUID 生成"><div class="card-info"><div class="card-title">GUID 生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="雪花 ID 生成" data-title="雪花 ID 生成" title="雪花 ID 生成"><div class="card-info"><div class="card-title">雪花 ID 生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="密钥生成" data-title="密钥生成" title="密钥生成"><div class="card-info"><div class="card-title">密钥生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="证书生成" data-title="证书生成" title="证书生成"><div class="card-info"><div class="card-title">证书生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="身份证生成" data-title="身份证生成" title="身份证生成"><div class="card-info"><div class="card-title">身份证生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="地址生成" data-title="地址生成" title="地址生成"><div class="card-info"><div class="card-title">地址生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="像素画生成" data-title="像素画生成" title="像素画生成"><div class="card-info"><div class="card-title">像素画生成</div></div></a>
+                        <button class="add-card" data-category="gen" data-i18n-title="tools.addTool" title="添加工具">
+                            <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                            <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 转换工具 -->
+                <div class="tool-group section-group" data-category="convert">
+                    <div class="section-header">
+                        <h2 class="section-title" data-i18n="section.convert">转换工具</h2>
+                        <button class="more-btn" data-target-category="convert"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                    </div>
+                    <div class="grid-container">
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="PDF 转 Word" data-title="PDF 转 Word" title="PDF 转 Word"><div class="card-info"><div class="card-title">PDF 转 Word</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Markdown 编辑器" data-title="Markdown 编辑器" title="Markdown 编辑器"><div class="card-info"><div class="card-title">Markdown 编辑器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文档格式转换" data-title="文档格式转换" title="文档格式转换"><div class="card-info"><div class="card-title">文档格式转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="表格生成" data-title="表格生成" title="表格生成"><div class="card-info"><div class="card-title">表格生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="思维导图" data-title="思维导图" title="思维导图"><div class="card-info"><div class="card-title">思维导图</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="CSV 转 JSON" data-title="CSV 转 JSON" title="CSV 转 JSON"><div class="card-info"><div class="card-title">CSV 转 JSON</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="JSON 转 CSV" data-title="JSON 转 CSV" title="JSON 转 CSV"><div class="card-info"><div class="card-title">JSON 转 CSV</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Excel 转 JSON" data-title="Excel 转 JSON" title="Excel 转 JSON"><div class="card-info"><div class="card-title">Excel 转 JSON</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="HTML 转 Markdown" data-title="HTML 转 Markdown" title="HTML 转 Markdown"><div class="card-info"><div class="card-title">HTML 转 Markdown</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="YAML 转 JSON" data-title="YAML 转 JSON" title="YAML 转 JSON"><div class="card-info"><div class="card-title">YAML 转 JSON</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="XML 转 JSON" data-title="XML 转 JSON" title="XML 转 JSON"><div class="card-info"><div class="card-title">XML 转 JSON</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="流程图绘制" data-title="流程图绘制" title="流程图绘制"><div class="card-info"><div class="card-title">流程图绘制</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="JSON 转 XML" data-title="JSON 转 XML" title="JSON 转 XML"><div class="card-info"><div class="card-title">JSON 转 XML</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="JSON 转 YAML" data-title="JSON 转 YAML" title="JSON 转 YAML"><div class="card-info"><div class="card-title">JSON 转 YAML</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="HTML 转文本" data-title="HTML 转文本" title="HTML 转文本"><div class="card-info"><div class="card-title">HTML 转文本</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="BBCode 转 HTML" data-title="BBCode 转 HTML" title="BBCode 转 HTML"><div class="card-info"><div class="card-title">BBCode 转 HTML</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="PDF 转 HTML" data-title="PDF 转 HTML" title="PDF 转 HTML"><div class="card-info"><div class="card-title">PDF 转 HTML</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Word 转 PDF" data-title="Word 转 PDF" title="Word 转 PDF"><div class="card-info"><div class="card-title">Word 转 PDF</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片转 PDF" data-title="图片转 PDF" title="图片转 PDF"><div class="card-info"><div class="card-title">图片转 PDF</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="PDF 合并" data-title="PDF 合并" title="PDF 合并"><div class="card-info"><div class="card-title">PDF 合并</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="PDF 拆分" data-title="PDF 拆分" title="PDF 拆分"><div class="card-info"><div class="card-title">PDF 拆分</div></div></a>
+                        <button class="add-card" data-category="convert" data-i18n-title="tools.addTool" title="添加工具">
+                            <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                            <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 网络工具 -->
+                <div class="tool-group section-group" data-category="net">
+                    <div class="section-header">
+                        <h2 class="section-title" data-i18n="section.net">网络工具</h2>
+                        <button class="more-btn" data-target-category="net"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                    </div>
+                    <div class="grid-container">
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="IP 查询" data-title="IP 查询" title="IP 查询"><div class="card-info"><div class="card-title">IP 查询</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="DNS 查询" data-title="DNS 查询" title="DNS 查询"><div class="card-info"><div class="card-title">DNS 查询</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="域名 Whois" data-title="域名 Whois" title="域名 Whois"><div class="card-info"><div class="card-title">域名 Whois</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="HTTP 请求测试" data-title="HTTP 请求测试" title="HTTP 请求测试"><div class="card-info"><div class="card-title">HTTP 请求测试</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="端口扫描" data-title="端口扫描" title="端口扫描"><div class="card-info"><div class="card-title">端口扫描</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="网速测试" data-title="网速测试" title="网速测试"><div class="card-info"><div class="card-title">网速测试</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="SSL 检测" data-title="SSL 检测" title="SSL 检测"><div class="card-info"><div class="card-title">SSL 检测</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="短链生成" data-title="短链生成" title="短链生成"><div class="card-info"><div class="card-title">短链生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="子网计算" data-title="子网计算" title="子网计算"><div class="card-info"><div class="card-title">子网计算</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="MAC 地址查询" data-title="MAC 地址查询" title="MAC 地址查询"><div class="card-info"><div class="card-title">MAC 地址查询</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="路由追踪" data-title="路由追踪" title="路由追踪"><div class="card-info"><div class="card-title">路由追踪</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Ping 测试" data-title="Ping 测试" title="Ping 测试"><div class="card-info"><div class="card-title">Ping 测试</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Header 查看" data-title="Header 查看" title="Header 查看"><div class="card-info"><div class="card-title">Header 查看</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="WebSocket 测试" data-title="WebSocket 测试" title="WebSocket 测试"><div class="card-info"><div class="card-title">WebSocket 测试</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Cookie 编辑" data-title="Cookie 编辑" title="Cookie 编辑"><div class="card-info"><div class="card-title">Cookie 编辑</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="端口转发" data-title="端口转发" title="端口转发"><div class="card-info"><div class="card-title">端口转发</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="IP 归属地" data-title="IP 归属地" title="IP 归属地"><div class="card-info"><div class="card-title">IP 归属地</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="域名解析" data-title="域名解析" title="域名解析"><div class="card-info"><div class="card-title">域名解析</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="CDN 检测" data-title="CDN 检测" title="CDN 检测"><div class="card-info"><div class="card-title">CDN 检测</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="网站测速" data-title="网站测速" title="网站测速"><div class="card-info"><div class="card-title">网站测速</div></div></a>
+                        <button class="add-card" data-category="net" data-i18n-title="tools.addTool" title="添加工具">
                             <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
                             <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
                         </button>
@@ -575,26 +684,29 @@
                 <div class="tool-group section-group" data-category="office">
                     <div class="section-header">
                         <h2 class="section-title" data-i18n="section.office">办公效率</h2>
+                        <button class="more-btn" data-target-category="office"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
                     </div>
                     <div class="grid-container">
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="PDF 转 Word" data-title="PDF 转 Word" title="PDF 转 Word">
-                            <div class="card-info"><div class="card-title">PDF 转 Word</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="流程图绘制" data-title="流程图绘制" title="流程图绘制">
-                            <div class="card-info"><div class="card-title">流程图绘制</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="Markdown 编辑器" data-title="Markdown 编辑器" title="Markdown 编辑器">
-                            <div class="card-info"><div class="card-title">Markdown 编辑器</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文档格式转换" data-title="文档格式转换" title="文档格式转换">
-                            <div class="card-info"><div class="card-title">文档格式转换</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="表格生成" data-title="表格生成" title="表格生成">
-                            <div class="card-info"><div class="card-title">表格生成</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="思维导图" data-title="思维导图" title="思维导图">
-                            <div class="card-info"><div class="card-title">思维导图</div></div>
-                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="日历生成" data-title="日历生成" title="日历生成"><div class="card-info"><div class="card-title">日历生成</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="倒计时器" data-title="倒计时器" title="倒计时器"><div class="card-info"><div class="card-title">倒计时器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="计算器" data-title="计算器" title="计算器"><div class="card-info"><div class="card-title">计算器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="单位换算" data-title="单位换算" title="单位换算"><div class="card-info"><div class="card-title">单位换算</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="汇率转换" data-title="汇率转换" title="汇率转换"><div class="card-info"><div class="card-title">汇率转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="世界时钟" data-title="世界时钟" title="世界时钟"><div class="card-info"><div class="card-title">世界时钟</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="番茄钟" data-title="番茄钟" title="番茄钟"><div class="card-info"><div class="card-title">番茄钟</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="备忘录" data-title="备忘录" title="备忘录"><div class="card-info"><div class="card-title">备忘录</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="排班表" data-title="排班表" title="排班表"><div class="card-info"><div class="card-title">排班表</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="扫描计数" data-title="扫描计数" title="扫描计数"><div class="card-info"><div class="card-title">扫描计数</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="名片识别" data-title="名片识别" title="名片识别"><div class="card-info"><div class="card-title">名片识别</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="发票识别" data-title="发票识别" title="发票识别"><div class="card-info"><div class="card-title">发票识别</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文字识别 OCR" data-title="文字识别 OCR" title="文字识别 OCR"><div class="card-info"><div class="card-title">文字识别 OCR</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="翻译工具" data-title="翻译工具" title="翻译工具"><div class="card-info"><div class="card-title">翻译工具</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="计数器" data-title="计数器" title="计数器"><div class="card-info"><div class="card-title">计数器</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="批量重命名" data-title="批量重命名" title="批量重命名"><div class="card-info"><div class="card-title">批量重命名</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="电子签名" data-title="电子签名" title="电子签名"><div class="card-info"><div class="card-title">电子签名</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="文档加密" data-title="文档加密" title="文档加密"><div class="card-info"><div class="card-title">文档加密</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="日程管理" data-title="日程管理" title="日程管理"><div class="card-info"><div class="card-title">日程管理</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="会议记录" data-title="会议记录" title="会议记录"><div class="card-info"><div class="card-title">会议记录</div></div></a>
                         <button class="add-card" data-category="office" data-i18n-title="tools.addTool" title="添加工具">
                             <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
                             <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
@@ -606,26 +718,29 @@
                 <div class="tool-group section-group" data-category="media">
                     <div class="section-header">
                         <h2 class="section-title" data-i18n="section.media">多媒体处理</h2>
+                        <button class="more-btn" data-target-category="media"><span data-i18n="more.text">更多</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
                     </div>
                     <div class="grid-container">
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片压缩" data-title="图片压缩" title="图片压缩">
-                            <div class="card-info"><div class="card-title">图片压缩</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="视频转 GIF" data-title="视频转 GIF" title="视频转 GIF">
-                            <div class="card-info"><div class="card-title">视频转 GIF</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片格式转换" data-title="图片格式转换" title="图片格式转换">
-                            <div class="card-info"><div class="card-title">图片格式转换</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片裁剪" data-title="图片裁剪" title="图片裁剪">
-                            <div class="card-info"><div class="card-title">图片裁剪</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="音频转换" data-title="音频转换" title="音频转换">
-                            <div class="card-info"><div class="card-title">音频转换</div></div>
-                        </a>
-                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片加水印" data-title="图片加水印" title="图片加水印">
-                            <div class="card-info"><div class="card-title">图片加水印</div></div>
-                        </a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片压缩" data-title="图片压缩" title="图片压缩"><div class="card-info"><div class="card-title">图片压缩</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="视频转 GIF" data-title="视频转 GIF" title="视频转 GIF"><div class="card-info"><div class="card-title">视频转 GIF</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片格式转换" data-title="图片格式转换" title="图片格式转换"><div class="card-info"><div class="card-title">图片格式转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片裁剪" data-title="图片裁剪" title="图片裁剪"><div class="card-info"><div class="card-title">图片裁剪</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="音频转换" data-title="音频转换" title="音频转换"><div class="card-info"><div class="card-title">音频转换</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片加水印" data-title="图片加水印" title="图片加水印"><div class="card-info"><div class="card-title">图片加水印</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片旋转" data-title="图片旋转" title="图片旋转"><div class="card-info"><div class="card-title">图片旋转</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片拼接" data-title="图片拼接" title="图片拼接"><div class="card-info"><div class="card-title">图片拼接</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="音频剪辑" data-title="音频剪辑" title="音频剪辑"><div class="card-info"><div class="card-title">音频剪辑</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="视频剪辑" data-title="视频剪辑" title="视频剪辑"><div class="card-info"><div class="card-title">视频剪辑</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片滤镜" data-title="图片滤镜" title="图片滤镜"><div class="card-info"><div class="card-title">图片滤镜</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片缩放" data-title="图片缩放" title="图片缩放"><div class="card-info"><div class="card-title">图片缩放</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="GIF 制作" data-title="GIF 制作" title="GIF 制作"><div class="card-info"><div class="card-title">GIF 制作</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="音频提取" data-title="音频提取" title="音频提取"><div class="card-info"><div class="card-title">音频提取</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="视频压缩" data-title="视频压缩" title="视频压缩"><div class="card-info"><div class="card-title">视频压缩</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片转 PDF" data-title="图片转 PDF" title="图片转 PDF"><div class="card-info"><div class="card-title">图片转 PDF</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片文字识别" data-title="图片文字识别" title="图片文字识别"><div class="card-info"><div class="card-title">图片文字识别</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="视频转码" data-title="视频转码" title="视频转码"><div class="card-info"><div class="card-title">视频转码</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="图片去背景" data-title="图片去背景" title="图片去背景"><div class="card-info"><div class="card-title">图片去背景</div></div></a>
+                        <a class="card-item" role="button" tabindex="0" data-coming-soon="音频混音" data-title="音频混音" title="音频混音"><div class="card-info"><div class="card-title">音频混音</div></div></a>
                         <button class="add-card" data-category="media" data-i18n-title="tools.addTool" title="添加工具">
                             <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
                             <div class="add-card-title" data-i18n="tools.addTool">添加工具</div>
@@ -661,6 +776,18 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
                 <span data-i18n="bottom.design">设计</span>
             </button>
+            <button class="bottom-nav-item" data-category="gen">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span data-i18n="bottom.gen">生成</span>
+            </button>
+            <button class="bottom-nav-item" data-category="convert">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+                <span data-i18n="bottom.convert">转换</span>
+            </button>
+            <button class="bottom-nav-item" data-category="net">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <span data-i18n="bottom.net">网络</span>
+            </button>
             <button class="bottom-nav-item" data-category="office">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 <span data-i18n="bottom.office">办公</span>
@@ -687,10 +814,10 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
-    <script src="/JS/liquid-glass.js?v=0.6.51" defer></script>
-    <script src="/JS/config.js?v=0.6.51" defer></script>
-    <script src="/JS/script.js?v=0.6.51" defer></script>
-    <script src="/JS/tools.js?v=0.6.51" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.53" defer></script>
+    <script src="/JS/config.js?v=0.6.53" defer></script>
+    <script src="/JS/script.js?v=0.6.53" defer></script>
+    <script src="/JS/tools.js?v=0.6.53" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

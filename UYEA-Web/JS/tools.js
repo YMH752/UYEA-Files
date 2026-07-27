@@ -7,15 +7,28 @@
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    // ==================== 分类筛选 + 搜索 ====================
+    // ==================== 分类筛选 + 搜索 + 2行限制 ====================
     let currentCategory = 'all';
     let toolsSearchTimer = null;
+
+    // 计算grid容器当前列数
+    function getGridColumns(grid, cards) {
+        if (!grid || !cards || cards.length === 0) return 1;
+        const gridWidth = grid.clientWidth;
+        const cardWidth = cards[0].getBoundingClientRect().width;
+        if (cardWidth <= 0) return 1;
+        const gap = 16; // 与 CSS gap: 0 16px 一致
+        return Math.max(1, Math.floor((gridWidth + gap) / (cardWidth + gap)));
+    }
 
     function applyToolsFilter() {
         const searchInput = document.getElementById('toolsSearchInput');
         const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
         const noResults = document.getElementById('toolsNoResults');
         let visibleCount = 0;
+
+        // "全部"视图且无搜索时，限制每分类最多显示2行
+        const isLimited = (currentCategory === 'all' && !keyword);
 
         document.querySelectorAll('.tool-group').forEach(group => {
             const groupCat = group.dataset.category;
@@ -25,14 +38,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // 搜索过滤：隐藏不匹配的卡片
+            // 先显示 group，修复切换分类后 display:none 导致 grid.clientWidth=0 的 BUG
+            group.style.display = '';
+
             const cards = group.querySelectorAll('.card-item');
+            const grid = group.querySelector('.grid-container');
+
+            // 先显示所有卡片，修复上一轮筛选隐藏 cards[0] 导致 getBoundingClientRect().width=0 的 BUG
+            cards.forEach(c => { c.style.display = ''; });
+
+            // 2行限制：计算当前列数，最多显示 columns*2 张卡片
+            let maxVisible = Infinity;
+            if (isLimited && grid && cards.length > 0) {
+                const columns = getGridColumns(grid, cards);
+                maxVisible = columns * 2;
+            }
+
+            // 搜索过滤 + 2行限制
             let groupVisible = 0;
             cards.forEach(card => {
                 const title = (card.dataset.title || card.querySelector('.card-title')?.textContent || '').toLowerCase();
-                const match = !keyword || title.includes(keyword);
-                card.style.display = match ? '' : 'none';
-                if (match) groupVisible++;
+                const matchSearch = !keyword || title.includes(keyword);
+                const withinLimit = groupVisible < maxVisible;
+                const show = matchSearch && (withinLimit || !isLimited);
+                card.style.display = show ? '' : 'none';
+                if (show) groupVisible++;
             });
 
             // 搜索后该分组无可见卡片则隐藏整个分组
@@ -41,6 +71,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (noResults) noResults.classList.toggle('show', visibleCount === 0);
+
+        // "更多"按钮只在"全部"视图且无搜索时显示，切到具体分类或搜索时隐藏
+        const showMoreBtns = (currentCategory === 'all' && !keyword);
+        document.querySelectorAll('.more-btn[data-target-category]').forEach(btn => {
+            btn.style.display = showMoreBtns ? '' : 'none';
+        });
+
+        // 加号按钮只在具体分类视图显示，"全部"视图隐藏
+        const showAddCards = (currentCategory !== 'all');
+        document.querySelectorAll('.add-card').forEach(btn => {
+            btn.style.display = showAddCards ? '' : 'none';
+        });
     }
 
     // 底部导航栏分类切换
@@ -57,6 +99,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // "更多"按钮：点击后切换到对应分类
+    document.querySelectorAll('.more-btn[data-target-category]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetCat = btn.dataset.targetCategory;
+            const targetNavBtn = document.querySelector(`.bottom-nav-item[data-category="${targetCat}"]`);
+            if (targetNavBtn) {
+                targetNavBtn.click();
+            }
+        });
+    });
+
     // 搜索过滤（防抖）
     const toolsSearchInput = document.getElementById('toolsSearchInput');
     if (toolsSearchInput) {
@@ -65,6 +118,16 @@ document.addEventListener('DOMContentLoaded', () => {
             toolsSearchTimer = setTimeout(applyToolsFilter, 200);
         });
     }
+
+    // 窗口大小变化时重新计算2行限制
+    let toolsResizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(toolsResizeTimer);
+        toolsResizeTimer = setTimeout(applyToolsFilter, 200);
+    });
+
+    // 页面加载后初始应用2行限制 + 隐藏"全部"视图下的加号按钮
+    applyToolsFilter();
 
     // ==================== 工具模态框管理 ====================
     const toolOverlay = document.getElementById('toolOverlay');
