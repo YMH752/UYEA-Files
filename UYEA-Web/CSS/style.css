@@ -610,7 +610,7 @@ a { color: var(--primary); text-decoration: none; }
     border-color: var(--primary-light);
 }
 
-/* 搜索下拉面板：颜色与语言/主题下拉统一，模糊度拉高，居中显示 */
+/* 搜索下拉面板：颜色加深防融合，模糊度拉高，居中显示 */
 .mobile-search-panel {
     display: none;
     position: absolute;
@@ -619,9 +619,9 @@ a { color: var(--primary); text-decoration: none; }
     transform: translateX(-50%);
     min-width: 320px;
     padding: 8px;
-    background: var(--glass-bg-strong);
-    backdrop-filter: blur(48px) saturate(240%);
-    -webkit-backdrop-filter: blur(48px) saturate(240%);
+    background: rgba(255, 251, 245, 0.45);
+    backdrop-filter: blur(64px) saturate(280%);
+    -webkit-backdrop-filter: blur(64px) saturate(280%);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md), inset 0 1px 0 var(--glass-highlight);
@@ -664,6 +664,8 @@ a { color: var(--primary); text-decoration: none; }
     background: var(--primary-lighter);
     color: var(--primary);
     font-weight: 700;
+    border: 0.5px solid var(--primary-light);
+    box-shadow: 0 0 0 0.5px var(--primary-light);
 }
 
 .mobile-search-input-row {
