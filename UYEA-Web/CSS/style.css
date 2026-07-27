@@ -611,7 +611,7 @@ a { color: var(--primary); text-decoration: none; }
     border-color: var(--primary-light);
 }
 
-/* 搜索下拉面板：模仿 .lang-dropdown / .theme-dropdown 样式 */
+/* 搜索下拉面板：模仿 .lang-dropdown / .theme-dropdown 样式，提高不透明度和模糊度 */
 .mobile-search-panel {
     display: none;
     position: absolute;
@@ -619,9 +619,9 @@ a { color: var(--primary); text-decoration: none; }
     right: 0;
     min-width: 300px;
     padding: 8px;
-    background: var(--glass-bg-strong);
-    backdrop-filter: blur(32px) saturate(200%);
-    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    background: rgba(255, 251, 245, 0.72);
+    backdrop-filter: blur(40px) saturate(220%);
+    -webkit-backdrop-filter: blur(40px) saturate(220%);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md), inset 0 1px 0 var(--glass-highlight);
@@ -708,6 +708,15 @@ a { color: var(--primary); text-decoration: none; }
 body.view-forum .header-search { display: none !important; }
 body.view-forum .mobile-search-toggle { display: flex !important; }
 body.view-forum .header-container { gap: 8px; }
+
+/* 深色/极客/咖啡主题：搜索面板背景适配（高不透明度防背后文字透出） */
+html[data-theme="dark"] .mobile-search-panel,
+html[data-theme="geek"] .mobile-search-panel {
+    background: rgba(28, 25, 23, 0.78);
+}
+html[data-theme="coffee"] .mobile-search-panel {
+    background: rgba(61, 41, 20, 0.78);
+}
 
 @media (max-width: 900px) {
     .mobile-search-toggle { display: flex; }
