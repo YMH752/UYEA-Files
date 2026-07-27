@@ -103,6 +103,13 @@
     const headerEngineCurrent = document.getElementById('headerEngineCurrent');
     const headerEngineOptions = document.querySelectorAll('.header-engine-option');
 
+    // 手机端搜索按钮 + 下拉面板
+    const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+    const mobileSearchPanel = document.getElementById('mobileSearchPanel');
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const mobileSearchSubmit = document.getElementById('mobileSearchSubmit');
+    const mobileEngineOptions = document.querySelectorAll('.mobile-engine-option');
+
     // 搜索引擎名称映射（用于常驻栏显示）
     const ENGINE_NAMES = {
         'baidu': { 'zh-CN': '百度', 'zh-TW': '百度', 'en': 'Baidu' },
@@ -121,9 +128,12 @@
         headerEngineCurrent.textContent = names[currentLang] || names['zh-CN'];
     }
 
-    // 同步引擎选择UI的active状态
+    // 同步引擎选择UI的active状态（同时更新桌面端和手机端）
     function syncEngineTabs() {
         headerEngineOptions.forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.value === current);
+        });
+        mobileEngineOptions.forEach(opt => {
             opt.classList.toggle('active', opt.dataset.value === current);
         });
         updateHeaderEngineLabel();
@@ -152,6 +162,78 @@
             headerEngineDropdown.classList.remove('show');
             if (headerSearchInput) headerSearchInput.focus();
         });
+    });
+
+    // ==================== 手机端搜索面板 ====================
+    // 手机端搜索面板展开/收起
+    if (mobileSearchToggle && mobileSearchPanel) {
+        mobileSearchToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllDropdowns(null);
+            const open = mobileSearchPanel.classList.toggle('show');
+            mobileSearchToggle.classList.toggle('active', open);
+            if (open && mobileSearchInput) {
+                setTimeout(() => mobileSearchInput.focus(), 100);
+            }
+        });
+    }
+
+    // 手机端引擎选项点击
+    mobileEngineOptions.forEach(opt => {
+        opt.addEventListener('click', (e) => {
+            e.stopPropagation();
+            switchEngine(opt.dataset.value);
+            if (mobileSearchInput) mobileSearchInput.focus();
+        });
+    });
+
+    // 手机端搜索提交
+    function executeMobileSearch() {
+        if (!mobileSearchInput) return;
+        const query = mobileSearchInput.value.trim();
+        if (!query) return;
+
+        if (current === 'site') {
+            mobileSearchInput.value = '';
+            const subtitle = document.getElementById('searchResultsSubtitle');
+            if (subtitle) {
+                const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+                subtitle.textContent = msgs['search.loading'] || '搜索中...';
+            }
+            showSearchView(query);
+            loadSiteSearchData().then(() => {
+                renderSiteSearchResults(query);
+            });
+        } else {
+            const engineUrl = UYEA_CONFIG.getSearchEngineUrl(current);
+            if (engineUrl) {
+                window.open(engineUrl + encodeURIComponent(query), '_blank');
+            }
+        }
+        mobileSearchPanel.classList.remove('show');
+        mobileSearchToggle.classList.remove('active');
+    }
+
+    if (mobileSearchSubmit) {
+        mobileSearchSubmit.addEventListener('click', executeMobileSearch);
+    }
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                executeMobileSearch();
+            }
+        });
+    }
+
+    // 点击外部关闭手机端搜索面板
+    document.addEventListener('click', (e) => {
+        if (mobileSearchPanel && mobileSearchPanel.classList.contains('show') &&
+            !mobileSearchPanel.contains(e.target) && e.target !== mobileSearchToggle &&
+            !mobileSearchToggle.contains(e.target)) {
+            mobileSearchPanel.classList.remove('show');
+            mobileSearchToggle.classList.remove('active');
+        }
     });
 
     // ==================== 站内搜索功能 ====================
