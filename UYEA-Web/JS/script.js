@@ -326,7 +326,7 @@
             })
             .then(nav => {
                 // 渲染分组视图（6个分类），每个分类末尾追加"添加网站"加号按钮
-                ['ai', 'social', 'tools', 'shopping', 'news', 'life'].forEach(cat => {
+                ['ai', 'social', 'tools', 'creative', 'shopping', 'news', 'life'].forEach(cat => {
                     const section = document.getElementById(cat + '-section');
                     if (section && nav[cat]) {
                         const grid = section.querySelector('.grid-container');

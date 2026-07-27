@@ -24,10 +24,7 @@
     { "title": "Character.AI", "url": "https://character.ai/", "icon": "characterai" },
     { "title": "Poe", "url": "https://poe.com/", "icon": "poe" },
     { "title": "You.com", "url": "https://you.com/", "icon": "youcom" },
-    { "title": "Lepton AI", "url": "https://www.lepton.ai/", "icon": "lepton" },
-    { "title": "Cursor", "url": "https://www.cursor.com/", "icon": "cursor" },
-    { "title": "Windsurf", "url": "https://codeium.com/windsurf", "icon": "windsurf" },
-    { "title": "Replit", "url": "https://replit.com/", "icon": "replit" }
+    { "title": "Lepton AI", "url": "https://www.lepton.ai/", "icon": "lepton" }
   ],
   "social": [
     { "title": "小红书", "url": "https://www.xiaohongshu.com/", "icon": "xiaohongshu" },
@@ -58,14 +55,6 @@
   ],
   "tools": [
     { "title": "GitHub", "url": "https://github.com/", "icon": "github" },
-    { "title": "v0", "url": "https://v0.dev/", "icon": "v0" },
-    { "title": "Figma", "url": "https://www.figma.com/", "icon": "figma" },
-    { "title": "Canva", "url": "https://www.canva.com/", "icon": "canva" },
-    { "title": "TinyPNG", "url": "https://tinypng.com/", "icon": "tinypng" },
-    { "title": "Stack Overflow", "url": "https://stackoverflow.com/", "icon": "stackoverflow" },
-    { "title": "CodePen", "url": "https://codepen.io/", "icon": "codepen" },
-    { "title": "Notion", "url": "https://www.notion.com/", "icon": "notion" },
-    { "title": "Excalidraw", "url": "https://excalidraw.com/", "icon": "excalidraw" },
     { "title": "GitLab", "url": "https://gitlab.com/", "icon": "gitlab" },
     { "title": "Bitbucket", "url": "https://bitbucket.org/", "icon": "bitbucket" },
     { "title": "Gitee", "url": "https://gitee.com/", "icon": "gitee" },
@@ -75,20 +64,32 @@
     { "title": "CodeSandbox", "url": "https://codesandbox.io/", "icon": "codesandbox" },
     { "title": "Replit", "url": "https://replit.com/", "icon": "replit" },
     { "title": "Glitch", "url": "https://glitch.com/", "icon": "glitch" },
+    { "title": "Cursor", "url": "https://www.cursor.com/", "icon": "cursor" },
+    { "title": "Windsurf", "url": "https://codeium.com/windsurf", "icon": "windsurf" },
+    { "title": "v0", "url": "https://v0.dev/", "icon": "v0" },
+    { "title": "Stack Overflow", "url": "https://stackoverflow.com/", "icon": "stackoverflow" },
+    { "title": "CodePen", "url": "https://codepen.io/", "icon": "codepen" },
     { "title": "MDN", "url": "https://developer.mozilla.org/", "icon": "mdn" },
     { "title": "W3Schools", "url": "https://www.w3schools.com/", "icon": "w3schools" },
     { "title": "LeetCode", "url": "https://leetcode.com/", "icon": "leetcode" },
     { "title": "牛客网", "url": "https://www.nowcoder.com/", "icon": "nowcoder" },
+    { "title": "Regex101", "url": "https://regex101.com/", "icon": "regex101" },
+    { "title": "JSON Formatter", "url": "https://jsonformatter.org/", "icon": "jsonformatter" },
+    { "title": "Notion", "url": "https://www.notion.com/", "icon": "notion" }
+  ],
+  "creative": [
+    { "title": "Figma", "url": "https://www.figma.com/", "icon": "figma" },
+    { "title": "Canva", "url": "https://www.canva.com/", "icon": "canva" },
     { "title": "Adobe", "url": "https://www.adobe.com/", "icon": "adobe" },
     { "title": "Sketch", "url": "https://www.sketch.com/", "icon": "sketch" },
     { "title": "Framer", "url": "https://www.framer.com/", "icon": "framer" },
+    { "title": "Excalidraw", "url": "https://excalidraw.com/", "icon": "excalidraw" },
     { "title": "Dribbble", "url": "https://dribbble.com/", "icon": "dribbble" },
     { "title": "Behance", "url": "https://www.behance.net/", "icon": "behance" },
     { "title": "Unsplash", "url": "https://unsplash.com/", "icon": "unsplash" },
     { "title": "Pexels", "url": "https://www.pexels.com/", "icon": "pexels" },
     { "title": "Remove.bg", "url": "https://www.remove.bg/", "icon": "removebg" },
-    { "title": "Regex101", "url": "https://regex101.com/", "icon": "regex101" },
-    { "title": "JSON Formatter", "url": "https://jsonformatter.org/", "icon": "jsonformatter" }
+    { "title": "TinyPNG", "url": "https://tinypng.com/", "icon": "tinypng" }
   ],
   "shopping": [
     { "title": "淘宝", "url": "https://www.taobao.com/", "icon": "taobao" },
