@@ -120,24 +120,56 @@
     const searchIcon = document.getElementById('searchIconBtn');
     const searchDropdown = document.getElementById('searchDropdown');
 
+    // 常驻搜索栏元素（桌面端）
+    const headerSearchInput = document.getElementById('headerSearchInput');
+    const headerSearchBtn = document.getElementById('headerSearchBtn');
+    const headerEngineSelect = document.getElementById('headerEngineSelect');
+    const headerEngineDropdown = document.getElementById('headerEngineDropdown');
+    const headerEngineCurrent = document.getElementById('headerEngineCurrent');
+    const headerEngineOptions = document.querySelectorAll('.header-engine-option');
+
+    // 搜索引擎名称映射（用于常驻栏显示）
+    const ENGINE_NAMES = {
+        'baidu': { 'zh-CN': '百度', 'zh-TW': '百度', 'en': 'Baidu' },
+        'google': { 'zh-CN': 'Google', 'zh-TW': 'Google', 'en': 'Google' },
+        'bing': { 'zh-CN': 'Bing', 'zh-TW': 'Bing', 'en': 'Bing' },
+        'site': { 'zh-CN': '站内', 'zh-TW': '站內', 'en': 'Site' }
+    };
+
     let current = safeGetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.searchEngine)) || UYEA_CONFIG.defaultSearchEngine;
     if (!UYEA_CONFIG.searchEngines[current] && current !== 'site') current = UYEA_CONFIG.defaultSearchEngine;
 
-    // 初始化搜索引擎标签 active 状态
+    // 更新常驻栏引擎名称显示
+    function updateHeaderEngineLabel() {
+        if (!headerEngineCurrent) return;
+        const names = ENGINE_NAMES[current] || ENGINE_NAMES[UYEA_CONFIG.defaultSearchEngine];
+        headerEngineCurrent.textContent = names[currentLang] || names['zh-CN'];
+    }
+
+    // 同步所有引擎选择UI的active状态
     function syncEngineTabs() {
         engineTabs.forEach(tab => {
             tab.classList.toggle('active', tab.dataset.value === current);
         });
+        headerEngineOptions.forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.value === current);
+        });
+        updateHeaderEngineLabel();
     }
     syncEngineTabs();
 
-    // 搜索引擎标签点击切换
+    // 统一切换搜索引擎函数
+    function switchEngine(value) {
+        current = value;
+        syncEngineTabs();
+        safeSetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.searchEngine), current);
+    }
+
+    // 下拉菜单中的引擎标签点击切换
     engineTabs.forEach(tab => {
         tab.addEventListener('click', (e) => {
             e.stopPropagation();
-            current = tab.dataset.value;
-            syncEngineTabs();
-            safeSetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.searchEngine), current);
+            switchEngine(tab.dataset.value);
             if (searchInput) {
                 searchInput.value = '';
                 searchInput.focus();
@@ -145,7 +177,29 @@
         });
     });
 
-    // 搜索下拉菜单
+    // 常驻栏引擎选择下拉
+    if (headerEngineSelect) {
+        headerEngineSelect.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllDropdowns(null);
+            headerEngineDropdown.classList.toggle('show');
+        });
+        document.addEventListener('click', (e) => {
+            if (headerEngineDropdown && !headerEngineSelect.contains(e.target)) {
+                headerEngineDropdown.classList.remove('show');
+            }
+        });
+    }
+    headerEngineOptions.forEach(opt => {
+        opt.addEventListener('click', (e) => {
+            e.stopPropagation();
+            switchEngine(opt.dataset.value);
+            headerEngineDropdown.classList.remove('show');
+            if (headerSearchInput) headerSearchInput.focus();
+        });
+    });
+
+    // 搜索下拉菜单（移动端图标触发）
     if (searchIcon && searchDropdown) {
         searchIcon.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -162,15 +216,284 @@
         });
     }
 
-    // 执行搜索提交
-    function executeSearch() {
-        if (!searchInput) return;
-        const query = searchInput.value.trim();
+    // ==================== 站内搜索功能 ====================
+    let siteSearchData = { posts: null, nav: null };
+
+    // 加载站内搜索所需数据（懒加载，首次站内搜索时触发）
+    async function loadSiteSearchData() {
+        const tasks = [];
+        if (!siteSearchData.posts) {
+            tasks.push(
+                fetch(UYEA_CONFIG.dataFiles.posts, { cache: 'no-cache' })
+                    .then(r => r.ok ? r.json() : [])
+                    .then(data => { siteSearchData.posts = Array.isArray(data) ? data : []; })
+                    .catch(() => { siteSearchData.posts = []; })
+            );
+        }
+        if (!siteSearchData.nav) {
+            tasks.push(
+                fetch(UYEA_CONFIG.dataFiles.navigation, { cache: 'no-cache' })
+                    .then(r => r.ok ? r.json() : {})
+                    .then(data => { siteSearchData.nav = data || {}; })
+                    .catch(() => { siteSearchData.nav = {}; })
+            );
+        }
+        if (tasks.length > 0) await Promise.all(tasks);
+    }
+
+    // 搜索论坛帖子
+    function searchForumPosts(query) {
+        if (!siteSearchData.posts) return [];
+        const q = query.toLowerCase();
+        return siteSearchData.posts.filter(p =>
+            (p.title || '').toLowerCase().includes(q) ||
+            (p.excerpt || '').toLowerCase().includes(q) ||
+            (p.author || '').toLowerCase().includes(q) ||
+            (p.tag || '').toLowerCase().includes(q)
+        ).slice(0, 20); // 最多显示20条
+    }
+
+    // 搜索导航网站
+    function searchNavSites(query) {
+        if (!siteSearchData.nav) return [];
+        const q = query.toLowerCase();
+        const results = [];
+        for (const cat in siteSearchData.nav) {
+            const sites = siteSearchData.nav[cat];
+            if (!Array.isArray(sites)) continue;
+            sites.forEach(site => {
+                if ((site.title || '').toLowerCase().includes(q)) {
+                    results.push(site);
+                }
+            });
+        }
+        return results.slice(0, 30); // 最多显示30条
+    }
+
+    // 搜索工具（从DOM读取工具卡片）
+    function searchTools(query) {
+        const q = query.toLowerCase();
+        const results = [];
+        document.querySelectorAll('#toolsView .card-item[data-title]').forEach(card => {
+            const title = (card.dataset.title || '').toLowerCase();
+            if (title.includes(q)) {
+                results.push({
+                    title: card.dataset.title,
+                    tool: card.dataset.tool,
+                    comingSoon: card.hasAttribute('data-coming-soon'),
+                    element: card
+                });
+            }
+        });
+        return results.slice(0, 30);
+    }
+
+    // 渲染站内搜索结果
+    function renderSiteSearchResults(query) {
+        const forumResults = searchForumPosts(query);
+        const navResults = searchNavSites(query);
+        const toolsResults = searchTools(query);
+
+        const totalCount = forumResults.length + navResults.length + toolsResults.length;
+
+        // 更新副标题
+        const subtitle = document.getElementById('searchResultsSubtitle');
+        if (subtitle) {
+            const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+            const tpl = msgs['search.resultsCount'] || '关键词「{q}」共找到 {n} 条结果';
+            subtitle.textContent = tpl.replace('{q}', query).replace('{n}', totalCount);
+        }
+
+        // 论坛结果
+        const forumSection = document.getElementById('searchForumSection');
+        const forumResultsEl = document.getElementById('searchForumResults');
+        const forumCount = document.getElementById('searchForumCount');
+        if (forumResults.length > 0) {
+            forumSection.style.display = '';
+            forumCount.textContent = forumResults.length;
+            // 帖子标签 i18n 映射
+            const TAG_I18N_MAP = {
+                '公告': 'forum.cat.announcement', 'AI 探讨': 'forum.cat.ai',
+                '工具': 'forum.cat.tools', '生活': 'forum.cat.life', '反馈': 'forum.cat.feedback'
+            };
+            const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+            function translateTag(tag) {
+                const key = TAG_I18N_MAP[tag];
+                return key ? (msgs[key] || tag) : tag;
+            }
+            forumResultsEl.innerHTML = forumResults.map(p => {
+                const hasUrl = p.url && p.url !== '#';
+                const href = hasUrl ? navEsc(p.url) : 'javascript:void(0)';
+                const targetAttr = hasUrl ? ' target="_blank" rel="noopener"' : '';
+                return `<a href="${href}" class="post-item"${targetAttr}>
+                    <div class="post-meta">
+                        <span class="post-tag">${navEsc(translateTag(p.tag))}</span>
+                        <span class="dot">•</span>
+                        <span>${navEsc(p.author)}</span>
+                        <span class="dot">•</span>
+                        <span>${navEsc(p.time)}</span>
+                    </div>
+                    <div class="post-title">${navEsc(p.title)}</div>
+                    <div class="post-excerpt">${navEsc(p.excerpt)}</div>
+                </a>`;
+            }).join('');
+        } else {
+            forumSection.style.display = 'none';
+        }
+
+        // 导航结果
+        const navSection = document.getElementById('searchNavSection');
+        const navResultsEl = document.getElementById('searchNavResults');
+        const navCount = document.getElementById('searchNavCount');
+        if (navResults.length > 0) {
+            navSection.style.display = '';
+            navCount.textContent = navResults.length;
+            navResultsEl.innerHTML = navResults.map(item => {
+                const firstChar = (item.title || '?').charAt(0).toUpperCase();
+                return `<a href="${navEsc(item.url)}" target="_blank" rel="noopener" class="card-item" data-title="${navEsc(item.title)}" title="${navEsc(item.title)}">
+                    <div class="card-icon"><span class="icon-placeholder">${navEsc(firstChar)}</span></div>
+                    <div class="card-info"><div class="card-title">${navEsc(item.title)}</div></div>
+                </a>`;
+            }).join('');
+        } else {
+            navSection.style.display = 'none';
+        }
+
+        // 工具结果
+        const toolsSection = document.getElementById('searchToolsSection');
+        const toolsResultsEl = document.getElementById('searchToolsResults');
+        const toolsCount = document.getElementById('searchToolsCount');
+        if (toolsResults.length > 0) {
+            toolsSection.style.display = '';
+            toolsCount.textContent = toolsResults.length;
+            toolsResultsEl.innerHTML = toolsResults.map(item => {
+                const firstChar = (item.title || '?').charAt(0).toUpperCase();
+                const clickAttr = item.comingSoon ? ' data-coming-soon="' + navEsc(item.title) + '"' : ' data-tool="' + navEsc(item.tool) + '"';
+                return `<a class="card-item" role="button" tabindex="0"${clickAttr} data-title="${navEsc(item.title)}" title="${navEsc(item.title)}">
+                    <div class="card-icon"><span class="icon-placeholder">${navEsc(firstChar)}</span></div>
+                    <div class="card-info"><div class="card-title">${navEsc(item.title)}</div></div>
+                </a>`;
+            }).join('');
+
+            // 绑定工具卡片点击事件
+            toolsResultsEl.querySelectorAll('.card-item[data-tool]').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    // 触发对应的工具打开（通过模拟点击原工具卡片）
+                    const toolName = card.dataset.tool;
+                    const originalCard = document.querySelector('#toolsView .card-item[data-tool="' + toolName + '"]');
+                    if (originalCard) originalCard.click();
+                });
+            });
+            // coming-soon 工具静默处理
+            toolsResultsEl.querySelectorAll('[data-coming-soon]').forEach(card => {
+                card.addEventListener('click', (e) => e.preventDefault());
+            });
+        } else {
+            toolsSection.style.display = 'none';
+        }
+
+        // 无结果提示
+        document.getElementById('searchNoResults').style.display = totalCount === 0 ? '' : 'none';
+    }
+
+    // 切换到搜索结果视图
+    let previousView = 'forum';
+    function showSearchView(query) {
+        // 记住当前视图，用于返回
+        if (currentView !== 'search') previousView = currentView;
+
+        // 隐藏所有视图
+        document.querySelectorAll('.view-container').forEach(v => {
+            v.style.display = 'none';
+            v.style.animation = '';
+        });
+
+        const searchView = document.getElementById('searchView');
+        if (searchView) {
+            searchView.style.display = 'block';
+            searchView.style.animation = 'none';
+            searchView.offsetHeight;
+            searchView.style.animation = '';
+        }
+
+        // 隐藏底部导航栏（搜索结果页不需要）
+        const bottomNav = document.getElementById('bottomNav');
+        if (bottomNav) bottomNav.style.display = 'none';
+
+        // 更新 nav-link active 状态
+        document.querySelectorAll('.nav-link[data-view]').forEach(link => {
+            link.classList.remove('active');
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // 渲染搜索结果
+        renderSiteSearchResults(query);
+
+        currentView = 'search';
+    }
+
+    // 返回之前的视图
+    function backFromSearch() {
+        const searchView = document.getElementById('searchView');
+        if (searchView) searchView.style.display = 'none';
+
+        // 恢复底部导航栏
+        const bottomNav = document.getElementById('bottomNav');
+        if (bottomNav) bottomNav.style.display = '';
+
+        // 恢复之前的视图
+        const targetView = document.getElementById(previousView + 'View');
+        if (targetView) {
+            targetView.style.display = 'block';
+            targetView.style.animation = 'none';
+            targetView.offsetHeight;
+            targetView.style.animation = '';
+        }
+
+        // 恢复 nav-link active
+        document.querySelectorAll('.nav-link[data-view]').forEach(link => {
+            link.classList.toggle('active', link.dataset.view === previousView);
+        });
+
+        // 恢复底部导航内容
+        if (bottomNav && typeof BOTTOM_NAVS !== 'undefined' && BOTTOM_NAVS[previousView]) {
+            bottomNav.innerHTML = BOTTOM_NAVS[previousView];
+            bottomNav.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+
+        // 通知视图切换
+        window.dispatchEvent(new CustomEvent('viewchange', { detail: { view: previousView } }));
+
+        currentView = previousView;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 搜索返回按钮
+    const searchBackBtn = document.getElementById('searchBackBtn');
+    if (searchBackBtn) {
+        searchBackBtn.addEventListener('click', backFromSearch);
+    }
+
+    // 执行搜索（统一入口，支持多个输入框）
+    async function executeSearch(inputEl) {
+        const el = inputEl || searchInput;
+        if (!el) return;
+        const query = el.value.trim();
         if (!query) return;
 
         if (current === 'site') {
-            // 站内搜索：静默处理
-            searchInput.value = '';
+            // 站内搜索：加载数据并展示结果
+            el.value = '';
+            // 显示加载状态
+            const subtitle = document.getElementById('searchResultsSubtitle');
+            if (subtitle) {
+                const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+                subtitle.textContent = msgs['search.loading'] || '搜索中...';
+            }
+            showSearchView(query);
+            await loadSiteSearchData();
+            renderSiteSearchResults(query);
         } else {
             const engineUrl = UYEA_CONFIG.getSearchEngineUrl(current);
             if (engineUrl) {
@@ -179,21 +502,42 @@
         }
     }
 
-    // 搜索提交：回车 + 点击按钮
+    // 下拉搜索框事件绑定
     if (searchInput) {
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                executeSearch();
+                executeSearch(searchInput);
             }
         });
     }
     if (searchSubmitBtn) {
         searchSubmitBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            executeSearch();
+            executeSearch(searchInput);
         });
     }
+
+    // 常驻搜索栏事件绑定
+    if (headerSearchInput) {
+        headerSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                executeSearch(headerSearchInput);
+            }
+        });
+    }
+    if (headerSearchBtn) {
+        headerSearchBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            executeSearch(headerSearchInput);
+        });
+    }
+
+    // 语言切换时更新常驻栏引擎名称
+    window.addEventListener('languagechange', () => {
+        updateHeaderEngineLabel();
+    });
 
     // ==================== 开发中功能（静默处理，不弹窗） ====================
     document.querySelectorAll('[data-coming-soon]').forEach(btn => {

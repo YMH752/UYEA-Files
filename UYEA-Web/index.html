@@ -25,8 +25,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.62" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.62" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.6.63" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.6.63" as="script">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -63,7 +63,7 @@
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.62" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.6.63" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -96,6 +96,25 @@
     <header class="top-header" data-liquid-glass data-lg-strength="0.4" data-lg-blur="blur(32px) saturate(200%)">
         <div class="header-container">
             <a href="/" class="logo-text" data-view="forum">UYEA</a>
+
+            <!-- 常驻搜索栏（桌面端可见） -->
+            <div class="header-search" id="headerSearch">
+                <div class="header-engine-select" id="headerEngineSelect">
+                    <span class="header-engine-current" id="headerEngineCurrent" data-i18n="search.engine.baidu">百度</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <div class="header-engine-dropdown" id="headerEngineDropdown">
+                        <button class="header-engine-option active" data-value="baidu" data-i18n="search.engine.baidu">百度</button>
+                        <button class="header-engine-option" data-value="google" data-i18n="search.engine.google">Google</button>
+                        <button class="header-engine-option" data-value="bing" data-i18n="search.engine.bing">Bing</button>
+                        <button class="header-engine-option" data-value="site" data-i18n="search.engine.site">站内</button>
+                    </div>
+                </div>
+                <input type="text" class="header-search-input" id="headerSearchInput" data-i18n-placeholder="search.placeholder" placeholder="输入关键词搜索...">
+                <button class="header-search-btn" id="headerSearchBtn" aria-label="搜索">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </div>
+
             <div class="header-right">
                 <nav class="nav-links">
                     <a href="#" class="nav-link active" data-view="forum" data-i18n="nav.forum">悠野社区</a>
@@ -618,9 +637,56 @@
 
             </div>
 
-        </div>
+            <!-- ===== 站内搜索结果视图 ===== -->
+            <div class="view-container" id="searchView" style="display:none;">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title" id="searchResultsTitle" data-i18n="search.resultsTitle">站内搜索结果</div>
+                        <div class="section-subtitle" id="searchResultsSubtitle"></div>
+                    </div>
+                    <button class="post-btn post-btn-ghost" id="searchBackBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        <span data-i18n="search.back">返回</span>
+                    </button>
+                </div>
 
-        <!-- 底部玻璃导航栏：根据视图动态切换（单一实例，由JS动态更新内容） -->
+                <!-- 论坛结果区块 -->
+                <div class="search-result-section" id="searchForumSection" style="display:none;">
+                    <div class="search-section-header">
+                        <h2 class="search-section-title" data-i18n="search.section.forum">论坛</h2>
+                        <span class="search-section-count" id="searchForumCount"></span>
+                    </div>
+                    <div class="post-list" id="searchForumResults"></div>
+                </div>
+
+                <!-- 导航结果区块 -->
+                <div class="search-result-section" id="searchNavSection" style="display:none;">
+                    <div class="search-section-header">
+                        <h2 class="search-section-title" data-i18n="search.section.nav">导航</h2>
+                        <span class="search-section-count" id="searchNavCount"></span>
+                    </div>
+                    <div class="grid-container search-nav-grid" id="searchNavResults"></div>
+                </div>
+
+                <!-- 工具结果区块 -->
+                <div class="search-result-section" id="searchToolsSection" style="display:none;">
+                    <div class="search-section-header">
+                        <h2 class="search-section-title" data-i18n="search.section.tools">工具</h2>
+                        <span class="search-section-count" id="searchToolsCount"></span>
+                    </div>
+                    <div class="grid-container search-tools-grid" id="searchToolsResults"></div>
+                </div>
+
+                <!-- 无结果提示 -->
+                <div class="no-results" id="searchNoResults" style="display:none;">
+                    <div class="no-results-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+                    <div class="no-results-text" data-i18n="search.noResults">未找到匹配结果</div>
+                </div>
+            </div>
+
+        </div>
         <nav class="bottom-nav" id="bottomNav" data-liquid-glass data-lg-strength="0.5">
             <button class="bottom-nav-item active" data-tab="recommend">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h4"></path><path d="M9 11V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6"></path><path d="M9 11h6"></path><path d="M9 22V11"></path><path d="M15 11h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"></path></svg>
@@ -726,12 +792,12 @@
         }
     </style>
 
-    <script src="/JS/liquid-glass.js?v=0.6.62" defer></script>
-    <script src="/JS/config.js?v=0.6.62" defer></script>
-    <script src="/JS/script.js?v=0.6.62" defer></script>
-    <script src="/JS/tools.js?v=0.6.62" defer></script>
-    <script src="/JS/forum.js?v=0.6.62" defer></script>
-    <script src="/JS/auth.js?v=0.6.62" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.6.63" defer></script>
+    <script src="/JS/config.js?v=0.6.63" defer></script>
+    <script src="/JS/script.js?v=0.6.63" defer></script>
+    <script src="/JS/tools.js?v=0.6.63" defer></script>
+    <script src="/JS/forum.js?v=0.6.63" defer></script>
+    <script src="/JS/auth.js?v=0.6.63" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
@@ -894,9 +960,10 @@
                     link.classList.toggle('active', link.dataset.view === viewName);
                 });
 
-                // 更新底部导航
+                // 更新底部导航（确保从搜索视图返回时恢复显示）
                 const bottomNav = document.getElementById('bottomNav');
                 if (bottomNav && BOTTOM_NAVS[viewName]) {
+                    bottomNav.style.display = '';
                     bottomNav.innerHTML = BOTTOM_NAVS[viewName];
                     bottomNav.scrollTo({ left: 0, behavior: 'smooth' });
                 }
