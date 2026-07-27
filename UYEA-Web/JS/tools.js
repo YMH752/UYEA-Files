@@ -236,9 +236,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     toolCloseBtn.addEventListener('click', closeTool);
     toolOverlay.addEventListener('click', closeTool);
+
+    // ESC关闭 + Tab焦点陷阱
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && toolModal.classList.contains('show')) {
+        if (!toolModal.classList.contains('show')) return;
+        if (e.key === 'Escape') {
             closeTool();
+        } else if (e.key === 'Tab') {
+            // 焦点陷阱：在模态框内循环
+            const focusables = toolModal.querySelectorAll('input, textarea, select, button, [tabindex]:not([tabindex="-1"])');
+            if (focusables.length === 0) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
         }
     });
 
@@ -455,6 +471,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!patternStr) { showError(error, '请输入正则表达式'); return; }
             if (!text) { showError(error, '请输入测试文本'); return; }
 
+            // ReDoS防护：限制文本长度
+            const MAX_TEXT_LEN = 5000;
+            if (text.length > MAX_TEXT_LEN) {
+                showError(error, '测试文本过长（超过' + MAX_TEXT_LEN + '字符），请缩短后重试');
+                return;
+            }
+
+            // ReDoS防护：检测潜在的灾难性回溯模式（嵌套量词）
+            if (/\([^)]*[+*?][^)]*\)[+*?{]/.test(patternStr) && text.length > 20) {
+                showError(error, '警告：该正则包含嵌套量词，可能存在灾难性回溯风险，请缩短测试文本（不超过20字符）');
+                return;
+            }
+
             let re;
             try {
                 re = new RegExp(patternStr, flags);
@@ -465,12 +494,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // 收集所有匹配
+            // 收集所有匹配（限制匹配数量防止过载）
             const matches = [];
+            const MAX_MATCHES = 10000;
             if (flags.indexOf('g') !== -1) {
                 let m;
                 let safety = 0;
-                while ((m = re.exec(text)) !== null && safety++ < 100000) {
+                while ((m = re.exec(text)) !== null && safety++ < MAX_MATCHES) {
                     matches.push({ index: m.index, match: m[0], groups: m.slice(1) });
                     if (m[0] === '') re.lastIndex++; // 避免零宽匹配死循环
                 }

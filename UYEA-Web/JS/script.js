@@ -200,6 +200,19 @@
         });
     });
 
+    // ==================== ESC键关闭所有下拉菜单 ====================
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeAllDropdowns(null);
+            DROPDOWN_PAIRS.forEach(({ btnId, menuId }) => {
+                const btn = document.getElementById(btnId);
+                const menu = document.getElementById(menuId);
+                if (menu) menu.classList.remove('show');
+                if (btn) btn.classList.remove('active');
+            });
+        }
+    });
+
     // ==================== 图标占位符系统（底色+边框，待后续替换为真实图标） ====================
     // 卡片图标使用首字母占位符，由 navCardHtml 内联生成，无需异步加载
 
@@ -207,6 +220,8 @@
     let navInitialized = false;
     let navCurrentCategory = 'all';
     let navSearchTimer = null;
+    // 调试：暴露闭包变量
+    window.__debug = { get navCurrentCategory() { return navCurrentCategory; } };
 
     // HTML 转义
     function navEsc(str) {
@@ -386,6 +401,7 @@
                     clearTimeout(navSearchTimer);
                     navSearchTimer = setTimeout(applyNavFilter, 200);
                 });
+            }
         }
     }
 
@@ -405,6 +421,8 @@
                 setTimeout(initNavView, 50);
                 return;
             }
+            // switchView替换了底部导航HTML，需重新绑定事件
+            bindNavEvents();
             // 恢复底部导航active状态（switchView会重置底部导航HTML）
             document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
             const activeBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${navCurrentCategory}"]`);
