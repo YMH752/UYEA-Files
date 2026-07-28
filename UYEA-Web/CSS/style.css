@@ -2193,10 +2193,10 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 
 /* ========== 认证弹窗 ========== */
 .auth-modal { width: min(92vw, 400px); }
-/* 浮动关闭按钮（左上角，避免与右侧拖动条重叠） */
+/* 浮动关闭按钮（右上角） */
 .auth-close-btn {
     position: absolute;
-    top: 8px; left: 8px;
+    top: 8px; right: 8px;
     width: 28px; height: 28px;
     border: none;
     background: transparent;
@@ -2239,6 +2239,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     letter-spacing: 3px;
     color: var(--primary);
     font-family: var(--font-serif);
+    margin-top: 10px;
     margin-bottom: 6px;
 }
 
@@ -2353,7 +2354,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     line-height: 1.5;
 }
 .auth-error.show { display: block; }
-.auth-actions { margin-bottom: 0; margin-top: 6px; display: flex; justify-content: center; }
+.auth-actions { margin-bottom: 8px; margin-top: 6px; display: flex; justify-content: center; }
 .auth-submit-btn {
     width: auto;
     min-width: 100px;
@@ -2392,7 +2393,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 }
 
 /* ========== 认证弹窗：拖拽分栏滑动布局 ========== */
-.auth-split { position: relative; overflow: hidden; min-height: 240px; }
+.auth-split { position: relative; overflow: hidden; min-height: 260px; }
 /* 注册层：底层，铺满容器 */
 .auth-register-layer {
     position: absolute;
