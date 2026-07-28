@@ -98,66 +98,63 @@ document.addEventListener('DOMContentLoaded', () => {
     const authModalClose = document.getElementById('authModalClose');
     const userBtn = document.querySelector('.user-btn');
 
-    // 登录表单 HTML（左右分栏滑动布局：左侧登录，右侧注册开发中）
+    // 登录表单 HTML（拖拽分栏布局：登录层覆盖注册层，拖拽手柄左滑揭示注册）
     function renderLoginForm() {
         return `
             <div class="auth-split" id="authSplit">
-                <div class="auth-split-track" id="authSplitTrack">
-                    <div class="auth-split-panel auth-split-panel-login">
-                        <div class="auth-form" id="loginForm">
-                            <div class="auth-hero">
-                                <div class="auth-hero-icon">
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                                        <polyline points="10 17 15 12 10 7"></polyline>
-                                        <line x1="15" y1="12" x2="3" y2="12"></line>
-                                    </svg>
-                                </div>
-                                <div class="auth-hero-title">${t('auth.login')}</div>
-                                <div class="auth-hero-subtitle">${t('auth.welcomeBack')}</div>
-                            </div>
-                            <div class="auth-field">
-                                <label class="auth-label" for="loginUsername">${t('auth.username')}</label>
-                                <div class="auth-input-wrap">
-                                    <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                    <input type="text" class="auth-input" id="loginUsername" placeholder="${t('auth.usernamePlaceholder')}" autocomplete="username" autocapitalize="none">
-                                </div>
-                            </div>
-                            <div class="auth-field">
-                                <label class="auth-label" for="loginPassword">${t('auth.password')}</label>
-                                <div class="auth-input-wrap">
-                                    <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                    <input type="password" class="auth-input auth-input-password" id="loginPassword" placeholder="${t('auth.passwordPlaceholder')}" autocomplete="current-password">
-                                    <button class="auth-password-toggle" id="loginPasswordToggle" type="button" aria-label="${t('auth.togglePassword')}">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="auth-error" id="loginError"></div>
-                            <div class="auth-actions">
-                                <button class="post-btn auth-submit-btn" id="loginSubmitBtn">${t('auth.login')}</button>
-                            </div>
-                            <div class="auth-switch">
-                                <span>${t('auth.noAccount')}</span>
-                                <button class="auth-switch-btn" id="switchToRegister">${t('auth.register')}</button>
-                            </div>
+                <!-- 注册层（底层） -->
+                <div class="auth-register-layer">
+                    <div class="auth-dev-message">
+                        <div class="auth-dev-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <line x1="20" y1="8" x2="20" y2="14"></line>
+                                <line x1="23" y1="11" x2="17" y2="11"></line>
+                            </svg>
                         </div>
+                        <div class="auth-dev-title">${t('auth.register')}</div>
+                        <div class="auth-dev-text">${t('auth.underDevelopment')}</div>
                     </div>
-                    <div class="auth-split-panel auth-split-panel-register">
-                        <div class="auth-dev-message">
-                            <div class="auth-dev-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="8.5" cy="7" r="4"></circle>
-                                    <line x1="20" y1="8" x2="20" y2="14"></line>
-                                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </div>
+                <!-- 登录层（上层，clip-path 裁剪） -->
+                <div class="auth-login-layer" id="authLoginLayer">
+                    <div class="auth-form" id="loginForm">
+                        <div class="auth-hero">
+                            <div class="auth-hero-icon">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                    <polyline points="10 17 15 12 10 7"></polyline>
+                                    <line x1="15" y1="12" x2="3" y2="12"></line>
                                 </svg>
                             </div>
-                            <div class="auth-dev-title">${t('auth.register')}</div>
-                            <div class="auth-dev-text">${t('auth.underDevelopment')}</div>
+                            <div class="auth-hero-title">${t('auth.login')}</div>
+                            <div class="auth-hero-subtitle">${t('auth.welcomeBack')}</div>
+                        </div>
+                        <div class="auth-field">
+                            <label class="auth-label" for="loginEmail">${t('auth.email')}</label>
+                            <div class="auth-input-wrap">
+                                <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                <input type="email" class="auth-input" id="loginEmail" placeholder="${t('auth.emailPlaceholder')}" autocomplete="email" autocapitalize="none">
+                            </div>
+                        </div>
+                        <div class="auth-field">
+                            <label class="auth-label" for="loginPassword">${t('auth.password')}</label>
+                            <div class="auth-input-wrap">
+                                <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                <input type="password" class="auth-input auth-input-password" id="loginPassword" placeholder="${t('auth.passwordPlaceholder')}" autocomplete="current-password">
+                                <button class="auth-password-toggle" id="loginPasswordToggle" type="button" aria-label="${t('auth.togglePassword')}">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="auth-error" id="loginError"></div>
+                        <div class="auth-actions">
+                            <button class="post-btn auth-submit-btn" id="loginSubmitBtn">${t('auth.login')}</button>
                         </div>
                     </div>
                 </div>
+                <!-- 拖拽手柄：左箭头，拖拽向左揭示注册 -->
                 <div class="auth-split-handle" id="authSlideHandle" role="button" aria-label="${t('auth.register')}">
                     <svg class="auth-handle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="15 18 9 12 15 6"></polyline>
@@ -617,15 +614,15 @@ document.addEventListener('DOMContentLoaded', () => {
         bindPasswordToggle('loginPasswordToggle', 'loginPassword');
 
         const submitBtn = document.getElementById('loginSubmitBtn');
-        const usernameInput = document.getElementById('loginUsername');
+        const emailInput = document.getElementById('loginEmail');
         const passwordInput = document.getElementById('loginPassword');
 
         async function doLogin() {
             hideAuthError('loginError');
-            const username = usernameInput.value.trim();
+            const email = emailInput.value.trim();
             const password = passwordInput.value;
 
-            if (!username) { showAuthError('loginError', t('auth.errorUsernameRequired')); usernameInput.focus(); return; }
+            if (!email) { showAuthError('loginError', t('auth.errorEmailRequired')); emailInput.focus(); return; }
             if (!password) { showAuthError('loginError', t('auth.errorPasswordRequired')); passwordInput.focus(); return; }
 
             submitBtn.disabled = true;
@@ -633,7 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const users = await loadUsers();
-                const user = users.find(u => u.username === username);
+                const user = users.find(u => u.email === email || u.username === email);
                 if (!user) {
                     // 用户不存在：关闭弹窗，显示成就式提示
                     closeAuthModal();
@@ -672,37 +669,51 @@ document.addEventListener('DOMContentLoaded', () => {
         passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); doLogin(); }
         });
-        usernameInput.addEventListener('keypress', (e) => {
+        emailInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); passwordInput.focus(); }
         });
 
-        // 切换到注册：滑动到注册面板（显示"正在开发中..."）
-        const switchBtn = document.getElementById('switchToRegister');
-        if (switchBtn) {
-            switchBtn.addEventListener('click', () => slideToRegister());
-        }
-
-        // 滑动手柄：点击切换 + 拖拽滑动
+        // 拖拽分栏手柄：点击切换 + 拖拽向左滑揭示注册
         const authSplit = document.getElementById('authSplit');
-        const authSplitTrack = document.getElementById('authSplitTrack');
+        const authLoginLayer = document.getElementById('authLoginLayer');
         const authSlideHandle = document.getElementById('authSlideHandle');
 
-        if (authSlideHandle && authSplitTrack && authSplit) {
+        if (authSlideHandle && authLoginLayer && authSplit) {
+            const HANDLE_WIDTH = window.innerWidth <= 600 ? 44 : 48;
             const DRAG_THRESHOLD = 5;
             let isPressing = false;
             let isDragging = false;
             let startX = 0;
-            let startPercent = 0;
+            let startDividerX = 0;
+
+            // 更新分栏位置：dividerX = 手柄左边界位置
+            function updateSplit(dividerX) {
+                authLoginLayer.style.clipPath = `inset(0 calc(100% - ${dividerX}px) 0 0)`;
+                authSlideHandle.style.left = `${dividerX}px`;
+            }
+
+            // 初始位置：手柄在右侧（显示登录）
+            function initSplit() {
+                const w = authSplit.offsetWidth;
+                updateSplit(w - HANDLE_WIDTH);
+                authSplit.classList.remove('show-register');
+            }
 
             function slideToRegister() {
-                authSplitTrack.style.transform = 'translateX(-50%)';
+                const w = authSplit.offsetWidth;
+                authLoginLayer.classList.remove('dragging');
+                authSlideHandle.classList.remove('dragging');
+                updateSplit(0);
                 authSplit.classList.add('show-register');
                 const title = document.getElementById('authModalTitle');
                 if (title) title.textContent = t('auth.register');
             }
 
             function slideToLogin() {
-                authSplitTrack.style.transform = 'translateX(0)';
+                const w = authSplit.offsetWidth;
+                authLoginLayer.classList.remove('dragging');
+                authSlideHandle.classList.remove('dragging');
+                updateSplit(w - HANDLE_WIDTH);
                 authSplit.classList.remove('show-register');
                 const title = document.getElementById('authModalTitle');
                 if (title) title.textContent = t('auth.login');
@@ -711,11 +722,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // 暴露给 closeAuthModal 调用
             window._authSlideReset = slideToLogin;
 
+            // 初始化分栏位置
+            requestAnimationFrame(() => initSplit());
+
             authSlideHandle.addEventListener('pointerdown', (e) => {
                 isPressing = true;
                 isDragging = false;
                 startX = e.clientX;
-                startPercent = authSplit.classList.contains('show-register') ? -50 : 0;
+                const leftStr = authSlideHandle.style.left || '0';
+                startDividerX = parseFloat(leftStr) || 0;
             });
 
             document.addEventListener('pointermove', (e) => {
@@ -724,16 +739,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!isDragging) {
                     if (Math.abs(deltaX) < DRAG_THRESHOLD) return;
                     isDragging = true;
-                    authSplitTrack.classList.add('dragging');
+                    authLoginLayer.classList.add('dragging');
+                    authSlideHandle.classList.add('dragging');
                     authSlideHandle.setPointerCapture && authSlideHandle.setPointerCapture(e.pointerId);
                 }
                 if (isDragging) {
-                    const modalWidth = authSplit.offsetWidth;
-                    if (modalWidth <= 0) return;
-                    const percentDelta = (deltaX / modalWidth) * 50;
-                    let newPercent = startPercent + percentDelta;
-                    newPercent = Math.max(-50, Math.min(0, newPercent));
-                    authSplitTrack.style.transform = `translateX(${newPercent}%)`;
+                    const w = authSplit.offsetWidth;
+                    let newX = startDividerX + deltaX;
+                    newX = Math.max(0, Math.min(w - HANDLE_WIDTH, newX));
+                    updateSplit(newX);
                     e.preventDefault();
                 }
             });
@@ -748,11 +762,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 isDragging = false;
-                authSplitTrack.classList.remove('dragging');
                 // 吸附到最近的面板
-                const match = authSplitTrack.style.transform.match(/-?[\d.]+/);
-                const currentPercent = match ? parseFloat(match[0]) : 0;
-                if (currentPercent < -25) slideToRegister();
+                const w = authSplit.offsetWidth;
+                const leftStr = authSlideHandle.style.left || '0';
+                const currentX = parseFloat(leftStr) || 0;
+                if (currentX < w / 2 - HANDLE_WIDTH / 2) slideToRegister();
                 else slideToLogin();
             }
 
@@ -760,8 +774,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.addEventListener('pointercancel', handlePointerEnd);
         }
 
-        // 自动聚焦用户名输入框
-        setTimeout(() => usernameInput.focus(), 50);
+        // 自动聚焦邮箱输入框
+        setTimeout(() => {
+            const emailEl = document.getElementById('loginEmail');
+            if (emailEl) emailEl.focus();
+        }, 50);
     }
 
     function bindRegisterEvents() {
