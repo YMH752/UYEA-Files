@@ -1,4 +1,4 @@
-﻿/**
+/**
  * UYEA Tools Page - tools.js
  * 纯前端在线工具集（JSON / Base64 / 正则 / 时间戳 / 颜色 / UUID）
  * 所有计算在浏览器本地完成，不依赖任何后端服务
@@ -7,7 +7,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    // 引用共享工具函数
+    // 引用共享工具函数（含守卫，防止 utils.js 加载失败时模块静默崩溃）
+    if (!window.UYEA_UTILS) {
+        console.error('[tools] UYEA_UTILS 未加载，工具模块初始化失败');
+        return;
+    }
     const { getGridColumns, escapeHtml } = window.UYEA_UTILS;
 
     // ==================== 分类筛选 + 2行限制 ====================
@@ -57,16 +61,20 @@ document.addEventListener('DOMContentLoaded', () => {
             group.style.display = (groupVisible > 0) ? '' : 'none';
             visibleCount += groupVisible;
 
-            // 重新触发卡片切换动画（Apple/华为/OPPO风格：弹性缩放+淡入）
-            let cardIdx = 0;
+            // 重新触发卡片切换动画（批量禁用动画 → 单次 reflow → 批量启用，避免每张卡都强制回流）
+            const visibleCards = [];
             cards.forEach(card => {
                 if (card.style.display !== 'none') {
                     card.style.animation = 'none';
-                    card.offsetHeight; // 强制回流以重置动画
-                    card.style.animation = `cardSwitchIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(cardIdx * 0.025, 0.3)}s both`;
-                    cardIdx++;
+                    visibleCards.push(card);
                 }
             });
+            if (visibleCards.length > 0) {
+                void visibleCards[0].offsetHeight; // 单次 reflow 重置所有动画
+                visibleCards.forEach((card, idx) => {
+                    card.style.animation = `cardSwitchIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(idx * 0.025, 0.3)}s both`;
+                });
+            }
         });
 
         if (noResults) noResults.classList.toggle('show', visibleCount === 0);
@@ -84,36 +92,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 绑定工具视图事件（底部导航切换后需重新绑定）
-    let toolsMoreBtnsBound = false;
-    function bindToolsEvents() {
-        // 底部导航栏分类切换
-        document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(item => {
-            item.addEventListener('click', () => {
-                if (item.classList.contains('active')) return;
-                document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
-                item.classList.add('active');
-                currentCategory = item.dataset.category;
-                // 滚动底部导航到激活项
-                if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
-                applyToolsFilter();
-            });
+    // ==================== 底部导航栏分类切换（事件委托） ====================
+    // 使用事件委托绑定在持久的 #bottomNav 容器上，避免每次视图切换重新绑定
+    // 工具页与导航页都使用 data-category，通过 currentView 区分当前激活视图
+    const toolsBottomNav = document.getElementById('bottomNav');
+    if (toolsBottomNav) {
+        toolsBottomNav.addEventListener('click', (e) => {
+            if (currentView !== 'tools') return;
+            const item = e.target.closest('.bottom-nav-item[data-category]');
+            if (!item || item.classList.contains('active')) return;
+            toolsBottomNav.querySelectorAll('.bottom-nav-item').forEach(x => x.classList.remove('active'));
+            item.classList.add('active');
+            currentCategory = item.dataset.category;
+            if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
+            applyToolsFilter();
         });
-
-        // "更多"按钮只需绑定一次（静态HTML不会随视图切换重建）
-        if (!toolsMoreBtnsBound) {
-            toolsMoreBtnsBound = true;
-            document.querySelectorAll('#toolsView .more-btn[data-target-category]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const targetCat = btn.dataset.targetCategory;
-                    const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
-                    if (targetNavBtn) {
-                        targetNavBtn.click();
-                    }
-                });
-            });
-        }
     }
+
+    // "更多"按钮只需绑定一次（静态HTML不会随视图切换重建）
+    document.querySelectorAll('#toolsView .more-btn[data-target-category]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetCat = btn.dataset.targetCategory;
+            const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
+            if (targetNavBtn) {
+                targetNavBtn.click();
+            }
+        });
+    });
 
     // 窗口大小变化时重新计算2行限制（仅在工具视图激活时）
     let toolsResizeTimer = null;
@@ -127,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 监听视图切换：切换到工具视图时恢复分类状态并重新应用筛选
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view !== 'tools') return;
-        bindToolsEvents();
         // 切换视图时统一重置为第一个分类（全部），不保留历史位置
         currentCategory = 'all';
         // 底部导航HTML已默认第一项active，无需额外操作
@@ -137,9 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
         }, 50);
     });
-
-    // 页面加载时立即绑定事件（工具卡片是静态HTML，无需异步加载）
-    bindToolsEvents();
     // 通知加载动画：工具模块已就绪
     window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'tools' } }));
 
@@ -268,12 +269,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const ta = document.createElement('textarea');
         ta.value = text;
         ta.style.position = 'fixed';
+        ta.style.top = '0';
+        ta.style.left = '0';
         ta.style.opacity = '0';
+        ta.setAttribute('readonly', '');
         document.body.appendChild(ta);
+        ta.focus();
         ta.select();
-        try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+        try { ta.setSelectionRange(0, ta.value.length); } catch (e) { /* iOS 兼容 */ }
+        let ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
         document.body.removeChild(ta);
-        if (cb) cb();
+        // 仅在真正复制成功时回调，避免虚假"已复制"反馈
+        if (ok && cb) cb();
     }
 
     function showError(el, msg) {
@@ -317,6 +325,11 @@ document.addEventListener('DOMContentLoaded', () => {
             hideError(error);
             const raw = input.value.trim();
             if (!raw) { showError(error, '请输入 JSON 文本'); return; }
+            // 输入大小限制：超过 1MB 时 JSON.parse 同步阻塞主线程数秒
+            if (raw.length > 1024 * 1024) {
+                showError(error, '输入过长（超过 1MB），请缩短后重试');
+                return;
+            }
             try {
                 const obj = JSON.parse(raw);
                 output.value = minify ? JSON.stringify(obj) : JSON.stringify(obj, null, 2);
@@ -965,15 +978,25 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < bytes.length; i++) hex += bytes[i].toString(16).padStart(2, '0');
             return hex;
         }
+        // 异步竞态保护：用户快速多次点击时，旧任务结果不会覆盖新任务结果
+        let runToken = 0;
         async function run() {
             hideError(error);
             const raw = input.value;
             if (!raw) { showError(error, '请输入文本'); return; }
+            // crypto.subtle 仅在 HTTPS/localhost 可用，提前检测给出明确提示
+            if (!window.crypto || !window.crypto.subtle) {
+                showError(error, '哈希功能需要 HTTPS 安全环境，请通过 HTTPS 访问本站');
+                return;
+            }
+            const token = ++runToken;
             try {
                 const enc = new TextEncoder().encode(raw);
                 const buf = await crypto.subtle.digest(getAlgo(), enc);
+                if (token !== runToken) return; // 已被新请求取代，丢弃旧结果
                 output.value = buf2hex(buf);
             } catch (e) {
+                if (token !== runToken) return;
                 output.value = '';
                 showError(error, '计算失败：' + e.message);
             }
@@ -1065,10 +1088,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const error = root.querySelector('#pwError');
         const SYMBOLS = '!@#$%^&*()-_=+[]{}|;:,.<>?';
         function secureRandInt(max) {
+            // 拒绝采样：消除 % 取模偏差，保证密码学均匀性
+            if (!window.crypto || !window.crypto.getRandomValues) {
+                throw new Error('NO_CRYPTO');
+            }
             const arr = new Uint32Array(1);
-            (window.crypto || { getRandomValues: null }).getRandomValues
-                ? crypto.getRandomValues(arr)
-                : arr[0] = Math.floor(Math.random() * 0xFFFFFFFF);
+            const limit = Math.floor(0xFFFFFFFF / max) * max;
+            do {
+                crypto.getRandomValues(arr);
+            } while (arr[0] >= limit);
             return arr[0] % max;
         }
         function buildPool() {
@@ -1083,9 +1111,21 @@ document.addEventListener('DOMContentLoaded', () => {
             hideError(error);
             const pool = buildPool();
             if (!pool) { showError(error, '请至少选择一种字符类型'); output.value = ''; return; }
+            // 非安全上下文（HTTP 非 localhost）下 crypto 不可用，给出明确提示
+            if (!window.crypto || !window.crypto.getRandomValues) {
+                showError(error, '当前为非 HTTPS 环境，加密随机数不可用，无法生成安全密码');
+                output.value = '';
+                return;
+            }
             const n = parseInt(lenSlider.value, 10);
             let pwd = '';
-            for (let i = 0; i < n; i++) pwd += pool[secureRandInt(pool.length)];
+            try {
+                for (let i = 0; i < n; i++) pwd += pool[secureRandInt(pool.length)];
+            } catch (e) {
+                showError(error, '生成失败：' + e.message);
+                output.value = '';
+                return;
+            }
             output.value = pwd;
         }
         lenSlider.addEventListener('input', () => { lenLabel.textContent = lenSlider.value; });

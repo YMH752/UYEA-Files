@@ -1,13 +1,14 @@
-﻿/*
- * UYEA 悠野社区 - Service Worker v0.6.92
+/*
+ * UYEA 悠野社区 - Service Worker v0.6.93
  * 缓存优先策略，支持离线访问
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
 
-const CACHE_NAME = 'uyea-v0.6.92';
-const V = 'v=0.6.92';
+const CACHE_NAME = 'uyea-v0.6.93';
+const V = 'v=0.6.93';
 
 // 核心静态资源（安装时预缓存）
+// 安全：users.json 含用户凭据，不预缓存也不运行时缓存
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -21,7 +22,6 @@ const CORE_ASSETS = [
   `/JS/auth.js?${V}`,
   '/JSON/navigation.json',
   '/JSON/posts.json',
-  '/JSON/users.json',
   '/manifest.json'
 ];
 
@@ -29,6 +29,11 @@ const CORE_ASSETS = [
 const RUNTIME_CACHE_PATTERN = [
   /\/IMAGE\//,
   /\/FONT\//
+];
+
+// 禁止缓存的路径（含敏感数据，仅网络请求，不写入 Cache API）
+const NEVER_CACHE_PATTERN = [
+  /\/JSON\/users\.json/
 ];
 
 // 安装：预缓存核心资源，跳过失败项
@@ -63,6 +68,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // 安全：含敏感数据的路径仅走网络，不拦截、不缓存
+  const reqPath = new URL(request.url).pathname;
+  if (NEVER_CACHE_PATTERN.some(pattern => pattern.test(reqPath))) {
+    return;
+  }
+
   // HTML 文档：网络优先（确保用户第一次刷新即获取最新 HTML 和 JS 版本）
   if (request.destination === 'document') {
     event.respondWith(
@@ -90,7 +101,10 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => caches.match(request).then(cached => cached || Response.error()))
+        // 离线时回退到缓存；无缓存则返回空数组（避免 Response.error() 导致消费者崩溃）
+        .catch(() => caches.match(request).then(cached => cached || new Response('[]', {
+          headers: { 'Content-Type': 'application/json' }
+        })))
     );
     return;
   }
