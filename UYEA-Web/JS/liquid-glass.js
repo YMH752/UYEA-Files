@@ -177,7 +177,7 @@
 
         // ========== 生成位移贴图（Canvas 逐像素） ==========
         // 性能优化：大尺寸元素使用降采样画布，位移贴图为平滑渐变可安全缩放
-        var MAX_CANVAS_PIXELS = 16384; // 单边最大像素数（128x128 足够）
+        var MAX_CANVAS_PIXELS = 128; // 单边最大像素数（128x128 足够，位移贴图为平滑渐变可安全降采样）
         var scaleDown = 1;
         var cw = w, ch = h;
         var maxDim = Math.max(w, h);
@@ -243,7 +243,7 @@
             data[j * 4 + 3] = 255;
         }
 
-        ctx.putImageData(new ImageData(data, w, h), 0, 0);
+        ctx.putImageData(new ImageData(data, cw, ch), 0, 0);
 
         // 设置 feImage 的 href（位移贴图数据）
         var dataURL = canvas.toDataURL();
