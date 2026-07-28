@@ -559,15 +559,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderAuthModal() {
         const title = document.getElementById('authModalTitle');
         if (currentAuthMode === 'profile') {
-            title.textContent = t('auth.profile');
+            if (title) title.textContent = t('auth.profile');
             authModalBody.innerHTML = renderUserProfile(getSession());
             bindProfileEvents();
         } else if (currentAuthMode === 'register') {
-            title.textContent = t('auth.register');
+            if (title) title.textContent = t('auth.register');
             authModalBody.innerHTML = renderRegisterForm();
             bindRegisterEvents();
         } else {
-            title.textContent = t('auth.login');
+            if (title) title.textContent = t('auth.login');
             authModalBody.innerHTML = renderLoginForm();
             bindLoginEvents();
         }
@@ -877,7 +877,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openHomepageGuide() {
         const title = document.getElementById('authModalTitle');
-        title.textContent = t('homepage.title');
+        if (title) title.textContent = t('homepage.title');
         authModalBody.innerHTML = renderSetHomepageGuide();
         currentAuthMode = 'homepage';
         authOverlay.classList.add('show');
