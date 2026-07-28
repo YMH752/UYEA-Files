@@ -1288,10 +1288,9 @@ html[data-theme="coffee"] .section-title {
 
 .card-item:hover .card-title { color: var(--primary); }
 
-/* 导航页/工具页卡片标题：去除加粗，中文显示更轻盈（覆盖默认 .card-title 的 600） */
-#navView .card-title,
-#toolsView .card-title {
-    font-weight: 500;
+/* 导航页/工具页：彻底清除所有文字加粗效果（含 section-title、card-title、card-desc 等） */
+#navView *, #toolsView * {
+    font-weight: 400;
 }
 
 /* 添加网站卡片（加号按钮，用于后续网站上传功能） */
@@ -1784,14 +1783,15 @@ html[data-theme="coffee"] .bg-orb-3 {
     scroll-snap-type: x proximity;
 }
 
-/* 凸透镜滑动指示器：固定宽度圆角矩形，跟随选中项滑动（仅 translateX，移除 backdrop-filter 提升性能）
-   注意：JS 中 updateBottomNavIndicator 只设置 transform: translateY(-50%) translateX(${offsetLeft}px)，
-   不再设置 width（宽度固定 80px）。 */
+/* 凸透镜滑动指示器：自适应宽度圆角矩形，跟随选中项滑动（仅 translateX，移除 backdrop-filter 提升性能）
+   注意：JS 中 updateBottomNavIndicator 会根据激活项 offsetWidth 动态设置 indicator.style.width，
+   CSS 仅提供 min-width 兜底。 */
 .bottom-nav-indicator {
     position: absolute;
     top: 50%;
     left: 0;
-    width: 80px; /* 固定宽度（恢复舒展尺寸） */
+    min-width: 80px; /* 最小宽度兜底 */
+    width: 80px; /* 初始宽度，JS 会动态覆盖 */
     height: 46px;
     border-radius: 24px;
     background: linear-gradient(135deg, rgba(255,255,255,0.65), rgba(255,255,255,0.45));
@@ -2245,7 +2245,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 }
 
 /* ========== 认证弹窗 ========== */
-.auth-modal { width: min(92vw, 400px); }
+.auth-modal { width: min(92vw, 400px); min-height: 480px; }
 /* 浮动关闭按钮（右上角） */
 .auth-close-btn {
     position: absolute;
@@ -2264,8 +2264,8 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     justify-content: center;
 }
 .auth-close-btn:hover { color: var(--text-primary); }
-/* 认证弹窗body紧凑内边距 */
-.auth-modal .tool-modal-body { padding: 16px 20px; }
+/* 认证弹窗body紧凑内边距 + 滚动条独立 gutter，避免与关闭按钮重叠 */
+.auth-modal .tool-modal-body { padding: 16px 20px; scrollbar-gutter: stable; }
 
 /* 头部用户按钮头像 */
 .user-btn-avatar {
@@ -2706,7 +2706,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 
 /* 认证弹窗响应式 */
 @media (max-width: 600px) {
-    .auth-modal { width: 96vw; max-height: 92vh; }
+    .auth-modal { width: 96vw; max-height: 92vh; min-height: min(480px, 92vh); }
     .homepage-guide-url { flex-direction: column; }
     .homepage-url-input { width: 100%; }
     .hp-detected-banner { font-size: 12px; }

@@ -939,11 +939,12 @@
             }
 
             // 计算位置（相对于bottom-nav的padding区域）
-            // 指示器宽度固定（CSS定义），仅更新 translateX 位置
+            // 指示器宽度自适应激活项宽度（itemWidth + 两侧 padding 8px×2），确保完全框住内容
             const navRect = bottomNav.getBoundingClientRect();
             const itemRect = activeItem.getBoundingClientRect();
             const offsetLeft = itemRect.left - navRect.left + bottomNav.scrollLeft;
-            const indicatorWidth = indicator.offsetWidth || 80;
+            const indicatorWidth = Math.max(80, activeItem.offsetWidth + 16);
+            indicator.style.width = indicatorWidth + 'px';
             const centeredOffset = offsetLeft + (itemRect.width - indicatorWidth) / 2;
 
             indicator.style.transform = `translateY(-50%) translateX(${centeredOffset}px)`;
