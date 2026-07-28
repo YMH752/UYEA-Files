@@ -120,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- 登录层（上层，clip-path 裁剪） -->
                 <div class="auth-login-layer" id="authLoginLayer">
                     <div class="auth-form" id="loginForm">
+                        <div class="auth-brand">UYEA</div>
                         <div class="auth-field">
                             <label class="auth-label" for="loginEmail">${t('auth.email')}</label>
                             <div class="auth-input-wrap">
