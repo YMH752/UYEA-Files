@@ -1,5 +1,9 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
-    // 引用共享工具函数
+document.addEventListener('DOMContentLoaded', () => {
+    // 引用共享工具函数（含守卫，防止 utils.js 加载失败时模块静默崩溃）
+    if (!window.UYEA_UTILS) {
+        console.error('[script] UYEA_UTILS 未加载，主脚本初始化失败');
+        return;
+    }
     const { safeGetItem, safeSetItem, escapeHtml: esc, getGridColumns, translateTag } = window.UYEA_UTILS;
 
     // ==================== 下拉菜单互斥机制 ====================
@@ -225,7 +229,7 @@
         mobileSearchSubmit.addEventListener('click', executeMobileSearch);
     }
     if (mobileSearchInput) {
-        mobileSearchInput.addEventListener('keypress', (e) => {
+        mobileSearchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 executeMobileSearch();
@@ -399,14 +403,19 @@
         }
 
         // 无结果提示
-        document.getElementById('searchNoResults').style.display = totalCount === 0 ? '' : 'none';
+        const searchNoResults = document.getElementById('searchNoResults');
+        if (searchNoResults) searchNoResults.style.display = totalCount === 0 ? '' : 'none';
     }
 
     // 切换到搜索结果视图
     let previousView = 'forum';
     function showSearchView(query) {
-        // 记住当前视图，用于返回
-        if (currentView !== 'search') previousView = currentView;
+        // 记住当前视图，用于返回（白名单校验，防止 currentView 异常时 previousView 变成 undefined）
+        if (currentView !== 'search' && typeof VIEWS !== 'undefined' && VIEWS[currentView]) {
+            previousView = currentView;
+        } else if (!previousView || (typeof VIEWS !== 'undefined' && !VIEWS[previousView])) {
+            previousView = 'forum';
+        }
 
         // 隐藏所有视图
         document.querySelectorAll('.view-container').forEach(v => {
@@ -462,10 +471,22 @@
             link.classList.toggle('active', link.dataset.view === previousView);
         });
 
-        // 恢复底部导航内容
+        // 恢复底部导航内容（含翻译、指示器、拖拽绑定，与 switchView 行为一致）
         if (bottomNav && typeof BOTTOM_NAVS !== 'undefined' && BOTTOM_NAVS[previousView]) {
             bottomNav.innerHTML = BOTTOM_NAVS[previousView];
+            // 翻译新注入的底部导航项
+            const navMsgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+            bottomNav.querySelectorAll('[data-i18n]').forEach(el => {
+                if (navMsgs[el.dataset.i18n]) el.textContent = navMsgs[el.dataset.i18n];
+            });
             bottomNav.scrollTo({ left: 0, behavior: 'smooth' });
+            // 双 rAF 确保 DOM 渲染完成后再校准指示器位置 + 重新绑定拖拽
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    if (typeof window.updateBottomNavIndicator === 'function') window.updateBottomNavIndicator();
+                    if (typeof window.bindBottomNavDrag === 'function') window.bindBottomNavDrag();
+                });
+            });
         }
 
         // 通知视图切换
@@ -509,7 +530,7 @@
 
     // 常驻搜索栏事件绑定
     if (headerSearchInput) {
-        headerSearchInput.addEventListener('keypress', (e) => {
+        headerSearchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 executeSearch(headerSearchInput);
@@ -630,16 +651,20 @@
             if (sectionVisible > 0) section.classList.add('revealed');
             visibleCount += sectionVisible;
 
-            // 重新触发卡片切换动画（Apple/华为/OPPO风格：弹性缩放+淡入）
-            let cardIdx = 0;
+            // 重新触发卡片切换动画（批量禁用动画 → 单次 reflow → 批量启用，避免每张卡都强制回流）
+            const visibleCards = [];
             cards.forEach(card => {
                 if (card.style.display !== 'none') {
                     card.style.animation = 'none';
-                    card.offsetHeight; // 强制回流以重置动画
-                    card.style.animation = `cardSwitchIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(cardIdx * 0.025, 0.3)}s both`;
-                    cardIdx++;
+                    visibleCards.push(card);
                 }
             });
+            if (visibleCards.length > 0) {
+                void visibleCards[0].offsetHeight; // 单次 reflow 重置所有动画
+                visibleCards.forEach((card, idx) => {
+                    card.style.animation = `cardSwitchIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(idx * 0.025, 0.3)}s both`;
+                });
+            }
         });
 
         if (noResults) noResults.classList.toggle('show', visibleCount === 0);
@@ -662,7 +687,6 @@
                 applyNavFilter();
                 navFilterApplied = true;
             }
-            bindNavEvents();
             return;
         }
         navInitialized = true;
@@ -694,7 +718,6 @@
                         }
                     });
                 });
-                bindNavEvents();
                 // 通知加载动画：导航模块已就绪
                 window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'nav' } }));
             })
@@ -705,33 +728,32 @@
             });
     }
 
-    // 绑定导航视图事件（底部导航切换后需重新绑定）
-    let moreBtnsBound = false;
-    function bindNavEvents() {
-        document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(item => {
-            item.addEventListener('click', () => {
-                document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]').forEach(x => x.classList.remove('active'));
-                item.classList.add('active');
-                navCurrentCategory = item.dataset.category;
-                // 滚动底部导航到激活项
-                if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
-                applyNavFilter();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+    // ==================== 底部导航栏分类切换（事件委托） ====================
+    // 使用事件委托绑定在持久的 #bottomNav 容器上，避免每次视图切换重新绑定
+    // 导航页与工具页都使用 data-category，通过 currentView 区分当前激活视图
+    const navBottomNav = document.getElementById('bottomNav');
+    if (navBottomNav) {
+        navBottomNav.addEventListener('click', (e) => {
+            if (currentView !== 'nav') return;
+            const item = e.target.closest('.bottom-nav-item[data-category]');
+            if (!item || item.classList.contains('active')) return;
+            navBottomNav.querySelectorAll('.bottom-nav-item').forEach(x => x.classList.remove('active'));
+            item.classList.add('active');
+            navCurrentCategory = item.dataset.category;
+            if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
+            applyNavFilter();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-
-        // "更多"按钮只需绑定一次（静态HTML不会随视图切换重建）
-        if (!moreBtnsBound) {
-            moreBtnsBound = true;
-            document.querySelectorAll('#navView .more-btn[data-target-category]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const targetCat = btn.dataset.targetCategory;
-                    const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
-                    if (targetNavBtn) targetNavBtn.click();
-                });
-            });
-        }
     }
+
+    // "更多"按钮只需绑定一次（静态HTML不会随视图切换重建）
+    document.querySelectorAll('#navView .more-btn[data-target-category]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetCat = btn.dataset.targetCategory;
+            const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
+            if (targetNavBtn) targetNavBtn.click();
+        });
+    });
 
     // 窗口resize时重新计算2行限制 + 搜索栏断点同步关闭下拉（防抖）
     let navResizeTimer = null;
@@ -764,8 +786,6 @@
                 setTimeout(initNavView, 50);
                 return;
             }
-            // switchView替换了底部导航HTML，需重新绑定事件
-            bindNavEvents();
             // 切换视图时统一重置为第一个分类（全部），不保留历史位置
             navCurrentCategory = 'all';
             // 底部导航HTML已默认第一项active，无需额外操作

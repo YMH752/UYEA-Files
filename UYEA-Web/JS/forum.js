@@ -1,4 +1,4 @@
-﻿/**
+/**
  * UYEA Forum - forum.js
  * 论坛帖子加载、搜索、feed分类筛选
  * 适用于论坛主页（index.html）
@@ -91,27 +91,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadPosts();
 
-    // ==================== 底部导航栏 tab 切换 ====================
-    function bindForumEvents() {
-        const bottomNavItems = document.querySelectorAll('#bottomNav .bottom-nav-item');
-        bottomNavItems.forEach(item => {
-            item.addEventListener('click', () => {
-                if (item.classList.contains('active')) return; // 已选中则跳过
-                bottomNavItems.forEach(x => x.classList.remove('active'));
-                item.classList.add('active');
-                currentFeed = item.dataset.tab;
-                filterPosts();
-                // 移动凸透镜指示器到选中项并居中滚动
-                if (typeof window.updateBottomNavIndicator === 'function') window.updateBottomNavIndicator();
-                if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
-            });
+    // ==================== 底部导航栏 tab 切换（事件委托） ====================
+    // 使用事件委托绑定在持久的 #bottomNav 容器上，避免每次视图切换重新绑定
+    // 论坛底部导航项使用 data-tab 属性，与导航/工具页的 data-category 区分
+    const bottomNav = document.getElementById('bottomNav');
+    if (bottomNav) {
+        bottomNav.addEventListener('click', (e) => {
+            const item = e.target.closest('.bottom-nav-item[data-tab]');
+            if (!item || item.classList.contains('active')) return;
+            bottomNav.querySelectorAll('.bottom-nav-item').forEach(x => x.classList.remove('active'));
+            item.classList.add('active');
+            currentFeed = item.dataset.tab;
+            filterPosts();
+            // 移动凸透镜指示器到选中项并居中滚动
+            if (typeof window.updateBottomNavIndicator === 'function') window.updateBottomNavIndicator();
+            if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
         });
     }
 
     // 监听视图切换：切换回论坛视图时重置为第一个分类（推荐）
     window.addEventListener('viewchange', (e) => {
         if (e.detail.view === 'forum') {
-            bindForumEvents();
             // 切换视图时统一重置为第一个分类（推荐），不保留历史位置
             currentFeed = 'recommend';
             // 底部导航HTML已默认第一项active，无需额外操作
@@ -119,9 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
         }
     });
-
-    // 初始绑定论坛底部导航事件
-    bindForumEvents();
 
     // 语言切换时重新渲染帖子（翻译标签）
     window.addEventListener('languagechange', () => {

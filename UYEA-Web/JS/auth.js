@@ -7,11 +7,18 @@
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    // 引用共享工具函数
+    // 引用共享工具函数（含守卫，防止 utils.js 加载失败时整个模块静默崩溃）
+    if (!window.UYEA_UTILS) {
+        console.error('[auth] UYEA_UTILS 未加载，鉴权模块初始化失败');
+        return;
+    }
     const { safeGetItem, safeSetItem, safeRemoveItem, escapeHtml, t } = window.UYEA_UTILS;
 
-    // SHA-256 哈希（使用 Web Crypto API）
+    // SHA-256 哈希（使用 Web Crypto API；HTTPS/localhost 才可用）
     async function sha256(text) {
+        if (!window.crypto || !window.crypto.subtle) {
+            throw new Error('CRYPTO_UNAVAILABLE');
+        }
         const encoder = new TextEncoder();
         const data = encoder.encode(text);
         const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -26,28 +33,40 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let usersCache = null; // 用户数据缓存
+    let usersPromise = null; // 进行中的 fetch（去重，防止双击登录按钮触发两次请求）
 
     // 加载用户数据（先从localStorage读取注册用户，再合并JSON默认用户）
     async function loadUsers() {
         if (usersCache) return usersCache;
+        if (usersPromise) return usersPromise;
 
-        // 从 localStorage 读取注册的用户
-        let registeredUsers = [];
-        const stored = safeGetItem(STORAGE_KEYS.users);
-        if (stored) {
-            try { registeredUsers = JSON.parse(stored); } catch (e) { /* 忽略损坏数据 */ }
-        }
+        usersPromise = (async () => {
+            // 从 localStorage 读取注册的用户
+            let registeredUsers = [];
+            const stored = safeGetItem(STORAGE_KEYS.users);
+            if (stored) {
+                try { registeredUsers = JSON.parse(stored); } catch (e) { /* 忽略损坏数据 */ }
+            }
 
-        // 从 JSON 加载默认用户
-        let defaultUsers = [];
-        try {
-            const resp = await fetch('/JSON/users.json', { cache: 'no-cache' });
-            if (resp.ok) defaultUsers = await resp.json();
-        } catch (e) { console.warn('加载用户数据失败:', e); }
+            // 从 JSON 加载默认用户（带 10s 超时，防止慢响应永久挂起登录按钮）
+            let defaultUsers = [];
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                const resp = await fetch('/JSON/users.json', { cache: 'no-cache', signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (resp.ok) defaultUsers = await resp.json();
+            } catch (e) { console.warn('加载用户数据失败:', e); }
 
-        // 合并：默认用户 + 注册用户
-        usersCache = [...defaultUsers, ...registeredUsers];
-        return usersCache;
+            // 合并：默认用户 + 注册用户
+            usersCache = [...defaultUsers, ...registeredUsers];
+            return usersCache;
+        })().catch(err => {
+            usersPromise = null; // 失败时重置，允许后续重试
+            throw err;
+        });
+
+        return usersPromise;
     }
 
     // 保存注册用户到 localStorage
@@ -62,8 +81,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!session) return null;
         try {
             const data = JSON.parse(session);
-            // 会话有效期：7天
-            if (data.expires && Date.now() > data.expires) {
+            // 结构校验：必须是含 userId 的对象，防止伪造/损坏的 session 绕过期检查
+            if (typeof data !== 'object' || data === null || typeof data.userId === 'undefined') {
+                safeRemoveItem(STORAGE_KEYS.session);
+                return null;
+            }
+            // 会话有效期：7天（expires 必须是数字，否则视为非法）
+            if (typeof data.expires !== 'number' || Date.now() > data.expires) {
                 safeRemoveItem(STORAGE_KEYS.session);
                 return null;
             }
@@ -125,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <label class="auth-label" for="loginEmail">${t('auth.email')}</label>
                             <div class="auth-input-wrap">
                                 <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                                <input type="email" class="auth-input" id="loginEmail" placeholder="${t('auth.emailPlaceholder')}" autocomplete="email" autocapitalize="none">
+                                <input type="text" inputmode="email" class="auth-input" id="loginEmail" placeholder="${t('auth.emailPlaceholder')}" autocomplete="email" autocapitalize="none">
                             </div>
                         </div>
                         <div class="auth-field">
@@ -621,12 +645,9 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const users = await loadUsers();
                 const user = users.find(u => u.email === email || u.username === email);
+                // 安全考虑：账号不存在与密码错误统一返回相同提示，防止账号枚举
                 if (!user) {
-                    // 用户不存在：关闭弹窗，显示成就式提示
-                    closeAuthModal();
-                    if (typeof window.showAchievement === 'function') {
-                        window.showAchievement(t('toast.comingSoon') || '正在完善中', t('toast.loginNotFound') || '登录功能正在完善中，敬请期待');
-                    }
+                    showAuthError('loginError', t('auth.errorPasswordWrong'));
                     submitBtn.disabled = false;
                     submitBtn.textContent = t('auth.login');
                     return;
@@ -635,6 +656,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const inputHash = await sha256(password);
                 if (inputHash !== user.passwordHash) {
                     showAuthError('loginError', t('auth.errorPasswordWrong'));
+                    passwordInput.value = ''; // 密码错误后清空密码框
+                    passwordInput.focus();
                     submitBtn.disabled = false;
                     submitBtn.textContent = t('auth.login');
                     return;
@@ -642,6 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // 登录成功
                 setSession(user);
+                passwordInput.value = ''; // 登录成功后立即清空密码，避免明文滞留 DOM
                 submitBtn.textContent = t('auth.loginSuccess');
                 setTimeout(() => {
                     closeAuthModal();
@@ -649,18 +673,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 500);
             } catch (e) {
                 console.error('登录失败:', e);
-                showAuthError('loginError', t('auth.errorNetwork'));
+                // crypto.subtle 不可用（HTTP 非 localhost 环境）给出明确提示
+                if (e && e.message === 'CRYPTO_UNAVAILABLE') {
+                    showAuthError('loginError', '当前为非 HTTPS 环境，密码加密不可用，请通过 HTTPS 访问本站');
+                } else {
+                    showAuthError('loginError', t('auth.errorNetwork'));
+                }
                 submitBtn.disabled = false;
                 submitBtn.textContent = t('auth.login');
             }
         }
 
         submitBtn.addEventListener('click', doLogin);
-        passwordInput.addEventListener('keypress', (e) => {
+        // keypress 已废弃，改用 keydown 以兼容所有键（含 Esc 等）
+        passwordInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); doLogin(); }
         });
-        emailInput.addEventListener('keypress', (e) => {
+        emailInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); passwordInput.focus(); }
+        });
+        // 用户开始重新输入时自动清除错误提示
+        [emailInput, passwordInput].forEach(el => {
+            el.addEventListener('input', () => hideAuthError('loginError'));
         });
 
         // 拖拽分栏手柄：点击切换 + 拖拽向左滑揭示注册
@@ -669,12 +703,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const authSlideHandle = document.getElementById('authSlideHandle');
 
         if (authSlideHandle && authLoginLayer && authSplit) {
-            const HANDLE_WIDTH = window.innerWidth <= 600 ? 44 : 48;
+            // HANDLE_WIDTH 改为函数，窗口尺寸变化后能动态读取
+            const getHandleWidth = () => window.innerWidth <= 600 ? 44 : 48;
             const DRAG_THRESHOLD = 5;
             let isPressing = false;
             let isDragging = false;
             let startX = 0;
             let startDividerX = 0;
+            let cachedSplitWidth = 0; // 缓存 offsetWidth，避免 pointermove 中每帧强制回流
 
             // 更新分栏位置：dividerX = 手柄左边界位置
             function updateSplit(dividerX) {
@@ -685,12 +721,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // 初始位置：手柄在右侧（显示登录）
             function initSplit() {
                 const w = authSplit.offsetWidth;
-                updateSplit(w - HANDLE_WIDTH);
+                cachedSplitWidth = w;
+                updateSplit(w - getHandleWidth());
                 authSplit.classList.remove('show-register');
             }
 
             function slideToRegister() {
-                const w = authSplit.offsetWidth;
+                cachedSplitWidth = authSplit.offsetWidth;
                 authLoginLayer.classList.remove('dragging');
                 authSlideHandle.classList.remove('dragging');
                 updateSplit(0);
@@ -700,10 +737,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             function slideToLogin() {
-                const w = authSplit.offsetWidth;
+                cachedSplitWidth = authSplit.offsetWidth;
                 authLoginLayer.classList.remove('dragging');
                 authSlideHandle.classList.remove('dragging');
-                updateSplit(w - HANDLE_WIDTH);
+                updateSplit(cachedSplitWidth - getHandleWidth());
                 authSplit.classList.remove('show-register');
                 const title = document.getElementById('authModalTitle');
                 if (title) title.textContent = t('auth.login');
@@ -721,7 +758,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 startX = e.clientX;
                 const leftStr = authSlideHandle.style.left || '0';
                 startDividerX = parseFloat(leftStr) || 0;
+                cachedSplitWidth = authSplit.offsetWidth; // 拖拽开始时缓存宽度
             });
+
+            // 关键修复：使用 AbortController 在重新调用 bindLoginEvents 时
+            // 自动解绑旧的 document 级监听器，防止每次打开登录弹窗累积 3 个监听器
+            if (window._authDragAbort) window._authDragAbort.abort();
+            const dragAbort = new AbortController();
+            window._authDragAbort = dragAbort;
 
             document.addEventListener('pointermove', (e) => {
                 if (!isPressing) return;
@@ -734,13 +778,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     authSlideHandle.setPointerCapture && authSlideHandle.setPointerCapture(e.pointerId);
                 }
                 if (isDragging) {
-                    const w = authSplit.offsetWidth;
+                    const w = cachedSplitWidth; // 使用缓存值，避免每帧读 offsetWidth 触发布局抖动
+                    const handleW = getHandleWidth();
                     let newX = startDividerX + deltaX;
-                    newX = Math.max(0, Math.min(w - HANDLE_WIDTH, newX));
+                    newX = Math.max(0, Math.min(w - handleW, newX));
                     updateSplit(newX);
                     e.preventDefault();
                 }
-            });
+            }, { signal: dragAbort.signal });
 
             function handlePointerEnd() {
                 if (!isPressing) return;
@@ -753,22 +798,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 isDragging = false;
                 // 吸附到最近的面板
-                const w = authSplit.offsetWidth;
+                const w = cachedSplitWidth;
                 const leftStr = authSlideHandle.style.left || '0';
                 const currentX = parseFloat(leftStr) || 0;
-                if (currentX < w / 2 - HANDLE_WIDTH / 2) slideToRegister();
+                if (currentX < w / 2 - getHandleWidth() / 2) slideToRegister();
                 else slideToLogin();
             }
 
-            document.addEventListener('pointerup', handlePointerEnd);
-            document.addEventListener('pointercancel', handlePointerEnd);
+            document.addEventListener('pointerup', handlePointerEnd, { signal: dragAbort.signal });
+            document.addEventListener('pointercancel', handlePointerEnd, { signal: dragAbort.signal });
         }
 
-        // 自动聚焦邮箱输入框
-        setTimeout(() => {
+        // 自动聚焦邮箱输入框（rAF 比 setTimeout 更对齐渲染时机）
+        requestAnimationFrame(() => {
             const emailEl = document.getElementById('loginEmail');
             if (emailEl) emailEl.focus();
-        }, 50);
+        });
     }
 
     function bindRegisterEvents() {
