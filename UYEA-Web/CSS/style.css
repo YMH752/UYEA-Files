@@ -2347,6 +2347,91 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     border: 1px dashed var(--border);
 }
 
+/* ========== 认证弹窗：左右分栏滑动布局 ========== */
+.auth-split { position: relative; overflow: hidden; }
+.auth-split-track {
+    display: flex;
+    width: 200%;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+}
+.auth-split-track.dragging { transition: none; }
+.auth-split-panel {
+    flex-shrink: 0;
+    width: 50%;
+    box-sizing: border-box;
+}
+.auth-split-panel-login .auth-form { padding-right: 40px; }
+.auth-split-panel-register {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+}
+.auth-dev-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+}
+.auth-dev-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    background: var(--primary-gradient);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    animation: authDevPulse 2s ease-in-out infinite;
+}
+@keyframes authDevPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(0.95); }
+}
+.auth-dev-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: var(--font-serif);
+}
+.auth-dev-text {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+/* 滑动手柄：右侧窄条 + 左箭头 */
+.auth-split-handle {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+    -webkit-user-select: none;
+    background: var(--surface-warm);
+    border-left: 1px solid var(--border);
+    transition: background 0.2s ease;
+}
+.auth-split-handle:hover { background: var(--border); }
+.auth-split-handle:active { background: var(--primary); }
+.auth-split-handle:active .auth-handle-arrow { color: white; }
+.auth-handle-arrow {
+    width: 20px; height: 20px;
+    color: var(--text-muted);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 注册面板可见时箭头翻转 */
+.auth-split.show-register .auth-handle-arrow { transform: rotate(180deg); }
+/* 窄屏适配 */
+@media (max-width: 600px) {
+    .auth-split-panel-login .auth-form { padding-right: 36px; }
+    .auth-split-handle { width: 32px; }
+}
+
 /* 设为首页引导 */
 .homepage-guide { padding: 4px 0; }
 .homepage-guide-intro {

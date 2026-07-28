@@ -98,45 +98,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const authModalClose = document.getElementById('authModalClose');
     const userBtn = document.querySelector('.user-btn');
 
-    // 登录表单 HTML（重新设计：液态玻璃卡片风格）
+    // 登录表单 HTML（左右分栏滑动布局：左侧登录，右侧注册开发中）
     function renderLoginForm() {
         return `
-            <div class="auth-form" id="loginForm">
-                <div class="auth-hero">
-                    <div class="auth-hero-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                            <polyline points="10 17 15 12 10 7"></polyline>
-                            <line x1="15" y1="12" x2="3" y2="12"></line>
-                        </svg>
+            <div class="auth-split" id="authSplit">
+                <div class="auth-split-track" id="authSplitTrack">
+                    <div class="auth-split-panel auth-split-panel-login">
+                        <div class="auth-form" id="loginForm">
+                            <div class="auth-hero">
+                                <div class="auth-hero-icon">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                        <polyline points="10 17 15 12 10 7"></polyline>
+                                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                                    </svg>
+                                </div>
+                                <div class="auth-hero-title">${t('auth.login')}</div>
+                                <div class="auth-hero-subtitle">${t('auth.welcomeBack')}</div>
+                            </div>
+                            <div class="auth-field">
+                                <label class="auth-label" for="loginUsername">${t('auth.username')}</label>
+                                <div class="auth-input-wrap">
+                                    <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    <input type="text" class="auth-input" id="loginUsername" placeholder="${t('auth.usernamePlaceholder')}" autocomplete="username" autocapitalize="none">
+                                </div>
+                            </div>
+                            <div class="auth-field">
+                                <label class="auth-label" for="loginPassword">${t('auth.password')}</label>
+                                <div class="auth-input-wrap">
+                                    <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                    <input type="password" class="auth-input auth-input-password" id="loginPassword" placeholder="${t('auth.passwordPlaceholder')}" autocomplete="current-password">
+                                    <button class="auth-password-toggle" id="loginPasswordToggle" type="button" aria-label="${t('auth.togglePassword')}">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="auth-error" id="loginError"></div>
+                            <div class="auth-actions">
+                                <button class="post-btn auth-submit-btn" id="loginSubmitBtn">${t('auth.login')}</button>
+                            </div>
+                            <div class="auth-switch">
+                                <span>${t('auth.noAccount')}</span>
+                                <button class="auth-switch-btn" id="switchToRegister">${t('auth.register')}</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="auth-hero-title">${t('auth.login')}</div>
-                    <div class="auth-hero-subtitle">${t('auth.welcomeBack')}</div>
-                </div>
-                <div class="auth-field">
-                    <label class="auth-label" for="loginUsername">${t('auth.username')}</label>
-                    <div class="auth-input-wrap">
-                        <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        <input type="text" class="auth-input" id="loginUsername" placeholder="${t('auth.usernamePlaceholder')}" autocomplete="username" autocapitalize="none">
+                    <div class="auth-split-panel auth-split-panel-register">
+                        <div class="auth-dev-message">
+                            <div class="auth-dev-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                                </svg>
+                            </div>
+                            <div class="auth-dev-title">${t('auth.register')}</div>
+                            <div class="auth-dev-text">${t('auth.underDevelopment')}</div>
+                        </div>
                     </div>
                 </div>
-                <div class="auth-field">
-                    <label class="auth-label" for="loginPassword">${t('auth.password')}</label>
-                    <div class="auth-input-wrap">
-                        <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <input type="password" class="auth-input auth-input-password" id="loginPassword" placeholder="${t('auth.passwordPlaceholder')}" autocomplete="current-password">
-                        <button class="auth-password-toggle" id="loginPasswordToggle" type="button" aria-label="${t('auth.togglePassword')}">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="auth-error" id="loginError"></div>
-                <div class="auth-actions">
-                    <button class="post-btn auth-submit-btn" id="loginSubmitBtn">${t('auth.login')}</button>
-                </div>
-                <div class="auth-switch">
-                    <span>${t('auth.noAccount')}</span>
-                    <button class="auth-switch-btn" id="switchToRegister">${t('auth.register')}</button>
+                <div class="auth-split-handle" id="authSlideHandle" role="button" aria-label="${t('auth.register')}">
+                    <svg class="auth-handle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
                 </div>
             </div>
         `;
@@ -541,6 +566,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
         const userBtn = document.querySelector('.user-btn');
         if (userBtn) userBtn.classList.remove('active');
+        // 重置滑动面板到登录位置
+        if (typeof window._authSlideReset === 'function') window._authSlideReset();
     }
 
     function renderAuthModal() {
@@ -649,13 +676,89 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter') { e.preventDefault(); passwordInput.focus(); }
         });
 
-        // 切换到注册：注册功能尚未开放，显示"完善中"提示（保留注册表单代码供未来使用）
-        document.getElementById('switchToRegister').addEventListener('click', () => {
-            closeAuthModal();
-            if (typeof window.showAchievement === 'function') {
-                window.showAchievement(t('toast.comingSoon') || '正在完善中', t('toast.register') || '注册功能正在完善中，敬请期待');
+        // 切换到注册：滑动到注册面板（显示"正在开发中..."）
+        const switchBtn = document.getElementById('switchToRegister');
+        if (switchBtn) {
+            switchBtn.addEventListener('click', () => slideToRegister());
+        }
+
+        // 滑动手柄：点击切换 + 拖拽滑动
+        const authSplit = document.getElementById('authSplit');
+        const authSplitTrack = document.getElementById('authSplitTrack');
+        const authSlideHandle = document.getElementById('authSlideHandle');
+
+        if (authSlideHandle && authSplitTrack && authSplit) {
+            const DRAG_THRESHOLD = 5;
+            let isPressing = false;
+            let isDragging = false;
+            let startX = 0;
+            let startPercent = 0;
+
+            function slideToRegister() {
+                authSplitTrack.style.transform = 'translateX(-50%)';
+                authSplit.classList.add('show-register');
+                const title = document.getElementById('authModalTitle');
+                if (title) title.textContent = t('auth.register');
             }
-        });
+
+            function slideToLogin() {
+                authSplitTrack.style.transform = 'translateX(0)';
+                authSplit.classList.remove('show-register');
+                const title = document.getElementById('authModalTitle');
+                if (title) title.textContent = t('auth.login');
+            }
+
+            // 暴露给 closeAuthModal 调用
+            window._authSlideReset = slideToLogin;
+
+            authSlideHandle.addEventListener('pointerdown', (e) => {
+                isPressing = true;
+                isDragging = false;
+                startX = e.clientX;
+                startPercent = authSplit.classList.contains('show-register') ? -50 : 0;
+            });
+
+            document.addEventListener('pointermove', (e) => {
+                if (!isPressing) return;
+                const deltaX = e.clientX - startX;
+                if (!isDragging) {
+                    if (Math.abs(deltaX) < DRAG_THRESHOLD) return;
+                    isDragging = true;
+                    authSplitTrack.classList.add('dragging');
+                    authSlideHandle.setPointerCapture && authSlideHandle.setPointerCapture(e.pointerId);
+                }
+                if (isDragging) {
+                    const modalWidth = authSplit.offsetWidth;
+                    if (modalWidth <= 0) return;
+                    const percentDelta = (deltaX / modalWidth) * 50;
+                    let newPercent = startPercent + percentDelta;
+                    newPercent = Math.max(-50, Math.min(0, newPercent));
+                    authSplitTrack.style.transform = `translateX(${newPercent}%)`;
+                    e.preventDefault();
+                }
+            });
+
+            function handlePointerEnd() {
+                if (!isPressing) return;
+                isPressing = false;
+                if (!isDragging) {
+                    // 纯点击：切换面板
+                    if (authSplit.classList.contains('show-register')) slideToLogin();
+                    else slideToRegister();
+                    return;
+                }
+                isDragging = false;
+                authSplitTrack.classList.remove('dragging');
+                // 吸附到最近的面板
+                const match = authSplitTrack.style.transform.match(/-?[\d.]+/);
+                const currentPercent = match ? parseFloat(match[0]) : 0;
+                if (currentPercent < -25) slideToRegister();
+                else slideToLogin();
+            }
+
+            document.addEventListener('pointerup', handlePointerEnd);
+            document.addEventListener('pointercancel', handlePointerEnd);
+        }
 
         // 自动聚焦用户名输入框
         setTimeout(() => usernameInput.focus(), 50);
@@ -684,14 +787,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (password.length < 6) { showAuthError('registerError', t('auth.errorPasswordTooShort')); return; }
             if (password !== confirm) { showAuthError('registerError', t('auth.errorPasswordMismatch')); return; }
 
-            // 注册功能完善中：关闭弹窗，显示成就式提示
-            closeAuthModal();
-            if (typeof window.showAchievement === 'function') {
-                window.showAchievement(t('toast.comingSoon') || '正在完善中', t('toast.register') || '注册功能正在完善中，敬请期待');
-            }
-            // 重置表单
-            submitBtn.disabled = false;
-            submitBtn.textContent = t('auth.register');
+            // 注册功能尚未开放（保留表单逻辑供未来使用）
+            showAuthError('registerError', t('auth.underDevelopment'));
         }
 
         submitBtn.addEventListener('click', doRegister);

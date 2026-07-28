@@ -53,6 +53,11 @@
         safeSetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language), lang);
         // 通知其他模块语言已切换
         window.dispatchEvent(new CustomEvent('languagechange', { detail: { lang } }));
+        // 语言切换后重新计算底部导航栏指示器（文字长度变化后需自适应）
+        requestAnimationFrame(() => {
+            if (typeof window.updateBottomNavIndicator === 'function') window.updateBottomNavIndicator();
+            if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
+        });
     };
 
     // 语言图标按钮：点击切换下拉菜单
