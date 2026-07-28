@@ -2192,7 +2192,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 }
 
 /* ========== 认证弹窗 ========== */
-.auth-modal { width: min(92vw, 360px); }
+.auth-modal { width: min(92vw, 400px); }
 
 /* 头部用户按钮头像 */
 .user-btn-avatar {
@@ -2351,7 +2351,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 }
 
 /* ========== 认证弹窗：拖拽分栏滑动布局 ========== */
-.auth-split { position: relative; overflow: hidden; }
+.auth-split { position: relative; overflow: hidden; min-height: 340px; }
 /* 注册层：底层，铺满容器 */
 .auth-register-layer {
     position: absolute;
@@ -2360,6 +2360,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0 52px;
 }
 /* 登录层：上层，通过 clip-path 裁剪右侧 */
 .auth-login-layer {
@@ -2369,6 +2370,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     clip-path: inset(0 0 0 0);
     transition: clip-path 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: clip-path;
+    background: var(--surface);
 }
 .auth-login-layer.dragging { transition: none; }
 /* 登录层内容右侧留出箭头空间 */
