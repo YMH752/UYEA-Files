@@ -93,6 +93,42 @@
         };
     }
 
+    // ==================== JSON 请求 Promise 缓存（同 URL 多次调用复用同一 Promise） ====================
+    var jsonCache = {};
+    function fetchJsonCached(url) {
+        if (jsonCache[url]) return jsonCache[url];
+        var p = fetch(url).then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+        }).catch(function (e) {
+            // 失败时清除缓存，允许下次重试
+            delete jsonCache[url];
+            throw e;
+        });
+        jsonCache[url] = p;
+        return p;
+    }
+
+    // ==================== 帖子卡片 HTML 渲染（forum.js / script.js 共用） ====================
+    function renderPostCard(post, lang) {
+        var tagHtml = '<span class="post-tag">' + escapeHtml(translateTag(post.tag, lang)) + '</span>';
+        // "#" 或空 URL 视为无链接，使用 href="#" 避免页面跳转和空白标签页
+        var hasUrl = post.url && post.url !== '#';
+        var href = hasUrl ? escapeHtml(post.url) : '#';
+        var targetAttr = hasUrl ? ' target="_blank" rel="noopener"' : '';
+        return '<a href="' + href + '" class="post-item"' + targetAttr + '>' +
+            '<div class="post-meta">' +
+                tagHtml +
+                '<span class="dot">•</span>' +
+                '<span>' + escapeHtml(post.author) + '</span>' +
+                '<span class="dot">•</span>' +
+                '<span>' + escapeHtml(post.time) + '</span>' +
+            '</div>' +
+            '<div class="post-title">' + escapeHtml(post.title) + '</div>' +
+            '<div class="post-excerpt">' + escapeHtml(post.excerpt) + '</div>' +
+        '</a>';
+    }
+
     // ==================== 暴露到全局 ====================
     window.UYEA_UTILS = {
         safeGetItem: safeGetItem,
@@ -105,6 +141,8 @@
         getMsgs: getMsgs,
         t: t,
         debounce: debounce,
+        fetchJsonCached: fetchJsonCached,
+        renderPostCard: renderPostCard,
         TAG_I18N_MAP: TAG_I18N_MAP
     };
 })();

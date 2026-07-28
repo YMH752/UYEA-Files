@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // "全部"视图时，限制每分类最多显示2行
         const isLimited = (currentCategory === 'all');
 
+        // 收集所有分组的可见卡片，先批量禁用动画，循环结束后统一触发一次全局 reflow
+        const groupsWithVisibleCards = [];
+
         document.querySelectorAll('#toolsView .tool-group').forEach(group => {
             const groupCat = group.dataset.category;
             // 分类过滤
@@ -61,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
             group.style.display = (groupVisible > 0) ? '' : 'none';
             visibleCount += groupVisible;
 
-            // 重新触发卡片切换动画（批量禁用动画 → 单次 reflow → 批量启用，避免每张卡都强制回流）
+            // 收集可见卡片并禁用动画（暂不触发 reflow，等所有分组处理完后统一回流）
             const visibleCards = [];
             cards.forEach(card => {
                 if (card.style.display !== 'none') {
@@ -70,12 +73,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             if (visibleCards.length > 0) {
-                void visibleCards[0].offsetHeight; // 单次 reflow 重置所有动画
+                groupsWithVisibleCards.push(visibleCards);
+            }
+        });
+
+        // 全局单次 reflow：所有分组的动画都已被禁用，此处统一触发一次回流，避免每个分组各回流一次
+        if (groupsWithVisibleCards.length > 0) {
+            void document.body.offsetHeight;
+            // 重新启用动画，每组使用各自的 idx 实现错峰
+            groupsWithVisibleCards.forEach(visibleCards => {
                 visibleCards.forEach((card, idx) => {
                     card.style.animation = `cardSwitchIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(idx * 0.025, 0.3)}s both`;
                 });
-            }
-        });
+            });
+        }
 
         if (noResults) noResults.classList.toggle('show', visibleCount === 0);
 
@@ -120,14 +131,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 窗口大小变化时重新计算2行限制（仅在工具视图激活时）
-    let toolsResizeTimer = null;
-    window.addEventListener('resize', () => {
+    // 窗口大小变化时重新计算2行限制（仅在工具视图激活时，防抖复用 utils.debounce）
+    window.addEventListener('resize', UYEA_UTILS.debounce(function () {
         const toolsView = document.getElementById('toolsView');
         if (!toolsView || toolsView.style.display === 'none') return;
-        clearTimeout(toolsResizeTimer);
-        toolsResizeTimer = setTimeout(applyToolsFilter, 200);
-    });
+        applyToolsFilter();
+    }, 200));
 
     // 监听视图切换：切换到工具视图时恢复分类状态并重新应用筛选
     window.addEventListener('viewchange', (e) => {
@@ -198,19 +207,45 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tsTimer) { clearInterval(tsTimer); tsTimer = null; }
     }
 
-    // 工具卡片点击 / 键盘交互
-    document.querySelectorAll('#toolsView [data-tool]').forEach(card => {
-        card.addEventListener('click', (e) => {
-            e.preventDefault();
-            openTool(card.dataset.tool);
-        });
-        card.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                openTool(card.dataset.tool);
-            }
-        });
+    // 视图切换离开工具页时关闭工具模态框，清理定时器
+    window.addEventListener('viewchange', (e) => {
+        if (e.detail && e.detail.view !== 'tools') {
+            closeTool();
+        }
     });
+
+    // 工具卡片点击 / 键盘交互（事件委托，避免逐个绑定）
+    // 委托在持久容器上，动态插入的卡片也自动生效
+    const toolsContainer = document.querySelector('#toolsGroupedView') || document.getElementById('toolsView');
+    if (toolsContainer) {
+        toolsContainer.addEventListener('click', (e) => {
+            const card = e.target.closest('.card-item');
+            if (!card) return;
+            // data-coming-soon 卡片：仅阻止默认行为，不打开工具
+            if (card.hasAttribute('data-coming-soon')) {
+                e.preventDefault();
+                return;
+            }
+            const toolKey = card.dataset.tool;
+            if (!toolKey) return;
+            e.preventDefault();
+            openTool(toolKey);
+        });
+        toolsContainer.addEventListener('keydown', (e) => {
+            const card = e.target.closest('.card-item');
+            if (!card) return;
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            // data-coming-soon 卡片：仅阻止默认行为
+            if (card.hasAttribute('data-coming-soon')) {
+                e.preventDefault();
+                return;
+            }
+            const toolKey = card.dataset.tool;
+            if (!toolKey) return;
+            e.preventDefault();
+            openTool(toolKey);
+        });
+    }
 
     // 添加工具按钮：显示成就式提示弹窗
     document.querySelectorAll('#toolsView .add-card').forEach(btn => {
@@ -223,8 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    toolCloseBtn.addEventListener('click', closeTool);
-    toolOverlay.addEventListener('click', closeTool);
+    if (toolCloseBtn) toolCloseBtn.addEventListener('click', closeTool);
+    if (toolOverlay) toolOverlay.addEventListener('click', closeTool);
 
     // ESC关闭 + Tab焦点陷阱
     document.addEventListener('keydown', (e) => {
@@ -410,9 +445,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // UTF-8 安全的 Base64 编解码
     function utf8ToBase64(str) {
         const bytes = new TextEncoder().encode(str);
-        let binary = '';
-        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-        return btoa(binary);
+        // 分块处理避免大数组栈溢出，且比字符串拼接更高效
+        const chunks = [];
+        const chunkSize = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+            chunks.push(String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize)));
+        }
+        return btoa(chunks.join(''));
     }
     function base64ToUtf8(b64) {
         const binary = atob(b64);

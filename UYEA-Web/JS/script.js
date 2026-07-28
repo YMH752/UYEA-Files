@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('[script] UYEA_UTILS 未加载，主脚本初始化失败');
         return;
     }
-    const { safeGetItem, safeSetItem, escapeHtml: esc, getGridColumns, translateTag } = window.UYEA_UTILS;
+    const { safeGetItem, safeSetItem, escapeHtml: esc, getGridColumns, renderPostCard } = window.UYEA_UTILS;
 
     // ==================== 下拉菜单互斥机制 ====================
     // 打开任一下拉菜单时，自动关闭其他所有下拉菜单，防止重叠
@@ -29,14 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.closeAllDropdowns = closeAllDropdowns;
 
     // ==================== 多语言系统 ====================
-    let currentLang = UYEA_CONFIG.defaultLanguage;
-    window.currentLang = currentLang; // 初始暴露给其他模块
+    window.currentLang = UYEA_CONFIG.defaultLanguage; // 暴露给其他模块（auth.js等）
 
     // 语言缩写映射
     const langAbbr = { 'zh-CN': '中', 'zh-TW': '繁', 'en': 'EN' };
 
     const setLang = (lang) => {
-        currentLang = lang;
         window.currentLang = lang; // 暴露给其他模块（auth.js等）
         const msgs = UYEA_CONFIG.i18n[lang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
         // 翻译文本内容
@@ -76,18 +74,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 语言选项点击事件
+    // 语言选项点击事件（事件委托，绑定在 #langDropdown 父容器上，避免逐个选项绑定）
     const langOptions = document.querySelectorAll('.lang-option');
-    langOptions.forEach(opt => {
-        opt.addEventListener('click', () => {
+    if (langDropdown) {
+        langDropdown.addEventListener('click', (e) => {
+            const opt = e.target.closest('.lang-option');
+            if (!opt) return;
             langOptions.forEach(x => x.classList.remove('active'));
             opt.classList.add('active');
             setLang(opt.dataset.lang);
             // 关闭下拉菜单
-            if (langDropdown) langDropdown.classList.remove('show');
+            langDropdown.classList.remove('show');
             if (langIconBtn) langIconBtn.classList.remove('active');
         });
-    });
+    }
 
     // 初始化语言
     const savedLang = safeGetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.language)) || UYEA_CONFIG.defaultLanguage;
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateHeaderEngineLabel() {
         if (!headerEngineCurrent) return;
         const names = ENGINE_NAMES[current] || ENGINE_NAMES[UYEA_CONFIG.defaultSearchEngine];
-        headerEngineCurrent.textContent = names[currentLang] || names['zh-CN'];
+        headerEngineCurrent.textContent = names[window.currentLang] || names['zh-CN'];
     }
 
     // 同步引擎选择UI的active状态（同时更新桌面端和手机端）
@@ -166,14 +166,17 @@ document.addEventListener('DOMContentLoaded', () => {
             headerEngineDropdown.classList.toggle('show');
         });
     }
-    headerEngineOptions.forEach(opt => {
-        opt.addEventListener('click', (e) => {
+    // 常驻栏引擎选项点击（事件委托，绑定在 #headerEngineDropdown 父容器上）
+    if (headerEngineDropdown) {
+        headerEngineDropdown.addEventListener('click', (e) => {
+            const opt = e.target.closest('.header-engine-option');
+            if (!opt) return;
             e.stopPropagation();
             switchEngine(opt.dataset.value);
             headerEngineDropdown.classList.remove('show');
             if (headerSearchInput) headerSearchInput.focus();
         });
-    });
+    }
 
     // ==================== 手机端搜索面板 ====================
     // 手机端搜索面板展开/收起
@@ -189,14 +192,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 手机端引擎选项点击
-    mobileEngineOptions.forEach(opt => {
-        opt.addEventListener('click', (e) => {
+    // 手机端引擎选项点击（事件委托，绑定在 #mobileSearchPanel 父容器上）
+    if (mobileSearchPanel) {
+        mobileSearchPanel.addEventListener('click', (e) => {
+            const opt = e.target.closest('.mobile-engine-option');
+            if (!opt) return;
             e.stopPropagation();
             switchEngine(opt.dataset.value);
             if (mobileSearchInput) mobileSearchInput.focus();
         });
-    });
+    }
 
     // 手机端搜索提交
     function executeMobileSearch() {
@@ -208,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mobileSearchInput.value = '';
             const subtitle = document.getElementById('searchResultsSubtitle');
             if (subtitle) {
-                const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+                const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
                 subtitle.textContent = msgs['search.loading'] || '搜索中...';
             }
             showSearchView(query);
@@ -221,8 +226,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.open(engineUrl + encodeURIComponent(query), '_blank');
             }
         }
-        mobileSearchPanel.classList.remove('show');
-        mobileSearchToggle.classList.remove('active');
+        if (mobileSearchPanel) mobileSearchPanel.classList.remove('show');
+        if (mobileSearchToggle) mobileSearchToggle.classList.remove('active');
     }
 
     if (mobileSearchSubmit) {
@@ -239,27 +244,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== 站内搜索功能 ====================
     let siteSearchData = { posts: null, nav: null };
+    let siteSearchPromise = null; // 进行中的加载（去重，防止并发搜索触发重复请求）
 
-    // 加载站内搜索所需数据（懒加载，首次站内搜索时触发）
-    async function loadSiteSearchData() {
-        const tasks = [];
-        if (!siteSearchData.posts) {
-            tasks.push(
-                fetch(UYEA_CONFIG.dataFiles.posts, { cache: 'no-cache' })
-                    .then(r => r.ok ? r.json() : [])
-                    .then(data => { siteSearchData.posts = Array.isArray(data) ? data : []; })
-                    .catch(() => { siteSearchData.posts = []; })
-            );
-        }
-        if (!siteSearchData.nav) {
-            tasks.push(
-                fetch(UYEA_CONFIG.dataFiles.navigation, { cache: 'no-cache' })
-                    .then(r => r.ok ? r.json() : {})
-                    .then(data => { siteSearchData.nav = data || {}; })
-                    .catch(() => { siteSearchData.nav = {}; })
-            );
-        }
-        if (tasks.length > 0) await Promise.all(tasks);
+    // 加载站内搜索所需数据（懒加载，首次站内搜索时触发；promise 缓存去重）
+    function loadSiteSearchData() {
+        if (siteSearchPromise) return siteSearchPromise;
+        siteSearchPromise = (async () => {
+            const tasks = [];
+            if (!siteSearchData.posts) {
+                tasks.push(
+                    UYEA_UTILS.fetchJsonCached(UYEA_CONFIG.dataFiles.posts)
+                        .then(data => { siteSearchData.posts = Array.isArray(data) ? data : []; })
+                        .catch(() => { siteSearchData.posts = []; })
+                );
+            }
+            if (!siteSearchData.nav) {
+                tasks.push(
+                    UYEA_UTILS.fetchJsonCached(UYEA_CONFIG.dataFiles.navigation)
+                        .then(data => { siteSearchData.nav = data || {}; })
+                        .catch(() => { siteSearchData.nav = {}; })
+                );
+            }
+            if (tasks.length > 0) await Promise.all(tasks);
+        })().catch(err => {
+            siteSearchPromise = null; // 失败时重置，允许后续重试
+            throw err;
+        });
+        return siteSearchPromise;
     }
 
     // 搜索论坛帖子
@@ -319,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 更新副标题
         const subtitle = document.getElementById('searchResultsSubtitle');
         if (subtitle) {
-            const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+            const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
             const tpl = msgs['search.resultsCount'] || '关键词「{q}」共找到 {n} 条结果';
             subtitle.textContent = tpl.replace('{q}', query).replace('{n}', totalCount);
         }
@@ -331,22 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (forumResults.length > 0) {
             forumSection.style.display = '';
             forumCount.textContent = forumResults.length;
-            forumResultsEl.innerHTML = forumResults.map(p => {
-                const hasUrl = p.url && p.url !== '#';
-                const href = hasUrl ? esc(p.url) : 'javascript:void(0)';
-                const targetAttr = hasUrl ? ' target="_blank" rel="noopener"' : '';
-                return `<a href="${href}" class="post-item"${targetAttr}>
-                    <div class="post-meta">
-                        <span class="post-tag">${esc(translateTag(p.tag, currentLang))}</span>
-                        <span class="dot">•</span>
-                        <span>${esc(p.author)}</span>
-                        <span class="dot">•</span>
-                        <span>${esc(p.time)}</span>
-                    </div>
-                    <div class="post-title">${esc(p.title)}</div>
-                    <div class="post-excerpt">${esc(p.excerpt)}</div>
-                </a>`;
-            }).join('');
+            forumResultsEl.innerHTML = forumResults.map(p => renderPostCard(p, window.currentLang)).join('');
         } else {
             forumSection.style.display = 'none';
         }
@@ -390,7 +386,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.addEventListener('click', (e) => {
                     // 触发对应的工具打开（通过模拟点击原工具卡片）
                     const toolName = card.dataset.tool;
-                    const originalCard = document.querySelector('#toolsView .card-item[data-tool="' + toolName + '"]');
+                    // 使用 dataset 比较而非字符串拼接选择器，防止 toolName 含特殊字符导致注入
+                    const originalCard = Array.from(document.querySelectorAll('#toolsView .card-item[data-tool]')).find(c => c.dataset.tool === toolName);
                     if (originalCard) originalCard.click();
                 });
             });
@@ -514,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 显示加载状态
             const subtitle = document.getElementById('searchResultsSubtitle');
             if (subtitle) {
-                const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+                const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
                 subtitle.textContent = msgs['search.loading'] || '搜索中...';
             }
             showSearchView(query);
@@ -554,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const name = btn.getAttribute('data-coming-soon') || btn.dataset.title || '';
-            const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+            const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
             if (typeof window.showAchievement === 'function') {
                 window.showAchievement(msgs['toast.comingSoon'] || '正在完善中', name + (msgs['toast.comingSoonDesc'] || ' · 正在开发中，敬请期待'));
             }
@@ -604,7 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 生成添加网站卡片 HTML（加号按钮，用于后续网站上传功能）
     function addCardHtml() {
-        const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+        const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
         const text = msgs['nav.addSite'] || '添加网站';
         return `<button class="add-card" aria-label="${esc(text)}">
             <div class="card-icon">
@@ -621,6 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const noResults = document.getElementById('navNoResults');
         let visibleCount = 0;
         const isLimited = (navCurrentCategory === 'all');
+        const allVisibleCards = []; // 收集所有 section 的可见卡片，批量处理动画
 
         document.querySelectorAll('#navView .section-group').forEach(section => {
             const sectionCat = section.dataset.category;
@@ -651,21 +649,22 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sectionVisible > 0) section.classList.add('revealed');
             visibleCount += sectionVisible;
 
-            // 重新触发卡片切换动画（批量禁用动画 → 单次 reflow → 批量启用，避免每张卡都强制回流）
-            const visibleCards = [];
+            // 收集可见卡片并禁用动画（统一在循环外做单次 reflow，避免每个 section 都强制回流）
             cards.forEach(card => {
                 if (card.style.display !== 'none') {
                     card.style.animation = 'none';
-                    visibleCards.push(card);
+                    allVisibleCards.push(card);
                 }
             });
-            if (visibleCards.length > 0) {
-                void visibleCards[0].offsetHeight; // 单次 reflow 重置所有动画
-                visibleCards.forEach((card, idx) => {
-                    card.style.animation = `cardSwitchIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(idx * 0.025, 0.3)}s both`;
-                });
-            }
         });
+
+        // 批量 reflow：单次强制回流重置所有卡片动画，再统一启用
+        if (allVisibleCards.length > 0) {
+            void document.body.offsetHeight;
+            allVisibleCards.forEach((card, idx) => {
+                card.style.animation = `cardSwitchIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(idx * 0.025, 0.3)}s both`;
+            });
+        }
 
         if (noResults) noResults.classList.toggle('show', visibleCount === 0);
 
@@ -691,11 +690,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         navInitialized = true;
 
-        fetch(UYEA_CONFIG.dataFiles.navigation, { cache: 'no-cache' })
-            .then(r => {
-                if (!r.ok) throw new Error(`HTTP ${r.status}: 导航数据加载失败`);
-                return r.json();
-            })
+        UYEA_UTILS.fetchJsonCached(UYEA_CONFIG.dataFiles.navigation)
             .then(nav => {
                 ['ai', 'social', 'tools', 'creative', 'shopping', 'news', 'life'].forEach(cat => {
                     const section = document.getElementById(cat + '-section');
@@ -713,7 +708,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.addEventListener('click', (e) => {
                         e.preventDefault();
                         if (typeof window.showAchievement === 'function') {
-                            const msgs = UYEA_CONFIG.i18n[currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+                            const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
                             window.showAchievement(msgs['toast.comingSoon'] || '正在完善中', msgs['toast.addSite'] || '添加网站功能正在开发中');
                         }
                     });
@@ -755,29 +750,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 窗口resize时重新计算2行限制 + 搜索栏断点同步关闭下拉（防抖）
-    let navResizeTimer = null;
+    // 窗口resize时重新计算2行限制 + 搜索栏断点同步关闭下拉（防抖，复用 utils.debounce）
     let lastDesktopMode = window.innerWidth >= 1299;
-    window.addEventListener('resize', () => {
-        clearTimeout(navResizeTimer);
-        navResizeTimer = setTimeout(() => {
-            if (document.getElementById('navView')?.style.display !== 'none') applyNavFilter();
-            // 跨越1299px断点时关闭搜索相关下拉，防止触发元素消失后下拉悬空
-            const isDesktop = window.innerWidth >= 1299;
-            if (isDesktop !== lastDesktopMode) {
-                lastDesktopMode = isDesktop;
-                // 桌面端：关闭手机搜索面板；手机端：关闭桌面引擎下拉
-                const mobilePanel = document.getElementById('mobileSearchPanel');
-                const headerDropdown = document.getElementById('headerEngineDropdown');
-                if (mobilePanel) { mobilePanel.classList.remove('show'); }
-                const mobileToggle = document.getElementById('mobileSearchToggle');
-                if (mobileToggle) { mobileToggle.classList.remove('active'); }
-                if (headerDropdown) { headerDropdown.classList.remove('show'); }
-                const headerSelect = document.getElementById('headerEngineSelect');
-                if (headerSelect) { headerSelect.classList.remove('active'); }
-            }
-        }, 150);
-    });
+    window.addEventListener('resize', UYEA_UTILS.debounce(function () {
+        if (document.getElementById('navView')?.style.display !== 'none') applyNavFilter();
+        // 跨越1299px断点时关闭搜索相关下拉，防止触发元素消失后下拉悬空
+        const isDesktop = window.innerWidth >= 1299;
+        if (isDesktop !== lastDesktopMode) {
+            lastDesktopMode = isDesktop;
+            // 桌面端：关闭手机搜索面板；手机端：关闭桌面引擎下拉
+            const mobilePanel = document.getElementById('mobileSearchPanel');
+            const headerDropdown = document.getElementById('headerEngineDropdown');
+            if (mobilePanel) { mobilePanel.classList.remove('show'); }
+            const mobileToggle = document.getElementById('mobileSearchToggle');
+            if (mobileToggle) { mobileToggle.classList.remove('active'); }
+            if (headerDropdown) { headerDropdown.classList.remove('show'); }
+            const headerSelect = document.getElementById('headerEngineSelect');
+            if (headerSelect) { headerSelect.classList.remove('active'); }
+        }
+    }, 150));
 
     // 监听视图切换：切换到导航视图时重置为第一个分类（全部）并重新应用筛选
     window.addEventListener('viewchange', (e) => {
@@ -798,8 +789,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 页面加载时立即预加载导航数据（不等待视图切换）
-    initNavView();
+    // 导航数据延迟加载：首次切换到导航视图时才加载（viewchange 事件中处理）
 
     // ==================== 字体异步加载 ====================
     if (document.fonts && document.fonts.load) {
@@ -810,7 +800,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==================== 主题切换（三主题：浅色/深色/极客） ====================
     const themeIconBtn = document.getElementById('themeIconBtn');
     const themeDropdown = document.getElementById('themeDropdown');
-    const savedTheme = safeGetItem('uyea_theme') ||
+    const savedTheme = safeGetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.theme)) ||
                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
     function applyTheme(theme) {
@@ -848,7 +838,7 @@ document.addEventListener('DOMContentLoaded', () => {
             themeOptions.forEach(x => x.classList.remove('active'));
             opt.classList.add('active');
             applyTheme(theme);
-            safeSetItem('uyea_theme', theme);
+            safeSetItem(UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.theme), theme);
             // 关闭下拉菜单
             if (themeDropdown) themeDropdown.classList.remove('show');
             if (themeIconBtn) themeIconBtn.classList.remove('active');
@@ -865,9 +855,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrollY = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-        // 滚动进度条
+        // 滚动进度条（使用 transform: scaleX() 代替 width，避免重排）
         if (scrollProgress) {
-            scrollProgress.style.width = (docHeight > 0 ? (scrollY / docHeight) * 100 : 0) + '%';
+            scrollProgress.style.transform = 'scaleX(' + (docHeight > 0 ? (scrollY / docHeight) : 0) + ')';
         }
 
         // 返回顶部按钮

@@ -1,7 +1,7 @@
 /**
  * UYEA 用户认证模块 - auth.js
  * 纯前端登录/注册/会话管理
- * 密码使用 SHA-256 哈希存储，会话通过 localStorage 维持
+ * 密码使用 PBKDF2 加盐哈希存储，会话通过 localStorage 维持
  * 注意：纯前端方案仅用于演示，生产环境需后端验证
  */
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,26 +14,106 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const { safeGetItem, safeSetItem, safeRemoveItem, escapeHtml, t } = window.UYEA_UTILS;
 
-    // SHA-256 哈希（使用 Web Crypto API；HTTPS/localhost 才可用）
-    async function sha256(text) {
+    // ==================== 密码哈希（PBKDF2 加盐） ====================
+    // hex 字符串 -> Uint8Array
+    function hexToBytes(hex) {
+        const bytes = new Uint8Array(hex.length / 2);
+        for (let i = 0; i < hex.length; i += 2) {
+            bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+        }
+        return bytes;
+    }
+
+    // Uint8Array/ArrayBuffer -> hex 字符串
+    function bytesToHex(bytes) {
+        return Array.from(new Uint8Array(bytes))
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+    }
+
+    // 生成 16 字节随机 salt（返回 hex 字符串）
+    function generateSalt() {
+        const arr = crypto.getRandomValues(new Uint8Array(16));
+        return bytesToHex(arr);
+    }
+
+    // PBKDF2 迭代次数（生产环境建议 >= 100000）
+    const PBKDF2_ITERATIONS = 100000;
+
+    // PBKDF2 加盐哈希（使用 Web Crypto API；HTTPS/localhost 才可用）
+    async function hashPassword(password, saltHex) {
         if (!window.crypto || !window.crypto.subtle) {
             throw new Error('CRYPTO_UNAVAILABLE');
         }
-        const encoder = new TextEncoder();
-        const data = encoder.encode(text);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        const enc = new TextEncoder();
+        const salt = hexToBytes(saltHex);
+        const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+        const bits = await crypto.subtle.deriveBits(
+            { name: 'PBKDF2', salt, iterations: PBKDF2_ITERATIONS, hash: 'SHA-256' },
+            keyMaterial, 256
+        );
+        return bytesToHex(bits);
+    }
+
+    // 恒定时间字符串比较（缓解时序攻击，避免逐字节短路返回）
+    function constantTimeEqual(a, b) {
+        if (typeof a !== 'string' || typeof b !== 'string') return false;
+        if (a.length !== b.length) return false;
+        let diff = 0;
+        for (let i = 0; i < a.length; i++) {
+            diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+        }
+        return diff === 0;
     }
 
     // ==================== 用户数据管理 ====================
     const STORAGE_KEYS = {
-        session: 'uyea_session',
-        users: 'uyea_users_override' // 注册用户覆盖存储（默认用户从JSON加载）
+        session: UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.session),
+        users: UYEA_CONFIG.getStorageKey(UYEA_CONFIG.storageKeys.users), // 注册用户覆盖存储（默认用户从JSON加载）
+        adminCreds: UYEA_CONFIG.getStorageKey('admin_creds'), // 内置 admin 账号 PBKDF2 凭据
+        adminInited: UYEA_CONFIG.getStorageKey('admin_inited') // 内置 admin 是否已初始化标志
+    };
+
+    // 内置 admin 账号基础信息（口令运行时通过 PBKDF2 派生 hash 存储，不读取 users.json 凭据）
+    // 不读取 users.json 中的凭据；登录时优先校验此账号
+    const ADMIN_ACCOUNT = {
+        id: 1,
+        username: 'admin',
+        nickname: '悠野管理员',
+        email: 'admin@uyea.dev',
+        role: 'admin',
+        joinDate: '2026-07-27'
     };
 
     let usersCache = null; // 用户数据缓存
     let usersPromise = null; // 进行中的 fetch（去重，防止双击登录按钮触发两次请求）
+    let adminInitPromise = null; // admin 账号初始化进行中的 promise（去重）
+
+    // 初始化内置 admin 账号：生成 salt + PBKDF2 hash，存入 localStorage
+    // 使用推荐方式避免硬编码 hash：模块加载时检测未初始化则异步计算
+    function ensureAdminAccount() {
+        if (adminInitPromise) return adminInitPromise;
+        adminInitPromise = (async () => {
+            // 已初始化则直接返回
+            if (safeGetItem(STORAGE_KEYS.adminInited)) return;
+            try {
+                const salt = generateSalt();
+                const hash = await hashPassword('uyea123', salt);
+                const adminWithCreds = {
+                    ...ADMIN_ACCOUNT,
+                    salt,
+                    hash,
+                    iterations: PBKDF2_ITERATIONS
+                };
+                safeSetItem(STORAGE_KEYS.adminCreds, JSON.stringify(adminWithCreds));
+                safeSetItem(STORAGE_KEYS.adminInited, '1');
+            } catch (e) {
+                // PBKDF2 在非 HTTPS 环境会失败，留待下次 HTTPS 环境重试
+                console.warn('[auth] 内置 admin 账号初始化失败（可能为非 HTTPS 环境）:', e);
+            }
+        })();
+        return adminInitPromise;
+    }
 
     // 加载用户数据（先从localStorage读取注册用户，再合并JSON默认用户）
     async function loadUsers() {
@@ -41,6 +121,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (usersPromise) return usersPromise;
 
         usersPromise = (async () => {
+            // 确保内置 admin 账号已初始化（生成 PBKDF2 凭据）
+            await ensureAdminAccount();
+
+            // 读取内置 admin 账号凭据（含 salt/hash/iterations）
+            let adminUser = null;
+            const adminStored = safeGetItem(STORAGE_KEYS.adminCreds);
+            if (adminStored) {
+                try { adminUser = JSON.parse(adminStored); } catch (e) { /* 忽略损坏数据 */ }
+            }
+
             // 从 localStorage 读取注册的用户
             let registeredUsers = [];
             const stored = safeGetItem(STORAGE_KEYS.users);
@@ -53,13 +143,32 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 10000);
-                const resp = await fetch('/JSON/users.json', { cache: 'no-cache', signal: controller.signal });
-                clearTimeout(timeoutId);
-                if (resp.ok) defaultUsers = await resp.json();
+                try {
+                    const resp = await fetch('/JSON/users.json', { cache: 'no-cache', signal: controller.signal });
+                    if (resp.ok) defaultUsers = await resp.json();
+                } finally {
+                    clearTimeout(timeoutId);
+                }
             } catch (e) { console.warn('加载用户数据失败:', e); }
 
-            // 合并：默认用户 + 注册用户
-            usersCache = [...defaultUsers, ...registeredUsers];
+            // 合并：内置 admin（带凭据，优先校验）+ JSON 默认用户（排除无凭据的 admin）+ 注册用户
+            let mergedUsers = [];
+            if (adminUser) {
+                // 合并 JSON 中 admin 的额外字段（bio/note 等）到 adminUser
+                const jsonAdminIdx = defaultUsers.findIndex(u => u.username === 'admin' || u.email === 'admin@uyea.dev');
+                if (jsonAdminIdx >= 0) {
+                    const jsonAdmin = defaultUsers[jsonAdminIdx];
+                    mergedUsers.push({ ...jsonAdmin, ...adminUser });
+                    defaultUsers.splice(jsonAdminIdx, 1);
+                } else {
+                    mergedUsers.push(adminUser);
+                }
+            }
+            // JSON 中可能残留的无凭据 admin 条目（admin 未初始化场景）排除掉，避免登录时凭据缺失误判
+            defaultUsers = defaultUsers.filter(u => u.username !== 'admin' && u.email !== 'admin@uyea.dev');
+            mergedUsers = mergedUsers.concat(defaultUsers, registeredUsers);
+
+            usersCache = mergedUsers;
             return usersCache;
         })().catch(err => {
             usersPromise = null; // 失败时重置，允许后续重试
@@ -76,6 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==================== 会话管理 ====================
+    // 注意：前端 session 可被控制台伪造，仅用于 UI 状态显示，不提供任何真实权限。
+    // 如需真实鉴权请接入后端或 Cloudflare Pages Functions。
     function getSession() {
         const session = safeGetItem(STORAGE_KEYS.session);
         if (!session) return null;
@@ -550,7 +661,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="hp-scroll-hint">${escapeHtml(t('homepage.scrollHint'))}</div>
                 <div class="homepage-guide-url">
-                    <input type="text" class="homepage-url-input" id="homepageUrl" readonly value="https://uyea-files.pages.dev/">
+                    <input type="text" class="homepage-url-input" id="homepageUrl" readonly value="${location.origin}/">
                     <button class="post-btn post-btn-secondary" id="copyHomepageUrl">${escapeHtml(t('homepage.copyUrl'))}</button>
                 </div>
                 <div class="homepage-guide-note">${escapeHtml(t('homepage.note'))}</div>
@@ -560,20 +671,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== 弹窗控制 ====================
     let currentAuthMode = 'login'; // 'login' | 'register' | 'profile'
+    let loginCloseTimer = null; // 登录成功后延迟关闭弹窗的定时器（closeAuthModal 时清理）
 
     function openAuthModal(mode) {
+        // null 守卫：核心 DOM 元素缺失时直接返回，避免后续抛错
+        if (!authOverlay || !authModal || !authModalBody) return;
         currentAuthMode = mode || (isLoggedIn() ? 'profile' : 'login');
         renderAuthModal();
-        authOverlay.classList.add('show');
-        authModal.classList.add('show');
+        if (authOverlay) authOverlay.classList.add('show');
+        if (authModal) authModal.classList.add('show');
         document.body.style.overflow = 'hidden';
         const userBtn = document.querySelector('.user-btn');
         if (userBtn) userBtn.classList.add('active');
     }
 
     function closeAuthModal() {
-        authOverlay.classList.remove('show');
-        authModal.classList.remove('show');
+        // null 守卫：核心 DOM 元素缺失时仅清理定时器并返回
+        if (!authOverlay || !authModal || !authModalBody) {
+            if (loginCloseTimer) { clearTimeout(loginCloseTimer); loginCloseTimer = null; }
+            return;
+        }
+        // 清理登录成功后的延迟关闭定时器，避免关闭后再触发回调
+        // 若定时器存在（说明登录成功回调未执行），仍需更新按钮状态以反映登录态
+        if (loginCloseTimer) {
+            clearTimeout(loginCloseTimer);
+            loginCloseTimer = null;
+            updateUserBtnState();
+        }
+        if (authOverlay) authOverlay.classList.remove('show');
+        if (authModal) authModal.classList.remove('show');
         document.body.style.overflow = '';
         const userBtn = document.querySelector('.user-btn');
         if (userBtn) userBtn.classList.remove('active');
@@ -585,15 +711,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = document.getElementById('authModalTitle');
         if (currentAuthMode === 'profile') {
             if (title) title.textContent = t('auth.profile');
-            authModalBody.innerHTML = renderUserProfile(getSession());
+            if (authModalBody) authModalBody.innerHTML = renderUserProfile(getSession());
             bindProfileEvents();
         } else if (currentAuthMode === 'register') {
             if (title) title.textContent = t('auth.register');
-            authModalBody.innerHTML = renderRegisterForm();
+            if (authModalBody) authModalBody.innerHTML = renderRegisterForm();
             bindRegisterEvents();
         } else {
             if (title) title.textContent = t('auth.login');
-            authModalBody.innerHTML = renderLoginForm();
+            if (authModalBody) authModalBody.innerHTML = renderLoginForm();
             bindLoginEvents();
         }
     }
@@ -625,11 +751,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function bindLoginEvents() {
+        // null 守卫：核心 DOM 元素缺失时直接返回
+        if (!authOverlay || !authModal || !authModalBody) return;
         bindPasswordToggle('loginPasswordToggle', 'loginPassword');
 
         const submitBtn = document.getElementById('loginSubmitBtn');
         const emailInput = document.getElementById('loginEmail');
         const passwordInput = document.getElementById('loginPassword');
+        if (!submitBtn || !emailInput || !passwordInput) return;
 
         async function doLogin() {
             hideAuthError('loginError');
@@ -653,8 +782,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                const inputHash = await sha256(password);
-                if (inputHash !== user.passwordHash) {
+                // 用户记录缺少凭据字段（如未初始化的 admin 残留条目），统一按密码错误处理
+                if (!user.salt || !user.hash) {
+                    showAuthError('loginError', t('auth.errorPasswordWrong'));
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = t('auth.login');
+                    return;
+                }
+
+                // PBKDF2 加盐哈希比对：用存储的 salt 重新派生，与存储的 hash 恒定时间比较
+                const inputHash = await hashPassword(password, user.salt);
+                if (!constantTimeEqual(inputHash, user.hash)) {
                     showAuthError('loginError', t('auth.errorPasswordWrong'));
                     passwordInput.value = ''; // 密码错误后清空密码框
                     passwordInput.focus();
@@ -666,8 +806,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 登录成功
                 setSession(user);
                 passwordInput.value = ''; // 登录成功后立即清空密码，避免明文滞留 DOM
-                submitBtn.textContent = t('auth.loginSuccess');
-                setTimeout(() => {
+                // 追加（演示模式）标注：提示用户当前为纯前端会话，无真实鉴权
+                submitBtn.textContent = t('auth.loginSuccess') + '（演示模式）';
+                // 保存定时器 id，便于 closeAuthModal 时清理（避免弹窗已关闭后仍触发回调）
+                if (loginCloseTimer) clearTimeout(loginCloseTimer);
+                loginCloseTimer = setTimeout(() => {
+                    loginCloseTimer = null;
                     closeAuthModal();
                     updateUserBtnState();
                 }, 500);
@@ -684,17 +828,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        submitBtn.addEventListener('click', doLogin);
+        if (submitBtn) submitBtn.addEventListener('click', doLogin);
         // keypress 已废弃，改用 keydown 以兼容所有键（含 Esc 等）
-        passwordInput.addEventListener('keydown', (e) => {
+        if (passwordInput) passwordInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); doLogin(); }
         });
-        emailInput.addEventListener('keydown', (e) => {
+        if (emailInput) emailInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); passwordInput.focus(); }
         });
         // 用户开始重新输入时自动清除错误提示
         [emailInput, passwordInput].forEach(el => {
-            el.addEventListener('input', () => hideAuthError('loginError'));
+            if (el) el.addEventListener('input', () => hideAuthError('loginError'));
         });
 
         // 拖拽分栏手柄：点击切换 + 拖拽向左滑揭示注册
@@ -712,10 +856,18 @@ document.addEventListener('DOMContentLoaded', () => {
             let startDividerX = 0;
             let cachedSplitWidth = 0; // 缓存 offsetWidth，避免 pointermove 中每帧强制回流
 
+            // 从 transform: translateX(Npx) 读取手柄当前 X 位置（与 CSS 共用 transform，避免布局抖动）
+            function getHandleX() {
+                const transform = authSlideHandle.style.transform || '';
+                const match = transform.match(/translateX\(\s*(-?[\d.]+)px\s*\)/);
+                return match ? parseFloat(match[1]) : 0;
+            }
+
             // 更新分栏位置：dividerX = 手柄左边界位置
+            // 改用 transform 而非 left，触发合成层而非布局/绘制，性能更优
             function updateSplit(dividerX) {
                 authLoginLayer.style.clipPath = `inset(0 calc(100% - ${dividerX}px) 0 0)`;
-                authSlideHandle.style.left = `${dividerX}px`;
+                authSlideHandle.style.transform = `translateX(${dividerX}px)`;
             }
 
             // 初始位置：手柄在右侧（显示登录）
@@ -756,8 +908,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 isPressing = true;
                 isDragging = false;
                 startX = e.clientX;
-                const leftStr = authSlideHandle.style.left || '0';
-                startDividerX = parseFloat(leftStr) || 0;
+                // 从 transform 读取当前手柄位置（替代旧 style.left 解析）
+                startDividerX = getHandleX();
                 cachedSplitWidth = authSplit.offsetWidth; // 拖拽开始时缓存宽度
             });
 
@@ -799,8 +951,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 isDragging = false;
                 // 吸附到最近的面板
                 const w = cachedSplitWidth;
-                const leftStr = authSlideHandle.style.left || '0';
-                const currentX = parseFloat(leftStr) || 0;
+                // 从 transform 读取当前手柄位置（替代旧 style.left 解析）
+                const currentX = getHandleX();
                 if (currentX < w / 2 - getHandleWidth() / 2) slideToRegister();
                 else slideToLogin();
             }
@@ -817,6 +969,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function bindRegisterEvents() {
+        // null 守卫：核心 DOM 元素缺失时直接返回
+        if (!authOverlay || !authModal || !authModalBody) return;
         bindPasswordToggle('regPasswordToggle', 'regPassword');
 
         const submitBtn = document.getElementById('registerSubmitBtn');
@@ -824,11 +978,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const nicknameInput = document.getElementById('regNickname');
         const passwordInput = document.getElementById('regPassword');
         const confirmInput = document.getElementById('regPasswordConfirm');
+        if (!submitBtn || !usernameInput || !passwordInput || !confirmInput) return;
 
         async function doRegister() {
             hideAuthError('registerError');
             const username = usernameInput.value.trim();
-            const nickname = nicknameInput.value.trim() || username;
+            const nickname = (nicknameInput && nicknameInput.value.trim()) || username;
             const password = passwordInput.value;
             const confirm = confirmInput.value;
 
@@ -839,22 +994,78 @@ document.addEventListener('DOMContentLoaded', () => {
             if (password.length < 6) { showAuthError('registerError', t('auth.errorPasswordTooShort')); return; }
             if (password !== confirm) { showAuthError('registerError', t('auth.errorPasswordMismatch')); return; }
 
-            // 注册功能尚未开放（保留表单逻辑供未来使用）
-            showAuthError('registerError', t('auth.underDevelopment'));
+            submitBtn.disabled = true;
+            submitBtn.textContent = t('auth.register');
+
+            try {
+                const users = await loadUsers();
+                // 检查用户名是否已存在（含内置 admin 与已有注册用户）
+                const existing = users.find(u => u.username === username);
+                if (existing) {
+                    showAuthError('registerError', t('auth.errorUserExists'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = t('auth.register');
+                    return;
+                }
+
+                // PBKDF2 加盐哈希：生成 salt + 派生 hash
+                const salt = generateSalt();
+                const hash = await hashPassword(password, salt);
+
+                // 读取现有注册用户列表（追加而非覆盖）
+                let registeredUsers = [];
+                const stored = safeGetItem(STORAGE_KEYS.users);
+                if (stored) {
+                    try { registeredUsers = JSON.parse(stored); } catch (e) { /* 忽略损坏数据 */ }
+                }
+
+                // 构造新用户记录：仅存储 salt/hash/iterations，不存储明文密码
+                const newUser = {
+                    id: Date.now(),
+                    username,
+                    nickname,
+                    email: '',
+                    salt,
+                    hash,
+                    iterations: PBKDF2_ITERATIONS,
+                    role: 'user',
+                    joinDate: new Date().toISOString().slice(0, 10)
+                };
+                registeredUsers.push(newUser);
+                saveRegisteredUsers(registeredUsers);
+
+                // 注册成功：提示后切换到登录面板
+                submitBtn.textContent = t('auth.registerSuccess');
+                setTimeout(() => {
+                    currentAuthMode = 'login';
+                    renderAuthModal();
+                }, 1000);
+            } catch (e) {
+                console.error('注册失败:', e);
+                // crypto.subtle 不可用（HTTP 非 localhost 环境）给出明确提示
+                if (e && e.message === 'CRYPTO_UNAVAILABLE') {
+                    showAuthError('registerError', '当前为非 HTTPS 环境，密码加密不可用，请通过 HTTPS 访问本站');
+                } else {
+                    showAuthError('registerError', t('auth.errorNetwork'));
+                }
+                submitBtn.disabled = false;
+                submitBtn.textContent = t('auth.register');
+            }
         }
 
-        submitBtn.addEventListener('click', doRegister);
-        confirmInput.addEventListener('keydown', (e) => {
+        if (submitBtn) submitBtn.addEventListener('click', doRegister);
+        if (confirmInput) confirmInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); doRegister(); }
         });
 
         // 切换到登录
-        document.getElementById('switchToLogin').addEventListener('click', () => {
+        const switchToLogin = document.getElementById('switchToLogin');
+        if (switchToLogin) switchToLogin.addEventListener('click', () => {
             currentAuthMode = 'login';
             renderAuthModal();
         });
 
-        setTimeout(() => usernameInput.focus(), 50);
+        if (usernameInput) setTimeout(() => usernameInput.focus(), 50);
     }
 
     function bindProfileEvents() {
@@ -906,7 +1117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ESC 关闭
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && authModal.classList.contains('show')) {
+        if (e.key === 'Escape' && authModal && authModal.classList.contains('show')) {
             closeAuthModal();
         }
     });
@@ -924,10 +1135,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function openHomepageGuide() {
         const title = document.getElementById('authModalTitle');
         if (title) title.textContent = t('homepage.title');
-        authModalBody.innerHTML = renderSetHomepageGuide();
+        if (authModalBody) authModalBody.innerHTML = renderSetHomepageGuide();
         currentAuthMode = 'homepage';
-        authOverlay.classList.add('show');
-        authModal.classList.add('show');
+        if (authOverlay) authOverlay.classList.add('show');
+        if (authModal) authModal.classList.add('show');
         document.body.style.overflow = 'hidden';
 
         // 绑定复制按钮
@@ -956,27 +1167,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 绑定标签页切换
-        authModalBody.querySelectorAll('.hp-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const targetTab = tab.dataset.tab;
-                authModalBody.querySelectorAll('.hp-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                authModalBody.querySelector('#hpTabDesktop').classList.toggle('hp-hidden', targetTab !== 'desktop');
-                authModalBody.querySelector('#hpTabMobile').classList.toggle('hp-hidden', targetTab !== 'mobile');
+        if (authModalBody) {
+            authModalBody.querySelectorAll('.hp-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetTab = tab.dataset.tab;
+                    authModalBody.querySelectorAll('.hp-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const desktopTab = authModalBody.querySelector('#hpTabDesktop');
+                    if (desktopTab) desktopTab.classList.toggle('hp-hidden', targetTab !== 'desktop');
+                    const mobileTab = authModalBody.querySelector('#hpTabMobile');
+                    if (mobileTab) mobileTab.classList.toggle('hp-hidden', targetTab !== 'mobile');
+                });
             });
-        });
 
-        // 自动滚动到检测到的浏览器卡片
-        setTimeout(() => {
-            const detectedCard = authModalBody.querySelector('.hp-browser-card.hp-detected');
-            if (detectedCard) {
-                detectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }, 300);
+            // 自动滚动到检测到的浏览器卡片
+            setTimeout(() => {
+                const detectedCard = authModalBody.querySelector('.hp-browser-card.hp-detected');
+                if (detectedCard) {
+                    detectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 300);
+        }
     }
 
     // ==================== 初始化 ====================
     updateUserBtnState();
+
+    // 模块加载时异步初始化内置 admin 账号（生成 PBKDF2 凭据），不阻塞 UI
+    // 失败会在 ensureAdminAccount 内部捕获并打印警告
+    ensureAdminAccount();
 
     // 通知加载动画：认证模块已就绪
     window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'auth' } }));
@@ -987,6 +1206,15 @@ document.addEventListener('DOMContentLoaded', () => {
         getSession,
         openAuthModal,
         closeAuthModal,
+        ensureAdminAccount,
         logout: () => { clearSession(); updateUserBtnState(); }
+    };
+
+    // 演示账号凭据：仅控制台调用 UYEA.demo() 时可见，不在 UI/i18n/公网 JSON 中暴露
+    window.UYEA = window.UYEA || {};
+    window.UYEA.demo = function() {
+        const msg = '演示账号：admin@uyea.dev / 密码：uyea123（仅演示，请勿用于生产）';
+        console.log(msg);
+        return 'admin@uyea.dev / uyea123';
     };
 });

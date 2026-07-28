@@ -5,8 +5,14 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 加载守卫：utils.js 未加载时通知模块就绪并退出，避免后续解构抛错导致模块静默崩溃
+    if (!window.UYEA_UTILS) {
+        console.error('[forum] UYEA_UTILS 未加载，论坛模块初始化失败');
+        window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'forum' } }));
+        return;
+    }
     // 引用共享工具函数
-    const { escapeHtml: esc, translateTag, t } = window.UYEA_UTILS;
+    const { escapeHtml: esc, t, renderPostCard } = window.UYEA_UTILS;
 
     const list = document.getElementById('postList');
     const noResults = document.getElementById('noResults');
@@ -35,9 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
 
         try {
-            const res = await fetch(UYEA_CONFIG.dataFiles.posts, { cache: 'no-cache' });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const posts = await res.json();
+            const posts = await UYEA_UTILS.fetchJsonCached(UYEA_CONFIG.dataFiles.posts);
             if (!Array.isArray(posts) || posts.length === 0) throw new Error('无帖子数据');
 
             allPosts = posts;
@@ -63,24 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        list.innerHTML = posts.map(p => {
-            const tagHtml = `<span class="post-tag">${esc(translateTag(p.tag, window.currentLang))}</span>`;
-            // "#" 或空 URL 视为无链接，避免页面跳转和空白标签页
-            const hasUrl = p.url && p.url !== '#';
-            const href = hasUrl ? esc(p.url) : 'javascript:void(0)';
-            const targetAttr = hasUrl ? ' target="_blank" rel="noopener"' : '';
-            return `<a href="${href}" class="post-item"${targetAttr}>
-                <div class="post-meta">
-                    ${tagHtml}
-                    <span class="dot">•</span>
-                    <span>${esc(p.author)}</span>
-                    <span class="dot">•</span>
-                    <span>${esc(p.time)}</span>
-                </div>
-                <div class="post-title">${esc(p.title)}</div>
-                <div class="post-excerpt">${esc(p.excerpt)}</div>
-            </a>`;
-        }).join('');
+        list.innerHTML = posts.map(p => renderPostCard(p, window.currentLang)).join('');
+
+        // 无链接的帖子卡片（href="#"）阻止默认跳转行为
+        list.querySelectorAll('a.post-item[href="#"]').forEach(a => {
+            a.addEventListener('click', e => e.preventDefault());
+        });
     }
 
     function filterPosts() {

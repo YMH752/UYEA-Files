@@ -1,4 +1,4 @@
-﻿/**
+/**
  * UYEA 全局配置文件
  * 集中管理所有URL、API、路径、超时等配置
  * 更新此文件以改变应用行为，无需修改其他文件
@@ -48,6 +48,9 @@ const UYEA_CONFIG = {
   storageKeys: {
     language: 'lang',
     searchEngine: 'engine',
+    theme: 'theme',
+    session: 'session',
+    users: 'users_override'
   },
 
   // 默认语言
@@ -55,24 +58,6 @@ const UYEA_CONFIG = {
 
   // 默认搜索引擎
   defaultSearchEngine: 'baidu',
-
-  // emoji 备选（图标加载失败时使用）
-  emojiMap: {
-    chatgpt: '🤖', gemini: '✨', claude: '🎯', deepseek: '🧠',
-    yiyan: '📝', qianwen: '💬', kimi: '🌟', doubao: '🫘',
-    yuanbao: '💰', perplexity: '🔍', copilot: '👨‍✈️', grok: '🧬',
-    chatglm: '🔮', llama: '🦙',
-    xiaohongshu: '📕', bilibili: '📺', zhihu: '💡', weibo: '🌐', douban: '🎭',
-    douyin: '🎵', kuaishou: '⚡', tieba: '💬',
-    github: '🐙', v0: '🌀', figma: '🎨', canva: '🖼️', tinypng: '🐼', stackoverflow: '📚',
-    codepen: '✏️', notion: '📝', excalidraw: '✍️',
-    taobao: '🛒', jd: '📦', meituan: '🍜', dianping: '⭐', eleme: '🛵',
-    pinduoduo: '🍉', tmall: '🐱', suning: '🏪',
-    '36kr': '📰', huxiu: '🐯', sspai: '⚡', ithome: '💻',
-    thepaper: '📄', geekpark: '🛴',
-    amap: '🗺️', baidumap: '📍', '12306': '🚄', ctrip: '✈️', fliggy: '🐷', moji: '🌤️',
-    kuaidi100: '📦', xiachufang: '🍳'
-  },
 
   // 搜索引擎URL
   searchEngines: {
@@ -178,7 +163,7 @@ const UYEA_CONFIG = {
       'auth.registering': '注册中...',
       'auth.loginSuccess': '登录成功',
       'auth.registerSuccess': '注册成功',
-      'auth.demoHint': '默认邮箱：admin@uyea.dev / 密码：uyea123',
+      'auth.demoHint': '演示账号请在浏览器控制台输入 UYEA.demo() 获取',
       'auth.roleAdmin': '管理员',
       'auth.roleUser': '普通用户',
       'auth.loginTime': '登录时间',
@@ -317,7 +302,7 @@ const UYEA_CONFIG = {
       'auth.registering': '註冊中...',
       'auth.loginSuccess': '登入成功',
       'auth.registerSuccess': '註冊成功',
-      'auth.demoHint': '預設郵箱：admin@uyea.dev / 密碼：uyea123',
+      'auth.demoHint': '演示帳號請在瀏覽器控制台輸入 UYEA.demo() 獲取',
       'auth.roleAdmin': '管理員',
       'auth.roleUser': '普通用戶',
       'auth.loginTime': '登入時間',
@@ -456,7 +441,7 @@ const UYEA_CONFIG = {
       'auth.registering': 'Registering...',
       'auth.loginSuccess': 'Login successful',
       'auth.registerSuccess': 'Registration successful',
-      'auth.demoHint': 'Default email: admin@uyea.dev / Password: uyea123',
+      'auth.demoHint': 'For demo account, run UYEA.demo() in browser console',
       'auth.roleAdmin': 'Administrator',
       'auth.roleUser': 'User',
       'auth.loginTime': 'Login Time',
@@ -509,7 +494,7 @@ const UYEA_CONFIG = {
    * @returns {string} 带前缀的键名
    */
   getStorageKey: function(key) {
-    return this.storagePrefix + key;
+    return UYEA_CONFIG.storagePrefix + key;
   },
 
   /**
@@ -518,7 +503,7 @@ const UYEA_CONFIG = {
    * @returns {string|null} URL模板或null
    */
   getSearchEngineUrl: function(engine) {
-    return this.searchEngines[engine] || this.searchEngines.baidu;
+    return UYEA_CONFIG.searchEngines[engine] || UYEA_CONFIG.searchEngines.baidu;
   },
 
   /**
@@ -528,7 +513,7 @@ const UYEA_CONFIG = {
    * @returns {string} 翻译内容
    */
   getTranslation: function(lang, key) {
-    const msgs = this.i18n[lang] || this.i18n[this.defaultLanguage];
+    const msgs = UYEA_CONFIG.i18n[lang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
     return msgs[key] || key;
   }
 };

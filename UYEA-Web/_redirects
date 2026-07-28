@@ -1,8 +1,8 @@
 # 三个页面已合并为SPA首页
 # .html 文件通过自身JS重定向到对应hash路由
-/forum.html / 301
-/navigation.html / 301
-/tools.html / 301
+/forum.html /#/ 301
+/navigation.html /#/nav 301
+/tools.html /#/tools 301
 /index.html / 301
 
 # clean URL 重定向到首页（带hash路由，SPA读取后自动切换视图）
@@ -11,4 +11,12 @@
 /tools /#/tools 301
 
 # 旧路径兼容：将 /UYEA-Web/* 重定向到 /*
+# 精确匹配 index.html 直接重定向到 /，避免 /UYEA-Web/index.html → /index.html → / 两次重定向
+/UYEA-Web/index.html / 301
 /UYEA-Web/* /:splat 301
+
+# 安全：阻止凭据文件公网访问
+/JSON/users.json / 404
+
+# SPA 404 回退：所有未匹配的路径返回 index.html（200 状态码），由前端路由处理
+/* /index.html 200

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -8,15 +8,16 @@
     <meta name="color-scheme" content="light dark">
     <title>UYEA | 悠野社区</title>
 
-    <link rel="canonical" href="https://uyea-files.pages.dev/">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231B5E20'/%3E%3Ctext x='50' y='68' font-family='serif' font-size='52' font-weight='bold' fill='white' text-anchor='middle'%3EU%3C/text%3E%3C/svg%3E" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231B5E20'/%3E%3Ctext x='50' y='68' font-family='serif' font-size='52' font-weight='bold' fill='white' text-anchor='middle'%3EU%3C/text%3E%3C/svg%3E">
+    <link rel="canonical" href="/">
+    <link rel="icon" href="/IMAGE/ICO/icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="/IMAGE/ICO/icon-192.png">
 
     <meta property="og:title" content="UYEA | 悠野社区">
     <meta property="og:description" content="悠野社区 - 以论坛为主页，分享AI使用心得、工具作品和生活点滴">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://uyea-files.pages.dev/">
-    <meta property="og:image" content="https://uyea-files.pages.dev/IMAGE/JPG/Peter_Thomas(2-2).webp">
+    <meta property="og:url" content="/">
+    <meta property="og:image" content="/IMAGE/JPG/Peter_Thomas%282-2%29.webp">
+    <meta property="og:locale" content="zh_CN">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,8 +26,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.6.95" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.6.95" as="script">
+    <link rel="preload" href="/CSS/style.css?v=0.7.0" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.7.0" as="script" fetchpriority="high">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -68,17 +69,77 @@
         @media(min-width:1401px){.header-container,.content-wrapper{max-width:1600px;padding:0 32px}.main-content{padding:32px 32px 150px}.post-item{padding:20px 24px}}
         /* iOS安全区域 */
         @supports(padding:env(safe-area-inset-top)){.top-header{padding-top:env(safe-area-inset-top)}.bottom-nav{bottom:calc(20px + env(safe-area-inset-bottom))}.back-to-top{bottom:calc(140px + env(safe-area-inset-bottom))}}
+
+        /* ==================== 加载动画CSS ==================== */
+        .page-loader {
+            position: fixed; inset: 0; z-index: 99999;
+            background: var(--bg, #F7F3ED);
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-content { text-align: center; }
+        .loader-logo {
+            font-family: var(--font-serif, Georgia, serif);
+            font-size: clamp(32px, 8vw, 48px);
+            font-weight: 800;
+            background: var(--primary-gradient, linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+            animation: loaderPulse 1.5s ease-in-out infinite;
+        }
+        .loader-spinner {
+            position: relative; width: 48px; height: 48px; margin: 0 auto 16px;
+        }
+        .spinner-ring {
+            position: absolute; inset: 0; border-radius: 50%;
+            border: 3px solid transparent;
+            animation: spinnerSpin 1.2s linear infinite;
+        }
+        .spinner-ring:nth-child(1) { border-top-color: var(--primary, #1B5E20); animation-delay: 0s; }
+        .spinner-ring:nth-child(2) { border-right-color: var(--accent, #BF6B00); animation-delay: 0.15s; opacity: 0.7; }
+        .spinner-ring:nth-child(3) { border-bottom-color: var(--primary, #2E7D32); animation-delay: 0.3s; opacity: 0.4; }
+        .loader-text {
+            font-size: 13px; color: var(--text-muted, #7A9A7A);
+            letter-spacing: 1px;
+        }
+        .loader-text::after { content: '...'; animation: loaderDots 1.5s steps(4) infinite; }
+        .loader-progress {
+            width: 120px; height: 3px; margin: 12px auto 0;
+            background: rgba(122,154,122,0.2); border-radius: 2px; overflow: hidden;
+        }
+        .loader-progress::after {
+            content: ''; display: block; height: 100%; width: 0%;
+            background: var(--primary-gradient, linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%));
+            border-radius: 2px; transition: width 0.3s ease;
+        }
+        .loader-progress.p33::after { width: 33%; }
+        .loader-progress.p66::after { width: 66%; }
+        .loader-progress.p100::after { width: 100%; }
+        @keyframes loaderPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.96); } }
+        @keyframes spinnerSpin { to { transform: rotate(360deg); } }
+        @keyframes loaderDots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
+        /* 视图切换动画：淡入 + 轻微上滑（优化：更短更快，will-change加速） */
+        .view-container { will-change: opacity, transform; animation: viewSlideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
+        @keyframes viewSlideIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes viewSlideOut {
+            from { opacity: 1; transform: translateY(0); }
+            to   { opacity: 0; transform: translateY(-6px); }
+        }
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.6.95" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.7.0" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap"></noscript>
-    <!-- DNS 预解析：外部 API 加速 -->
-    <link rel="dns-prefetch" href="https://timor.tech">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@700&display=swap"></noscript>
+    <!-- 外部 API 预连接加速 -->
+    <link rel="preconnect" href="https://timor.tech" crossorigin>
 
     <!-- 防止暗色模式闪烁：在CSS加载前应用主题 -->
     <script>
@@ -106,7 +167,7 @@
     <!-- ==================== 顶部导航栏 ==================== -->
     <header class="top-header" data-liquid-glass data-lg-strength="0.4" data-lg-blur="blur(20px) saturate(180%)">
         <div class="header-container">
-            <a href="/" class="logo-text" data-view="forum">UYEA</a>
+            <a href="/#/forum" class="logo-text" data-view="forum">UYEA</a>
 
             <!-- 常驻搜索栏（桌面端可见） -->
             <div class="header-search" id="headerSearch">
@@ -130,9 +191,9 @@
 
             <div class="header-right">
                 <nav class="nav-links">
-                    <a href="#" class="nav-link active" data-view="forum" data-i18n="nav.forum">悠野社区</a>
-                    <a href="#" class="nav-link" data-view="nav" data-i18n="nav.home">网站导航</a>
-                    <a href="#" class="nav-link" data-view="tools" data-i18n="nav.tools">线上工具</a>
+                    <a href="/#/forum" class="nav-link active" data-view="forum" data-i18n="nav.forum">悠野社区</a>
+                    <a href="/#/nav" class="nav-link" data-view="nav" data-i18n="nav.home">网站导航</a>
+                    <a href="/#/tools" class="nav-link" data-view="tools" data-i18n="nav.tools">线上工具</a>
                 </nav>
                 <button class="user-btn" aria-label="用户中心" id="userBtn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -197,9 +258,9 @@
     <!-- 移动端下拉菜单 -->
     <div class="dropdown-menu" id="dropdownMenu" data-liquid-glass data-lg-strength="0.5">
         <nav class="menu-nav">
-            <a href="#" class="menu-item active" data-view="forum" data-i18n="nav.forum">悠野社区</a>
-            <a href="#" class="menu-item" data-view="nav" data-i18n="nav.home">网站导航</a>
-            <a href="#" class="menu-item" data-view="tools" data-i18n="nav.tools">线上工具</a>
+            <a href="/#/forum" class="menu-item active" data-view="forum" data-i18n="nav.forum">悠野社区</a>
+            <a href="/#/nav" class="menu-item" data-view="nav" data-i18n="nav.home">网站导航</a>
+            <a href="/#/tools" class="menu-item" data-view="tools" data-i18n="nav.tools">线上工具</a>
         </nav>
         <div class="menu-auth-section">
             <button class="homepage-guide-btn" id="homepageGuideBtn"><span data-i18n="homepage.title">设为浏览器首页</span></button>
@@ -699,7 +760,8 @@
 
     <!-- 认证弹窗（登录/注册/个人中心/设为首页引导） -->
     <div class="modal-overlay" id="authOverlay"></div>
-    <div class="tool-modal auth-modal" id="authModal" role="dialog" aria-modal="true">
+    <div class="tool-modal auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+        <h2 id="authModalTitle" class="sr-only">用户中心</h2>
         <button class="auth-close-btn" id="authModalClose" aria-label="关闭">&times;</button>
         <div class="tool-modal-body" id="authModalBody"></div>
     </div>
@@ -720,77 +782,13 @@
         </div>
     </div>
 
-    <!-- 加载动画CSS -->
-    <style>
-        .page-loader {
-            position: fixed; inset: 0; z-index: 99999;
-            background: var(--bg, #F7F3ED);
-            display: flex; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-content { text-align: center; }
-        .loader-logo {
-            font-family: var(--font-serif, Georgia, serif);
-            font-size: clamp(32px, 8vw, 48px);
-            font-weight: 800;
-            background: var(--primary-gradient, linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 2px;
-            margin-bottom: 24px;
-            animation: loaderPulse 1.5s ease-in-out infinite;
-        }
-        .loader-spinner {
-            position: relative; width: 48px; height: 48px; margin: 0 auto 16px;
-        }
-        .spinner-ring {
-            position: absolute; inset: 0; border-radius: 50%;
-            border: 3px solid transparent;
-            animation: spinnerSpin 1.2s linear infinite;
-        }
-        .spinner-ring:nth-child(1) { border-top-color: var(--primary, #1B5E20); animation-delay: 0s; }
-        .spinner-ring:nth-child(2) { border-right-color: var(--accent, #BF6B00); animation-delay: 0.15s; opacity: 0.7; }
-        .spinner-ring:nth-child(3) { border-bottom-color: var(--primary, #2E7D32); animation-delay: 0.3s; opacity: 0.4; }
-        .loader-text {
-            font-size: 13px; color: var(--text-muted, #7A9A7A);
-            letter-spacing: 1px;
-        }
-        .loader-text::after { content: '...'; animation: loaderDots 1.5s steps(4) infinite; }
-        .loader-progress {
-            width: 120px; height: 3px; margin: 12px auto 0;
-            background: rgba(122,154,122,0.2); border-radius: 2px; overflow: hidden;
-        }
-        .loader-progress::after {
-            content: ''; display: block; height: 100%; width: 0%;
-            background: var(--primary-gradient, linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%));
-            border-radius: 2px; transition: width 0.3s ease;
-        }
-        .loader-progress.p33::after { width: 33%; }
-        .loader-progress.p66::after { width: 66%; }
-        .loader-progress.p100::after { width: 100%; }
-        @keyframes loaderPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.96); } }
-        @keyframes spinnerSpin { to { transform: rotate(360deg); } }
-        @keyframes loaderDots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
-        /* 视图切换动画：淡入 + 轻微上滑（优化：更短更快，will-change加速） */
-        .view-container { will-change: opacity, transform; animation: viewSlideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
-        @keyframes viewSlideIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes viewSlideOut {
-            from { opacity: 1; transform: translateY(0); }
-            to   { opacity: 0; transform: translateY(-6px); }
-        }
-    </style>
-
-    <script src="/JS/liquid-glass.js?v=0.6.95" defer></script>
-    <script src="/JS/config.js?v=0.6.95" defer></script>
-    <script src="/JS/utils.js?v=0.6.95" defer></script>
-    <script src="/JS/script.js?v=0.6.95" defer></script>
-    <script src="/JS/tools.js?v=0.6.95" defer></script>
-    <script src="/JS/forum.js?v=0.6.95" defer></script>
-    <script src="/JS/auth.js?v=0.6.95" defer></script>
+    <script src="/JS/config.js?v=0.7.0" defer></script>
+    <script src="/JS/utils.js?v=0.7.0" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.7.0" defer></script>
+    <script src="/JS/script.js?v=0.7.0" defer></script>
+    <script src="/JS/tools.js?v=0.7.0" defer></script>
+    <script src="/JS/forum.js?v=0.7.0" defer></script>
+    <script src="/JS/auth.js?v=0.7.0" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
@@ -907,6 +905,7 @@
         };
 
         let currentView = 'forum';
+        let switchToken = 0;
 
         // 滚动底部导航到激活项（居中显示）+ 移动凸透镜指示器
         window.scrollBottomNavToActive = function() {
@@ -937,13 +936,14 @@
             }
 
             // 计算位置（相对于bottom-nav的padding区域）
+            // 指示器宽度固定（CSS定义），仅更新 translateX 位置
             const navRect = bottomNav.getBoundingClientRect();
             const itemRect = activeItem.getBoundingClientRect();
             const offsetLeft = itemRect.left - navRect.left + bottomNav.scrollLeft;
-            const width = itemRect.width;
+            const indicatorWidth = indicator.offsetWidth || 64;
+            const centeredOffset = offsetLeft + (itemRect.width - indicatorWidth) / 2;
 
-            indicator.style.width = width + 'px';
-            indicator.style.transform = `translateY(-50%) translateX(${offsetLeft}px)`;
+            indicator.style.transform = `translateY(-50%) translateX(${centeredOffset}px)`;
         };
 
         // 凸透镜长按拖拽滑动效果：手指/鼠标拖动时指示器跟随，松开后吸附到最近项
@@ -1089,7 +1089,9 @@
             }
 
             // 100ms后切换到新视图并淡入（优化：减少空窗期）
+            const myToken = ++switchToken;
             setTimeout(() => {
+                if (myToken !== switchToken) return;
                 document.querySelectorAll('.view-container').forEach(v => {
                     v.style.display = 'none';
                     v.style.animation = '';
@@ -1117,7 +1119,7 @@
                     bottomNav.style.display = '';
                     bottomNav.innerHTML = BOTTOM_NAVS[viewName];
                     // 翻译新注入的底部导航项（修复切换语言后视图切换翻译不全的BUG）
-                    const navMsgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+                    const navMsgs = (window.UYEA_CONFIG && UYEA_CONFIG.i18n[window.currentLang]) || (window.UYEA_CONFIG && UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage]) || {};
                     bottomNav.querySelectorAll('[data-i18n]').forEach(el => {
                         if (navMsgs[el.dataset.i18n]) el.textContent = navMsgs[el.dataset.i18n];
                     });
@@ -1195,7 +1197,7 @@
             if (!toast) return;
 
             // 根据点击来源设置优先级文案
-            const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+            const msgs = (window.UYEA_CONFIG && UYEA_CONFIG.i18n[window.currentLang]) || (window.UYEA_CONFIG && UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage]) || {};
             titleEl.textContent = title || msgs['toast.comingSoon'] || '正在完善中';
             descEl.textContent = desc || msgs['toast.comingSoonDesc'] || '该功能正在开发中，敬请期待';
 
@@ -1235,9 +1237,12 @@
         // ==================== Service Worker ====================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(reg => {
+                navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).then(reg => {
                     navigator.serviceWorker.addEventListener('controllerchange', () => {
-                        window.location.reload();
+                        // 不强制 reload，改为提示用户刷新（避免丢失表单输入）
+                        if (window.showAchievement) {
+                            window.showAchievement('站点已更新', '刷新页面以加载最新版本');
+                        }
                     });
                 }).catch(() => {});
             });

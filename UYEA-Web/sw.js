@@ -1,17 +1,16 @@
 /*
- * UYEA 悠野社区 - Service Worker v0.6.95
+ * UYEA 悠野社区 - Service Worker v0.7.0
  * 缓存优先策略，支持离线访问
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
 
-const CACHE_NAME = 'uyea-v0.6.95';
-const V = 'v=0.6.95';
+const CACHE_NAME = 'uyea-v0.7.0';
+const V = 'v=0.7.0';
 
 // 核心静态资源（安装时预缓存）
 // 安全：users.json 含用户凭据，不预缓存也不运行时缓存
 const CORE_ASSETS = [
   '/',
-  '/index.html',
   `/CSS/style.css?${V}`,
   `/JS/liquid-glass.js?${V}`,
   `/JS/config.js?${V}`,
@@ -20,8 +19,6 @@ const CORE_ASSETS = [
   `/JS/tools.js?${V}`,
   `/JS/forum.js?${V}`,
   `/JS/auth.js?${V}`,
-  '/JSON/navigation.json',
-  '/JSON/posts.json',
   '/manifest.json',
   '/IMAGE/JPG/Peter_Thomas(2-2).webp'
 ];
@@ -56,6 +53,7 @@ self.addEventListener('activate', (event) => {
       .then(keys => Promise.all(
         keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
       ))
+      .catch(() => {})
       .then(() => {
         // 启用导航预加载：页面请求时并行发起网络请求，减少 SW 启动延迟
         if (self.registration.navigationPreload) {
@@ -88,22 +86,36 @@ self.addEventListener('fetch', (event) => {
         // 优先使用导航预加载的响应（如果可用）
         // event.preloadResponse 是 Promise，必须 await 获取实际 Response
         const preloadResponse = await event.preloadResponse;
-        if (preloadResponse) {
-          const clone = preloadResponse.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+        if (preloadResponse && preloadResponse.ok) {
+          const contentType = preloadResponse.headers.get('content-type') || '';
+          if (contentType.includes('text/html')) {
+            const clone = preloadResponse.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+          }
           return preloadResponse;
         }
         // 回退到正常网络请求
         try {
           const response = await fetch(request);
           if (response && response.ok) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('text/html')) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+            }
           }
           return response;
         } catch (e) {
           const cached = await caches.match(request);
-          return cached || caches.match('/index.html');
+          if (cached) return cached;
+          const indexCache = await caches.match('/index.html');
+          if (indexCache) return indexCache;
+          // 兜底：构造离线提示页面，避免返回 undefined 导致 TypeError
+          return new Response('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>离线</title></head><body style="font-family:sans-serif;text-align:center;padding:40px"><h1>您当前处于离线状态</h1><p>请检查网络连接后重试</p></body></html>', {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+          });
         }
       })()
     );
@@ -121,8 +133,8 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        // 离线时回退到缓存；无缓存则返回空数组（避免 Response.error() 导致消费者崩溃）
-        .catch(() => caches.match(request).then(cached => cached || new Response('[]', {
+        // 离线时回退到缓存；无缓存则返回带 offline 标识的空数据（避免 Response.error() 导致消费者崩溃）
+        .catch(() => caches.match(request).then(cached => cached || new Response('{"offline":true,"data":[]}', {
           headers: { 'Content-Type': 'application/json' }
         })))
     );
@@ -161,7 +173,7 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => {})
+        .catch(() => caches.match('/index.html') || new Response('', { status: 504, statusText: 'Gateway Timeout' }))
     })
   );
 });
