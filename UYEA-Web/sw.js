@@ -1,11 +1,11 @@
 /*
- * UYEA 悠野社区 - Service Worker v0.6.94
+ * UYEA 悠野社区 - Service Worker v0.6.95
  * 缓存优先策略，支持离线访问
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
 
-const CACHE_NAME = 'uyea-v0.6.94';
-const V = 'v=0.6.94';
+const CACHE_NAME = 'uyea-v0.6.95';
+const V = 'v=0.6.95';
 
 // 核心静态资源（安装时预缓存）
 // 安全：users.json 含用户凭据，不预缓存也不运行时缓存
@@ -86,7 +86,8 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       (async () => {
         // 优先使用导航预加载的响应（如果可用）
-        const preloadResponse = event.preloadResponse;
+        // event.preloadResponse 是 Promise，必须 await 获取实际 Response
+        const preloadResponse = await event.preloadResponse;
         if (preloadResponse) {
           const clone = preloadResponse.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
