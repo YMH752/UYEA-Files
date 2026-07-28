@@ -101,6 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.classList.add('active');
                 currentFeed = item.dataset.tab;
                 filterPosts();
+                // 移动凸透镜指示器到选中项并居中滚动
+                if (typeof window.updateBottomNavIndicator === 'function') window.updateBottomNavIndicator();
+                if (typeof window.scrollBottomNavToActive === 'function') window.scrollBottomNavToActive();
             });
         });
     }
