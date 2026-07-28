@@ -914,7 +914,10 @@
             const activeItem = bottomNav.querySelector('.bottom-nav-item.active');
             if (activeItem) {
                 const scrollLeft = activeItem.offsetLeft - bottomNav.clientWidth / 2 + activeItem.clientWidth / 2;
-                bottomNav.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' });
+                // clamp 到合法范围 [0, scrollWidth - clientWidth]，防止右滚露出空白区
+                const maxScroll = Math.max(0, bottomNav.scrollWidth - bottomNav.clientWidth);
+                const clamped = Math.min(Math.max(0, scrollLeft), maxScroll);
+                bottomNav.scrollTo({ left: clamped, behavior: 'smooth' });
             }
             // 更新凸透镜指示器位置
             window.updateBottomNavIndicator();
@@ -940,7 +943,7 @@
             const navRect = bottomNav.getBoundingClientRect();
             const itemRect = activeItem.getBoundingClientRect();
             const offsetLeft = itemRect.left - navRect.left + bottomNav.scrollLeft;
-            const indicatorWidth = indicator.offsetWidth || 64;
+            const indicatorWidth = indicator.offsetWidth || 80;
             const centeredOffset = offsetLeft + (itemRect.width - indicatorWidth) / 2;
 
             indicator.style.transform = `translateY(-50%) translateX(${centeredOffset}px)`;
@@ -1034,7 +1037,16 @@
                 }
 
                 if (isDragging && indicator) {
-                    indicator.style.transform = `translateY(-50%) translateX(${initTransform + deltaX}px)`;
+                    // 拖拽位置 clamp：禁止指示器超出底部导航容器左右内边界
+                    // 指示器 transform 为 translateX(centeredOffset)，0 对应容器最左 padding 内边界
+                    // 最右边界 = 容器内容宽度(clientWidth) - 指示器宽度(indicator.offsetWidth)
+                    const indW = indicator.offsetWidth || 80;
+                    const minTransform = 0;
+                    const maxTransform = Math.max(minTransform, bottomNav.clientWidth - indW);
+                    const rawTransform = initTransform + deltaX;
+                    const clampedTransform = Math.min(Math.max(rawTransform, minTransform), maxTransform);
+
+                    indicator.style.transform = `translateY(-50%) translateX(${clampedTransform}px)`;
                     e.preventDefault();
 
                     // 凸透镜效果：指示器覆盖范围内所有项都放大突出
