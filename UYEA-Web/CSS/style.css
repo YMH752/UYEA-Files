@@ -2193,6 +2193,26 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 
 /* ========== 认证弹窗 ========== */
 .auth-modal { width: min(92vw, 360px); }
+/* 浮动关闭按钮（去除header后） */
+.auth-close-btn {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 28px; height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.auth-close-btn:hover { color: var(--text-primary); }
+/* 认证弹窗body紧凑内边距 */
+.auth-modal .tool-modal-body { padding: 16px 20px; }
 
 /* 头部用户按钮头像 */
 .user-btn-avatar {
@@ -2201,8 +2221,14 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     color: var(--primary);
 }
 
-/* 登录/注册表单（紧凑风格） */
-.auth-form { padding: 2px 0; }
+/* 登录/注册表单（紧凑居中风格） */
+.auth-form {
+    padding: 2px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
 
 /* Hero 区域：图标 + 标题 + 副标题（紧凑，无线框图风格） */
 .auth-hero {
@@ -2351,7 +2377,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 }
 
 /* ========== 认证弹窗：拖拽分栏滑动布局 ========== */
-.auth-split { position: relative; overflow: hidden; min-height: 300px; }
+.auth-split { position: relative; overflow: hidden; min-height: 220px; }
 /* 注册层：底层，铺满容器 */
 .auth-register-layer {
     position: absolute;
@@ -2373,8 +2399,8 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     background: var(--surface);
 }
 .auth-login-layer.dragging { transition: none; }
-/* 登录层内容右侧留出箭头空间 */
-.auth-login-layer .auth-form { padding-right: 52px; }
+/* 登录层内容右侧留出箭头空间（与侧边条保持适当间隔） */
+.auth-login-layer .auth-form { padding-right: 58px; }
 
 /* 注册开发中提示 */
 .auth-dev-message {
@@ -2441,7 +2467,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 .auth-split.show-register .auth-handle-arrow { transform: rotate(180deg); }
 /* 窄屏适配 */
 @media (max-width: 600px) {
-    .auth-login-layer .auth-form { padding-right: 48px; }
+    .auth-login-layer .auth-form { padding-right: 54px; }
     .auth-split-handle { width: 44px; }
 }
 

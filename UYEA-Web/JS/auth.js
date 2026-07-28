@@ -120,17 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- 登录层（上层，clip-path 裁剪） -->
                 <div class="auth-login-layer" id="authLoginLayer">
                     <div class="auth-form" id="loginForm">
-                        <div class="auth-hero">
-                            <div class="auth-hero-icon">
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                                    <polyline points="10 17 15 12 10 7"></polyline>
-                                    <line x1="15" y1="12" x2="3" y2="12"></line>
-                                </svg>
-                            </div>
-                            <div class="auth-hero-title">${t('auth.login')}</div>
-                            <div class="auth-hero-subtitle">${t('auth.welcomeBack')}</div>
-                        </div>
                         <div class="auth-field">
                             <label class="auth-label" for="loginEmail">${t('auth.email')}</label>
                             <div class="auth-input-wrap">
