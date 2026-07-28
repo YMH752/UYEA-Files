@@ -1,5 +1,5 @@
 /* ============================================================
-   UYEA 悠野社区 · style.css v0.6.93
+   UYEA 悠野社区 · style.css v0.6.94
    复古×现代 · 墨绿琥珀 · 液态玻璃 · 纸张质感
    ============================================================ */
 
@@ -828,7 +828,8 @@ html[data-theme="coffee"] .mobile-engine-option.active {
     width: 22px; height: 2px;
     background: var(--text-primary);
     border-radius: 2px;
-    transition: all 0.4s var(--ease-bounce);
+    transition: transform 0.4s var(--ease-bounce), opacity 0.4s var(--ease-bounce);
+    will-change: transform, opacity;
 }
 
 .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
@@ -977,7 +978,7 @@ html[data-theme="coffee"] .section-title {
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    transition: all var(--duration) var(--ease-smooth);
+    transition: box-shadow var(--duration) var(--ease-smooth), transform var(--duration) var(--ease-smooth);
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -1030,7 +1031,7 @@ html[data-theme="coffee"] .section-title {
     border-radius: var(--radius-md);
     text-decoration: none;
     color: var(--text-primary);
-    transition: all var(--duration) var(--ease-smooth);
+    transition: box-shadow var(--duration) var(--ease-smooth), border-color var(--duration) var(--ease-smooth);
     border-left: 3px solid var(--accent);
     animation: fadeInUp 0.4s var(--ease-smooth) both;
     overflow: hidden;
@@ -1089,7 +1090,7 @@ html[data-theme="coffee"] .section-title {
     font-weight: 600;
     color: var(--accent-dark);
     border: 1px solid var(--accent-light);
-    transition: all 0.3s var(--ease-bounce);
+    transition: background 0.3s var(--ease-bounce), color 0.3s var(--ease-bounce), border-color 0.3s var(--ease-bounce);
 }
 
 .post-item:hover .post-tag {
@@ -1153,7 +1154,7 @@ html[data-theme="coffee"] .section-title {
     border-radius: 0;
     text-decoration: none;
     color: var(--text-primary);
-    transition: all var(--duration) var(--ease-smooth);
+    transition: box-shadow var(--duration) var(--ease-smooth), border-color var(--duration) var(--ease-smooth), transform var(--duration) var(--ease-smooth);
     overflow: hidden;
     min-width: 0;
     position: relative;
@@ -1212,7 +1213,7 @@ html[data-theme="coffee"] .section-title {
     font-weight: 700;
     color: var(--primary);
     text-transform: uppercase;
-    transition: all var(--duration) ease;
+    transition: color var(--duration) ease, background var(--duration) ease;
 }
 
 .card-item:hover .icon-placeholder {
@@ -1341,7 +1342,7 @@ html[data-theme="coffee"] .section-title {
     font-weight: 600;
     cursor: pointer;
     font-family: inherit;
-    transition: all var(--duration) ease;
+    transition: color var(--duration) ease, background var(--duration) ease, border-color var(--duration) ease;
 }
 
 .modal-btn-cancel { background: var(--bg); color: var(--text-secondary); border: 1px solid var(--border); }
@@ -1413,6 +1414,7 @@ html[data-theme="coffee"] .section-title {
     z-index: 9998;
     transition: width 0.1s ease;
     box-shadow: 0 0 8px rgba(26, 77, 58, 0.4);
+    will-change: width;
 }
 
 /* ========== 暗色模式切换按钮 ========== */
@@ -1573,7 +1575,8 @@ html[data-theme="coffee"] .theme-icon-coffee { display: block; }
     opacity: 0;
     transform: translateY(20px) scale(0.8);
     pointer-events: none;
-    transition: all 0.3s var(--ease-bounce);
+    transition: opacity 0.3s var(--ease-bounce), transform 0.3s var(--ease-bounce);
+    will-change: opacity, transform;
 }
 
 .back-to-top.show {
@@ -1621,6 +1624,7 @@ html[data-theme="coffee"] .theme-icon-coffee { display: block; }
     filter: blur(80px);
     opacity: 0.4;
     animation: orbFloat 20s ease-in-out infinite;
+    will-change: transform;
 }
 
 .bg-orb-1 {
@@ -1718,6 +1722,7 @@ html[data-theme="coffee"] .bg-orb-3 {
     pointer-events: none;
     z-index: 0;
     opacity: 1;
+    will-change: transform, width;
 }
 
 /* 星空主题：凸透镜指示器 */
@@ -1955,7 +1960,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: all var(--duration) ease;
+    transition: background var(--duration) ease, color var(--duration) ease;
 }
 .tool-modal-close:hover { background: var(--accent-5); color: var(--ink); }
 

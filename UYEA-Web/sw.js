@@ -1,11 +1,11 @@
 /*
- * UYEA 悠野社区 - Service Worker v0.6.93
+ * UYEA 悠野社区 - Service Worker v0.6.94
  * 缓存优先策略，支持离线访问
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
 
-const CACHE_NAME = 'uyea-v0.6.93';
-const V = 'v=0.6.93';
+const CACHE_NAME = 'uyea-v0.6.94';
+const V = 'v=0.6.94';
 
 // 核心静态资源（安装时预缓存）
 // 安全：users.json 含用户凭据，不预缓存也不运行时缓存
@@ -22,7 +22,8 @@ const CORE_ASSETS = [
   `/JS/auth.js?${V}`,
   '/JSON/navigation.json',
   '/JSON/posts.json',
-  '/manifest.json'
+  '/manifest.json',
+  '/IMAGE/JPG/Peter_Thomas(2-2).webp'
 ];
 
 // 可延迟缓存的资源（运行时按需缓存）
@@ -48,13 +49,19 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// 激活：清理旧缓存
+// 激活：清理旧缓存 + 启用导航预加载
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(
         keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
       ))
+      .then(() => {
+        // 启用导航预加载：页面请求时并行发起网络请求，减少 SW 启动延迟
+        if (self.registration.navigationPreload) {
+          return self.registration.navigationPreload.enable();
+        }
+      })
       .then(() => self.clients.claim())
   );
 });
@@ -77,15 +84,27 @@ self.addEventListener('fetch', (event) => {
   // HTML 文档：网络优先（确保用户第一次刷新即获取最新 HTML 和 JS 版本）
   if (request.destination === 'document') {
     event.respondWith(
-      fetch(request)
-        .then(response => {
+      (async () => {
+        // 优先使用导航预加载的响应（如果可用）
+        const preloadResponse = event.preloadResponse;
+        if (preloadResponse) {
+          const clone = preloadResponse.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+          return preloadResponse;
+        }
+        // 回退到正常网络请求
+        try {
+          const response = await fetch(request);
           if (response && response.ok) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
           }
           return response;
-        })
-        .catch(() => caches.match(request).then(cached => cached || caches.match('/index.html')))
+        } catch (e) {
+          const cached = await caches.match(request);
+          return cached || caches.match('/index.html');
+        }
+      })()
     );
     return;
   }

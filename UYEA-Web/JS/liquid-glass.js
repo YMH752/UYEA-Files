@@ -82,7 +82,7 @@
      * 生成唯一 ID
      */
     function generateId() {
-        return 'lg-' + Math.random().toString(36).substr(2, 9);
+        return 'lg-' + Math.random().toString(36).substring(2, 11);
     }
 
     /* ========== 核心：生成位移贴图并应用滤镜 ========== */
@@ -176,21 +176,31 @@
         defs.appendChild(filter);
 
         // ========== 生成位移贴图（Canvas 逐像素） ==========
+        // 性能优化：大尺寸元素使用降采样画布，位移贴图为平滑渐变可安全缩放
+        var MAX_CANVAS_PIXELS = 16384; // 单边最大像素数（128x128 足够）
+        var scaleDown = 1;
+        var cw = w, ch = h;
+        var maxDim = Math.max(w, h);
+        if (maxDim > MAX_CANVAS_PIXELS) {
+            scaleDown = MAX_CANVAS_PIXELS / maxDim;
+            cw = Math.max(1, Math.round(w * scaleDown));
+            ch = Math.max(1, Math.round(h * scaleDown));
+        }
         var canvas = document.createElement('canvas');
-        canvas.width = w;
-        canvas.height = h;
+        canvas.width = cw;
+        canvas.height = ch;
         var ctx = canvas.getContext('2d');
 
-        var pixelCount = w * h;
+        var pixelCount = cw * ch;
         var data = new Uint8ClampedArray(pixelCount * 4);
         var maxScale = 0;
         var rawValues = new Float32Array(pixelCount * 2);
 
         for (var i = 0; i < pixelCount; i++) {
-            var x = i % w;
-            var y = Math.floor(i / w);
-            var uvx = x / w;
-            var uvy = y / h;
+            var x = i % cw;
+            var y = Math.floor(i / cw);
+            var uvx = x / cw;
+            var uvy = y / ch;
 
             // 转换到中心坐标系（-0.5 到 0.5）
             var ix = uvx - 0.5;
@@ -301,6 +311,35 @@
         applyLiquidGlass(element, getOptions(element));
     }
 
+    /* ========== 元素清理（防止内存泄漏） ========== */
+
+    /**
+     * 清理已移除元素的所有引用：SVG 滤镜节点 + 内部数组
+     */
+    function cleanupElement(element) {
+        if (!element) return;
+        // 递归清理子元素
+        if (element.querySelectorAll) {
+            var children = element.querySelectorAll('[data-liquid-glass]');
+            for (var i = 0; i < children.length; i++) {
+                cleanupElement(children[i]);
+            }
+        }
+        if (!element.hasAttribute || !element.hasAttribute('data-liquid-glass')) return;
+
+        var idx = appliedElements.indexOf(element);
+        if (idx !== -1) {
+            // 移除对应的 SVG 滤镜
+            if (element._lgFilterId) {
+                var oldFilter = document.getElementById(element._lgFilterId);
+                if (oldFilter && oldFilter.parentNode) oldFilter.parentNode.removeChild(oldFilter);
+                element._lgFilterId = null;
+            }
+            appliedElements.splice(idx, 1);
+            elementData.splice(idx, 1);
+        }
+    }
+
     /* ========== MutationObserver：处理动态显示的元素 ========== */
 
     var observer = null;
@@ -309,12 +348,13 @@
         if (observer) observer.disconnect();
 
         observer = new MutationObserver(function (mutations) {
-            for (var i = 0; i < mutations.length; i++) {
-                var mutation = mutations[i];
-                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                    var el = mutation.target;
+            for (let i = 0; i < mutations.length; i++) {
+                const mutation = mutations[i];
+                if (mutation.type === 'attributes' && (mutation.attributeName === 'class' || mutation.attributeName === 'style')) {
+                    const el = mutation.target;
                     if (el.hasAttribute('data-liquid-glass') && el.classList.contains('show')) {
                         // 元素变为可见，延迟一帧后应用效果
+                        // 使用 let 确保闭包捕获正确的 el 引用（修复多元素同时变更时引用最后一个的 BUG）
                         requestAnimationFrame(function () {
                             requestAnimationFrame(function () {
                                 applyLiquidGlass(el, getOptions(el));
@@ -324,19 +364,25 @@
                 }
                 // 处理新添加的 DOM 节点
                 if (mutation.type === 'childList') {
-                    for (var j = 0; j < mutation.addedNodes.length; j++) {
-                        var node = mutation.addedNodes[j];
+                    for (let j = 0; j < mutation.addedNodes.length; j++) {
+                        const node = mutation.addedNodes[j];
                         if (node.nodeType === 1) {
                             if (node.hasAttribute && node.hasAttribute('data-liquid-glass')) {
                                 initElement(node);
                             }
                             if (node.querySelectorAll) {
-                                var children = node.querySelectorAll('[data-liquid-glass]');
-                                for (var k = 0; k < children.length; k++) {
+                                const children = node.querySelectorAll('[data-liquid-glass]');
+                                for (let k = 0; k < children.length; k++) {
                                     initElement(children[k]);
                                 }
                             }
                         }
+                    }
+                    // 清理已移除元素的引用，防止内存泄漏
+                    for (let r = 0; r < mutation.removedNodes.length; r++) {
+                        const removedNode = mutation.removedNodes[r];
+                        if (removedNode.nodeType !== 1) continue;
+                        cleanupElement(removedNode);
                     }
                 }
             }

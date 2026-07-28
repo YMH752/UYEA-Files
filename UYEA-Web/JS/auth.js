@@ -844,7 +844,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         submitBtn.addEventListener('click', doRegister);
-        confirmInput.addEventListener('keypress', (e) => {
+        confirmInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); doRegister(); }
         });
 
@@ -934,9 +934,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const copyBtn = document.getElementById('copyHomepageUrl');
         const urlInput = document.getElementById('homepageUrl');
         if (copyBtn && urlInput) {
-            copyBtn.addEventListener('click', () => {
-                urlInput.select();
-                try { document.execCommand('copy'); } catch (e) { /* 忽略 */ }
+            copyBtn.addEventListener('click', async () => {
+                const url = urlInput.value;
+                try {
+                    // 优先使用现代 Clipboard API
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        await navigator.clipboard.writeText(url);
+                    } else {
+                        // 回退到废弃的 execCommand（兼容旧浏览器/非 HTTPS 环境）
+                        urlInput.select();
+                        document.execCommand('copy');
+                    }
+                } catch (e) {
+                    // 最终回退：仍然尝试 execCommand
+                    try { urlInput.select(); document.execCommand('copy'); } catch (e2) { /* 忽略 */ }
+                }
                 const orig = copyBtn.textContent;
                 copyBtn.textContent = t('homepage.copied');
                 setTimeout(() => { copyBtn.textContent = orig; }, 1500);
