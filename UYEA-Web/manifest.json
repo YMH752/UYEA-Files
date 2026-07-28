@@ -14,19 +14,19 @@
   "categories": ["social", "productivity", "utilities"],
   "icons": [
     {
-      "src": "/IMAGE/icons/icon-192.png",
+      "src": "/IMAGE/ICO/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/IMAGE/icons/icon-512.png",
+      "src": "/IMAGE/ICO/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/IMAGE/icons/icon-512.png",
+      "src": "/IMAGE/ICO/icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
