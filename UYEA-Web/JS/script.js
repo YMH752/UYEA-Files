@@ -573,7 +573,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 生成单张卡片 HTML（图标用首字母占位符，底色+边框）
     function navCardHtml(item) {
         const firstChar = (item.title || '?').charAt(0).toUpperCase();
-        return `<a href="${esc(item.url)}" target="_blank" rel="noopener" class="card-item" data-title="${esc(item.title)}" title="${esc(item.title)}">
+        // 协议白名单校验：仅允许 http(s):// 和相对路径(/)，防止 javascript:/data: 等 XSS
+        const safeUrl = /^(https?:\/\/|\/)/.test(item.url || '') ? item.url : '#';
+        return `<a href="${esc(safeUrl)}" target="_blank" rel="noopener noreferrer" class="card-item" data-title="${esc(item.title)}" title="${esc(item.title)}">
             <div class="card-icon">
                 <span class="icon-placeholder">${esc(firstChar)}</span>
             </div>

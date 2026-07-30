@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('[tools] UYEA_UTILS 未加载，工具模块初始化失败');
         return;
     }
+    if (!window.UYEA_CONFIG) {
+        console.error('[tools] UYEA_CONFIG 未加载，工具模块初始化失败');
+        return;
+    }
     const { getGridColumns, escapeHtml } = window.UYEA_UTILS;
 
     // ==================== 工具卡片数据（替代 index.html 静态卡片） ====================

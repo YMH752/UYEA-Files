@@ -503,7 +503,10 @@ const UYEA_CONFIG = {
    * @returns {string|null} URL模板或null
    */
   getSearchEngineUrl: function(engine) {
-    return UYEA_CONFIG.searchEngines[engine] || UYEA_CONFIG.searchEngines.baidu;
+    // 注意：site 引擎的值为 null（表示站内搜索），不能用 || 判断
+    // 仅当引擎不存在于对象中时才回退到默认引擎
+    var url = UYEA_CONFIG.searchEngines[engine];
+    return url !== undefined ? url : UYEA_CONFIG.searchEngines.baidu;
   },
 
   /**
