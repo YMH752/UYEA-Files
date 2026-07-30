@@ -16,3 +16,7 @@ Thumbs.db
 
 # 本地测试临时文件
 uyea-test-forum.png
+
+# 下载的仓库压缩包和解压目录（临时文件，不应提交）
+repo.zip
+extracted/

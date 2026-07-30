@@ -4,8 +4,8 @@
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
 
-const CACHE_NAME = 'uyea-v0.8.0';
-const V = 'v=0.8.0';
+const CACHE_NAME = 'uyea-v0.8.1';
+const V = 'v=0.8.1';
 
 // 核心静态资源（安装时预缓存）
 // 安全：users.json 含用户凭据，不预缓存也不运行时缓存
@@ -173,7 +173,7 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => caches.match('/index.html') || new Response('', { status: 504, statusText: 'Gateway Timeout' }))
+        .catch(() => caches.match('/index.html').then(cached => cached || new Response('', { status: 504, statusText: 'Gateway Timeout' })))
     })
   );
 });

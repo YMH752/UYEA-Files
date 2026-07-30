@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== 下拉菜单互斥机制 ====================
     // 打开任一下拉菜单时，自动关闭其他所有下拉菜单，防止重叠
+    // 性能优化：预先缓存 DOM 引用，避免每次 closeAllDropdowns 都 getElementById
     const DROPDOWN_PAIRS = [
         { btnId: 'langIconBtn', menuId: 'langDropdown' },
         { btnId: 'themeIconBtn', menuId: 'themeDropdown' },
@@ -15,14 +16,16 @@ document.addEventListener('DOMContentLoaded', () => {
         { btnId: 'mobileSearchToggle', menuId: 'mobileSearchPanel' },
         { btnId: 'headerEngineSelect', menuId: 'headerEngineDropdown' }
     ];
+    const dropdownEls = DROPDOWN_PAIRS.map(({ btnId, menuId }) => ({
+        btn: document.getElementById(btnId),
+        menu: document.getElementById(menuId)
+    }));
 
     function closeAllDropdowns(exceptBtnId) {
-        DROPDOWN_PAIRS.forEach(({ btnId, menuId }) => {
-            if (btnId === exceptBtnId) return;
-            const btn = document.getElementById(btnId);
-            const menu = document.getElementById(menuId);
-            if (menu) menu.classList.remove('show');
-            if (btn) btn.classList.remove('active');
+        dropdownEls.forEach((pair, i) => {
+            if (DROPDOWN_PAIRS[i].btnId === exceptBtnId) return;
+            if (pair.menu) pair.menu.classList.remove('show');
+            if (pair.btn) pair.btn.classList.remove('active');
         });
     }
     // 暴露给 auth.js 等其他模块调用
@@ -269,14 +272,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!siteSearchData.nav) return [];
         const q = query.toLowerCase();
         const results = [];
-        for (const cat in siteSearchData.nav) {
+        // 使用 Object.keys 避免 for...in 遍历原型链的性能开销
+        for (const cat of Object.keys(siteSearchData.nav)) {
             const sites = siteSearchData.nav[cat];
             if (!Array.isArray(sites)) continue;
-            sites.forEach(site => {
-                if ((site.title || '').toLowerCase().includes(q)) {
-                    results.push(site);
+            for (let i = 0; i < sites.length; i++) {
+                if ((sites[i].title || '').toLowerCase().includes(q)) {
+                    results.push(sites[i]);
                 }
-            });
+            }
         }
         return results.slice(0, 30); // 最多显示30条
     }
@@ -546,10 +550,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 统一的点击外部关闭下拉菜单（所有下拉菜单均在 DROPDOWN_PAIRS 中统一处理）
+    // 性能优化：使用预缓存的 DOM 引用，避免每次点击都 getElementById
     document.addEventListener('click', (e) => {
-        DROPDOWN_PAIRS.forEach(({ btnId, menuId }) => {
-            const btn = document.getElementById(btnId);
-            const menu = document.getElementById(menuId);
+        dropdownEls.forEach((pair, i) => {
+            const { btn, menu } = pair;
             if (menu && menu.classList.contains('show')) {
                 if (!menu.contains(e.target) && e.target !== btn && (!btn || !btn.contains(e.target))) {
                     menu.classList.remove('show');

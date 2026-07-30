@@ -651,6 +651,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // null 守卫：核心 DOM 元素缺失时直接返回，避免后续抛错
         if (!authOverlay || !authModal || !authModalBody) return;
         currentAuthMode = mode || (isLoggedIn() ? 'profile' : 'login');
+        // 按需初始化内置 admin 账号（避免首屏加载时阻塞主线程）
+        if (currentAuthMode === 'login' || currentAuthMode === 'register') {
+            ensureAdminAccount();
+        }
         renderAuthModal();
         if (authOverlay) authOverlay.classList.add('show');
         if (authModal) authModal.classList.add('show');
@@ -1089,10 +1093,24 @@ document.addEventListener('DOMContentLoaded', () => {
         authOverlay.addEventListener('click', closeAuthModal);
     }
 
-    // ESC 关闭
+    // ESC 关闭 + Tab 焦点陷阱（与 tools.js 模态框行为一致）
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && authModal && authModal.classList.contains('show')) {
+        if (!authModal || !authModal.classList.contains('show')) return;
+        if (e.key === 'Escape') {
             closeAuthModal();
+        } else if (e.key === 'Tab') {
+            // 焦点陷阱：在认证弹窗内循环
+            const focusables = authModal.querySelectorAll('input, textarea, select, button, [tabindex]:not([tabindex="-1"])');
+            if (focusables.length === 0) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
         }
     });
 
@@ -1167,9 +1185,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==================== 初始化 ====================
     updateUserBtnState();
 
-    // 模块加载时异步初始化内置 admin 账号（生成 PBKDF2 凭据），不阻塞 UI
+    // 性能优化：延迟初始化内置 admin 账号（PBKDF2 100k 迭代约耗时 100ms+）
+    // 改为在用户首次打开登录弹窗时按需触发，避免首屏加载时阻塞主线程
     // 失败会在 ensureAdminAccount 内部捕获并打印警告
-    ensureAdminAccount();
 
     // 通知加载动画：认证模块已就绪
     window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'auth' } }));
