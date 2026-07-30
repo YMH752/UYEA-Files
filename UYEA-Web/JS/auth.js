@@ -138,35 +138,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 try { registeredUsers = JSON.parse(stored); } catch (e) { /* 忽略损坏数据 */ }
             }
 
-            // 从 JSON 加载默认用户（带 10s 超时，防止慢响应永久挂起登录按钮）
-            let defaultUsers = [];
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
-                try {
-                    const resp = await fetch('/JSON/users.json', { cache: 'no-cache', signal: controller.signal });
-                    if (resp.ok) defaultUsers = await resp.json();
-                } finally {
-                    clearTimeout(timeoutId);
-                }
-            } catch (e) { console.warn('加载用户数据失败:', e); }
-
-            // 合并：内置 admin（带凭据，优先校验）+ JSON 默认用户（排除无凭据的 admin）+ 注册用户
-            let mergedUsers = [];
-            if (adminUser) {
-                // 合并 JSON 中 admin 的额外字段（bio/note 等）到 adminUser
-                const jsonAdminIdx = defaultUsers.findIndex(u => u.username === 'admin' || u.email === 'admin@uyea.dev');
-                if (jsonAdminIdx >= 0) {
-                    const jsonAdmin = defaultUsers[jsonAdminIdx];
-                    mergedUsers.push({ ...jsonAdmin, ...adminUser });
-                    defaultUsers.splice(jsonAdminIdx, 1);
-                } else {
-                    mergedUsers.push(adminUser);
-                }
-            }
-            // JSON 中可能残留的无凭据 admin 条目（admin 未初始化场景）排除掉，避免登录时凭据缺失误判
-            defaultUsers = defaultUsers.filter(u => u.username !== 'admin' && u.email !== 'admin@uyea.dev');
-            mergedUsers = mergedUsers.concat(defaultUsers, registeredUsers);
+            // 合并：内置 admin（带凭据）+ 注册用户
+            let mergedUsers = adminUser ? [adminUser] : [];
+            mergedUsers = mergedUsers.concat(registeredUsers);
 
             usersCache = mergedUsers;
             return usersCache;
@@ -1210,11 +1184,13 @@ document.addEventListener('DOMContentLoaded', () => {
         logout: () => { clearSession(); updateUserBtnState(); }
     };
 
-    // 演示账号凭据：仅控制台调用 UYEA.demo() 时可见，不在 UI/i18n/公网 JSON 中暴露
+    // 演示账号凭据：仅在本地开发环境暴露，生产环境不提供该 API
     window.UYEA = window.UYEA || {};
-    window.UYEA.demo = function() {
-        const msg = '演示账号：admin@uyea.dev / 密码：uyea123（仅演示，请勿用于生产）';
-        console.log(msg);
-        return 'admin@uyea.dev / uyea123';
-    };
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        window.UYEA.demo = function() {
+            const msg = '演示账号：admin@uyea.dev / 密码：uyea123（仅演示，请勿用于生产）';
+            console.log(msg);
+            return 'admin@uyea.dev / uyea123';
+        };
+    }
 });

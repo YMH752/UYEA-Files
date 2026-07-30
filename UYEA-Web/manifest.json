@@ -1,7 +1,7 @@
 {
   "name": "UYEA 悠野社区",
   "short_name": "UYEA",
-  "description": "悠野社区 - 分享AI使用心得、工具作品和生活点滴",
+  "description": "悠野社区(UYEA) - 集论坛、网站导航、线上工具于一体的纯前端社区平台。分享 AI 使用心得、工具作品与生活点滴，提供 JSON 格式化、Base64、正则测试等纯前端在线工具，数据不出本地。",
   "start_url": "/",
   "scope": "/",
   "id": "/",
@@ -12,6 +12,38 @@
   "theme_color": "#1B5E20",
   "orientation": "any",
   "categories": ["social", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "悠野社区",
+      "short_name": "社区",
+      "description": "进入悠野论坛",
+      "url": "/#/forum",
+      "icons": [{ "src": "/IMAGE/ICO/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "网站导航",
+      "short_name": "导航",
+      "description": "浏览网站导航",
+      "url": "/#/nav",
+      "icons": [{ "src": "/IMAGE/ICO/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "线上工具",
+      "short_name": "工具",
+      "description": "使用在线工具",
+      "url": "/#/tools",
+      "icons": [{ "src": "/IMAGE/ICO/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/IMAGE/JPG/Peter_Thomas(2-2).webp",
+      "sizes": "1200x630",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "UYEA 悠野社区首页"
+    }
+  ],
   "icons": [
     {
       "src": "/IMAGE/ICO/icon-192.png",

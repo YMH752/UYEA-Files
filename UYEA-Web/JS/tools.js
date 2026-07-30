@@ -14,6 +14,259 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const { getGridColumns, escapeHtml } = window.UYEA_UTILS;
 
+    // ==================== 工具卡片数据（替代 index.html 静态卡片） ====================
+    const TOOLS_DATA = [
+        {
+            category: 'dev',
+            titleKey: 'section.dev',
+            defaultTitle: '开发者工具',
+            tools: [
+                { title: 'JSON 格式化', tool: 'json' },
+                { title: 'Base64 编解码', tool: 'base64' },
+                { title: 'URL 编解码', tool: 'url' },
+                { title: '哈希生成', tool: 'hash' },
+                { title: '正则表达式测试', tool: 'regex' },
+                { title: '时间戳转换', tool: 'timestamp' },
+                { title: 'JWT 解码', comingSoon: true },
+                { title: 'Cron 表达式', comingSoon: true },
+                { title: 'HTML 转义', comingSoon: true },
+                { title: 'Hex 编解码', comingSoon: true },
+                { title: 'SQL 格式化', comingSoon: true },
+                { title: 'HTTP 状态码', comingSoon: true },
+                { title: '代码对比', comingSoon: true },
+                { title: 'XML 格式化', comingSoon: true },
+                { title: 'MIME 类型', comingSoon: true },
+                { title: 'User-Agent 解析', comingSoon: true },
+                { title: 'YAML 转换', comingSoon: true },
+                { title: 'JSONPath 查询', comingSoon: true },
+                { title: 'CSS 压缩', comingSoon: true },
+                { title: 'JS 压缩', comingSoon: true },
+                { title: 'HTML 美化', comingSoon: true },
+                { title: '代码混淆', comingSoon: true },
+                { title: 'ASCII 艺术字', comingSoon: true },
+                { title: 'Lorem Ipsum', comingSoon: true }
+            ]
+        },
+        {
+            category: 'text',
+            titleKey: 'section.text',
+            defaultTitle: '文本工具',
+            tools: [
+                { title: '字数统计', tool: 'wordcount' },
+                { title: '文本对比', comingSoon: true },
+                { title: '大小写转换', comingSoon: true },
+                { title: '文本去重', comingSoon: true },
+                { title: '文本反转', comingSoon: true },
+                { title: '繁简转换', comingSoon: true },
+                { title: '拼音转换', comingSoon: true },
+                { title: '字符替换', comingSoon: true },
+                { title: '行排序', comingSoon: true },
+                { title: '进制转换', comingSoon: true },
+                { title: '文本加密', comingSoon: true },
+                { title: '文本转语音', comingSoon: true },
+                { title: '文本脱敏', comingSoon: true },
+                { title: '随机文本', comingSoon: true },
+                { title: '文本分行', comingSoon: true },
+                { title: '空格删除', comingSoon: true },
+                { title: '全角半角转换', comingSoon: true },
+                { title: 'Markdown 预览', comingSoon: true },
+                { title: '文本拼接', comingSoon: true },
+                { title: '文本截取', comingSoon: true },
+                { title: '关键词提取', comingSoon: true },
+                { title: '文本摘要', comingSoon: true },
+                { title: '字频统计', comingSoon: true },
+                { title: '文本 Diff', comingSoon: true }
+            ]
+        },
+        {
+            category: 'design',
+            titleKey: 'section.design',
+            defaultTitle: '设计美化',
+            tools: [
+                { title: '颜色选择器', tool: 'color' },
+                { title: 'CSS 渐变生成', comingSoon: true },
+                { title: '阴影生成器', comingSoon: true },
+                { title: 'SVG 优化', comingSoon: true },
+                { title: '屏幕取色器', comingSoon: true },
+                { title: '调色板生成', comingSoon: true },
+                { title: '字体预览', comingSoon: true },
+                { title: '圆角生成器', comingSoon: true },
+                { title: 'Favicon 生成', comingSoon: true },
+                { title: '图片转 Base64', comingSoon: true },
+                { title: 'CSS 单位转换', comingSoon: true },
+                { title: '渐变色卡', comingSoon: true },
+                { title: '图片占位符', comingSoon: true },
+                { title: '按钮生成器', comingSoon: true },
+                { title: 'CSS 动画生成', comingSoon: true },
+                { title: '网格生成器', comingSoon: true },
+                { title: '渐变文字', comingSoon: true },
+                { title: '边框生成器', comingSoon: true },
+                { title: '贝塞尔曲线', comingSoon: true },
+                { title: '响应式预览', comingSoon: true },
+                { title: '色值转换', comingSoon: true },
+                { title: '配色方案', comingSoon: true }
+            ]
+        },
+        {
+            category: 'gen',
+            titleKey: 'section.gen',
+            defaultTitle: '生成工具',
+            tools: [
+                { title: 'UUID 生成器', tool: 'uuid' },
+                { title: '随机密码生成', tool: 'password' },
+                { title: '二维码生成', comingSoon: true },
+                { title: '条形码生成', comingSoon: true },
+                { title: '验证码生成', comingSoon: true },
+                { title: 'Lorem 占位文本', comingSoon: true },
+                { title: '名字生成', comingSoon: true },
+                { title: 'IP 地址生成', comingSoon: true },
+                { title: '颜色生成', comingSoon: true },
+                { title: '数字序列生成', comingSoon: true },
+                { title: '邮箱生成', comingSoon: true },
+                { title: '手机号生成', comingSoon: true },
+                { title: '时间生成', comingSoon: true },
+                { title: '字符串生成', comingSoon: true },
+                { title: 'GUID 生成', comingSoon: true },
+                { title: '雪花 ID 生成', comingSoon: true },
+                { title: '密钥生成', comingSoon: true },
+                { title: '证书生成', comingSoon: true },
+                { title: '身份证生成', comingSoon: true },
+                { title: '地址生成', comingSoon: true },
+                { title: '像素画生成', comingSoon: true }
+            ]
+        },
+        {
+            category: 'convert',
+            titleKey: 'section.convert',
+            defaultTitle: '转换工具',
+            tools: [
+                { title: 'PDF 转 Word', comingSoon: true },
+                { title: 'Markdown 编辑器', comingSoon: true },
+                { title: '文档格式转换', comingSoon: true },
+                { title: '表格生成', comingSoon: true },
+                { title: '思维导图', comingSoon: true },
+                { title: 'CSV 转 JSON', comingSoon: true },
+                { title: 'JSON 转 CSV', comingSoon: true },
+                { title: 'Excel 转 JSON', comingSoon: true },
+                { title: 'HTML 转 Markdown', comingSoon: true },
+                { title: 'YAML 转 JSON', comingSoon: true },
+                { title: 'XML 转 JSON', comingSoon: true },
+                { title: '流程图绘制', comingSoon: true },
+                { title: 'JSON 转 XML', comingSoon: true },
+                { title: 'JSON 转 YAML', comingSoon: true },
+                { title: 'HTML 转文本', comingSoon: true },
+                { title: 'BBCode 转 HTML', comingSoon: true },
+                { title: 'PDF 转 HTML', comingSoon: true },
+                { title: 'Word 转 PDF', comingSoon: true },
+                { title: '图片转 PDF', comingSoon: true },
+                { title: 'PDF 合并', comingSoon: true },
+                { title: 'PDF 拆分', comingSoon: true }
+            ]
+        },
+        {
+            category: 'net',
+            titleKey: 'section.net',
+            defaultTitle: '网络工具',
+            tools: [
+                { title: 'IP 查询', comingSoon: true },
+                { title: 'DNS 查询', comingSoon: true },
+                { title: '域名 Whois', comingSoon: true },
+                { title: 'HTTP 请求测试', comingSoon: true },
+                { title: '端口扫描', comingSoon: true },
+                { title: '网速测试', comingSoon: true },
+                { title: 'SSL 检测', comingSoon: true },
+                { title: '短链生成', comingSoon: true },
+                { title: '子网计算', comingSoon: true },
+                { title: 'MAC 地址查询', comingSoon: true },
+                { title: '路由追踪', comingSoon: true },
+                { title: 'Ping 测试', comingSoon: true },
+                { title: 'Header 查看', comingSoon: true },
+                { title: 'WebSocket 测试', comingSoon: true },
+                { title: 'Cookie 编辑', comingSoon: true },
+                { title: '端口转发', comingSoon: true },
+                { title: 'IP 归属地', comingSoon: true },
+                { title: '域名解析', comingSoon: true },
+                { title: 'CDN 检测', comingSoon: true },
+                { title: '网站测速', comingSoon: true }
+            ]
+        },
+        {
+            category: 'office',
+            titleKey: 'section.office',
+            defaultTitle: '办公效率',
+            tools: [
+                { title: '日历生成', comingSoon: true },
+                { title: '倒计时器', comingSoon: true },
+                { title: '计算器', comingSoon: true },
+                { title: '单位换算', comingSoon: true },
+                { title: '汇率转换', comingSoon: true },
+                { title: '世界时钟', comingSoon: true },
+                { title: '番茄钟', comingSoon: true },
+                { title: '备忘录', comingSoon: true },
+                { title: '排班表', comingSoon: true },
+                { title: '扫描计数', comingSoon: true },
+                { title: '名片识别', comingSoon: true },
+                { title: '发票识别', comingSoon: true },
+                { title: '文字识别 OCR', comingSoon: true },
+                { title: '翻译工具', comingSoon: true },
+                { title: '计数器', comingSoon: true },
+                { title: '批量重命名', comingSoon: true },
+                { title: '电子签名', comingSoon: true },
+                { title: '文档加密', comingSoon: true },
+                { title: '日程管理', comingSoon: true },
+                { title: '会议记录', comingSoon: true }
+            ]
+        },
+        {
+            category: 'media',
+            titleKey: 'section.media',
+            defaultTitle: '多媒体处理',
+            tools: [
+                { title: '图片压缩', comingSoon: true },
+                { title: '视频转 GIF', comingSoon: true },
+                { title: '图片格式转换', comingSoon: true },
+                { title: '图片裁剪', comingSoon: true },
+                { title: '音频转换', comingSoon: true },
+                { title: '图片加水印', comingSoon: true },
+                { title: '图片旋转', comingSoon: true },
+                { title: '图片拼接', comingSoon: true },
+                { title: '音频剪辑', comingSoon: true },
+                { title: '视频剪辑', comingSoon: true },
+                { title: '图片滤镜', comingSoon: true },
+                { title: '图片缩放', comingSoon: true },
+                { title: 'GIF 制作', comingSoon: true },
+                { title: '音频提取', comingSoon: true },
+                { title: '视频压缩', comingSoon: true },
+                { title: '图片转 PDF', comingSoon: true },
+                { title: '图片文字识别', comingSoon: true },
+                { title: '视频转码', comingSoon: true },
+                { title: '图片去背景', comingSoon: true },
+                { title: '音频混音', comingSoon: true }
+            ]
+        }
+    ];
+
+    // 渲染工具卡片到各分类的 .grid-container，并在末尾追加"添加工具"按钮
+    function renderToolsCards() {
+        TOOLS_DATA.forEach(group => {
+            const groupEl = document.querySelector('#toolsView .tool-group[data-category="' + group.category + '"]');
+            if (!groupEl) return;
+            const grid = groupEl.querySelector('.grid-container');
+            if (!grid) return;
+            const html = group.tools.map(tool => {
+                if (tool.comingSoon) {
+                    return '<a class="card-item" role="button" tabindex="0" data-coming-soon="' + escapeHtml(tool.title) + '" data-title="' + escapeHtml(tool.title) + '" title="' + escapeHtml(tool.title) + '"><div class="card-info"><div class="card-title">' + escapeHtml(tool.title) + '</div></div></a>';
+                }
+                return '<a class="card-item" role="button" tabindex="0" data-tool="' + escapeHtml(tool.tool) + '" data-title="' + escapeHtml(tool.title) + '" title="' + escapeHtml(tool.title) + '"><div class="card-info"><div class="card-title">' + escapeHtml(tool.title) + '</div></div></a>';
+            }).join('');
+            const addCardHtml = '<button class="add-card" data-category="' + group.category + '" data-i18n-title="tools.addTool" title="添加工具"><div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div><div class="add-card-title" data-i18n="tools.addTool">添加工具</div></button>';
+            grid.innerHTML = html + addCardHtml;
+        });
+    }
+
+    // 先渲染工具卡片，确保后续 add-card 事件绑定能找到动态生成的按钮
+    renderToolsCards();
+
     // ==================== 分类筛选 + 2行限制 ====================
     let currentCategory = 'all';
 
@@ -124,7 +377,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('#toolsView .more-btn[data-target-category]').forEach(btn => {
         btn.addEventListener('click', () => {
             const targetCat = btn.dataset.targetCategory;
-            const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
+            // 使用 dataset 比较而非字符串拼接选择器，防止 targetCat 含特殊字符导致注入
+            const targetNavBtn = Array.from(document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]'))
+                .find(c => c.dataset.category === targetCat);
             if (targetNavBtn) {
                 targetNavBtn.click();
             }

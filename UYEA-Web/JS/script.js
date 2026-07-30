@@ -203,41 +203,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 手机端搜索提交
-    function executeMobileSearch() {
-        if (!mobileSearchInput) return;
-        const query = mobileSearchInput.value.trim();
-        if (!query) return;
-
-        if (current === 'site') {
-            mobileSearchInput.value = '';
-            const subtitle = document.getElementById('searchResultsSubtitle');
-            if (subtitle) {
-                const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
-                subtitle.textContent = msgs['search.loading'] || '搜索中...';
-            }
-            showSearchView(query);
-            loadSiteSearchData().then(() => {
-                renderSiteSearchResults(query);
-            });
-        } else {
-            const engineUrl = UYEA_CONFIG.getSearchEngineUrl(current);
-            if (engineUrl) {
-                window.open(engineUrl + encodeURIComponent(query), '_blank');
-            }
-        }
-        if (mobileSearchPanel) mobileSearchPanel.classList.remove('show');
-        if (mobileSearchToggle) mobileSearchToggle.classList.remove('active');
-    }
-
     if (mobileSearchSubmit) {
-        mobileSearchSubmit.addEventListener('click', executeMobileSearch);
+        mobileSearchSubmit.addEventListener('click', () => {
+            executeSearch(mobileSearchInput);
+            if (mobileSearchPanel) mobileSearchPanel.classList.remove('show');
+            if (mobileSearchToggle) mobileSearchToggle.classList.remove('active');
+        });
     }
     if (mobileSearchInput) {
         mobileSearchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                executeMobileSearch();
+                executeSearch(mobileSearchInput);
+                if (mobileSearchPanel) mobileSearchPanel.classList.remove('show');
+                if (mobileSearchToggle) mobileSearchToggle.classList.remove('active');
             }
         });
     }
@@ -547,15 +526,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==================== 开发中功能：显示成就式提示弹窗 ====================
-    document.querySelectorAll('[data-coming-soon]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const name = btn.getAttribute('data-coming-soon') || btn.dataset.title || '';
-            const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
-            if (typeof window.showAchievement === 'function') {
-                window.showAchievement(msgs['toast.comingSoon'] || '正在完善中', name + (msgs['toast.comingSoonDesc'] || ' · 正在开发中，敬请期待'));
-            }
-        });
+    // 使用 document 级事件委托，确保 tools.js 等动态生成的 [data-coming-soon] 元素也能触发
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-coming-soon]');
+        if (!btn) return;
+        e.preventDefault();
+        const name = btn.getAttribute('data-coming-soon') || btn.dataset.title || '';
+        const msgs = UYEA_CONFIG.i18n[window.currentLang] || UYEA_CONFIG.i18n[UYEA_CONFIG.defaultLanguage];
+        if (typeof window.showAchievement === 'function') {
+            window.showAchievement(msgs['toast.comingSoon'] || '正在完善中', name + (msgs['toast.comingSoonDesc'] || ' · 正在开发中，敬请期待'));
+        }
     });
 
     // ==================== ESC键 + 点击外部关闭所有下拉菜单 ====================
@@ -745,7 +725,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('#navView .more-btn[data-target-category]').forEach(btn => {
         btn.addEventListener('click', () => {
             const targetCat = btn.dataset.targetCategory;
-            const targetNavBtn = document.querySelector(`#bottomNav .bottom-nav-item[data-category="${targetCat}"]`);
+            // 使用 dataset 比较而非字符串拼接选择器，防止 targetCat 含特殊字符导致注入
+            const targetNavBtn = Array.from(document.querySelectorAll('#bottomNav .bottom-nav-item[data-category]'))
+                .find(c => c.dataset.category === targetCat);
             if (targetNavBtn) targetNavBtn.click();
         });
     });
