@@ -441,6 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tool.init(toolBody);
         } catch (e) {
             console.error('工具初始化失败:', e);
+            toolBody.innerHTML = '<div class="tool-error show" style="padding:20px;text-align:center;color:var(--text-muted)">工具加载失败，请刷新页面重试</div>';
         }
         toolOverlay.classList.add('show');
         toolModal.classList.add('show');
@@ -1342,7 +1343,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 行数
             elLines.textContent = t === '' ? 0 : t.split(/\r?\n/).length;
         }
-        input.addEventListener('input', update);
+        input.addEventListener('input', UYEA_UTILS.debounce(update, 300));
         root.querySelector('#wcClear').addEventListener('click', () => {
             input.value = ''; update(); input.focus();
         });
@@ -1382,6 +1383,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const error = root.querySelector('#pwError');
         const SYMBOLS = '!@#$%^&*()-_=+[]{}|;:,.<>?';
         function secureRandInt(max) {
+            // 快速路径：max<=1 时无需随机，直接返回 0
+            if (max <= 1) return 0;
             // 拒绝采样：消除 % 取模偏差，保证密码学均匀性
             if (!window.crypto || !window.crypto.getRandomValues) {
                 throw new Error('NO_CRYPTO');
@@ -1411,16 +1414,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 output.value = '';
                 return;
             }
+            // 收集每种已选字符类型的字符集，用于保证每种类型至少出现一次
+            const typePools = [];
+            if (root.querySelector('#pwLower').checked) typePools.push('abcdefghijklmnopqrstuvwxyz');
+            if (root.querySelector('#pwUpper').checked) typePools.push('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+            if (root.querySelector('#pwDigit').checked) typePools.push('0123456789');
+            if (root.querySelector('#pwSymbol').checked) typePools.push(SYMBOLS);
             const n = parseInt(lenSlider.value, 10);
-            let pwd = '';
             try {
-                for (let i = 0; i < n; i++) pwd += pool[secureRandInt(pool.length)];
+                const chars = [];
+                // 1. 先从每种已选类型各取一个字符，保证类型覆盖
+                const guaranteed = Math.min(typePools.length, n);
+                for (let i = 0; i < guaranteed; i++) {
+                    chars.push(typePools[i][secureRandInt(typePools[i].length)]);
+                }
+                // 2. 剩余位从全池随机选取
+                for (let i = chars.length; i < n; i++) {
+                    chars.push(pool[secureRandInt(pool.length)]);
+                }
+                // 3. Fisher-Yates 洗牌打乱顺序
+                for (let i = chars.length - 1; i > 0; i--) {
+                    const j = secureRandInt(i + 1);
+                    const tmp = chars[i];
+                    chars[i] = chars[j];
+                    chars[j] = tmp;
+                }
+                output.value = chars.join('');
             } catch (e) {
                 showError(error, '生成失败：' + e.message);
                 output.value = '';
                 return;
             }
-            output.value = pwd;
         }
         lenSlider.addEventListener('input', () => { lenLabel.textContent = lenSlider.value; });
         root.querySelector('#pwGen').addEventListener('click', generate);

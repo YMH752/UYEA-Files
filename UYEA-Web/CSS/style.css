@@ -890,7 +890,7 @@ html[data-theme="coffee"] .mobile-engine-option.active {
 .dropdown-menu {
     display: none;
     position: fixed;
-    top: var(--header-h);
+    top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
     left: 0; right: 0;
     border-bottom: 1px solid var(--glass-border);
     z-index: 999;
@@ -1689,7 +1689,7 @@ html[data-theme="coffee"] .theme-icon-coffee { display: block; }
 .bg-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
+    filter: blur(50px);
     opacity: 0.4;
     animation: orbFloat 20s ease-in-out infinite;
     will-change: transform;

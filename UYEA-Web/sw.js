@@ -1,5 +1,5 @@
 /*
- * UYEA 悠野社区 - Service Worker v0.7.0
+ * UYEA 悠野社区 - Service Worker v0.8.1
  * 缓存优先策略，支持离线访问
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
@@ -108,7 +108,7 @@ self.addEventListener('fetch', (event) => {
         } catch (e) {
           const cached = await caches.match(request);
           if (cached) return cached;
-          const indexCache = await caches.match('/index.html');
+          const indexCache = await caches.match('/');
           if (indexCache) return indexCache;
           // 兜底：构造离线提示页面，避免返回 undefined 导致 TypeError
           return new Response('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>离线</title></head><body style="font-family:sans-serif;text-align:center;padding:40px"><h1>您当前处于离线状态</h1><p>请检查网络连接后重试</p></body></html>', {
@@ -133,10 +133,18 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        // 离线时回退到缓存；无缓存则返回带 offline 标识的空数据（避免 Response.error() 导致消费者崩溃）
-        .catch(() => caches.match(request).then(cached => cached || new Response('{"offline":true,"data":[]}', {
-          headers: { 'Content-Type': 'application/json' }
-        })))
+        // 离线时回退到缓存；无缓存则按 URL 返回正确结构的空数据
+        // （posts.json 是数组、navigation.json 是对象，避免消费者解析崩溃）
+        .catch(() => caches.match(request).then(cached => {
+          if (cached) return cached;
+          const url = request.url;
+          const fallback = url.includes('posts') ? '[]'
+            : url.includes('navigation') ? '{}'
+            : '{"offline":true,"data":[]}';
+          return new Response(fallback, {
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }))
     );
     return;
   }
@@ -173,7 +181,7 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => caches.match('/index.html').then(cached => cached || new Response('', { status: 504, statusText: 'Gateway Timeout' })))
+        .catch(() => caches.match('/').then(cached => cached || new Response('', { status: 504, statusText: 'Gateway Timeout' })))
     })
   );
 });

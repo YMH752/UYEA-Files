@@ -112,10 +112,12 @@
     // ==================== 帖子卡片 HTML 渲染（forum.js / script.js 共用） ====================
     function renderPostCard(post, lang) {
         var tagHtml = '<span class="post-tag">' + escapeHtml(translateTag(post.tag, lang)) + '</span>';
+        // 协议白名单校验：仅允许 http(s)://、相对路径(/) 和锚点(#)，防止 javascript:/data: 等导致 XSS
+        var safeUrl = /^(https?:\/\/|\/|#)/.test(post.url || '') ? post.url : '#';
         // "#" 或空 URL 视为无链接，使用 href="#" 避免页面跳转和空白标签页
-        var hasUrl = post.url && post.url !== '#';
-        var href = hasUrl ? escapeHtml(post.url) : '#';
-        var targetAttr = hasUrl ? ' target="_blank" rel="noopener"' : '';
+        var hasUrl = safeUrl && safeUrl !== '#';
+        var href = hasUrl ? escapeHtml(safeUrl) : '#';
+        var targetAttr = hasUrl ? ' target="_blank" rel="noopener noreferrer"' : '';
         return '<a href="' + href + '" class="post-item"' + targetAttr + '>' +
             '<div class="post-meta">' +
                 tagHtml +

@@ -6,7 +6,7 @@
 /index.html / 301
 
 # clean URL 重定向到首页（带hash路由，SPA读取后自动切换视图）
-/forum / 301
+/forum /#/ 301
 /navigation /#/nav 301
 /tools /#/tools 301
 

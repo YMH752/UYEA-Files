@@ -20,3 +20,7 @@ uyea-test-forum.png
 # 下载的仓库压缩包和解压目录（临时文件，不应提交）
 repo.zip
 extracted/
+
+# Git 操作产生的临时日志文件
+fetch_err.txt
+fetch_out.txt

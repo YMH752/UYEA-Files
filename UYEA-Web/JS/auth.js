@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('[auth] UYEA_UTILS 未加载，鉴权模块初始化失败');
         return;
     }
+    if (!window.UYEA_CONFIG) {
+        console.error('[auth] UYEA_CONFIG 未加载，鉴权模块初始化失败');
+        return;
+    }
     const { safeGetItem, safeSetItem, safeRemoveItem, escapeHtml, t } = window.UYEA_UTILS;
 
     // ==================== 密码哈希（PBKDF2 加盐） ====================
@@ -110,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (e) {
                 // PBKDF2 在非 HTTPS 环境会失败，留待下次 HTTPS 环境重试
                 console.warn('[auth] 内置 admin 账号初始化失败（可能为非 HTTPS 环境）:', e);
+                adminInitPromise = null; // 失败时重置，允许后续重试
             }
         })();
         return adminInitPromise;
@@ -156,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveRegisteredUsers(registeredUsers) {
         safeSetItem(STORAGE_KEYS.users, JSON.stringify(registeredUsers));
         usersCache = null; // 清除缓存，下次重新加载
+        usersPromise = null; // 重置进行中的 fetch，确保新注册用户可立即登录
     }
 
     // ==================== 会话管理 ====================
@@ -659,7 +665,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (authOverlay) authOverlay.classList.add('show');
         if (authModal) authModal.classList.add('show');
         document.body.style.overflow = 'hidden';
-        const userBtn = document.querySelector('.user-btn');
         if (userBtn) userBtn.classList.add('active');
     }
 
@@ -679,7 +684,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (authOverlay) authOverlay.classList.remove('show');
         if (authModal) authModal.classList.remove('show');
         document.body.style.overflow = '';
-        const userBtn = document.querySelector('.user-btn');
         if (userBtn) userBtn.classList.remove('active');
         // 重置滑动面板到登录位置
         if (typeof window._authSlideReset === 'function') window._authSlideReset();
@@ -754,6 +758,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const user = users.find(u => u.email === email || u.username === email);
                 // 安全考虑：账号不存在与密码错误统一返回相同提示，防止账号枚举
                 if (!user) {
+                    // 执行一次 dummy hash 计算消除时序侧信道，使账号不存在与密码错误耗时一致
+                    await hashPassword(password, generateSalt());
                     showAuthError('loginError', t('auth.errorPasswordWrong'));
                     submitBtn.disabled = false;
                     submitBtn.textContent = t('auth.login');
@@ -999,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // 构造新用户记录：仅存储 salt/hash/iterations，不存储明文密码
                 const newUser = {
-                    id: Date.now(),
+                    id: crypto.randomUUID ? crypto.randomUUID() : (Date.now() + '-' + Math.random().toString(36).slice(2,8)),
                     username,
                     nickname,
                     email: '',

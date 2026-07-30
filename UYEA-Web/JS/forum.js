@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
         window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'forum' } }));
         return;
     }
+    if (!window.UYEA_CONFIG) {
+        console.error('[forum] UYEA_CONFIG 未加载，论坛模块初始化失败');
+        window.dispatchEvent(new CustomEvent('uyea:moduleReady', { detail: { module: 'forum' } }));
+        return;
+    }
     // 引用共享工具函数
     const { escapeHtml: esc, t, renderPostCard } = window.UYEA_UTILS;
 
@@ -42,7 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const posts = await UYEA_UTILS.fetchJsonCached(UYEA_CONFIG.dataFiles.posts);
-            if (!Array.isArray(posts) || posts.length === 0) throw new Error('无帖子数据');
+            if (!Array.isArray(posts) || posts.length === 0) {
+                allPosts = [];
+                renderPosts([]);
+                list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;">暂无帖子</div>';
+                return;
+            }
 
             allPosts = posts;
             filterPosts();
