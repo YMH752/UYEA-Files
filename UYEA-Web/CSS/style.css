@@ -1875,11 +1875,11 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     color: var(--accent-3);
 }
 
-/* 手机端：隐藏凸透镜指示器，改用激活项自带胶囊高亮，适配小屏 */
-@media (max-width: 600px) {
-    .bottom-nav-item { padding: 8px 18px; }
-    .bottom-nav { bottom: 12px; gap: 6px; padding: 7px; }
-    /* 隐藏滑动指示器，小屏不适用 */
+/* 手机/平板端（≤900px）：隐藏凸透镜指示器，改用激活项自带胶囊高亮，适配中小屏 */
+@media (max-width: 900px) {
+    .bottom-nav-item { padding: 8px 16px; }
+    .bottom-nav { bottom: 12px; gap: 5px; padding: 7px; }
+    /* 隐藏滑动指示器，中小屏不适用 */
     .bottom-nav-indicator { display: none !important; }
     /* 激活项自带胶囊背景 */
     .bottom-nav-item.active {
@@ -1947,9 +1947,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     /* 帖子列表间距优化 */
     .post-item { padding: 16px 18px; }
     .section-group { margin-bottom: 24px; }
-    /* 底部导航间距优化 */
-    .bottom-nav { gap: 5px; padding: 8px; }
-    .bottom-nav-item { padding: 8px 14px; }
+    /* 底部导航已由 ≤900px 媒体查询统一处理，此处不再覆盖 */
 }
 
 /* 平板竖屏窄边（768px-900px）：使用手机搜索按钮时的优化 */
@@ -1985,9 +1983,8 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     .post-title { font-size: 14px; }
     .post-excerpt { font-size: 12px; -webkit-line-clamp: 2; }
     .section-title { font-size: clamp(20px, 5vw, 24px); }
-    /* 底部导航保持可读性，最小11px；加宽间距触发横滑 */
-    .bottom-nav-item { padding: 7px 14px; font-size: 11px; }
-    .bottom-nav { gap: 4px; padding: 6px; }
+    /* 底部导航：≤900px已统一处理，此处仅缩字号 */
+    .bottom-nav-item { font-size: 11px; }
     /* 窄屏保持2列，缩小图标 */
     .grid-container { grid-template-columns: repeat(2, 1fr); gap: 0 12px; }
     .card-item { padding: 5px 4px; }
@@ -1997,7 +1994,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 /* 超小屏（380px）：隐藏非核心元素 */
 @media (max-width: 380px) {
     .lang-selector { display: none; }
-    .bottom-nav-item { padding: 6px 12px; font-size: 12px; }
+    .bottom-nav-item { font-size: 12px; }
     .header-right { gap: 4px; }
     .card-icon { width: 34px; height: 34px; font-size: 20px; }
     .card-item { padding: 4px 7px; gap: 5px; }
@@ -2010,8 +2007,8 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     .logo-text { font-size: 20px; letter-spacing: 1px; }
     .post-item { padding: 10px 12px; }
     .post-title { font-size: 13px; }
-    .bottom-nav { padding: 5px; gap: 3px; max-width: calc(100vw - 16px); }
-    .bottom-nav-item { padding: 5px 10px; font-size: 12px; }
+    /* 底部导航：≤900px已统一处理，超小屏仅缩容器 */
+    .bottom-nav { max-width: calc(100vw - 16px); }
     .back-to-top { right: 10px; bottom: 100px; }
 }
 
@@ -2020,8 +2017,8 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     .top-header { height: 48px; }
     :root { --header-h: 48px; }
     .main-content { padding-top: 12px; padding-bottom: 90px; min-height: calc(100vh - 48px); }
-    .bottom-nav { bottom: 8px; padding: 5px; gap: 3px; }
-    .bottom-nav-item { padding: 5px 10px; font-size: 12px; }
+    /* 底部导航：≤900px已统一处理，横屏仅调整位置 */
+    .bottom-nav { bottom: 8px; }
     .back-to-top { bottom: 70px; width: 44px; height: 44px; }
     .section-group { margin-bottom: 16px; }
     .card-item { padding: 5px 4px; }
