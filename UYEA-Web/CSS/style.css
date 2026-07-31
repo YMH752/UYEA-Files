@@ -1829,7 +1829,7 @@ html[data-theme="coffee"] .bottom-nav-indicator {
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    padding: 8px 20px;
+    padding: 8px 12px;
     border: none;
     background: transparent;
     color: var(--text-muted);
@@ -1876,7 +1876,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 }
 
 @media (max-width: 600px) {
-    .bottom-nav-item { padding: 6px 14px; }
+    .bottom-nav-item { padding: 6px 10px; }
     .bottom-nav { bottom: 12px; gap: 2px; padding: 6px; }
 }
 
@@ -1929,7 +1929,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     .section-group { margin-bottom: 24px; }
     /* 底部导航间距优化 */
     .bottom-nav { gap: 4px; padding: 7px; }
-    .bottom-nav-item { padding: 7px 16px; }
+    .bottom-nav-item { padding: 7px 10px; }
 }
 
 /* 平板竖屏窄边（768px-900px）：使用手机搜索按钮时的优化 */
@@ -1966,7 +1966,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     .post-excerpt { font-size: 12px; -webkit-line-clamp: 2; }
     .section-title { font-size: clamp(20px, 5vw, 24px); }
     /* 底部导航保持可读性，最小11px */
-    .bottom-nav-item { padding: 6px 12px; font-size: 11px; }
+    .bottom-nav-item { padding: 6px 8px; font-size: 11px; }
     .bottom-nav { gap: 2px; padding: 5px; }
     /* 窄屏保持2列，缩小图标 */
     .grid-container { grid-template-columns: repeat(2, 1fr); gap: 0 12px; }
@@ -1991,7 +1991,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     .post-item { padding: 10px 12px; }
     .post-title { font-size: 13px; }
     .bottom-nav { padding: 4px; gap: 1px; max-width: calc(100vw - 16px); }
-    .bottom-nav-item { padding: 4px 8px; font-size: 12px; }
+    .bottom-nav-item { padding: 4px 6px; font-size: 12px; }
     .back-to-top { right: 10px; bottom: 100px; }
 }
 
@@ -2001,7 +2001,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     :root { --header-h: 48px; }
     .main-content { padding-top: 12px; padding-bottom: 90px; min-height: calc(100vh - 48px); }
     .bottom-nav { bottom: 8px; padding: 4px; }
-    .bottom-nav-item { padding: 4px 12px; font-size: 12px; }
+    .bottom-nav-item { padding: 4px 8px; font-size: 12px; }
     .back-to-top { bottom: 70px; width: 44px; height: 44px; }
     .section-group { margin-bottom: 16px; }
     .card-item { padding: 5px 4px; }
