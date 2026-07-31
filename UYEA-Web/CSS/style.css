@@ -415,10 +415,10 @@ a { color: var(--primary); text-decoration: none; }
     align-items: center;
     justify-content: center;
     gap: 4px;
-    min-width: 44px;       /* 中文单字（中/繁）固定宽度基准 */
+    min-width: 34px;       /* 中文单字（中/繁）固定宽度基准 */
     width: auto;
     height: 44px;
-    padding: 0 8px;
+    padding: 0 6px;
     background: transparent;
     border: none;
     border-radius: 10px;
@@ -561,8 +561,8 @@ a { color: var(--primary); text-decoration: none; }
     align-items: center;
     justify-content: center;
     gap: 4px;
-    padding: 0 12px;
-    min-width: 76px;       /* 中文两字（百度/站内）固定宽度基准 */
+    padding: 0 8px;
+    min-width: 56px;       /* 中文两字（百度/站内）固定宽度基准 */
     width: auto;
     height: 100%;
     border-right: 1px solid var(--border);
@@ -2251,7 +2251,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 }
 
 /* ========== 认证弹窗 ========== */
-.auth-modal { width: min(92vw, 400px); min-height: 480px; }
+.tool-modal.auth-modal { width: min(88vw, 340px); min-height: 440px; }
 /* 浮动关闭按钮（右上角） */
 .auth-close-btn {
     position: absolute;
@@ -2712,7 +2712,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 
 /* 认证弹窗响应式 */
 @media (max-width: 600px) {
-    .auth-modal { width: 96vw; max-height: 92vh; min-height: min(480px, 92vh); }
+    .tool-modal.auth-modal { width: 92vw; max-height: 92vh; min-height: min(440px, 92vh); }
     .homepage-guide-url { flex-direction: column; }
     .homepage-url-input { width: 100%; }
     .hp-detected-banner { font-size: 12px; }
