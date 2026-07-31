@@ -1770,7 +1770,7 @@ html[data-theme="coffee"] .bg-orb-3 {
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     padding: 8px;
     background: var(--glass-bg-strong);
     backdrop-filter: var(--glass-blur);
@@ -1875,9 +1875,16 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     color: var(--accent-3);
 }
 
+/* 手机端：指示器收窄，防止与相邻分类重叠 */
 @media (max-width: 600px) {
-    .bottom-nav-item { padding: 7px 12px; }
-    .bottom-nav { bottom: 12px; gap: 3px; padding: 7px; }
+    .bottom-nav-item { padding: 6px 10px; }
+    .bottom-nav { bottom: 12px; gap: 2px; padding: 6px; }
+    .bottom-nav-indicator {
+        min-width: 44px;
+        width: 44px;
+        height: 46px;
+        border-radius: 18px;
+    }
 }
 
 /* 移动端 backdrop-filter 降级（性能优化）
