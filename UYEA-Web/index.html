@@ -26,8 +26,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.8.1" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.8.1" as="script" fetchpriority="high">
+    <link rel="preload" href="/CSS/style.css?v=0.8.2" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.8.2" as="script" fetchpriority="high">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -133,7 +133,7 @@
         }
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.8.1" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.8.2" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -533,6 +533,14 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                 <span data-i18n="bottom.favorite">收藏</span>
             </button>
+            <button class="bottom-nav-item" data-tab="qa">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span data-i18n="bottom.qa">答疑</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="resources">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <span data-i18n="bottom.resources">资源</span>
+            </button>
         </nav>
     </main>
 
@@ -570,13 +578,13 @@
         </div>
     </div>
 
-    <script src="/JS/config.js?v=0.8.1" defer></script>
-    <script src="/JS/utils.js?v=0.8.1" defer></script>
-    <script src="/JS/liquid-glass.js?v=0.8.1" defer></script>
-    <script src="/JS/script.js?v=0.8.1" defer></script>
-    <script src="/JS/tools.js?v=0.8.1" defer></script>
-    <script src="/JS/forum.js?v=0.8.1" defer></script>
-    <script src="/JS/auth.js?v=0.8.1" defer></script>
+    <script src="/JS/config.js?v=0.8.2" defer></script>
+    <script src="/JS/utils.js?v=0.8.2" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.8.2" defer></script>
+    <script src="/JS/script.js?v=0.8.2" defer></script>
+    <script src="/JS/tools.js?v=0.8.2" defer></script>
+    <script src="/JS/forum.js?v=0.8.2" defer></script>
+    <script src="/JS/auth.js?v=0.8.2" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
@@ -621,6 +629,14 @@
             <button class="bottom-nav-item" data-tab="favorite">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                 <span data-i18n="bottom.favorite">收藏</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="qa">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span data-i18n="bottom.qa">答疑</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="resources">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <span data-i18n="bottom.resources">资源</span>
             </button>`,
             nav: `<button class="bottom-nav-item active" data-category="all">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>

@@ -415,7 +415,10 @@ a { color: var(--primary); text-decoration: none; }
     align-items: center;
     justify-content: center;
     gap: 4px;
-    width: 44px; height: 44px;
+    min-width: 44px;       /* 中文单字（中/繁）固定宽度基准 */
+    width: auto;
+    height: 44px;
+    padding: 0 8px;
     background: transparent;
     border: none;
     border-radius: 10px;
@@ -551,13 +554,16 @@ a { color: var(--primary); text-decoration: none; }
     box-shadow: 0 0 0 3px var(--primary-lighter), 0 0 16px var(--focus-ring);
 }
 
-/* 引擎选择器 */
+/* 引擎选择器（自适应宽度：中文固定宽度，英文按文字长度自适应） */
 .header-engine-select {
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 4px;
     padding: 0 12px;
+    min-width: 76px;       /* 中文两字（百度/站内）固定宽度基准 */
+    width: auto;
     height: 100%;
     border-right: 1px solid var(--border);
     cursor: pointer;
@@ -565,7 +571,7 @@ a { color: var(--primary); text-decoration: none; }
     font-size: 13px;
     font-weight: 600;
     white-space: nowrap;
-    transition: color var(--duration) ease;
+    transition: color var(--duration) ease, min-width var(--duration) ease;
     flex-shrink: 0;
 }
 
