@@ -1877,8 +1877,8 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 
 /* 手机端：隐藏凸透镜指示器，改用激活项自带胶囊高亮，适配小屏 */
 @media (max-width: 600px) {
-    .bottom-nav-item { padding: 7px 13px; }
-    .bottom-nav { bottom: 12px; gap: 3px; padding: 6px; }
+    .bottom-nav-item { padding: 8px 18px; }
+    .bottom-nav { bottom: 12px; gap: 6px; padding: 7px; }
     /* 隐藏滑动指示器，小屏不适用 */
     .bottom-nav-indicator { display: none !important; }
     /* 激活项自带胶囊背景 */
