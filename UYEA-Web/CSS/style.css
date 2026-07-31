@@ -1770,8 +1770,8 @@ html[data-theme="coffee"] .bg-orb-3 {
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px;
+    gap: 5px;
+    padding: 8px;
     background: var(--glass-bg-strong);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
@@ -1829,7 +1829,7 @@ html[data-theme="coffee"] .bottom-nav-indicator {
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    padding: 10px 20px;
+    padding: 9px 16px;
     border: none;
     background: transparent;
     color: var(--text-muted);
@@ -1876,8 +1876,8 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 }
 
 @media (max-width: 600px) {
-    .bottom-nav-item { padding: 8px 14px; }
-    .bottom-nav { bottom: 12px; gap: 4px; padding: 8px; }
+    .bottom-nav-item { padding: 7px 12px; }
+    .bottom-nav { bottom: 12px; gap: 3px; padding: 7px; }
 }
 
 /* 移动端 backdrop-filter 降级（性能优化）
