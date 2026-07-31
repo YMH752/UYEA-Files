@@ -1875,15 +1875,28 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     color: var(--accent-3);
 }
 
-/* 手机端：指示器收窄，防止与相邻分类重叠 */
+/* 手机端：隐藏凸透镜指示器，改用激活项自带胶囊高亮，适配小屏 */
 @media (max-width: 600px) {
-    .bottom-nav-item { padding: 6px 10px; }
-    .bottom-nav { bottom: 12px; gap: 2px; padding: 6px; }
-    .bottom-nav-indicator {
-        min-width: 44px;
-        width: 44px;
-        height: 46px;
-        border-radius: 18px;
+    .bottom-nav-item { padding: 7px 13px; }
+    .bottom-nav { bottom: 12px; gap: 3px; padding: 6px; }
+    /* 隐藏滑动指示器，小屏不适用 */
+    .bottom-nav-indicator { display: none !important; }
+    /* 激活项自带胶囊背景 */
+    .bottom-nav-item.active {
+        background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    /* 暗色主题 */
+    html[data-theme="dark"] .bottom-nav-item.active {
+        background: linear-gradient(135deg, rgba(124,156,255,0.20) 0%, rgba(255,214,110,0.10) 100%);
+        border: 1px solid var(--glass-border);
+        box-shadow: inset 0 1px 1px rgba(124,156,255,0.25), 0 2px 8px rgba(0,0,10,0.3);
+    }
+    /* 咖啡主题 */
+    html[data-theme="coffee"] .bottom-nav-item.active {
+        background: linear-gradient(135deg, rgba(255,252,248,0.18) 0%, rgba(198,134,66,0.12) 100%);
+        border: 1px solid var(--glass-border);
     }
 }
 

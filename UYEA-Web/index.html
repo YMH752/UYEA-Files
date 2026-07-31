@@ -26,8 +26,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.9.0" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.9.0" as="script" fetchpriority="high">
+    <link rel="preload" href="/CSS/style.css?v=0.9.1" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.9.1" as="script" fetchpriority="high">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -133,7 +133,7 @@
         }
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.9.0" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.9.1" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -578,13 +578,13 @@
         </div>
     </div>
 
-    <script src="/JS/config.js?v=0.9.0" defer></script>
-    <script src="/JS/utils.js?v=0.9.0" defer></script>
-    <script src="/JS/liquid-glass.js?v=0.9.0" defer></script>
-    <script src="/JS/script.js?v=0.9.0" defer></script>
-    <script src="/JS/tools.js?v=0.9.0" defer></script>
-    <script src="/JS/forum.js?v=0.9.0" defer></script>
-    <script src="/JS/auth.js?v=0.9.0" defer></script>
+    <script src="/JS/config.js?v=0.9.1" defer></script>
+    <script src="/JS/utils.js?v=0.9.1" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.9.1" defer></script>
+    <script src="/JS/script.js?v=0.9.1" defer></script>
+    <script src="/JS/tools.js?v=0.9.1" defer></script>
+    <script src="/JS/forum.js?v=0.9.1" defer></script>
+    <script src="/JS/auth.js?v=0.9.1" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
@@ -731,6 +731,8 @@
         window.updateBottomNavIndicator = function() {
             const bottomNav = document.getElementById('bottomNav');
             if (!bottomNav) return;
+            // 手机端无指示器，跳过定位计算
+            if (window.innerWidth <= 600) return;
             const activeItem = bottomNav.querySelector('.bottom-nav-item.active');
             if (!activeItem) return;
 
@@ -744,12 +746,10 @@
 
             // 计算位置（相对于bottom-nav的padding区域）
             // 指示器宽度比按钮略宽，留出视觉边距
-            // 手机端额外宽度收窄，防止与相邻分类重叠
             const navRect = bottomNav.getBoundingClientRect();
             const itemRect = activeItem.getBoundingClientRect();
             const offsetLeft = itemRect.left - navRect.left + bottomNav.scrollLeft;
-            const isMobile = window.innerWidth <= 600;
-            const extraWidth = isMobile ? 2 : 10;
+            const extraWidth = 10;
             const indicatorWidth = activeItem.offsetWidth + extraWidth;
             indicator.style.width = indicatorWidth + 'px';
             const centeredOffset = offsetLeft - extraWidth / 2;
@@ -837,6 +837,8 @@
                 // 移动阈值：超过5px才进入拖拽模式，避免误触
                 if (!isDragging) {
                     if (Math.abs(deltaX) < DRAG_THRESHOLD) return;
+                    // 手机端无指示器，不进入拖拽模式，让原生横向滚动生效
+                    if (!indicator || indicator.offsetParent === null) return;
                     isDragging = true;
                     // 添加dragging类：抑制起始位置active项的高亮样式
                     bottomNav.classList.add('dragging');
