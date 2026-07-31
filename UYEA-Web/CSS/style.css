@@ -367,7 +367,7 @@ a { color: var(--primary); text-decoration: none; }
 
 .logo-text:hover { opacity: 0.85; }
 
-.header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-left: auto; }
+.header-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; margin-left: auto; }
 
 .nav-links { display: flex; align-items: center; gap: 2px; }
 
@@ -414,11 +414,11 @@ a { color: var(--primary); text-decoration: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    min-width: 34px;       /* 中文单字（中/繁）固定宽度基准 */
+    gap: 2px;
+    min-width: 28px;       /* 中文单字（中/繁）固定宽度基准 */
     width: auto;
-    height: 44px;
-    padding: 0 6px;
+    height: 34px;
+    padding: 0 4px;
     background: transparent;
     border: none;
     border-radius: 10px;
@@ -512,7 +512,7 @@ a { color: var(--primary); text-decoration: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px; height: 40px;
+    width: 34px; height: 34px;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -561,8 +561,7 @@ a { color: var(--primary); text-decoration: none; }
     align-items: center;
     justify-content: center;
     gap: 4px;
-    padding: 0 8px;
-    min-width: 56px;       /* 中文两字（百度/站内）固定宽度基准 */
+    min-width: 44px;       /* 中文两字（百度/站内）固定宽度基准 */
     width: auto;
     height: 100%;
     border-right: 1px solid var(--border);
@@ -681,7 +680,7 @@ a { color: var(--primary); text-decoration: none; }
     display: flex; /* 默认显示，仅宽屏(≥1299px)隐藏 */
     align-items: center;
     justify-content: center;
-    width: 40px; height: 40px;
+    width: 34px; height: 34px;
     border: none;
     background: transparent;
     color: var(--text-secondary);
@@ -872,10 +871,10 @@ html[data-theme="coffee"] .mobile-engine-option.active {
 .menu-toggle {
     display: none;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
     background: none; border: none;
     cursor: pointer;
-    padding: 8px;
+    padding: 6px;
     flex-shrink: 0;
 }
 
@@ -1503,7 +1502,7 @@ html[data-theme="coffee"] .section-title {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px; height: 44px;
+    width: 34px; height: 34px;
     background: transparent;
     border: none;
     border-radius: 10px;
@@ -1949,9 +1948,9 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 /* 手机（600px）：全面收缩布局（保持44px触摸目标） */
 @media (max-width: 600px) {
     .main-content { padding: 16px 12px 110px; }
-    .header-right { gap: 4px; }
-    .theme-icon-btn { width: 40px; height: 40px; }
-    .user-btn { width: 40px; height: 40px; }
+    .header-right { gap: 3px; }
+    .theme-icon-btn { width: 30px; height: 30px; }
+    .user-btn { width: 30px; height: 30px; }
     .forum-toolbar { flex-direction: column; }
     .post-item { padding: 14px 16px; }
     .post-title { font-size: 15px; }
