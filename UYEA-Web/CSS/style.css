@@ -1770,8 +1770,8 @@ html[data-theme="coffee"] .bg-orb-3 {
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 8px;
+    gap: 8px;
+    padding: 10px;
     background: var(--glass-bg-strong);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
@@ -1795,10 +1795,10 @@ html[data-theme="coffee"] .bg-orb-3 {
     position: absolute;
     top: 50%;
     left: 0;
-    min-width: 40px; /* 最小宽度兜底，与按钮宽度匹配 */
-    width: 40px; /* 初始宽度，JS 会动态覆盖 */
-    height: 46px;
-    border-radius: 20px;
+    min-width: 64px; /* 最小宽度兜底 */
+    width: 64px; /* 初始宽度，JS 会动态覆盖 */
+    height: 54px;
+    border-radius: 24px;
     background: linear-gradient(135deg, rgba(255,255,255,0.65), rgba(255,255,255,0.45));
     border: 1px solid var(--glass-border);
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -1829,7 +1829,7 @@ html[data-theme="coffee"] .bottom-nav-indicator {
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    padding: 8px 12px;
+    padding: 10px 20px;
     border: none;
     background: transparent;
     color: var(--text-muted);
@@ -1876,8 +1876,8 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 }
 
 @media (max-width: 600px) {
-    .bottom-nav-item { padding: 6px 10px; }
-    .bottom-nav { bottom: 12px; gap: 2px; padding: 6px; }
+    .bottom-nav-item { padding: 8px 14px; }
+    .bottom-nav { bottom: 12px; gap: 4px; padding: 8px; }
 }
 
 /* 移动端 backdrop-filter 降级（性能优化）
@@ -2250,7 +2250,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 }
 
 /* ========== 认证弹窗 ========== */
-.tool-modal.auth-modal { width: min(88vw, 340px); min-height: 440px; }
+.tool-modal.auth-modal { width: min(84vw, 280px); min-height: 400px; }
 /* 浮动关闭按钮（右上角） */
 .auth-close-btn {
     position: absolute;
@@ -2711,7 +2711,7 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 
 /* 认证弹窗响应式 */
 @media (max-width: 600px) {
-    .tool-modal.auth-modal { width: 92vw; max-height: 92vh; min-height: min(440px, 92vh); }
+    .tool-modal.auth-modal { width: 88vw; max-height: 92vh; min-height: min(400px, 92vh); }
     .homepage-guide-url { flex-direction: column; }
     .homepage-url-input { width: 100%; }
     .hp-detected-banner { font-size: 12px; }
