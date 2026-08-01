@@ -3,7 +3,11 @@
  * 论坛页右侧小组件系统：固定显示、可编辑、本地持久化
  */
 
+let __widgetsInitialized = false;
+
 function initWidgets() {
+    if (__widgetsInitialized) return;
+
     const STORAGE_KEY = 'uyea_active_widgets';
     const container = document.getElementById('widgetContainer');
     const editBtn = document.getElementById('widgetEditBtn');
@@ -11,10 +15,13 @@ function initWidgets() {
         console.warn('[widgets] 容器或编辑按钮未找到，跳过初始化');
         return;
     }
+    __widgetsInitialized = true;
+    console.log('[widgets] 初始化开始', { readyState: document.readyState });
 
     let isEditing = false;
     let clockTimer = null;
     let activeIds = loadActiveIds();
+    console.log('[widgets] activeIds', activeIds);
 
     // 默认显示的组件：时钟、日历、天气
     const DEFAULT_WIDGETS = ['clock', 'calendar', 'weather'];
@@ -22,7 +29,10 @@ function initWidgets() {
     function loadActiveIds() {
         try {
             const saved = localStorage.getItem(STORAGE_KEY);
-            return saved ? JSON.parse(saved) : DEFAULT_WIDGETS.slice();
+            if (!saved) return DEFAULT_WIDGETS.slice();
+            const ids = JSON.parse(saved);
+            if (!Array.isArray(ids) || ids.length === 0) return DEFAULT_WIDGETS.slice();
+            return ids;
         } catch (e) {
             return DEFAULT_WIDGETS.slice();
         }
@@ -450,8 +460,19 @@ function initWidgets() {
 }
 
 // 兼容 defer 脚本在 DOMContentLoaded 之后执行的情况
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initWidgets);
-} else {
-    initWidgets();
+function tryInitWidgets() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initWidgets);
+    } else {
+        initWidgets();
+    }
 }
+tryInitWidgets();
+
+// 兜底：页面完全加载后如果还没初始化，再试一次
+window.addEventListener('load', () => {
+    if (!__widgetsInitialized) {
+        console.warn('[widgets] window.load 兜底初始化');
+        initWidgets();
+    }
+});
