@@ -26,8 +26,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.9.8" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.9.8" as="script" fetchpriority="high">
+    <link rel="preload" href="/CSS/style.css?v=0.9.9" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.9.9" as="script" fetchpriority="high">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -133,7 +133,7 @@
         }
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.9.8" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.9.9" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -578,13 +578,13 @@
         </div>
     </div>
 
-    <script src="/JS/config.js?v=0.9.8" defer></script>
-    <script src="/JS/utils.js?v=0.9.8" defer></script>
-    <script src="/JS/liquid-glass.js?v=0.9.8" defer></script>
-    <script src="/JS/script.js?v=0.9.8" defer></script>
-    <script src="/JS/tools.js?v=0.9.8" defer></script>
-    <script src="/JS/forum.js?v=0.9.8" defer></script>
-    <script src="/JS/auth.js?v=0.9.8" defer></script>
+    <script src="/JS/config.js?v=0.9.9" defer></script>
+    <script src="/JS/utils.js?v=0.9.9" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.9.9" defer></script>
+    <script src="/JS/script.js?v=0.9.9" defer></script>
+    <script src="/JS/tools.js?v=0.9.9" defer></script>
+    <script src="/JS/forum.js?v=0.9.9" defer></script>
+    <script src="/JS/auth.js?v=0.9.9" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
@@ -731,21 +731,23 @@
         window.updateBottomNavIndicator = function() {
             const bottomNav = document.getElementById('bottomNav');
             if (!bottomNav) return;
-            // 手机/平板端无指示器，跳过定位计算
-            if (window.innerWidth <= 900) return;
             const activeItem = bottomNav.querySelector('.bottom-nav-item.active');
             if (!activeItem) return;
 
-            // 创建或获取指示器
+            // 创建或获取指示器（始终创建，CSS 控制手机端 display:none）
             let indicator = bottomNav.querySelector('.bottom-nav-indicator');
             if (!indicator) {
                 indicator = document.createElement('div');
                 indicator.className = 'bottom-nav-indicator';
                 bottomNav.insertBefore(indicator, bottomNav.firstChild);
+                // 给指示器单独绑定拖拽事件
+                window._bindIndicatorDrag(indicator);
             }
 
+            // 手机端不定位（display:none 无需计算位置）
+            if (window.innerWidth <= 900) return;
+
             // 计算位置（相对于bottom-nav的padding区域）
-            // 指示器宽度比按钮略宽，留出视觉边距
             const navRect = bottomNav.getBoundingClientRect();
             const itemRect = activeItem.getBoundingClientRect();
             const offsetLeft = itemRect.left - navRect.left + bottomNav.scrollLeft;
@@ -757,21 +759,21 @@
             indicator.style.transform = `translateY(-50%) translateX(${centeredOffset}px)`;
         };
 
-        // 凸透镜长按拖拽滑动效果：手指/鼠标拖动时指示器跟随，松开后吸附到最近项
-        // 参考 Apple/华为：拖拽时指示器经过的项动态放大，如同凸透镜扫过文字
-        window.bindBottomNavDrag = function() {
-            const bottomNav = document.getElementById('bottomNav');
-            if (!bottomNav || bottomNav._dragBound) return;
-            bottomNav._dragBound = true;
+        // 凸透镜长按拖拽滑动效果：直接在指示器元素上绑定事件
+        // 仅按住指示器本身才能拖拽，点击其他区域不触发
+        window._bindIndicatorDrag = function(indicator) {
+            if (!indicator || indicator._dragBound) return;
+            indicator._dragBound = true;
 
-            const DRAG_THRESHOLD = 5; // 移动超过5px才判定为拖拽（区分点击和拖拽）
-            let isPressing = false;   // 指针已按下
-            let isDragging = false;   // 超过阈值，进入拖拽模式
+            const DRAG_THRESHOLD = 5;
+            let isPressing = false;
+            let isDragging = false;
             let startX = 0;
-            let indicator = null;
-            let items = [];
             let initTransform = 0;
-            let lensItems = [];       // 当前被凸透镜覆盖的所有项
+            let items = [];
+            let lensItems = [];
+            const bottomNav = document.getElementById('bottomNav');
+            if (!bottomNav) return;
 
             function findClosestItem(centerX) {
                 let closest = null;
@@ -785,9 +787,8 @@
                 return closest;
             }
 
-            // 找出指示器中心60%区域重叠的项（缩小触发范围，但不会小到中心点导致空隙）
             function findOverlappingItems(indRect) {
-                var shrink = indRect.width * 0.2; // 每侧缩小20%，保留中心60%区域
+                var shrink = indRect.width * 0.2;
                 var effectiveLeft = indRect.left + shrink;
                 var effectiveRight = indRect.right - shrink;
                 return items.filter(function(item) {
@@ -799,11 +800,9 @@
             function updateLens(indRect) {
                 const newLens = findOverlappingItems(indRect);
                 const newSet = new Set(newLens);
-                // 移除不再重叠的项
                 lensItems.forEach(item => {
                     if (!newSet.has(item)) item.classList.remove('lens-active');
                 });
-                // 添加新重叠的项
                 newLens.forEach(item => {
                     if (!item.classList.contains('lens-active')) item.classList.add('lens-active');
                 });
@@ -816,46 +815,32 @@
             }
 
             function onStart(e) {
-                // 仅长按滑动指示器本身才触发拖拽
-                const ind = bottomNav.querySelector('.bottom-nav-indicator');
-                if (!ind || ind.offsetParent === null) return; // 指示器隐藏（手机端）则跳过
-
-                // 通过坐标判断：点击位置是否落在指示器矩形范围内
-                const indRect = ind.getBoundingClientRect();
-                const inIndicator = e.clientX >= indRect.left && e.clientX <= indRect.right
-                    && e.clientY >= indRect.top && e.clientY <= indRect.bottom;
-                if (!inIndicator) return; // 点击的不是指示器，不触发拖拽
-
+                // 直接绑定在指示器上，只有按住指示器才会触发
+                if (indicator.offsetParent === null) return; // 指示器隐藏则跳过
                 isPressing = true;
                 isDragging = false;
                 startX = e.clientX;
-                indicator = ind;
                 items = Array.from(bottomNav.querySelectorAll('.bottom-nav-item'));
                 const t = indicator.style.transform;
                 const m = t.match(/translateX\(([-\d.]+)px\)/);
                 initTransform = m ? parseFloat(m[1]) : 0;
-                // 清除起始位置的选中效果，拖动开始时不显示高亮
                 clearLens();
+                e.stopPropagation(); // 阻止事件冒泡到 bottomNav 的点击处理
             }
 
             function onMove(e) {
                 if (!isPressing) return;
                 const deltaX = e.clientX - startX;
 
-                // 移动阈值：超过5px才进入拖拽模式，避免误触
                 if (!isDragging) {
                     if (Math.abs(deltaX) < DRAG_THRESHOLD) return;
                     isDragging = true;
-                    // 添加dragging类：抑制起始位置active项的高亮样式
                     bottomNav.classList.add('dragging');
                     indicator.style.transition = 'none';
-                    bottomNav.setPointerCapture && bottomNav.setPointerCapture(e.pointerId);
+                    indicator.setPointerCapture && indicator.setPointerCapture(e.pointerId);
                 }
 
-                if (isDragging && indicator) {
-                    // 拖拽位置 clamp：禁止指示器超出底部导航容器左右内边界
-                    // 指示器 transform 为 translateX(centeredOffset)，0 对应容器最左 padding 内边界
-                    // 最右边界 = 容器内容宽度(clientWidth) - 指示器宽度(indicator.offsetWidth)
+                if (isDragging) {
                     const indW = indicator.offsetWidth || 80;
                     const minTransform = 0;
                     const maxTransform = Math.max(minTransform, bottomNav.clientWidth - indW);
@@ -865,7 +850,6 @@
                     indicator.style.transform = `translateY(-50%) translateX(${clampedTransform}px)`;
                     e.preventDefault();
 
-                    // 凸透镜效果：指示器覆盖范围内所有项都放大突出
                     const indRect = indicator.getBoundingClientRect();
                     updateLens(indRect);
                 }
@@ -875,16 +859,14 @@
                 if (!isPressing) return;
                 isPressing = false;
 
-                if (!isDragging) return; // 只是点击，不干预，让click事件正常处理
+                if (!isDragging) return;
                 isDragging = false;
 
-                // 移除dragging类：恢复active项的高亮样式
                 bottomNav.classList.remove('dragging');
-                if (indicator) indicator.style.transition = '';
+                indicator.style.transition = '';
                 clearLens();
 
-                // 吸附到最近的项
-                if (items.length > 0 && indicator) {
+                if (items.length > 0) {
                     const indRect = indicator.getBoundingClientRect();
                     const indCenter = indRect.left + indRect.width / 2;
                     const closest = findClosestItem(indCenter);
@@ -896,12 +878,29 @@
                 }
             }
 
-            // pointerdown 绑定在 bottomNav，onStart 内部通过坐标判断是否点在指示器上
-            bottomNav.addEventListener('pointerdown', onStart);
+            // 事件直接绑定在指示器元素上
+            indicator.addEventListener('pointerdown', onStart);
             document.addEventListener('pointermove', onMove);
             document.addEventListener('pointerup', onEnd);
             document.addEventListener('pointercancel', onEnd);
         };
+
+        // 兼容旧调用：bindBottomNavDrag 改为查找指示器并绑定
+        window.bindBottomNavDrag = function() {
+            const bottomNav = document.getElementById('bottomNav');
+            if (!bottomNav) return;
+            const indicator = bottomNav.querySelector('.bottom-nav-indicator');
+            if (indicator) window._bindIndicatorDrag(indicator);
+        };
+
+        // 窗口 resize 时重新定位指示器（防抖）
+        let _resizeTimer = null;
+        window.addEventListener('resize', function() {
+            if (_resizeTimer) clearTimeout(_resizeTimer);
+            _resizeTimer = setTimeout(function() {
+                window.updateBottomNavIndicator();
+            }, 150);
+        });
 
         function switchView(viewName) {
             if (!VIEWS[viewName] || currentView === viewName) return;
