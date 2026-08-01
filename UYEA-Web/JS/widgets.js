@@ -18,13 +18,13 @@ function initWidgets() {
     __widgetsInitialized = true;
     console.log('[widgets] 初始化开始', { readyState: document.readyState });
 
+    // 默认显示的组件：时钟、日历、天气
+    const DEFAULT_WIDGETS = ['clock', 'calendar', 'weather'];
+
     let isEditing = false;
     let clockTimer = null;
     let activeIds = loadActiveIds();
     console.log('[widgets] activeIds', activeIds);
-
-    // 默认显示的组件：时钟、日历、天气
-    const DEFAULT_WIDGETS = ['clock', 'calendar', 'weather'];
 
     function loadActiveIds() {
         try {
@@ -349,19 +349,24 @@ function initWidgets() {
         el.id = id;
         el.dataset.type = type;
         el.innerHTML = def.render(id);
-        if (def.init) def.init(id);
-        return el;
+        return { el, init: () => { if (def.init) def.init(id); } };
     }
 
     function renderAll() {
         if (clockTimer) { clearInterval(clockTimer); clockTimer = null; }
         container.innerHTML = '';
         const counts = {};
+        const inits = [];
         activeIds.forEach(type => {
             counts[type] = (counts[type] || 0) + 1;
             const w = renderWidget(type, counts[type]);
-            if (w) container.appendChild(w);
+            if (w) {
+                container.appendChild(w.el);
+                inits.push(w.init);
+            }
         });
+        // 先 append 到 DOM，再执行 init，否则 getElementById 找不到子元素
+        inits.forEach(fn => fn());
         if (isEditing) attachRemoveButtons();
     }
 
