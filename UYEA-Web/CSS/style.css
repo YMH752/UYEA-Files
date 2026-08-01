@@ -1906,6 +1906,36 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     }
 }
 
+/* 移动端动画优化（≤900px）：缩短时长、移除交错延迟、简化transform，提升流畅度 */
+@media (max-width: 900px) {
+    /* 帖子/卡片入场动画：简化为纯淡入，移除 translateY 避免移动端布局抖动 */
+    .post-item, .card-item, .add-card {
+        animation: fadeIn 0.25s ease both !important;
+        animation-delay: 0s !important;
+    }
+    /* 视图切换：缩短至 0.18s，减少位移距离 */
+    .view-container { animation-duration: 0.18s; }
+    @keyframes viewSlideIn {
+        from { opacity: 0; transform: translateY(4px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    /* 禁用 hover 专属动效（触屏无 hover，保留会造成卡顿） */
+    .post-item:hover, .card-item:hover {
+        transform: none;
+        box-shadow: var(--shadow-sm);
+    }
+    .post-item:hover::after, .card-item:hover::before { transform: scaleX(0) scaleY(0); }
+    /* 下拉菜单/搜索面板：缩短展开动画 */
+    .dropdown-menu { animation-duration: 0.15s; }
+    .mobile-search-panel { animation-duration: 0.15s; }
+    /* 模态框弹出：缩短至 0.18s */
+    .modal-jump.show { animation-duration: 0.18s; }
+    /* 返回顶部按钮：禁用 hover 缩放 */
+    .back-to-top:hover { transform: none; }
+    /* 底部导航项：禁用 hover transform 弹跳 */
+    .bottom-nav-item:hover:not(.active) { transform: none; }
+}
+
 /* 移动端 backdrop-filter 降级（性能优化）
    - 浮动按钮/Toast 直接禁用 backdrop-filter，使用不透明背景
    - 导航栏/下拉菜单降低 blur 半径，保留轻微毛玻璃效果 */

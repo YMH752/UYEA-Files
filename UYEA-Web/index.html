@@ -26,8 +26,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.10.0" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.10.0" as="script" fetchpriority="high">
+    <link rel="preload" href="/CSS/style.css?v=0.10.1" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.10.1" as="script" fetchpriority="high">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -91,7 +91,7 @@
             animation: loaderPulse 1.5s ease-in-out infinite;
         }
         .loader-spinner {
-            position: relative; width: 48px; height: 48px; margin: 0 auto 16px;
+            position: relative; width: 48px; height: 48px; margin: 0 auto;
         }
         .spinner-ring {
             position: absolute; inset: 0; border-radius: 50%;
@@ -101,26 +101,8 @@
         .spinner-ring:nth-child(1) { border-top-color: var(--primary, #1B5E20); animation-delay: 0s; }
         .spinner-ring:nth-child(2) { border-right-color: var(--accent, #BF6B00); animation-delay: 0.15s; opacity: 0.7; }
         .spinner-ring:nth-child(3) { border-bottom-color: var(--primary, #2E7D32); animation-delay: 0.3s; opacity: 0.4; }
-        .loader-text {
-            font-size: 13px; color: var(--text-muted, #7A9A7A);
-            letter-spacing: 1px;
-        }
-        .loader-text::after { content: '...'; animation: loaderDots 1.5s steps(4) infinite; }
-        .loader-progress {
-            width: 120px; height: 3px; margin: 12px auto 0;
-            background: rgba(122,154,122,0.2); border-radius: 2px; overflow: hidden;
-        }
-        .loader-progress::after {
-            content: ''; display: block; height: 100%; width: 0%;
-            background: var(--primary-gradient, linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%));
-            border-radius: 2px; transition: width 0.3s ease;
-        }
-        .loader-progress.p33::after { width: 33%; }
-        .loader-progress.p66::after { width: 66%; }
-        .loader-progress.p100::after { width: 100%; }
         @keyframes loaderPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.96); } }
         @keyframes spinnerSpin { to { transform: rotate(360deg); } }
-        @keyframes loaderDots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
         /* 视图切换动画：淡入 + 轻微上滑（优化：更短更快，will-change加速） */
         .view-container { will-change: opacity, transform; animation: viewSlideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
         @keyframes viewSlideIn {
@@ -133,7 +115,7 @@
         }
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.10.0" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.10.1" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -156,8 +138,6 @@
                 <div class="spinner-ring"></div>
                 <div class="spinner-ring"></div>
             </div>
-            <div class="loader-text">加载中</div>
-            <div class="loader-progress" id="loaderProgress"></div>
         </div>
     </div>
 
@@ -578,13 +558,13 @@
         </div>
     </div>
 
-    <script src="/JS/config.js?v=0.10.0" defer></script>
-    <script src="/JS/utils.js?v=0.10.0" defer></script>
-    <script src="/JS/liquid-glass.js?v=0.10.0" defer></script>
-    <script src="/JS/script.js?v=0.10.0" defer></script>
-    <script src="/JS/tools.js?v=0.10.0" defer></script>
-    <script src="/JS/forum.js?v=0.10.0" defer></script>
-    <script src="/JS/auth.js?v=0.10.0" defer></script>
+    <script src="/JS/config.js?v=0.10.1" defer></script>
+    <script src="/JS/utils.js?v=0.10.1" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.10.1" defer></script>
+    <script src="/JS/script.js?v=0.10.1" defer></script>
+    <script src="/JS/tools.js?v=0.10.1" defer></script>
+    <script src="/JS/forum.js?v=0.10.1" defer></script>
+    <script src="/JS/auth.js?v=0.10.1" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
@@ -839,8 +819,13 @@
 
                 if (isDragging) {
                     const indW = indicator.offsetWidth || 80;
-                    const minTransform = 0;
-                    const maxTransform = Math.max(minTransform, bottomNav.clientWidth - indW);
+                    const extraWidth = 10;
+                    const navRect = bottomNav.getBoundingClientRect();
+                    // 拖拽范围限制在导航项实际范围内（第一项中心到最后一项中心）
+                    const firstRect = items[0].getBoundingClientRect();
+                    const lastRect = items[items.length - 1].getBoundingClientRect();
+                    const minTransform = (firstRect.left - navRect.left + bottomNav.scrollLeft) - extraWidth / 2;
+                    const maxTransform = Math.max(minTransform, (lastRect.left - navRect.left + bottomNav.scrollLeft) - extraWidth / 2);
                     const rawTransform = initTransform + deltaX;
                     const clampedTransform = Math.min(Math.max(rawTransform, minTransform), maxTransform);
 
