@@ -1790,17 +1790,6 @@ html[data-theme="coffee"] .bg-orb-3 {
     touch-action: pan-y; /* 允许纵向滚动，拦截横向手势给拖拽 */
 }
 
-/* 桌面端（>900px）：指示器可接收事件、可拖拽 */
-@media (min-width: 901px) {
-    .bottom-nav-indicator {
-        pointer-events: auto;
-        cursor: grab;
-    }
-    .bottom-nav.dragging .bottom-nav-indicator {
-        cursor: grabbing;
-    }
-}
-
 /* 凸透镜滑动指示器：自适应宽度圆角矩形，跟随选中项滑动（仅 translateX，移除 backdrop-filter 提升性能）
    注意：JS 中 updateBottomNavIndicator 会根据激活项 offsetWidth 动态设置 indicator.style.width，
    CSS 仅提供 min-width 兜底。 */
@@ -1817,9 +1806,15 @@ html[data-theme="coffee"] .bg-orb-3 {
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     transform: translateY(-50%) translateX(0);
     transition: transform var(--duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: grab;
     z-index: 0;
     /* 移除 backdrop-filter */
+}
+
+/* 拖拽中：grabbing 光标 */
+.bottom-nav.dragging .bottom-nav-indicator {
+    cursor: grabbing;
 }
 
 /* 星空主题：凸透镜指示器 */
@@ -1888,12 +1883,10 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     color: var(--accent-3);
 }
 
-/* 手机/平板端（≤900px）：隐藏凸透镜指示器，改用激活项自带胶囊高亮，适配中小屏 */
+/* 手机/平板端（≤900px）：指示器保持显示，确保任意窗口尺寸均可拖拽 */
 @media (max-width: 900px) {
     .bottom-nav-item { padding: 8px 16px; }
     .bottom-nav { bottom: 12px; gap: 5px; padding: 7px; }
-    /* 隐藏滑动指示器，中小屏不适用 */
-    .bottom-nav-indicator { display: none !important; }
     /* 激活项自带胶囊背景 */
     .bottom-nav-item.active {
         background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
