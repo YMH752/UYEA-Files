@@ -536,7 +536,7 @@ a { color: var(--primary); text-decoration: none; }
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    max-width: 520px;
+    max-width: 560px;
     width: 100%;
     display: none; /* 默认隐藏，仅宽屏(≥1299px)显示 */
     align-items: center;
@@ -561,9 +561,10 @@ a { color: var(--primary); text-decoration: none; }
     align-items: center;
     justify-content: center;
     gap: 4px;
-    min-width: 44px;       /* 中文两字（百度/站内）固定宽度基准 */
+    min-width: 48px;
     width: auto;
     height: 100%;
+    padding: 0 10px;
     border-right: 1px solid var(--border);
     cursor: pointer;
     color: var(--text-secondary);
@@ -1786,6 +1787,20 @@ html[data-theme="coffee"] .bg-orb-3 {
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
+    touch-action: pan-y; /* 允许纵向滚动，拦截横向手势给拖拽 */
+    cursor: grab;
+}
+
+/* 桌面端（>900px）：指示器可拖拽 */
+@media (min-width: 901px) {
+    .bottom-nav-indicator {
+        pointer-events: auto;
+        cursor: grab;
+    }
+    .bottom-nav.dragging,
+    .bottom-nav.dragging .bottom-nav-indicator {
+        cursor: grabbing;
+    }
 }
 
 /* 凸透镜滑动指示器：自适应宽度圆角矩形，跟随选中项滑动（仅 translateX，移除 backdrop-filter 提升性能）
