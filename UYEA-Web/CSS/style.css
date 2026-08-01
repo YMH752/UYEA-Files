@@ -1085,6 +1085,316 @@ html[data-theme="coffee"] .mobile-engine-option.active {
     font-weight: 700;
 }
 
+/* 编辑组件按钮 */
+.widget-edit-btn {
+    width: 100%;
+    padding: 10px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--duration) ease;
+}
+
+.widget-edit-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.widget-edit-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+/* 组件移除按钮（编辑模式） */
+.widget {
+    position: relative;
+}
+
+.widget-remove {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--error, #ef4444);
+    color: #fff;
+    border: 2px solid var(--surface);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+    padding: 0;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, background 0.2s ease;
+    z-index: 5;
+}
+
+.widget-remove:hover {
+    transform: scale(1.1);
+    background: #dc2626;
+}
+
+/* 编辑面板 */
+.widget-edit-panel {
+    margin-top: 4px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    animation: widgetFadeIn 0.25s ease;
+}
+
+.widget-edit-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.widget-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.widget-edit-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.widget-edit-item:hover {
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.widget-edit-item.added {
+    border-color: var(--primary);
+    background: rgba(var(--primary-rgb, 59, 130, 246), 0.08);
+}
+
+.widget-edit-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.widget-edit-name {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.widget-edit-toggle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    line-height: 1;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+.widget-edit-item:hover .widget-edit-toggle {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.widget-edit-item.added .widget-edit-toggle {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+/* 待办事项 */
+.widget-todo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+    max-height: 140px;
+    overflow-y: auto;
+}
+
+.widget-todo-empty {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 12px 0;
+}
+
+.widget-todo-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.widget-todo-item.done span {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+.widget-todo-item input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.widget-todo-add {
+    display: flex;
+    gap: 6px;
+}
+
+.widget-todo-add input {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 13px;
+    outline: none;
+}
+
+.widget-todo-add input:focus {
+    border-color: var(--primary);
+}
+
+.widget-todo-add button {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+}
+
+.widget-todo-add button:hover { opacity: 0.85; }
+
+/* 每日一言 */
+.widget-quote-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.widget-quote-refresh {
+    font-size: 12px;
+    color: var(--primary);
+    cursor: pointer;
+    text-align: right;
+    transition: opacity 0.2s ease;
+}
+
+.widget-quote-refresh:hover { opacity: 0.7; }
+
+/* 主题切换 */
+.widget-theme-options {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.widget-theme-btn {
+    flex: 1;
+    min-width: 60px;
+    padding: 8px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.widget-theme-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.widget-theme-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+/* 快捷链接 */
+.widget-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.widget-links a {
+    display: block;
+    padding: 8px 10px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.widget-links a:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* 倒计时 */
+.widget-countdown {
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+    text-align: center;
+    padding: 10px 0;
+}
+
+@keyframes widgetFadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* 移动端：小组件移到帖子列表下方 */
 @media (max-width: 900px) {
     .forum-layout {

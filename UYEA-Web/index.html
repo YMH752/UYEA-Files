@@ -26,8 +26,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.10.7" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.10.7" as="script" fetchpriority="high">
+    <link rel="preload" href="/CSS/style.css?v=0.10.8" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.10.8" as="script" fetchpriority="high">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -115,7 +115,7 @@
         }
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.10.7" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.10.8" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -279,28 +279,8 @@
                     </div>
 
                     <aside class="forum-widgets" id="forumWidgets" aria-label="小组件">
-                        <div class="widget widget-clock" id="widgetClock" style="display:none;">
-                            <div class="widget-label">当前时间</div>
-                            <div class="widget-clock-time" id="clockTime">--:--</div>
-                            <div class="widget-clock-date" id="clockDate">----/--/--</div>
-                        </div>
-                        <div class="widget widget-calendar" id="widgetCalendar" style="display:none;">
-                            <div class="widget-label">日历</div>
-                            <div class="widget-calendar-grid" id="calendarGrid"></div>
-                        </div>
-                        <div class="widget widget-weather" id="widgetWeather" style="display:none;">
-                            <div class="widget-label">天气</div>
-                            <div class="widget-weather-main">
-                                <div class="widget-weather-icon" id="weatherIcon">⛅</div>
-                                <div class="widget-weather-temp" id="weatherTemp">--°</div>
-                            </div>
-                            <div class="widget-weather-desc" id="weatherDesc">定位中...</div>
-                        </div>
-                        <div class="widget widget-stats" id="widgetStats" style="display:none;">
-                            <div class="widget-label">社区统计</div>
-                            <div class="widget-stat-row"><span>帖子</span><strong id="statPosts">--</strong></div>
-                            <div class="widget-stat-row"><span>标签</span><strong id="statTags">--</strong></div>
-                        </div>
+                        <div class="widget-container" id="widgetContainer"></div>
+                        <button class="widget-edit-btn" id="widgetEditBtn">编辑组件</button>
                     </aside>
                 </div>
             </div>
@@ -585,14 +565,14 @@
         </div>
     </div>
 
-    <script src="/JS/config.js?v=0.10.7" defer></script>
-    <script src="/JS/utils.js?v=0.10.7" defer></script>
-    <script src="/JS/liquid-glass.js?v=0.10.7" defer></script>
-    <script src="/JS/script.js?v=0.10.7" defer></script>
-    <script src="/JS/tools.js?v=0.10.7" defer></script>
-    <script src="/JS/forum.js?v=0.10.7" defer></script>
-    <script src="/JS/widgets.js?v=0.10.7" defer></script>
-    <script src="/JS/auth.js?v=0.10.7" defer></script>
+    <script src="/JS/config.js?v=0.10.8" defer></script>
+    <script src="/JS/utils.js?v=0.10.8" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.10.8" defer></script>
+    <script src="/JS/script.js?v=0.10.8" defer></script>
+    <script src="/JS/tools.js?v=0.10.8" defer></script>
+    <script src="/JS/forum.js?v=0.10.8" defer></script>
+    <script src="/JS/widgets.js?v=0.10.8" defer></script>
+    <script src="/JS/auth.js?v=0.10.8" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
