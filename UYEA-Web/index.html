@@ -707,184 +707,149 @@
             window.updateBottomNavIndicator();
         };
 
-        // 凸透镜指示器：创建并定位到选中项
-        window.updateBottomNavIndicator = function() {
-            const bottomNav = document.getElementById('bottomNav');
-            if (!bottomNav) return;
+        // 滑动指示器：创建、定位、拖拽（单一实例，避免重复创建）
+        (function() {
+            const BOTTOM_NAV = document.getElementById('bottomNav');
+            if (!BOTTOM_NAV) return;
 
-            // 防御性清理：移除所有 lens-active 残留，避免非拖拽状态出现双高亮
-            bottomNav.querySelectorAll('.bottom-nav-item.lens-active').forEach(item => {
-                item.classList.remove('lens-active');
-            });
-
-            const activeItem = bottomNav.querySelector('.bottom-nav-item.active');
-            if (!activeItem) return;
-
-            // 创建或获取指示器（始终创建并显示，不受窗口尺寸限制）
-            let indicator = bottomNav.querySelector('.bottom-nav-indicator');
-            if (!indicator) {
-                indicator = document.createElement('div');
-                indicator.className = 'bottom-nav-indicator';
-                bottomNav.insertBefore(indicator, bottomNav.firstChild);
-                // 给指示器单独绑定拖拽事件
-                window._bindIndicatorDrag(indicator);
-            }
-
-            // 始终计算位置，不受窗口尺寸限制
-            // 计算位置（相对于bottom-nav的padding区域）
-            const navRect = bottomNav.getBoundingClientRect();
-            const itemRect = activeItem.getBoundingClientRect();
-            const offsetLeft = itemRect.left - navRect.left + bottomNav.scrollLeft;
-            const extraWidth = 10;
-            const indicatorWidth = activeItem.offsetWidth + extraWidth;
-            indicator.style.width = indicatorWidth + 'px';
-            const centeredOffset = offsetLeft - extraWidth / 2;
-
-            indicator.style.transform = `translateY(-50%) translateX(${centeredOffset}px)`;
-        };
-
-        // 凸透镜长按拖拽滑动效果：直接在指示器元素上绑定事件
-        // 仅按住指示器本身才能拖拽，点击其他区域不触发
-        window._bindIndicatorDrag = function(indicator) {
-            if (!indicator || indicator._dragBound) return;
-            indicator._dragBound = true;
-
-            const DRAG_THRESHOLD = 5;
-            let isPressing = false;
+            let indicator = null;
             let isDragging = false;
             let startX = 0;
-            let initTransform = 0;
-            let items = [];
-            let lensItems = [];
-            const bottomNav = document.getElementById('bottomNav');
-            if (!bottomNav) return;
+            let currentX = 0;
+            let itemCenters = [];
 
-            function findClosestItem(centerX) {
-                let closest = null;
-                let minDist = Infinity;
-                items.forEach(item => {
+            function getItems() {
+                return Array.from(BOTTOM_NAV.querySelectorAll('.bottom-nav-item'));
+            }
+
+            function createIndicator() {
+                // 先移除可能存在的旧指示器，确保全局唯一
+                const old = BOTTOM_NAV.querySelector('.bottom-nav-indicator');
+                if (old) old.remove();
+
+                indicator = document.createElement('div');
+                indicator.className = 'bottom-nav-indicator';
+                BOTTOM_NAV.insertBefore(indicator, BOTTOM_NAV.firstChild);
+                return indicator;
+            }
+
+            function getIndicatorX(item) {
+                const navRect = BOTTOM_NAV.getBoundingClientRect();
+                const itemRect = item.getBoundingClientRect();
+                const extra = 10;
+                return {
+                    x: itemRect.left - navRect.left + BOTTOM_NAV.scrollLeft - extra / 2,
+                    width: itemRect.width + extra
+                };
+            }
+
+            function updateItemCenters() {
+                const navRect = BOTTOM_NAV.getBoundingClientRect();
+                itemCenters = getItems().map(item => {
                     const r = item.getBoundingClientRect();
-                    const c = r.left + r.width / 2;
-                    const d = Math.abs(c - centerX);
-                    if (d < minDist) { minDist = d; closest = item; }
-                });
-                return closest;
-            }
-
-            function findOverlappingItems(indRect) {
-                var shrink = indRect.width * 0.2;
-                var effectiveLeft = indRect.left + shrink;
-                var effectiveRight = indRect.right - shrink;
-                return items.filter(function(item) {
-                    var r = item.getBoundingClientRect();
-                    return r.left < effectiveRight && r.right > effectiveLeft;
+                    return r.left - navRect.left + BOTTOM_NAV.scrollLeft + r.width / 2;
                 });
             }
 
-            function updateLens(indRect) {
-                const newLens = findOverlappingItems(indRect);
-                const newSet = new Set(newLens);
-                lensItems.forEach(item => {
-                    if (!newSet.has(item)) item.classList.remove('lens-active');
+            window.updateBottomNavIndicator = function() {
+                const activeItem = BOTTOM_NAV.querySelector('.bottom-nav-item.active');
+                if (!activeItem) return;
+
+                // 如果指示器不存在或已被移出DOM（如switchView重置了innerHTML），重新创建
+                if (!indicator || !indicator.isConnected) {
+                    createIndicator();
+                    indicator.addEventListener('pointerdown', onPointerDown);
+                    indicator.addEventListener('pointermove', onPointerMove);
+                    indicator.addEventListener('pointerup', onPointerUp);
+                    indicator.addEventListener('pointercancel', onPointerCancel);
+                }
+                const pos = getIndicatorX(activeItem);
+                indicator.style.width = pos.width + 'px';
+                indicator.style.transform = `translateY(-50%) translateX(${pos.x}px)`;
+                currentX = pos.x;
+            };
+
+            function findNearestIndex(x) {
+                const indCenter = x + (indicator.offsetWidth || 64) / 2;
+                let nearest = 0;
+                let min = Infinity;
+                itemCenters.forEach((c, i) => {
+                    const d = Math.abs(c - indCenter);
+                    if (d < min) { min = d; nearest = i; }
                 });
-                newLens.forEach(item => {
-                    if (!item.classList.contains('lens-active')) item.classList.add('lens-active');
-                });
-                lensItems = newLens;
+                return nearest;
             }
 
-            function clearLens() {
-                lensItems.forEach(item => item.classList.remove('lens-active'));
-                lensItems = [];
+            function clamp(x) {
+                if (itemCenters.length < 2) return x;
+                updateItemCenters();
+                const first = itemCenters[0];
+                const last = itemCenters[itemCenters.length - 1];
+                const halfW = (indicator.offsetWidth || 64) / 2;
+                const minX = first - halfW - 5;
+                const maxX = last - halfW + 5;
+                return Math.min(Math.max(x, minX), maxX);
             }
 
-            function onStart(e) {
-                // 直接绑定在指示器上，只有按住指示器才会触发
-                // 防御性清理：拖拽开始时清除所有可能残留的 lens-active，避免双高亮
-                bottomNav.querySelectorAll('.bottom-nav-item.lens-active').forEach(item => {
-                    item.classList.remove('lens-active');
-                });
-                clearLens();
-                isPressing = true;
-                isDragging = false;
+            function onPointerDown(e) {
+                // 仅响应主指针（鼠标左键/单指触摸）
+                if (e.button !== 0) return;
+                isDragging = true;
                 startX = e.clientX;
-                items = Array.from(bottomNav.querySelectorAll('.bottom-nav-item'));
-                const t = indicator.style.transform;
-                const m = t.match(/translateX\(([-\d.]+)px\)/);
-                initTransform = m ? parseFloat(m[1]) : 0;
-                clearLens();
-                e.stopPropagation(); // 阻止事件冒泡到 bottomNav 的点击处理
+                updateItemCenters();
+                BOTTOM_NAV.classList.add('dragging');
+                indicator.style.transition = 'none';
+                indicator.setPointerCapture && indicator.setPointerCapture(e.pointerId);
+                e.preventDefault();
+                e.stopPropagation();
             }
 
-            function onMove(e) {
-                if (!isPressing) return;
-                const deltaX = e.clientX - startX;
-
-                if (!isDragging) {
-                    if (Math.abs(deltaX) < DRAG_THRESHOLD) return;
-                    isDragging = true;
-                    bottomNav.classList.add('dragging');
-                    indicator.style.transition = 'none';
-                    indicator.setPointerCapture && indicator.setPointerCapture(e.pointerId);
-                }
-
-                if (isDragging) {
-                    const indW = indicator.offsetWidth || 80;
-                    const extraWidth = 10;
-                    const navRect = bottomNav.getBoundingClientRect();
-                    // 拖拽范围限制在导航项实际范围内（第一项中心到最后一项中心）
-                    const firstRect = items[0].getBoundingClientRect();
-                    const lastRect = items[items.length - 1].getBoundingClientRect();
-                    const minTransform = (firstRect.left - navRect.left + bottomNav.scrollLeft) - extraWidth / 2;
-                    const maxTransform = Math.max(minTransform, (lastRect.left - navRect.left + bottomNav.scrollLeft) - extraWidth / 2);
-                    const rawTransform = initTransform + deltaX;
-                    const clampedTransform = Math.min(Math.max(rawTransform, minTransform), maxTransform);
-
-                    indicator.style.transform = `translateY(-50%) translateX(${clampedTransform}px)`;
-                    e.preventDefault();
-
-                    const indRect = indicator.getBoundingClientRect();
-                    updateLens(indRect);
-                }
+            function onPointerMove(e) {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const newX = clamp(currentX + dx);
+                indicator.style.transform = `translateY(-50%) translateX(${newX}px)`;
+                e.preventDefault();
             }
 
-            function onEnd(e) {
-                if (!isPressing) return;
-                isPressing = false;
-
+            function onPointerUp(e) {
                 if (!isDragging) return;
                 isDragging = false;
-
-                bottomNav.classList.remove('dragging');
+                BOTTOM_NAV.classList.remove('dragging');
                 indicator.style.transition = '';
-                clearLens();
 
-                if (items.length > 0) {
-                    const indRect = indicator.getBoundingClientRect();
-                    const indCenter = indRect.left + indRect.width / 2;
-                    const closest = findClosestItem(indCenter);
-                    if (closest && !closest.classList.contains('active')) {
-                        closest.click();
-                    } else {
-                        window.updateBottomNavIndicator();
-                    }
+                const style = indicator.style.transform;
+                const m = style.match(/translateX\(([-\d.]+)px\)/);
+                const x = m ? parseFloat(m[1]) : currentX;
+                const idx = findNearestIndex(x);
+                const items = getItems();
+                if (items[idx] && !items[idx].classList.contains('active')) {
+                    items[idx].click();
+                } else {
+                    window.updateBottomNavIndicator();
                 }
             }
 
-            // 事件直接绑定在指示器元素上
-            indicator.addEventListener('pointerdown', onStart);
-            document.addEventListener('pointermove', onMove);
-            document.addEventListener('pointerup', onEnd);
-            document.addEventListener('pointercancel', onEnd);
-        };
+            function onPointerCancel(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                BOTTOM_NAV.classList.remove('dragging');
+                indicator.style.transition = '';
+                window.updateBottomNavIndicator();
+            }
 
-        // 兼容旧调用：bindBottomNavDrag 改为查找指示器并绑定
-        window.bindBottomNavDrag = function() {
-            const bottomNav = document.getElementById('bottomNav');
-            if (!bottomNav) return;
-            const indicator = bottomNav.querySelector('.bottom-nav-indicator');
-            if (indicator) window._bindIndicatorDrag(indicator);
-        };
+            // 初始化指示器并绑定事件（只绑定一次）
+            createIndicator();
+            indicator.addEventListener('pointerdown', onPointerDown);
+            indicator.addEventListener('pointermove', onPointerMove);
+            indicator.addEventListener('pointerup', onPointerUp);
+            indicator.addEventListener('pointercancel', onPointerCancel);
+
+            // 兼容旧调用
+            window.bindBottomNavDrag = function() {
+                // 指示器已绑定，无需重复操作
+            };
+        })();
 
         // 窗口 resize 时重新定位指示器（防抖）
         let _resizeTimer = null;
