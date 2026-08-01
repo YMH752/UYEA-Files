@@ -1790,13 +1790,11 @@ html[data-theme="coffee"] .bg-orb-3 {
     touch-action: pan-y; /* 允许纵向滚动，拦截横向手势给拖拽 */
 }
 
-/* 桌面端（>900px）：指示器可拖拽 */
+/* 桌面端（>900px）：指示器可拖拽，坐标命中检测由JS处理 */
 @media (min-width: 901px) {
     .bottom-nav-indicator {
-        pointer-events: auto;
         cursor: grab;
     }
-    .bottom-nav.dragging,
     .bottom-nav.dragging .bottom-nav-indicator {
         cursor: grabbing;
     }

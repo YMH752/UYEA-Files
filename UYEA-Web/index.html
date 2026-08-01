@@ -26,8 +26,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.9.7" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.9.7" as="script" fetchpriority="high">
+    <link rel="preload" href="/CSS/style.css?v=0.9.8" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.9.8" as="script" fetchpriority="high">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -133,7 +133,7 @@
         }
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.9.7" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.9.8" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -578,13 +578,13 @@
         </div>
     </div>
 
-    <script src="/JS/config.js?v=0.9.7" defer></script>
-    <script src="/JS/utils.js?v=0.9.7" defer></script>
-    <script src="/JS/liquid-glass.js?v=0.9.7" defer></script>
-    <script src="/JS/script.js?v=0.9.7" defer></script>
-    <script src="/JS/tools.js?v=0.9.7" defer></script>
-    <script src="/JS/forum.js?v=0.9.7" defer></script>
-    <script src="/JS/auth.js?v=0.9.7" defer></script>
+    <script src="/JS/config.js?v=0.9.8" defer></script>
+    <script src="/JS/utils.js?v=0.9.8" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.9.8" defer></script>
+    <script src="/JS/script.js?v=0.9.8" defer></script>
+    <script src="/JS/tools.js?v=0.9.8" defer></script>
+    <script src="/JS/forum.js?v=0.9.8" defer></script>
+    <script src="/JS/auth.js?v=0.9.8" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
@@ -818,7 +818,13 @@
             function onStart(e) {
                 // 仅长按滑动指示器本身才触发拖拽
                 const ind = bottomNav.querySelector('.bottom-nav-indicator');
-                if (!ind) return;
+                if (!ind || ind.offsetParent === null) return; // 指示器隐藏（手机端）则跳过
+
+                // 通过坐标判断：点击位置是否落在指示器矩形范围内
+                const indRect = ind.getBoundingClientRect();
+                const inIndicator = e.clientX >= indRect.left && e.clientX <= indRect.right
+                    && e.clientY >= indRect.top && e.clientY <= indRect.bottom;
+                if (!inIndicator) return; // 点击的不是指示器，不触发拖拽
 
                 isPressing = true;
                 isDragging = false;
@@ -890,14 +896,8 @@
                 }
             }
 
-            // 事件委托：仅当 pointerdown 目标是滑动指示器时才触发拖拽
-            bottomNav.addEventListener('pointerdown', function(e) {
-                const ind = bottomNav.querySelector('.bottom-nav-indicator');
-                // indicator 的 pointer-events 在桌面端为 auto，手机端为 none
-                // 如果 e.target 是 indicator 或其子元素，说明指示器接收到了事件
-                if (!ind || (e.target !== ind && !ind.contains(e.target))) return;
-                onStart(e);
-            });
+            // pointerdown 绑定在 bottomNav，onStart 内部通过坐标判断是否点在指示器上
+            bottomNav.addEventListener('pointerdown', onStart);
             document.addEventListener('pointermove', onMove);
             document.addEventListener('pointerup', onEnd);
             document.addEventListener('pointercancel', onEnd);
