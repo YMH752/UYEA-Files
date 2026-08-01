@@ -3,18 +3,21 @@
  * 论坛页右侧小组件系统：固定显示、可编辑、本地持久化
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+function initWidgets() {
     const STORAGE_KEY = 'uyea_active_widgets';
     const container = document.getElementById('widgetContainer');
     const editBtn = document.getElementById('widgetEditBtn');
-    if (!container || !editBtn) return;
+    if (!container || !editBtn) {
+        console.warn('[widgets] 容器或编辑按钮未找到，跳过初始化');
+        return;
+    }
 
     let isEditing = false;
     let clockTimer = null;
     let activeIds = loadActiveIds();
 
-    // 默认显示的组件
-    const DEFAULT_WIDGETS = ['clock', 'calendar', 'weather', 'stats'];
+    // 默认显示的组件：时钟、日历、天气
+    const DEFAULT_WIDGETS = ['clock', 'calendar', 'weather'];
 
     function loadActiveIds() {
         try {
@@ -444,4 +447,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     renderAll();
-});
+}
+
+// 兼容 defer 脚本在 DOMContentLoaded 之后执行的情况
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWidgets);
+} else {
+    initWidgets();
+}
