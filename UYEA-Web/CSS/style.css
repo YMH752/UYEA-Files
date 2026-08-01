@@ -1887,6 +1887,11 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
 @media (max-width: 900px) {
     .bottom-nav-item { padding: 8px 16px; }
     .bottom-nav { bottom: 12px; gap: 5px; padding: 7px; }
+    /* 移动端指示器：缩小高度和圆角，避免臃肿感 */
+    .bottom-nav-indicator {
+        height: 42px;
+        border-radius: 16px;
+    }
 }
 
 /* 移动端动画优化（≤900px）：缩短时长、移除交错延迟、简化transform，提升流畅度 */
