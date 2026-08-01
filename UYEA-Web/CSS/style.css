@@ -1808,7 +1808,7 @@ html[data-theme="coffee"] .bg-orb-3 {
     transition: transform var(--duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: auto;
     cursor: grab;
-    z-index: 0;
+    z-index: 2; /* 高于导航项(z-index:1)，确保整个指示器区域可接收拖拽事件 */
     /* 移除 backdrop-filter */
 }
 
