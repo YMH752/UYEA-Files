@@ -1883,27 +1883,10 @@ html[data-theme="dark"] .bottom-nav-item:hover:not(.active) {
     color: var(--accent-3);
 }
 
-/* 手机/平板端（≤900px）：指示器保持显示，确保任意窗口尺寸均可拖拽 */
+/* 手机/平板端（≤900px）：仅保留圆角矩形滑动指示器，激活项不再自带胶囊背景 */
 @media (max-width: 900px) {
     .bottom-nav-item { padding: 8px 16px; }
     .bottom-nav { bottom: 12px; gap: 5px; padding: 7px; }
-    /* 激活项自带胶囊背景 */
-    .bottom-nav-item.active {
-        background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
-        border: 1px solid var(--glass-border);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    /* 暗色主题 */
-    html[data-theme="dark"] .bottom-nav-item.active {
-        background: linear-gradient(135deg, rgba(124,156,255,0.20) 0%, rgba(255,214,110,0.10) 100%);
-        border: 1px solid var(--glass-border);
-        box-shadow: inset 0 1px 1px rgba(124,156,255,0.25), 0 2px 8px rgba(0,0,10,0.3);
-    }
-    /* 咖啡主题 */
-    html[data-theme="coffee"] .bottom-nav-item.active {
-        background: linear-gradient(135deg, rgba(255,252,248,0.18) 0%, rgba(198,134,66,0.12) 100%);
-        border: 1px solid var(--glass-border);
-    }
 }
 
 /* 移动端动画优化（≤900px）：缩短时长、移除交错延迟、简化transform，提升流畅度 */
