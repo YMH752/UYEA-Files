@@ -26,8 +26,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.10.1" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.10.1" as="script" fetchpriority="high">
+    <link rel="preload" href="/CSS/style.css?v=0.10.7" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.10.7" as="script" fetchpriority="high">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -115,7 +115,7 @@
         }
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.10.1" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.10.7" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -253,28 +253,55 @@
 
             <!-- ===== 论坛视图 ===== -->
             <div class="view-container" id="forumView" style="display:block;">
-                <div class="forum-main">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title" data-i18n="nav.forum">悠野社区</div>
+                <div class="forum-layout">
+                    <div class="forum-main">
+                        <div class="section-header">
+                            <div>
+                                <div class="section-title" data-i18n="nav.forum">悠野社区</div>
+                            </div>
+                        </div>
+
+                        <div class="forum-toolbar">
+                            <button class="post-btn" data-coming-soon="发布新帖子">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <span data-i18n="forum.newPost">发布新帖</span>
+                            </button>
+                        </div>
+
+                        <div class="post-list" id="postList"></div>
+
+                        <div class="no-results" id="noResults">
+                            <div class="no-results-icon">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            </div>
+                            <div class="no-results-text" data-i18n="forum.noResults">未找到匹配的帖子</div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="forum-toolbar">
-                    <button class="post-btn" data-coming-soon="发布新帖子">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        <span data-i18n="forum.newPost">发布新帖</span>
-                    </button>
-                </div>
-
-                <div class="post-list" id="postList"></div>
-
-                <div class="no-results" id="noResults">
-                    <div class="no-results-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    </div>
-                    <div class="no-results-text" data-i18n="forum.noResults">未找到匹配的帖子</div>
-                </div>
+                    <aside class="forum-widgets" id="forumWidgets" aria-label="小组件">
+                        <div class="widget widget-clock" id="widgetClock" style="display:none;">
+                            <div class="widget-label">当前时间</div>
+                            <div class="widget-clock-time" id="clockTime">--:--</div>
+                            <div class="widget-clock-date" id="clockDate">----/--/--</div>
+                        </div>
+                        <div class="widget widget-calendar" id="widgetCalendar" style="display:none;">
+                            <div class="widget-label">日历</div>
+                            <div class="widget-calendar-grid" id="calendarGrid"></div>
+                        </div>
+                        <div class="widget widget-weather" id="widgetWeather" style="display:none;">
+                            <div class="widget-label">天气</div>
+                            <div class="widget-weather-main">
+                                <div class="widget-weather-icon" id="weatherIcon">⛅</div>
+                                <div class="widget-weather-temp" id="weatherTemp">--°</div>
+                            </div>
+                            <div class="widget-weather-desc" id="weatherDesc">定位中...</div>
+                        </div>
+                        <div class="widget widget-stats" id="widgetStats" style="display:none;">
+                            <div class="widget-label">社区统计</div>
+                            <div class="widget-stat-row"><span>帖子</span><strong id="statPosts">--</strong></div>
+                            <div class="widget-stat-row"><span>标签</span><strong id="statTags">--</strong></div>
+                        </div>
+                    </aside>
                 </div>
             </div>
 
@@ -558,13 +585,14 @@
         </div>
     </div>
 
-    <script src="/JS/config.js?v=0.10.1" defer></script>
-    <script src="/JS/utils.js?v=0.10.1" defer></script>
-    <script src="/JS/liquid-glass.js?v=0.10.1" defer></script>
-    <script src="/JS/script.js?v=0.10.1" defer></script>
-    <script src="/JS/tools.js?v=0.10.1" defer></script>
-    <script src="/JS/forum.js?v=0.10.1" defer></script>
-    <script src="/JS/auth.js?v=0.10.1" defer></script>
+    <script src="/JS/config.js?v=0.10.7" defer></script>
+    <script src="/JS/utils.js?v=0.10.7" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.10.7" defer></script>
+    <script src="/JS/script.js?v=0.10.7" defer></script>
+    <script src="/JS/tools.js?v=0.10.7" defer></script>
+    <script src="/JS/forum.js?v=0.10.7" defer></script>
+    <script src="/JS/widgets.js?v=0.10.7" defer></script>
+    <script src="/JS/auth.js?v=0.10.7" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };

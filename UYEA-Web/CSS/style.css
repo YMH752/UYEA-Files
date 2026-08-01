@@ -959,7 +959,152 @@ html[data-theme="coffee"] .mobile-engine-option.active {
 .content-wrapper { max-width: 1400px; margin: 0 auto; width: 100%; }
 
 /* ========== 论坛主页布局 ========== */
-.forum-main { min-width: 0; width: 100%; }
+.forum-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 24px;
+    align-items: start;
+}
+
+.forum-main { min-width: 0; }
+
+.forum-widgets {
+    position: sticky;
+    top: 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.widget {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.widget-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+/* 时钟小组件 */
+.widget-clock-time {
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+}
+
+.widget-clock-date {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+}
+
+/* 日历小组件 */
+.widget-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    text-align: center;
+}
+
+.widget-calendar-grid .cal-header {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 4px 0;
+}
+
+.widget-calendar-grid .cal-day {
+    font-size: 12px;
+    padding: 5px 0;
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+}
+
+.widget-calendar-grid .cal-day.other {
+    color: var(--text-muted);
+    opacity: 0.5;
+}
+
+.widget-calendar-grid .cal-day.today {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+}
+
+/* 天气小组件 */
+.widget-weather-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.widget-weather-icon {
+    font-size: 36px;
+    line-height: 1;
+}
+
+.widget-weather-temp {
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.widget-weather-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* 统计小组件 */
+.widget-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.widget-stat-row:last-child { border-bottom: none; }
+
+.widget-stat-row strong {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* 移动端：小组件移到帖子列表下方 */
+@media (max-width: 900px) {
+    .forum-layout {
+        grid-template-columns: 1fr;
+    }
+    .forum-widgets {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    .widget { padding: 14px; }
+    .widget-clock-time { font-size: 28px; }
+}
+
+@media (max-width: 600px) {
+    .forum-widgets {
+        grid-template-columns: 1fr;
+    }
+}
 
 .section-header {
     margin-bottom: 20px;

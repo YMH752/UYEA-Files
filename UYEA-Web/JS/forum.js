@@ -74,6 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderPosts(posts) {
         if (posts.length === 0) {
             list.innerHTML = '';
+            // 同步小组件状态（无帖子时只显示时钟）
+            if (typeof window.updateForumWidgets === 'function') {
+                window.updateForumWidgets(posts);
+            }
             return;
         }
 
@@ -83,6 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
         list.querySelectorAll('a.post-item[href="#"]').forEach(a => {
             a.addEventListener('click', e => e.preventDefault());
         });
+
+        // 同步小组件：根据帖子数量决定显示几个
+        if (typeof window.updateForumWidgets === 'function') {
+            window.updateForumWidgets(posts);
+        }
     }
 
     function filterPosts() {

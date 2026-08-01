@@ -1,11 +1,11 @@
 /*
- * UYEA 悠野社区 - Service Worker v0.10.6
+ * UYEA 悠野社区 - Service Worker v0.10.7
  * 缓存优先策略，支持离线访问
  * 复古×现代 · 液态玻璃 · 纸张质感
  */
 
-const CACHE_NAME = 'uyea-v0.10.6';
-const V = 'v=0.10.6';
+const CACHE_NAME = 'uyea-v0.10.7';
+const V = 'v=0.10.7';
 
 // 核心静态资源（安装时预缓存）
 // 安全：users.json 含用户凭据，不预缓存也不运行时缓存
@@ -18,6 +18,7 @@ const CORE_ASSETS = [
   `/JS/script.js?${V}`,
   `/JS/tools.js?${V}`,
   `/JS/forum.js?${V}`,
+  `/JS/widgets.js?${V}`,
   `/JS/auth.js?${V}`,
   '/manifest.json',
   '/IMAGE/JPG/Peter_Thomas(2-2).webp'
