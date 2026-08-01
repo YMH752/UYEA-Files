@@ -26,8 +26,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="/CSS/style.css?v=0.9.6" as="style" fetchpriority="high">
-    <link rel="preload" href="/JS/config.js?v=0.9.6" as="script" fetchpriority="high">
+    <link rel="preload" href="/CSS/style.css?v=0.9.7" as="style" fetchpriority="high">
+    <link rel="preload" href="/JS/config.js?v=0.9.7" as="script" fetchpriority="high">
 
     <!-- 关键内联CSS：首屏渲染不等待外部CSS下载 -->
     <style>
@@ -133,7 +133,7 @@
         }
     </style>
 
-    <link rel="stylesheet" href="/CSS/style.css?v=0.9.6" media="all">
+    <link rel="stylesheet" href="/CSS/style.css?v=0.9.7" media="all">
 
     <!-- 异步加载字体：衬线标题 + 无衬线正文 -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -578,13 +578,13 @@
         </div>
     </div>
 
-    <script src="/JS/config.js?v=0.9.6" defer></script>
-    <script src="/JS/utils.js?v=0.9.6" defer></script>
-    <script src="/JS/liquid-glass.js?v=0.9.6" defer></script>
-    <script src="/JS/script.js?v=0.9.6" defer></script>
-    <script src="/JS/tools.js?v=0.9.6" defer></script>
-    <script src="/JS/forum.js?v=0.9.6" defer></script>
-    <script src="/JS/auth.js?v=0.9.6" defer></script>
+    <script src="/JS/config.js?v=0.9.7" defer></script>
+    <script src="/JS/utils.js?v=0.9.7" defer></script>
+    <script src="/JS/liquid-glass.js?v=0.9.7" defer></script>
+    <script src="/JS/script.js?v=0.9.7" defer></script>
+    <script src="/JS/tools.js?v=0.9.7" defer></script>
+    <script src="/JS/forum.js?v=0.9.7" defer></script>
+    <script src="/JS/auth.js?v=0.9.7" defer></script>
     <script>
         // ==================== 加载动画：等待三页数据全部加载完成 ====================
         const MODULES_READY = { forum: false, nav: false, tools: false };
@@ -816,20 +816,18 @@
             }
 
             function onStart(e) {
-                // 仅点击滑动指示器本身才触发拖拽，点击其他区域无效
+                // 仅长按滑动指示器本身才触发拖拽
                 const ind = bottomNav.querySelector('.bottom-nav-indicator');
-                if (!ind || (e.target !== ind && !ind.contains(e.target))) return;
+                if (!ind) return;
 
                 isPressing = true;
                 isDragging = false;
                 startX = e.clientX;
                 indicator = ind;
                 items = Array.from(bottomNav.querySelectorAll('.bottom-nav-item'));
-                if (indicator) {
-                    const t = indicator.style.transform;
-                    const m = t.match(/translateX\(([-\d.]+)px\)/);
-                    initTransform = m ? parseFloat(m[1]) : 0;
-                }
+                const t = indicator.style.transform;
+                const m = t.match(/translateX\(([-\d.]+)px\)/);
+                initTransform = m ? parseFloat(m[1]) : 0;
                 // 清除起始位置的选中效果，拖动开始时不显示高亮
                 clearLens();
             }
@@ -841,12 +839,10 @@
                 // 移动阈值：超过5px才进入拖拽模式，避免误触
                 if (!isDragging) {
                     if (Math.abs(deltaX) < DRAG_THRESHOLD) return;
-                    // 手机端无指示器，不进入拖拽模式，让原生横向滚动生效
-                    if (!indicator || indicator.offsetParent === null) return;
                     isDragging = true;
                     // 添加dragging类：抑制起始位置active项的高亮样式
                     bottomNav.classList.add('dragging');
-                    if (indicator) indicator.style.transition = 'none';
+                    indicator.style.transition = 'none';
                     bottomNav.setPointerCapture && bottomNav.setPointerCapture(e.pointerId);
                 }
 
@@ -894,7 +890,14 @@
                 }
             }
 
-            bottomNav.addEventListener('pointerdown', onStart);
+            // 事件委托：仅当 pointerdown 目标是滑动指示器时才触发拖拽
+            bottomNav.addEventListener('pointerdown', function(e) {
+                const ind = bottomNav.querySelector('.bottom-nav-indicator');
+                // indicator 的 pointer-events 在桌面端为 auto，手机端为 none
+                // 如果 e.target 是 indicator 或其子元素，说明指示器接收到了事件
+                if (!ind || (e.target !== ind && !ind.contains(e.target))) return;
+                onStart(e);
+            });
             document.addEventListener('pointermove', onMove);
             document.addEventListener('pointerup', onEnd);
             document.addEventListener('pointercancel', onEnd);
