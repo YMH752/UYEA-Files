@@ -711,6 +711,12 @@
         window.updateBottomNavIndicator = function() {
             const bottomNav = document.getElementById('bottomNav');
             if (!bottomNav) return;
+
+            // 防御性清理：移除所有 lens-active 残留，避免非拖拽状态出现双高亮
+            bottomNav.querySelectorAll('.bottom-nav-item.lens-active').forEach(item => {
+                item.classList.remove('lens-active');
+            });
+
             const activeItem = bottomNav.querySelector('.bottom-nav-item.active');
             if (!activeItem) return;
 
@@ -794,6 +800,11 @@
 
             function onStart(e) {
                 // 直接绑定在指示器上，只有按住指示器才会触发
+                // 防御性清理：拖拽开始时清除所有可能残留的 lens-active，避免双高亮
+                bottomNav.querySelectorAll('.bottom-nav-item.lens-active').forEach(item => {
+                    item.classList.remove('lens-active');
+                });
+                clearLens();
                 isPressing = true;
                 isDragging = false;
                 startX = e.clientX;
